@@ -123,10 +123,11 @@
 
 -(void)resizeOverlayWindow
 {
-	CGRect frame = self.overlayView.frame;
-	frame.origin.x = round((self.view.frame.size.width - frame.size.width) / 2.0);
-	frame.origin.y = round((self.view.frame.size.height - frame.size.height) / 2.0);
-	self.overlayView.frame = frame;
+//	CGRect frame = self.overlayView.frame;
+//	frame.origin.x = round((self.view.frame.size.width - frame.size.width) / 2.0);
+//	frame.origin.y = round((self.view.frame.size.height - frame.size.height) / 2.0);
+//	self.overlayView.frame = frame;
+    self.overlayView.frame = self.view.bounds;
 }
 
 /* Remove the movie view from the view hierarchy. */
@@ -314,9 +315,9 @@
 /* Handle movie load state changes. */
 - (void)loadStateDidChange:(NSNotification *)notification
 {
-//	MPMoviePlayerController *player = notification.object;
-//	MPMovieLoadState loadState = player.loadState;
-//    
+	MPMoviePlayerController *player = notification.object;
+	MPMovieLoadState loadState = player.loadState;
+//
 //	/* The load state is not known at this time. */
 //	if (loadState & MPMovieLoadStateUnknown)
 //	{
@@ -332,15 +333,15 @@
 //        [overlayController setLoadStateDisplayString:@"playable"];
 //	}
 //	
-//	/* Enough data has been buffered for playback to continue uninterrupted. */
-//	if (loadState & MPMovieLoadStatePlaythroughOK)
-//	{
-//        // Add an overlay view on top of the movie view
-//        [self addOverlayView];
-//        
+	/* Enough data has been buffered for playback to continue uninterrupted. */
+	if (loadState & MPMovieLoadStatePlaythroughOK)
+	{
+        // Add an overlay view on top of the movie view
+        [self addOverlayView];
+        
 //        [overlayController setLoadStateDisplayString:@"playthrough ok"];
-//	}
-//	
+	}
+//
 //	/* The buffering of data has stalled. */
 //	if (loadState & MPMovieLoadStateStalled)
 //	{
@@ -381,7 +382,7 @@
 - (void) mediaIsPreparedToPlayDidChange:(NSNotification*)notification
 {
 	// Add an overlay view on top of the movie view
-//    [self addOverlayView];
+    [self addOverlayView];
 }
 
 
@@ -405,32 +406,32 @@
 #pragma mark MovieControlSourceDelegate
 - (void)movieControlSourcePlay:(id<MovieControlSource>)source
 {
-    
+    [self.moviePlayerController play];
 }
 
 - (void)movieControlSourcePause:(id<MovieControlSource>)source
 {
-    
+    [self.moviePlayerController pause];
 }
 
 - (void)movieControlSourceResume:(id<MovieControlSource>)source
 {
-    
+    [self.moviePlayerController play];
 }
 
 - (void)movieControlSourceReplay:(id<MovieControlSource>)source
 {
-    
+    [self.moviePlayerController play];
 }
 
 - (void)movieControlSource:(id<MovieControlSource>)source setProgress:(CGFloat)progress
 {
-    
+    self.moviePlayerController.currentPlaybackTime = 10;
 }
 
 - (void)movieControlSourceExit:(id<MovieControlSource>)source
 {
-    
+    [self.moviePlayerController stop];
 }
 
 @end

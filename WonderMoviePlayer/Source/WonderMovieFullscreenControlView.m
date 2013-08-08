@@ -44,18 +44,22 @@
     self.bottomBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
     [self addSubview:self.bottomBar];
     self.progressView = [[[WonderMovieProgressView alloc] initWithFrame:CGRectMake(progressBarLeftPadding, 0, self.bottomBar.width - progressBarLeftPadding - progressBarRightPadding, bottomBarHeight)] autorelease];
+    self.progressView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     [self.bottomBar addSubview:self.progressView];
     
     self.actionButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    self.actionButton.titleLabel.font = [UIFont systemFontOfSize:10];
     self.actionButton.frame = CGRectMake(0, 0, 40, bottomBarHeight);
     [self.actionButton setTitle:@"Play" forState:UIControlStateNormal];
     [self.actionButton addTarget:self action:@selector(onClickAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.bottomBar addSubview:self.actionButton];
     
     self.startLabel = [[[UILabel alloc] initWithFrame:CGRectMake(self.actionButton.right + 5, 0, progressBarLeftPadding - self.actionButton.right - 5, bottomBarHeight)] autorelease];
+    self.startLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight;
     [self.bottomBar addSubview:self.startLabel];
     
     self.durationLabel = [[[UILabel alloc] initWithFrame:CGRectMake(self.progressView.right + 5, 0, self.width - self.progressView.right - 5, bottomBarHeight)] autorelease];
+    self.durationLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
     [self.bottomBar addSubview:self.durationLabel];
     
     
@@ -136,6 +140,9 @@
     else if (self.controlState == WonderMovieControlStateEnded) {
         [self replay];
     }
+    
+    NSArray *titles = @[@"default", @"playing", @"paused", @"ended"];
+    [sender setTitle:titles[self.controlState] forState:UIControlStateNormal];
 }
 
 @end

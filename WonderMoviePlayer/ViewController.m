@@ -27,6 +27,12 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    /* Return YES for supported orientations. */
+    return YES;
+}
+
 - (IBAction)onClickPlay:(id)sender {
     WonderMoiveViewController *controller = [[WonderMoiveViewController alloc] init];
     [self presentViewController:controller animated:YES completion:^{
