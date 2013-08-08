@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  WonderMovieProgressView.h
 //  WonderMoviePlayer
 //
 //  Created by Zhuang Yanjun on 13-8-8.
@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
-- (IBAction)onClickPlay:(id)sender;
-
+@interface WonderMovieProgressView : UIView
+- (void)setProgress:(CGFloat)progress;
 @end

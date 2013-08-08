@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "WonderMoiveViewController.h"
 
 @interface ViewController ()
 
@@ -24,6 +25,15 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (IBAction)onClickPlay:(id)sender {
+    WonderMoiveViewController *controller = [[WonderMoiveViewController alloc] init];
+    [self presentViewController:controller animated:YES completion:^{
+        NSLog(@"start to play");
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"Movie" ofType:@"m4v"];
+        [controller playMovieFile:[NSURL fileURLWithPath:path]];
+    }];
 }
 
 @end
