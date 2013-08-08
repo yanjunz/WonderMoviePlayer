@@ -1,0 +1,303 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B517773817B36D44006B948E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517773717B36D44006B948E /* UIKit.framework */; };
+		B517773A17B36D44006B948E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517773917B36D44006B948E /* Foundation.framework */; };
+		B517773C17B36D44006B948E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517773B17B36D44006B948E /* CoreGraphics.framework */; };
+		B517774217B36D44006B948E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B517774017B36D44006B948E /* InfoPlist.strings */; };
+		B517774417B36D44006B948E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B517774317B36D44006B948E /* main.m */; };
+		B517774817B36D44006B948E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B517774717B36D44006B948E /* AppDelegate.m */; };
+		B517774A17B36D44006B948E /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = B517774917B36D44006B948E /* Default.png */; };
+		B517774C17B36D44006B948E /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B517774B17B36D44006B948E /* Default@2x.png */; };
+		B517774E17B36D44006B948E /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B517774D17B36D44006B948E /* Default-568h@2x.png */; };
+		B517775117B36D44006B948E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B517775017B36D44006B948E /* ViewController.m */; };
+		B517775417B36D44006B948E /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B517775217B36D44006B948E /* ViewController.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		B517773417B36D44006B948E /* WonderMoviePlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WonderMoviePlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B517773717B36D44006B948E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		B517773917B36D44006B948E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		B517773B17B36D44006B948E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		B517773F17B36D44006B948E /* WonderMoviePlayer-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "WonderMoviePlayer-Info.plist"; sourceTree = "<group>"; };
+		B517774117B36D44006B948E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		B517774317B36D44006B948E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		B517774517B36D44006B948E /* WonderMoviePlayer-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WonderMoviePlayer-Prefix.pch"; sourceTree = "<group>"; };
+		B517774617B36D44006B948E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		B517774717B36D44006B948E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		B517774917B36D44006B948E /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		B517774B17B36D44006B948E /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		B517774D17B36D44006B948E /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		B517774F17B36D44006B948E /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		B517775017B36D44006B948E /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		B517775317B36D44006B948E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController.xib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B517773117B36D44006B948E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B517773817B36D44006B948E /* UIKit.framework in Frameworks */,
+				B517773A17B36D44006B948E /* Foundation.framework in Frameworks */,
+				B517773C17B36D44006B948E /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		B517772B17B36D44006B948E = {
+			isa = PBXGroup;
+			children = (
+				B517773D17B36D44006B948E /* WonderMoviePlayer */,
+				B517773617B36D44006B948E /* Frameworks */,
+				B517773517B36D44006B948E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		B517773517B36D44006B948E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B517773417B36D44006B948E /* WonderMoviePlayer.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B517773617B36D44006B948E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B517773717B36D44006B948E /* UIKit.framework */,
+				B517773917B36D44006B948E /* Foundation.framework */,
+				B517773B17B36D44006B948E /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B517773D17B36D44006B948E /* WonderMoviePlayer */ = {
+			isa = PBXGroup;
+			children = (
+				B517774617B36D44006B948E /* AppDelegate.h */,
+				B517774717B36D44006B948E /* AppDelegate.m */,
+				B517774F17B36D44006B948E /* ViewController.h */,
+				B517775017B36D44006B948E /* ViewController.m */,
+				B517775217B36D44006B948E /* ViewController.xib */,
+				B517773E17B36D44006B948E /* Supporting Files */,
+			);
+			path = WonderMoviePlayer;
+			sourceTree = "<group>";
+		};
+		B517773E17B36D44006B948E /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				B517773F17B36D44006B948E /* WonderMoviePlayer-Info.plist */,
+				B517774017B36D44006B948E /* InfoPlist.strings */,
+				B517774317B36D44006B948E /* main.m */,
+				B517774517B36D44006B948E /* WonderMoviePlayer-Prefix.pch */,
+				B517774917B36D44006B948E /* Default.png */,
+				B517774B17B36D44006B948E /* Default@2x.png */,
+				B517774D17B36D44006B948E /* Default-568h@2x.png */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B517773317B36D44006B948E /* WonderMoviePlayer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B517775717B36D44006B948E /* Build configuration list for PBXNativeTarget "WonderMoviePlayer" */;
+			buildPhases = (
+				B517773017B36D44006B948E /* Sources */,
+				B517773117B36D44006B948E /* Frameworks */,
+				B517773217B36D44006B948E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WonderMoviePlayer;
+			productName = WonderMoviePlayer;
+			productReference = B517773417B36D44006B948E /* WonderMoviePlayer.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B517772C17B36D44006B948E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = Tencent;
+			};
+			buildConfigurationList = B517772F17B36D44006B948E /* Build configuration list for PBXProject "WonderMoviePlayer" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = B517772B17B36D44006B948E;
+			productRefGroup = B517773517B36D44006B948E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B517773317B36D44006B948E /* WonderMoviePlayer */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B517773217B36D44006B948E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B517774217B36D44006B948E /* InfoPlist.strings in Resources */,
+				B517774A17B36D44006B948E /* Default.png in Resources */,
+				B517774C17B36D44006B948E /* Default@2x.png in Resources */,
+				B517774E17B36D44006B948E /* Default-568h@2x.png in Resources */,
+				B517775417B36D44006B948E /* ViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B517773017B36D44006B948E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B517774417B36D44006B948E /* main.m in Sources */,
+				B517774817B36D44006B948E /* AppDelegate.m in Sources */,
+				B517775117B36D44006B948E /* ViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		B517774017B36D44006B948E /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B517774117B36D44006B948E /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		B517775217B36D44006B948E /* ViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B517775317B36D44006B948E /* en */,
+			);
+			name = ViewController.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		B517775517B36D44006B948E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		B517775617B36D44006B948E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		B517775817B36D44006B948E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "WonderMoviePlayer/WonderMoviePlayer-Prefix.pch";
+				INFOPLIST_FILE = "WonderMoviePlayer/WonderMoviePlayer-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		B517775917B36D44006B948E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "WonderMoviePlayer/WonderMoviePlayer-Prefix.pch";
+				INFOPLIST_FILE = "WonderMoviePlayer/WonderMoviePlayer-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B517772F17B36D44006B948E /* Build configuration list for PBXProject "WonderMoviePlayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B517775517B36D44006B948E /* Debug */,
+				B517775617B36D44006B948E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B517775717B36D44006B948E /* Build configuration list for PBXNativeTarget "WonderMoviePlayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B517775817B36D44006B948E /* Debug */,
+				B517775917B36D44006B948E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B517772C17B36D44006B948E /* Project object */;
+}
