@@ -9,22 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MovieControlSource.h"
 
-typedef enum {
-    MovieControlStateDefault, // not started
-    MovieControlStatePlaying,
-    MovieControlStatePaused,
-//    MovieControlStateBuffering,
-    MovieControlStateEnded,
-} MovieControlState;
-
-typedef enum {
-    MovieControlCommandPlay,
-    MovieControlCommandPause,
-    MovieControlCommandStop,
-    MovieControlCommandReplay,
-    MovieControlCommandSetProgress,
-} MovieControlCommand;
-
 @interface WonderMovieFullscreenControlView : UIView<MovieControlSource>
-@property (nonatomic, assign) MovieControlState controlState;
+@property (nonatomic, assign) BOOL autoPlayWhenStarted;
+- (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted;
 @end

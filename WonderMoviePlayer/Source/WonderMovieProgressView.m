@@ -32,6 +32,7 @@
     self.progressView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.progressView.frame = self.bounds;
     [self addSubview:self.progressView];
+    self.progressView.center = CGPointMake(self.progressView.center.x, self.center.y);
     
     self.progressIndicator = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)] autorelease];
     self.progressIndicator.backgroundColor = [UIColor redColor];
@@ -45,8 +46,11 @@
 #pragma mark Progress action
 - (void)setProgress:(CGFloat)progress
 {
-    [self.progressView setProgress:progress];
-    self.progressIndicator.center = CGPointMake(self.progressView.left + self.progressView.width * progress, self.progressView.center.y);
+//    NSLog(@"setProgrss: %f, %f", progress, self.progressView.progress);
+    if (fabs(progress - self.progressView.progress) > 0.01) {
+        [self.progressView setProgress:progress];
+        self.progressIndicator.center = CGPointMake(self.progressView.left + self.progressView.width * progress, self.progressView.center.y);
+    }
 }
 
 - (void)notifyProgressChanged:(CGFloat)progress
@@ -61,6 +65,7 @@
 {
     CGPoint pt = [gr locationInView:self];
     CGFloat progress = pt.x / self.width;
+    NSLog(@"onTap: %f", progress);
     [self setProgress:progress];
     [self notifyProgressChanged:progress];
 }

@@ -42,4 +42,16 @@
     }];
 }
 
+- (IBAction)onClickPlayRemote:(id)sender {
+    WonderMoiveViewController *controller = [[WonderMoiveViewController alloc] init];
+    [self presentViewController:controller animated:YES completion:^{
+        NSLog(@"start to play");
+//        NSString *path = [[NSBundle mainBundle] pathForResource:@"Movie" ofType:@"m4v"];
+        [controller playMovieStream:[NSURL URLWithString:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"]];
+    }];
+}
+
+- (void)dealloc {
+    [super dealloc];
+}
 @end

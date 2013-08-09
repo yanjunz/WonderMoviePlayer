@@ -8,11 +8,28 @@
 
 #import <Foundation/Foundation.h>
 
+
+typedef enum {
+    MovieControlStateDefault, // not started
+    MovieControlStatePlaying,
+    MovieControlStatePaused,
+    MovieControlStateBuffering,
+    MovieControlStateEnded,
+} MovieControlState;
+
+typedef enum {
+    MovieControlCommandPlay,
+    MovieControlCommandPause,
+    MovieControlCommandEnd,
+    MovieControlCommandReplay,
+    MovieControlCommandSetProgress,
+    MovieControlCommandBuffer,
+} MovieControlCommand;
+
 /**
  * delegate will not be notified if functions such as play, pause, etc. were called.
  * delegate will only be notified when MovieControlSource internally trigger play/pause and other video operations.
  */
-
 
 @protocol MovieControlSourceDelegate;
 
@@ -24,7 +41,8 @@
 - (void)resume;
 - (void)replay;
 - (void)setProgress:(CGFloat)progress;
-- (void)exit;
+- (void)buffer;
+- (void)end;
 
 @optional
 
@@ -46,6 +64,7 @@
 
 
 @required
+@property (nonatomic, assign) MovieControlState controlState;
 @property (nonatomic, assign) id<MovieControlSourceDelegate> delegate;
 @end
 
@@ -57,5 +76,8 @@
 - (void)movieControlSourceReplay:(id<MovieControlSource>)source;
 - (void)movieControlSource:(id<MovieControlSource>)source setProgress:(CGFloat)progress;
 - (void)movieControlSourceExit:(id<MovieControlSource>)source;
+
+@optional
+- (void)movieControlSourceBuffer:(id<MovieControlSource>)source;
 
 @end

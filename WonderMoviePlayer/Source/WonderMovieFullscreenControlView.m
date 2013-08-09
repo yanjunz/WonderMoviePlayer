@@ -25,10 +25,12 @@
 
 @implementation WonderMovieFullscreenControlView
 @synthesize delegate;
+@synthesize controlState;
 
-- (id)initWithFrame:(CGRect)frame
+- (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted
 {
     if (self = [super initWithFrame:frame]) {
+        self.autoPlayWhenStarted = autoPlayWhenStarted;
         [self setupView];
     }
     return self;
@@ -69,7 +71,12 @@
     self.durationLabel.font = [UIFont systemFontOfSize:10];
     [self.bottomBar addSubview:self.durationLabel];
     
-    self.controlState = MovieControlStatePlaying;
+    if (self.autoPlayWhenStarted) {
+        self.controlState = MovieControlStatePlaying;
+    }
+    else {
+        self.controlState = MovieControlStateDefault;
+    }
     [self updateActionState];
 }
 
@@ -86,7 +93,7 @@
 #pragma mark State Manchine
 - (void)handleCommand:(MovieControlCommand)cmd param:(id)param notify:(BOOL)notify
 {
-    if (cmd == MovieControlCommandStop) {
+    if (cmd == MovieControlCommandEnd) {
         self.controlState = MovieControlStateEnded;
         
         if (notify && [self.delegate respondsToSelector:@selector(movieControlSourceExit:)]) {
@@ -119,6 +126,13 @@
                         [self.delegate movieControlSource:self setProgress:[(NSNumber *)param floatValue]];
                     }
                 }
+                else if (cmd == MovieControlCommandBuffer) {
+                    self.controlState = MovieControlStateBuffering;
+                    
+                    if (notify && [self.delegate respondsToSelector:@selector(movieControlSourceBuffer:)]) {
+                        [self.delegate movieControlSourceBuffer:self];
+                    }
+                }
                 break;
             case MovieControlStateEnded:
                 if (cmd == MovieControlCommandReplay) {
@@ -135,6 +149,23 @@
                     
                     if (notify && [self.delegate respondsToSelector:@selector(movieControlSourceResume:)]) {
                         [self.delegate movieControlSourceResume:self];
+                    }
+                }
+                else if (cmd == MovieControlCommandSetProgress) {
+                    self.controlState = MovieControlStatePaused;
+                    
+                    if (notify && [self.delegate respondsToSelector:@selector(movieControlSource:setProgress:)]) {
+                        [self.delegate movieControlSource:self setProgress:[(NSNumber *)param floatValue]];
+                    }
+                }
+                break;
+            case MovieControlStateBuffering:
+                if (cmd == MovieControlCommandPlay) {
+                    self.controlState = MovieControlStatePlaying;
+                    
+                    // Actually there is no need to notify since no internal operation will trigger buffer
+                    if (notify && [self.delegate respondsToSelector:@selector(movieControlSourcePlay:)]) {
+                        [self.delegate movieControlSourcePlay:self];
                     }
                 }
                 break;
@@ -172,9 +203,14 @@
     [self handleCommand:MovieControlCommandSetProgress param:@(progress) notify:NO];
 }
 
-- (void)exit
+- (void)buffer
 {
-    [self handleCommand:MovieControlCommandStop param:nil notify:NO];
+    [self handleCommand:MovieControlCommandBuffer param:nil notify:NO];
+}
+
+- (void)end
+{
+    [self handleCommand:MovieControlCommandEnd param:nil notify:NO];
 }
 
 - (void)setPlaybackTime:(NSTimeInterval)playbackTime
@@ -214,7 +250,7 @@
 
 - (void)updateActionState
 {
-    NSArray *titles = @[@"default", @"playing", @"paused", @"ended"];
+    NSArray *titles = @[@"default", @"playing", @"paused", @"buffering", @"ended"];
     [self.actionButton setTitle:titles[self.controlState] forState:UIControlStateNormal];
 }
 

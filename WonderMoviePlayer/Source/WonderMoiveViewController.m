@@ -191,7 +191,7 @@
 - (void)setupControlSource:(BOOL)fullscreen
 {
     if (fullscreen) {
-        WonderMovieFullscreenControlView *fullscreenControlView = [[[WonderMovieFullscreenControlView alloc] initWithFrame:self.view.bounds] autorelease];
+        WonderMovieFullscreenControlView *fullscreenControlView = [[[WonderMovieFullscreenControlView alloc] initWithFrame:self.view.bounds autoPlayWhenStarted:YES] autorelease];
         fullscreenControlView.delegate = self;
         self.overlayView = fullscreenControlView;
         self.controlSource = fullscreenControlView;
@@ -281,36 +281,37 @@
 /*  Notification called when the movie finished playing. */
 - (void) moviePlayBackDidFinish:(NSNotification*)notification
 {
-//    NSNumber *reason = [[notification userInfo] objectForKey:MPMoviePlayerPlaybackDidFinishReasonUserInfoKey];
-//	switch ([reason integerValue])
-//	{
-//            /* The end of the movie was reached. */
-//		case MPMovieFinishReasonPlaybackEnded:
-//            /*
-//             Add your code here to handle MPMovieFinishReasonPlaybackEnded.
-//             */
-//			break;
-//            
-//            /* An error was encountered during playback. */
-//		case MPMovieFinishReasonPlaybackError:
-//            NSLog(@"An error was encountered during playback");
+    NSNumber *reason = [[notification userInfo] objectForKey:MPMoviePlayerPlaybackDidFinishReasonUserInfoKey];
+	switch ([reason integerValue])
+	{
+            /* The end of the movie was reached. */
+		case MPMovieFinishReasonPlaybackEnded:
+            /*
+             Add your code here to handle MPMovieFinishReasonPlaybackEnded.
+             */
+            [self.controlSource end];
+			break;
+            
+            /* An error was encountered during playback. */
+		case MPMovieFinishReasonPlaybackError:
+            NSLog(@"An error was encountered during playback");
 //            [self performSelectorOnMainThread:@selector(displayError:) withObject:[[notification userInfo] objectForKey:@"error"]
 //                                waitUntilDone:NO];
-//            [self removeMovieViewFromViewHierarchy];
-//            [self removeOverlayView];
-//            [self.backgroundView removeFromSuperview];
-//			break;
-//            
-//            /* The user stopped playback. */
-//		case MPMovieFinishReasonUserExited:
-//            [self removeMovieViewFromViewHierarchy];
-//            [self removeOverlayView];
-//            [self.backgroundView removeFromSuperview];
-//			break;
-//            
-//		default:
-//			break;
-//	}
+            [self removeMovieViewFromViewHierarchy];
+            [self removeOverlayView];
+            [self.backgroundView removeFromSuperview];
+			break;
+            
+            /* The user stopped playback. */
+		case MPMovieFinishReasonUserExited:
+            [self removeMovieViewFromViewHierarchy];
+            [self removeOverlayView];
+            [self.backgroundView removeFromSuperview];
+			break;
+            
+		default:
+			break;
+	}
 }
 
 /* Handle movie load state changes. */
@@ -319,22 +320,24 @@
     NSLog(@"loadStateDidChange");
 	MPMoviePlayerController *player = notification.object;
 	MPMovieLoadState loadState = player.loadState;
-//
-//	/* The load state is not known at this time. */
-//	if (loadState & MPMovieLoadStateUnknown)
-//	{
+
+	/* The load state is not known at this time. */
+	if (loadState & MPMovieLoadStateUnknown)
+	{
+        [self.controlSource buffer];
 //        [self.overlayController setLoadStateDisplayString:@"n/a"];
-//        
+        
 //        [overlayController setLoadStateDisplayString:@"unknown"];
-//	}
-//	
-//	/* The buffer has enough data that playback can begin, but it
-//	 may run out of data before playback finishes. */
-//	if (loadState & MPMovieLoadStatePlayable)
-//	{
+	}
+
+	/* The buffer has enough data that playback can begin, but it
+	 may run out of data before playback finishes. */
+	if (loadState & MPMovieLoadStatePlayable)
+	{
 //        [overlayController setLoadStateDisplayString:@"playable"];
-//	}
-//	
+        [self.controlSource play];
+	}
+	
 	/* Enough data has been buffered for playback to continue uninterrupted. */
 	if (loadState & MPMovieLoadStatePlaythroughOK)
 	{
@@ -342,13 +345,18 @@
         [self addOverlayView];
         
 //        [overlayController setLoadStateDisplayString:@"playthrough ok"];
+        
+        // FIXME
+        // show cached size
+        
 	}
-//
-//	/* The buffering of data has stalled. */
-//	if (loadState & MPMovieLoadStateStalled)
-//	{
+
+	/* The buffering of data has stalled. */
+	if (loadState & MPMovieLoadStateStalled)
+	{
+        [self.controlSource buffer];
 //        [overlayController setLoadStateDisplayString:@"stalled"];
-//	}
+	}
 }
 
 /* Called when the movie playback state has changed. */
@@ -434,6 +442,7 @@
 - (void)movieControlSource:(id<MovieControlSource>)source setProgress:(CGFloat)progress
 {
     self.moviePlayerController.currentPlaybackTime = progress * self.moviePlayerController.playableDuration;
+//    NSLog(@"movieControlSource:setProgress %f, %f", self.moviePlayerController.currentPlaybackTime, self.moviePlayerController.playableDuration);
     [self updateTimeLabels];
 }
 
@@ -447,6 +456,8 @@
 {
     NSTimeInterval currentPlaybackTime = self.moviePlayerController.currentPlaybackTime;
     NSTimeInterval playbackDuration = self.moviePlayerController.playableDuration;
+    
+//    NSLog(@"updateTimeLabels %f, %f", currentPlaybackTime, playbackDuration);
     
     if ([self.controlSource respondsToSelector:@selector(setPlaybackTime:)]) {
         [self.controlSource setPlaybackTime:currentPlaybackTime];
