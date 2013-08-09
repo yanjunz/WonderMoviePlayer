@@ -12,11 +12,19 @@
 
 @interface WonderMovieFullscreenControlView ()
 @property (nonatomic, retain) WonderMovieProgressView *progressView;
+
+// bottom bar
 @property (nonatomic, retain) UIView *bottomBar;
-@property (nonatomic, retain) UIView *headerBar;
 @property (nonatomic, retain) UIButton *actionButton;
 @property (nonatomic, retain) UILabel *startLabel;
 @property (nonatomic, retain) UILabel *durationLabel;
+@property (nonatomic, retain) UIButton *fullscreenButton;
+
+// header bar
+@property (nonatomic, retain) UIView *headerBar;
+@property (nonatomic, retain) UIButton *lockButton;
+@property (nonatomic, retain) UIButton *downloadButton;
+
 @end
 
 @interface WonderMovieFullscreenControlView (ProgressView) <WonderMovieProgressViewDelegate>
@@ -43,10 +51,11 @@
     CGFloat bottomBarHeight = 40;
     CGFloat headerBarHeight = 40;
     CGFloat progressBarLeftPadding = 100;
-    CGFloat progressBarRightPadding = 50;
+    CGFloat progressBarRightPadding = 100;
     
-    // setup bottomBar
+    // Setup bottomBar
     self.bottomBar = [[[UIView alloc] initWithFrame:CGRectMake(0, self.height - bottomBarHeight, self.width, bottomBarHeight)] autorelease];
+    self.bottomBar.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
     self.bottomBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
     [self addSubview:self.bottomBar];
     self.progressView = [[[WonderMovieProgressView alloc] initWithFrame:CGRectMake(progressBarLeftPadding, 0, self.bottomBar.width - progressBarLeftPadding - progressBarRightPadding, bottomBarHeight)] autorelease];
@@ -64,13 +73,49 @@
     self.startLabel = [[[UILabel alloc] initWithFrame:CGRectMake(self.actionButton.right + 5, 0, progressBarLeftPadding - self.actionButton.right - 5, bottomBarHeight)] autorelease];
     self.startLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight;
     self.startLabel.font = [UIFont systemFontOfSize:10];
+    self.startLabel.backgroundColor = [UIColor clearColor];
+    self.startLabel.textColor = [UIColor whiteColor];
     [self.bottomBar addSubview:self.startLabel];
     
-    self.durationLabel = [[[UILabel alloc] initWithFrame:CGRectMake(self.progressView.right + 5, 0, self.width - self.progressView.right - 5, bottomBarHeight)] autorelease];
+    self.fullscreenButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    self.fullscreenButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
+    [self.fullscreenButton setTitle:@"F" forState:UIControlStateNormal];
+    self.fullscreenButton.frame = CGRectMake(self.width - 45, 0, 40, bottomBarHeight);
+    [self.bottomBar addSubview:self.fullscreenButton];
+    
+    self.durationLabel = [[[UILabel alloc] initWithFrame:CGRectMake(self.progressView.right + 5, 0, self.fullscreenButton.left - self.progressView.right - 5, bottomBarHeight)] autorelease];
     self.durationLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
     self.durationLabel.font = [UIFont systemFontOfSize:10];
+    self.durationLabel.backgroundColor = [UIColor clearColor];
+    self.durationLabel.textColor = [UIColor whiteColor];
     [self.bottomBar addSubview:self.durationLabel];
     
+    // Setup headerBar
+    self.headerBar = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, self.width, headerBarHeight)] autorelease];
+    self.headerBar.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];    
+    self.headerBar.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
+    [self addSubview:self.headerBar];
+    
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [backButton setTitle:@"B" forState:UIControlStateNormal];
+    backButton.frame = CGRectMake(0, 0, 40, 40);
+    backButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
+    [backButton addTarget:self action:@selector(onClickBack:) forControlEvents:UIControlEventTouchUpInside];
+    [self.headerBar addSubview:backButton];
+    
+    self.downloadButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [self.downloadButton setTitle:@"D" forState:UIControlStateNormal];
+    self.downloadButton.frame = CGRectMake(self.headerBar.width - 100, 0, 40, 40);
+    self.downloadButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    [self.headerBar addSubview:self.downloadButton];
+    
+    self.lockButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [self.lockButton setTitle:@"L" forState:UIControlStateNormal];
+    self.lockButton.frame = CGRectMake(self.width - 50, 0, 40, 40);
+    self.lockButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;    
+    [self.headerBar addSubview:self.lockButton];
+    
+    // Update control state
     if (self.autoPlayWhenStarted) {
         self.controlState = MovieControlStatePlaying;
     }
@@ -246,6 +291,11 @@
     else if (self.controlState == MovieControlStateEnded) {
         [self handleCommand:MovieControlCommandReplay param:nil notify:YES];
     }
+}
+
+- (IBAction)onClickBack:(id)sender
+{
+    [self handleCommand:MovieControlCommandEnd param:nil notify:YES];
 }
 
 - (void)updateActionState

@@ -443,21 +443,23 @@
 {
     self.moviePlayerController.currentPlaybackTime = progress * self.moviePlayerController.playableDuration;
 //    NSLog(@"movieControlSource:setProgress %f, %f", self.moviePlayerController.currentPlaybackTime, self.moviePlayerController.playableDuration);
-    [self updateTimeLabels];
+    [self updateTimeInfo];
 }
 
 - (void)movieControlSourceExit:(id<MovieControlSource>)source
 {
     [self.moviePlayerController stop];
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark Control operation
-- (void)updateTimeLabels
+- (void)updateTimeInfo
 {
     NSTimeInterval currentPlaybackTime = self.moviePlayerController.currentPlaybackTime;
     NSTimeInterval playbackDuration = self.moviePlayerController.playableDuration;
     
-//    NSLog(@"updateTimeLabels %f, %f", currentPlaybackTime, playbackDuration);
+//    NSLog(@"updateTimeInfo %f, %f", currentPlaybackTime, playbackDuration);
     
     if ([self.controlSource respondsToSelector:@selector(setPlaybackTime:)]) {
         [self.controlSource setPlaybackTime:currentPlaybackTime];
@@ -472,7 +474,7 @@
 
 - (void)startTimer
 {
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updateTimeLabels) userInfo:nil repeats:YES];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updateTimeInfo) userInfo:nil repeats:YES];
 }
 
 - (void)stopTimer
