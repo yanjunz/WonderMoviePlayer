@@ -11,7 +11,7 @@
 #import "MoviePlayerUserPrefs.h"
 
 @interface WonderMoiveViewController ()
-
+@property (nonatomic, retain) NSTimer *timer;
 @end
 
 @implementation WonderMoiveViewController
@@ -194,6 +194,7 @@
         WonderMovieFullscreenControlView *fullscreenControlView = [[[WonderMovieFullscreenControlView alloc] initWithFrame:self.view.bounds] autorelease];
         fullscreenControlView.delegate = self;
         self.overlayView = fullscreenControlView;
+        self.controlSource = fullscreenControlView;
     }
 }
 
@@ -315,6 +316,7 @@
 /* Handle movie load state changes. */
 - (void)loadStateDidChange:(NSNotification *)notification
 {
+    NSLog(@"loadStateDidChange");
 	MPMoviePlayerController *player = notification.object;
 	MPMovieLoadState loadState = player.loadState;
 //
@@ -352,6 +354,7 @@
 /* Called when the movie playback state has changed. */
 - (void) moviePlayBackStateDidChange:(NSNotification*)notification
 {
+    NSLog(@"moviePlayBackStateDidChange");
 //	MPMoviePlayerController *player = notification.object;
 //    
 //	/* Playback is currently stopped. */
@@ -389,11 +392,15 @@
 #pragma mark Public
 - (void)playMovieFile:(NSURL *)movieFileURL
 {
+    [self stopTimer];
+    [self startTimer];
     [self createAndPlayMovieForURL:movieFileURL sourceType:MPMovieSourceTypeFile];
 }
 
 - (void)playMovieStream:(NSURL *)movieFileURL
 {
+    [self stopTimer];
+    [self startTimer];
     MPMovieSourceType movieSourceType = MPMovieSourceTypeUnknown;
     /* If we have a streaming url then specify the movie source type. */
     if ([[movieFileURL pathExtension] compare:@"m3u8" options:NSCaseInsensitiveSearch] == NSOrderedSame)
@@ -426,12 +433,41 @@
 
 - (void)movieControlSource:(id<MovieControlSource>)source setProgress:(CGFloat)progress
 {
-    self.moviePlayerController.currentPlaybackTime = 10;
+    self.moviePlayerController.currentPlaybackTime = progress * self.moviePlayerController.playableDuration;
+    [self updateTimeLabels];
 }
 
 - (void)movieControlSourceExit:(id<MovieControlSource>)source
 {
     [self.moviePlayerController stop];
+}
+
+#pragma mark Control operation
+- (void)updateTimeLabels
+{
+    NSTimeInterval currentPlaybackTime = self.moviePlayerController.currentPlaybackTime;
+    NSTimeInterval playbackDuration = self.moviePlayerController.playableDuration;
+    
+    if ([self.controlSource respondsToSelector:@selector(setPlaybackTime:)]) {
+        [self.controlSource setPlaybackTime:currentPlaybackTime];
+    }
+    if ([self.controlSource respondsToSelector:@selector(setPlaybackDuration:)]) {
+        [self.controlSource setPlaybackDuration:playbackDuration];
+    }
+    if ([self.controlSource respondsToSelector:@selector(setProgress:)]) {
+        [self.controlSource setProgress:currentPlaybackTime / playbackDuration];
+    }
+}
+
+- (void)startTimer
+{
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updateTimeLabels) userInfo:nil repeats:YES];
+}
+
+- (void)stopTimer
+{
+    [self.timer invalidate];
+    self.timer = nil;
 }
 
 @end

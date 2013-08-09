@@ -8,10 +8,17 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ * delegate will not be notified if functions such as play, pause, etc. were called.
+ * delegate will only be notified when MovieControlSource internally trigger play/pause and other video operations.
+ */
+
+
 @protocol MovieControlSourceDelegate;
 
 @protocol MovieControlSource <NSObject>
 @required
+// Video operations
 - (void)play;
 - (void)pause;
 - (void)resume;
@@ -20,12 +27,23 @@
 - (void)exit;
 
 @optional
+
+// Auxiliary Utils
 - (void)startToDownload;
 - (void)pauseDownload;
 - (void)lockScreen;
+
+// Set movie screen state
 - (void)setFullscreen:(BOOL)fullscreen animated:(BOOL)animated;
+
+// Set system state
 - (void)setBrightness:(CGFloat)brightness;
 - (void)setVolumne:(CGFloat)volumne;
+
+// Update play time info
+- (void)setPlaybackTime:(NSTimeInterval)playbackTime;
+- (void)setPlaybackDuration:(NSTimeInterval)playbackDuration;
+
 
 @required
 @property (nonatomic, assign) id<MovieControlSourceDelegate> delegate;

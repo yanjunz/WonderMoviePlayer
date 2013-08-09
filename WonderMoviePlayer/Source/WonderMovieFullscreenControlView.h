@@ -10,12 +10,21 @@
 #import "MovieControlSource.h"
 
 typedef enum {
-    WonderMovieControlStateDefault, // not started
-    WonderMovieControlStatePlaying,
-    WonderMovieControlStatePaused,
-    WonderMovieControlStateEnded,
-} WonderMovieControlState;
+    MovieControlStateDefault, // not started
+    MovieControlStatePlaying,
+    MovieControlStatePaused,
+//    MovieControlStateBuffering,
+    MovieControlStateEnded,
+} MovieControlState;
+
+typedef enum {
+    MovieControlCommandPlay,
+    MovieControlCommandPause,
+    MovieControlCommandStop,
+    MovieControlCommandReplay,
+    MovieControlCommandSetProgress,
+} MovieControlCommand;
 
 @interface WonderMovieFullscreenControlView : UIView<MovieControlSource>
-@property (nonatomic, assign) WonderMovieControlState controlState;
+@property (nonatomic, assign) MovieControlState controlState;
 @end
