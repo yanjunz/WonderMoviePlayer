@@ -47,7 +47,10 @@
     [self presentViewController:controller animated:YES completion:^{
         NSLog(@"start to play");
 //        NSString *path = [[NSBundle mainBundle] pathForResource:@"Movie" ofType:@"m4v"];
-        [controller playMovieStream:[NSURL URLWithString:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"]];
+        [controller playMovieStream:[NSURL URLWithString:
+//                                     @"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"
+                                     @"http://v.youku.com/player/getM3U8/vid/148104913/type/flv/ts/1376293704/useKeyFrame/0/v.m3u8"
+                                     ]];
     }];
 }
 

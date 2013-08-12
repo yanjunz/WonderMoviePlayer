@@ -9,9 +9,16 @@
 #import "WonderMoiveViewController.h"
 #import "WonderMovieFullscreenControlView.h"
 #import "MoviePlayerUserPrefs.h"
+#import "UIView+Sizes.h"
+
+// y / x
+#define kWonderMovieVerticalPanGestureCoordRatio    1.732050808f
+#define kWonderMovieHorizontalPanGestureCoordRatio  1
+
 
 @interface WonderMoiveViewController ()
 @property (nonatomic, retain) NSTimer *timer;
+@property (nonatomic, retain) UIView *controlView;
 @end
 
 @implementation WonderMoiveViewController
@@ -31,9 +38,21 @@
 	// Do any additional setup after loading the view.
     if (self.backgroundView == nil) {
         self.backgroundView = [[[UIView alloc] initWithFrame:self.view.bounds] autorelease];
+        self.backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         self.backgroundView.backgroundColor = [UIColor blackColor];
     }
+    
+    if (self.overlayView == nil) {
+        self.overlayView = [[[UIView alloc] initWithFrame:self.view.bounds] autorelease];
+        self.overlayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        self.overlayView.backgroundColor = [UIColor clearColor];
+    }
+    
     [self setupControlSource:YES];
+    
+    // Setup tap GR
+    [self.overlayView addGestureRecognizer:[[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapOverlayView:)] autorelease]];
+    [self.overlayView addGestureRecognizer:[[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPanOverlayView:)] autorelease]];
 }
 
 - (void)didReceiveMemoryWarning
@@ -191,9 +210,11 @@
 - (void)setupControlSource:(BOOL)fullscreen
 {
     if (fullscreen) {
-        WonderMovieFullscreenControlView *fullscreenControlView = [[[WonderMovieFullscreenControlView alloc] initWithFrame:self.view.bounds autoPlayWhenStarted:YES] autorelease];
+        WonderMovieFullscreenControlView *fullscreenControlView = [[[WonderMovieFullscreenControlView alloc] initWithFrame:self.overlayView.bounds autoPlayWhenStarted:YES] autorelease];
         fullscreenControlView.delegate = self;
-        self.overlayView = fullscreenControlView;
+        fullscreenControlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        self.controlView = fullscreenControlView;
+        [self.overlayView addSubview:fullscreenControlView];
         self.controlSource = fullscreenControlView;
     }
 }
@@ -297,16 +318,16 @@
             NSLog(@"An error was encountered during playback");
 //            [self performSelectorOnMainThread:@selector(displayError:) withObject:[[notification userInfo] objectForKey:@"error"]
 //                                waitUntilDone:NO];
-            [self removeMovieViewFromViewHierarchy];
-            [self removeOverlayView];
-            [self.backgroundView removeFromSuperview];
+//            [self removeMovieViewFromViewHierarchy];
+//            [self removeOverlayView];
+//            [self.backgroundView removeFromSuperview];
 			break;
             
             /* The user stopped playback. */
 		case MPMovieFinishReasonUserExited:
-            [self removeMovieViewFromViewHierarchy];
-            [self removeOverlayView];
-            [self.backgroundView removeFromSuperview];
+//            [self removeMovieViewFromViewHierarchy];
+//            [self removeOverlayView];
+//            [self.backgroundView removeFromSuperview];
 			break;
             
 		default:
@@ -317,10 +338,9 @@
 /* Handle movie load state changes. */
 - (void)loadStateDidChange:(NSNotification *)notification
 {
-    NSLog(@"loadStateDidChange");
 	MPMoviePlayerController *player = notification.object;
 	MPMovieLoadState loadState = player.loadState;
-
+    NSLog(@"loadStateDidChange %d", loadState);
 	/* The load state is not known at this time. */
 	if (loadState & MPMovieLoadStateUnknown)
 	{
@@ -362,9 +382,9 @@
 /* Called when the movie playback state has changed. */
 - (void) moviePlayBackStateDidChange:(NSNotification*)notification
 {
-    NSLog(@"moviePlayBackStateDidChange");
-//	MPMoviePlayerController *player = notification.object;
-//    
+	MPMoviePlayerController *player = notification.object;
+    NSLog(@"moviePlayBackStateDidChange %d, %f", player.playbackState, player.playableDuration);
+    
 //	/* Playback is currently stopped. */
 //	if (player.playbackState == MPMoviePlaybackStateStopped)
 //	{
@@ -393,6 +413,7 @@
 - (void) mediaIsPreparedToPlayDidChange:(NSNotification*)notification
 {
 	// Add an overlay view on top of the movie view
+    NSLog(@"mediaIsPreparedToPlayDidChange");
     [self addOverlayView];
 }
 
@@ -482,5 +503,57 @@
     [self.timer invalidate];
     self.timer = nil;
 }
+     
+#pragma mark Gesture handler
+- (IBAction)onTapOverlayView:(UITapGestureRecognizer *)gr
+{
+    BOOL animationToHide = self.controlView.alpha > 0;
+    [UIView animateWithDuration:0.5f animations:^{
+        if (animationToHide) {
+            self.controlView.alpha = 0;
+        }
+        else {
+            self.controlView.alpha = 1;
+        }
+    }];
+}
+
+- (IBAction)onPanOverlayView:(UIPanGestureRecognizer *)gr
+{
+    CGPoint offset = [gr translationInView:gr.view];
+    CGPoint loc = [gr locationInView:gr.view];
+    if (fabs(offset.y) >= fabs(offset.x) * kWonderMovieVerticalPanGestureCoordRatio) {
+        // vertical pan gesture, should be treated for volumne or brightness
+        if (loc.x < gr.view.width * 0.4) {
+            // brightness
+            
+        }
+        else if (loc.x > gr.view.width * 0.6) {
+            // volumne
+            
+        }
+    }
+    else if (fabs(offset.y) <= fabs(offset.x) * kWonderMovieHorizontalPanGestureCoordRatio) {
+        // progress
+        
+    }
+}
+
+#pragma mark Update System Info
+- (void)setVolumne:(CGFloat)volumne
+{
+    
+}
+
+- (void)setBrightness:(CGFloat)brightness
+{
+    
+}
+
+- (void)setProgress:(CGFloat)progress
+{
+    
+}
+
 
 @end
