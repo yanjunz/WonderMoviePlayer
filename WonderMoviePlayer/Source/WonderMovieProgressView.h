@@ -18,5 +18,6 @@
 
 @interface WonderMovieProgressView : UIView
 @property (nonatomic, assign) id<WonderMovieProgressViewDelegate> delegate;
-- (void)setProgress:(CGFloat)progress;
+@property (nonatomic, assign) CGFloat progress;
+@property (nonatomic, assign) CGFloat cacheProgress;
 @end

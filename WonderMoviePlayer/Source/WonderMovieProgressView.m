@@ -10,7 +10,10 @@
 #import "UIView+Sizes.h"
 
 @interface WonderMovieProgressView ()
-@property (nonatomic, retain) UIProgressView *progressView;
+//@property (nonatomic, retain) UIProgressView *progressView;
+@property (nonatomic, retain) UIImageView *progressBottomView;
+@property (nonatomic, retain) UIImageView *progressCacheView;
+@property (nonatomic, retain) UIImageView *progressTopView;
 @property (nonatomic, retain) UIImageView *progressIndicator;
 @end
 
@@ -28,28 +31,56 @@
 
 - (void)setupView
 {
-    self.progressView = [[[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault] autorelease];
-    self.progressView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.progressView.frame = self.bounds;
-    [self addSubview:self.progressView];
-    self.progressView.center = CGPointMake(self.progressView.center.x, self.center.y);
+    self.progressBottomView = [[[UIImageView alloc] init] autorelease];
+    self.progressBottomView.backgroundColor = [UIColor blueColor];
+    [self addSubview:self.progressBottomView];
     
-    self.progressIndicator = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)] autorelease];
-    self.progressIndicator.backgroundColor = [UIColor redColor];
+    self.progressCacheView = [[[UIImageView alloc] init] autorelease];
+    self.progressCacheView.backgroundColor = [UIColor redColor];
+    [self addSubview:self.progressCacheView];
+    
+    self.progressTopView = [[[UIImageView alloc] init] autorelease];
+    self.progressTopView.backgroundColor = [UIColor whiteColor];
+    [self addSubview:self.progressTopView];
+    
+    self.progressIndicator = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)] autorelease];
+    self.progressIndicator.backgroundColor = [UIColor lightTextColor];
     [self addSubview:self.progressIndicator];
     
     [self addGestureRecognizer:[[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)] autorelease]];
     
     [self setProgress:0];
+    [self setNeedsLayout];
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    CGFloat progressHeight = 12;
+    self.progressBottomView.frame = CGRectMake(0, (self.height - progressHeight) / 2, self.width, progressHeight);
+    self.progressCacheView.frame = self.progressBottomView.frame;
+    self.progressCacheView.width = self.progressBottomView.width * self.cacheProgress;
+    self.progressTopView.frame = self.progressCacheView.frame;
+    self.progressTopView.width = self.progressBottomView.width * self.progress;
+    self.progressIndicator.center = CGPointMake(self.progressBottomView.left + self.progressBottomView.width * self.progress, self.progressBottomView.center.y);
 }
 
 #pragma mark Progress action
 - (void)setProgress:(CGFloat)progress
 {
-//    NSLog(@"setProgrss: %f, %f", progress, self.progressView.progress);
-    if (fabs(progress - self.progressView.progress) > 0.01) {
-        [self.progressView setProgress:progress];
-        self.progressIndicator.center = CGPointMake(self.progressView.left + self.progressView.width * progress, self.progressView.center.y);
+    NSLog(@"setProgress %f, %f, %f", progress, self.progressTopView.width, self.progressCacheView.width);
+    if (_progress != progress) {
+        _progress = progress;
+        [self setNeedsLayout];
+    }
+}
+
+- (void)setCacheProgress:(CGFloat)cacheProgress
+{
+    NSLog(@"setCacheProgress %f", cacheProgress);
+    if (_cacheProgress != cacheProgress) {
+        _cacheProgress = cacheProgress;
+        [self setNeedsLayout];
     }
 }
 

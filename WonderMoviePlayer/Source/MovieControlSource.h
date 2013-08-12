@@ -24,6 +24,7 @@ typedef enum {
     MovieControlCommandReplay,
     MovieControlCommandSetProgress,
     MovieControlCommandBuffer,
+    MovieControlCommandUnbuffer,
 } MovieControlCommand;
 
 /**
@@ -42,6 +43,7 @@ typedef enum {
 - (void)replay;
 - (void)setProgress:(CGFloat)progress;
 - (void)buffer;
+- (void)unbuffer;
 - (void)end;
 
 @optional
@@ -80,5 +82,6 @@ typedef enum {
 
 @optional
 - (void)movieControlSourceBuffer:(id<MovieControlSource>)source;
+- (void)movieControlSourceUnbuffer:(id<MovieControlSource>)source;
 
 @end

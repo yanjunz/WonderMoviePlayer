@@ -10,7 +10,11 @@
 #import "WonderMovieProgressView.h"
 #import "UIView+Sizes.h"
 
-@interface WonderMovieFullscreenControlView ()
+@interface WonderMovieFullscreenControlView () {
+    NSTimeInterval _totalDuration;
+    BOOL _bufferFromPaused;
+}
+
 @property (nonatomic, retain) WonderMovieProgressView *progressView;
 
 // bottom bar
@@ -138,6 +142,7 @@
 #pragma mark State Manchine
 - (void)handleCommand:(MovieControlCommand)cmd param:(id)param notify:(BOOL)notify
 {
+    NSLog(@"handleCommand %d, %@, %d", cmd, param, notify);
     if (cmd == MovieControlCommandEnd) {
         self.controlState = MovieControlStateEnded;
         
@@ -173,6 +178,7 @@
                 }
                 else if (cmd == MovieControlCommandBuffer) {
                     self.controlState = MovieControlStateBuffering;
+                    _bufferFromPaused = NO;
                     
                     if (notify && [self.delegate respondsToSelector:@selector(movieControlSourceBuffer:)]) {
                         [self.delegate movieControlSourceBuffer:self];
@@ -203,14 +209,34 @@
                         [self.delegate movieControlSource:self setProgress:[(NSNumber *)param floatValue]];
                     }
                 }
+                else if (cmd == MovieControlCommandBuffer) {
+                    self.controlState = MovieControlStateBuffering;
+                    _bufferFromPaused = YES;
+                    
+                    if (notify && [self.delegate respondsToSelector:@selector(movieControlSourceBuffer:)]) {
+                        [self.delegate movieControlSourceBuffer:self];
+                    }
+                }
                 break;
             case MovieControlStateBuffering:
-                if (cmd == MovieControlCommandPlay) {
+                if (cmd == MovieControlCommandPlay) { // FIXME! Need it?
                     self.controlState = MovieControlStatePlaying;
                     
                     // Actually there is no need to notify since no internal operation will trigger buffer
                     if (notify && [self.delegate respondsToSelector:@selector(movieControlSourcePlay:)]) {
                         [self.delegate movieControlSourcePlay:self];
+                    }
+                }
+                else if (cmd == MovieControlCommandUnbuffer) {
+                    if (_bufferFromPaused) {
+                        self.controlState = MovieControlStatePaused;
+                    }
+                    else {
+                        self.controlState = MovieControlStatePlaying;
+                    }
+
+                    if (notify && [self.delegate respondsToSelector:@selector(movieControlSourceUnbuffer:)]) {
+                        [self.delegate movieControlSourceUnbuffer:self];
                     }
                 }
                 break;
@@ -253,6 +279,11 @@
     [self handleCommand:MovieControlCommandBuffer param:nil notify:NO];
 }
 
+- (void)unbuffer
+{
+    [self handleCommand:MovieControlCommandUnbuffer param:nil notify:NO];
+}
+
 - (void)end
 {
     [self handleCommand:MovieControlCommandEnd param:nil notify:NO];
@@ -267,9 +298,16 @@
     self.startLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d", hour, minute, second];
 }
 
-//- (void)setPlayableDuration:(NSTimeInterval)playableDuration
+- (void)setPlayableDuration:(NSTimeInterval)playableDuration
+{
+    if (_totalDuration > 0) {
+        [self.progressView setCacheProgress:playableDuration / _totalDuration];
+    }
+}
+
 - (void)setDuration:(NSTimeInterval)duration
 {
+    _totalDuration = duration;
     long time = duration;
     int hour = time / 3600;
     int minute = time / 60 - hour * 60;

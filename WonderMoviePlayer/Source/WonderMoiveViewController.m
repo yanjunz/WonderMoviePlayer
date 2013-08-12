@@ -357,7 +357,10 @@
 	if (loadState & MPMovieLoadStatePlayable)
 	{
 //        [overlayController setLoadStateDisplayString:@"playable"];
-        [self.controlSource play];
+        
+        // FIXME!
+//        [self.controlSource play];
+        [self.controlSource unbuffer];
 	}
 	
 	/* Enough data has been buffered for playback to continue uninterrupted. */
@@ -486,14 +489,14 @@
     
 //    NSLog(@"updateTimeInfo %f, %f", currentPlaybackTime, playbackDuration);
     
+    if ([self.controlSource respondsToSelector:@selector(setDuration:)]) {
+        [self.controlSource setDuration:duration];
+    }
     if ([self.controlSource respondsToSelector:@selector(setPlaybackTime:)]) {
         [self.controlSource setPlaybackTime:currentPlaybackTime];
     }
     if ([self.controlSource respondsToSelector:@selector(setPlayableDuration:)]) {
         [self.controlSource setPlayableDuration:playableDuration];
-    }
-    if ([self.controlSource respondsToSelector:@selector(setDuration:)]) {
-        [self.controlSource setDuration:duration];
     }
     if ([self.controlSource respondsToSelector:@selector(setProgress:)] && duration > 0) {
         [self.controlSource setProgress:currentPlaybackTime / duration];
@@ -502,7 +505,7 @@
 
 - (void)startTimer
 {
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:3.0f target:self selector:@selector(updateTimeInfo) userInfo:nil repeats:YES];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updateTimeInfo) userInfo:nil repeats:YES];
 }
 
 - (void)stopTimer
