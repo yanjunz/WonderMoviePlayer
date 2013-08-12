@@ -5,7 +5,8 @@
 //  Created by Zhuang Yanjun on 13-8-8.
 //  Copyright (c) 2013年 Tencent. All rights reserved.
 //
-
+#import <AVFoundation/AVFoundation.h>
+#import <AVFoundation/AVAsset.h>
 #import "WonderMoiveViewController.h"
 #import "WonderMovieFullscreenControlView.h"
 #import "MoviePlayerUserPrefs.h"
@@ -13,7 +14,7 @@
 
 // y / x
 #define kWonderMovieVerticalPanGestureCoordRatio    1.732050808f
-#define kWonderMovieHorizontalPanGestureCoordRatio  1
+#define kWonderMovieHorizontalPanGestureCoordRatio  1.0f
 
 
 @interface WonderMoiveViewController ()
@@ -315,7 +316,8 @@
             
             /* An error was encountered during playback. */
 		case MPMovieFinishReasonPlaybackError:
-            NSLog(@"An error was encountered during playback");
+            NSLog(@"An error was encountered during playback, %@", [[notification userInfo] objectForKey:@"error"]);
+            
 //            [self performSelectorOnMainThread:@selector(displayError:) withObject:[[notification userInfo] objectForKey:@"error"]
 //                                waitUntilDone:NO];
 //            [self removeMovieViewFromViewHierarchy];
@@ -462,7 +464,7 @@
 
 - (void)movieControlSource:(id<MovieControlSource>)source setProgress:(CGFloat)progress
 {
-    self.moviePlayerController.currentPlaybackTime = progress * self.moviePlayerController.playableDuration;
+    self.moviePlayerController.currentPlaybackTime = progress * self.moviePlayerController.duration;
 //    NSLog(@"movieControlSource:setProgress %f, %f", self.moviePlayerController.currentPlaybackTime, self.moviePlayerController.playableDuration);
     [self updateTimeInfo];
 }
@@ -478,24 +480,29 @@
 - (void)updateTimeInfo
 {
     NSTimeInterval currentPlaybackTime = self.moviePlayerController.currentPlaybackTime;
-    NSTimeInterval playbackDuration = self.moviePlayerController.playableDuration;
+    NSTimeInterval playableDuration = self.moviePlayerController.playableDuration;
+    NSTimeInterval duration = self.moviePlayerController.duration;
+    
     
 //    NSLog(@"updateTimeInfo %f, %f", currentPlaybackTime, playbackDuration);
     
     if ([self.controlSource respondsToSelector:@selector(setPlaybackTime:)]) {
         [self.controlSource setPlaybackTime:currentPlaybackTime];
     }
-    if ([self.controlSource respondsToSelector:@selector(setPlaybackDuration:)]) {
-        [self.controlSource setPlaybackDuration:playbackDuration];
+    if ([self.controlSource respondsToSelector:@selector(setPlayableDuration:)]) {
+        [self.controlSource setPlayableDuration:playableDuration];
     }
-    if ([self.controlSource respondsToSelector:@selector(setProgress:)]) {
-        [self.controlSource setProgress:currentPlaybackTime / playbackDuration];
+    if ([self.controlSource respondsToSelector:@selector(setDuration:)]) {
+        [self.controlSource setDuration:duration];
+    }
+    if ([self.controlSource respondsToSelector:@selector(setProgress:)] && duration > 0) {
+        [self.controlSource setProgress:currentPlaybackTime / duration];
     }
 }
 
 - (void)startTimer
 {
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updateTimeInfo) userInfo:nil repeats:YES];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:3.0f target:self selector:@selector(updateTimeInfo) userInfo:nil repeats:YES];
 }
 
 - (void)stopTimer

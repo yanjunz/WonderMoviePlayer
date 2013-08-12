@@ -267,9 +267,10 @@
     self.startLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d", hour, minute, second];
 }
 
-- (void)setPlaybackDuration:(NSTimeInterval)playbackDuration
+//- (void)setPlayableDuration:(NSTimeInterval)playableDuration
+- (void)setDuration:(NSTimeInterval)duration
 {
-    long time = playbackDuration;
+    long time = duration;
     int hour = time / 3600;
     int minute = time / 60 - hour * 60;
     int second = time % 60;

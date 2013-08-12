@@ -60,7 +60,8 @@ typedef enum {
 
 // Update play time info
 - (void)setPlaybackTime:(NSTimeInterval)playbackTime;
-- (void)setPlaybackDuration:(NSTimeInterval)playbackDuration;
+- (void)setPlayableDuration:(NSTimeInterval)playableDuration;
+- (void)setDuration:(NSTimeInterval)duration;
 
 
 @required
