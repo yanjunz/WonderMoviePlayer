@@ -111,6 +111,7 @@
     [self.downloadButton setTitle:@"D" forState:UIControlStateNormal];
     self.downloadButton.frame = CGRectMake(self.headerBar.width - 100, 0, 40, 40);
     self.downloadButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    [self.downloadButton addTarget:self action:@selector(onClickDownload:) forControlEvents:UIControlEventTouchUpInside];
     [self.headerBar addSubview:self.downloadButton];
     
     self.lockButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -335,6 +336,13 @@
 - (IBAction)onClickBack:(id)sender
 {
     [self handleCommand:MovieControlCommandEnd param:nil notify:YES];
+}
+
+- (IBAction)onClickDownload:(id)sender
+{
+    if ([self.delegate respondsToSelector:@selector(movieControlSource:setFullscreen:)]) {
+        [self.delegate movieControlSource:self setFullscreen:NO];
+    }
 }
 
 - (void)updateActionState

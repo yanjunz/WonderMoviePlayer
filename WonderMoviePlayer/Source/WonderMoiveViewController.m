@@ -205,6 +205,7 @@
 - (void)createAndPlayMovieForURL:(NSURL *)movieURL sourceType:(MPMovieSourceType)sourceType
 {
     [self createAndConfigurePlayerWithURL:movieURL sourceType:sourceType];
+    [self.moviePlayerController prepareToPlay];
     [self.moviePlayerController play];
 }
 
@@ -477,6 +478,11 @@
     [self.moviePlayerController stop];
     
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)movieControlSource:(id<MovieControlSource>)source setFullscreen:(BOOL)fullscreen
+{
+    [self.moviePlayerController setFullscreen:fullscreen animated:YES];
 }
 
 #pragma mark Control operation
