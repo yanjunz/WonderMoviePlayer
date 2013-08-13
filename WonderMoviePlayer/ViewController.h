@@ -11,5 +11,6 @@
 @interface ViewController : UIViewController
 - (IBAction)onClickPlay:(id)sender;
 - (IBAction)onClickPlayRemote:(id)sender;
+- (IBAction)onClickWebView:(id)sender;
 
 @end
