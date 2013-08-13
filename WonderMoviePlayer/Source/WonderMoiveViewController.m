@@ -533,13 +533,13 @@
     CGPoint offset = [gr translationInView:gr.view];
     CGPoint loc = [gr locationInView:gr.view];
     if (fabs(offset.y) >= fabs(offset.x) * kWonderMovieVerticalPanGestureCoordRatio) {
-        // vertical pan gesture, should be treated for volumne or brightness
+        // vertical pan gesture, should be treated for volume or brightness
         if (loc.x < gr.view.width * 0.4) {
             // brightness
             
         }
         else if (loc.x > gr.view.width * 0.6) {
-            // volumne
+            // volume
             
         }
     }
@@ -550,7 +550,7 @@
 }
 
 #pragma mark Update System Info
-- (void)setVolumne:(CGFloat)volumne
+- (void)setVolume:(CGFloat)volume
 {
     
 }

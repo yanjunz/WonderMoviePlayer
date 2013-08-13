@@ -58,7 +58,7 @@ typedef enum {
 
 // Set system state
 - (void)setBrightness:(CGFloat)brightness;
-- (void)setVolumne:(CGFloat)volumne;
+- (void)setVolume:(CGFloat)volume;
 
 // Update play time info
 - (void)setPlaybackTime:(NSTimeInterval)playbackTime;
