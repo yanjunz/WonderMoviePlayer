@@ -13,8 +13,15 @@
 #import "BatteryIconView.h"
 
 @interface WonderMovieFullscreenControlView () {
-    NSTimeInterval _totalDuration;
+    NSTimeInterval _playbackTime;
+    NSTimeInterval _playableDuration;
+    NSTimeInterval _duration;
+    
+    
+    // for buffer loading
     BOOL _bufferFromPaused;
+    BOOL _isLoading;
+    NSTimeInterval _totalBufferingSize;
 }
 @property (nonatomic, retain) NSTimer *timer;
 @property (nonatomic, retain) WonderMovieProgressView *progressView;
@@ -252,6 +259,7 @@
 
 - (void)startLoading
 {
+    _isLoading = YES;
     NSLog(@"%@", self.loadingView.superview);
     if (self.loadingView.superview != self) {
         [self.loadingView removeFromSuperview];
@@ -270,6 +278,9 @@
 
 - (void)stopLoading
 {
+    _isLoading = NO;
+    _totalBufferingSize = 0;
+    
     [self.loadingView removeFromSuperview];
 }
 
@@ -429,6 +440,7 @@
 
 - (void)setPlaybackTime:(NSTimeInterval)playbackTime
 {
+    _playbackTime = playbackTime;
     long time = playbackTime;
     int hour = time / 3600;
     int minute = time / 60 - hour * 60;
@@ -438,14 +450,27 @@
 
 - (void)setPlayableDuration:(NSTimeInterval)playableDuration
 {
-    if (_totalDuration > 0) {
-        [self.progressView setCacheProgress:playableDuration / _totalDuration];
+    _playableDuration = playableDuration;
+    if (_duration > 0) {
+        [self.progressView setCacheProgress:playableDuration / _duration];
+    }
+    
+    if (playableDuration < _playbackTime) {
+        // loading
+        if (_isLoading) {
+            if (_totalBufferingSize <= 0) {
+                _totalBufferingSize = _playbackTime - playableDuration;
+            }
+            
+            CGFloat percent = 1 - ((_playbackTime - playableDuration) / _totalBufferingSize);
+            self.loadingPercentLabel.text = [NSString stringWithFormat:@"%d%%", (int)(percent * 100)];
+        }
     }
 }
 
 - (void)setDuration:(NSTimeInterval)duration
 {
-    _totalDuration = duration;
+    _duration = duration;
     long time = duration;
     int hour = time / 3600;
     int minute = time / 60 - hour * 60;

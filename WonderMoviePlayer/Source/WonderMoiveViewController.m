@@ -473,7 +473,7 @@
 {
     self.moviePlayerController.currentPlaybackTime = progress * self.moviePlayerController.duration;
 //    NSLog(@"movieControlSource:setProgress %f, %f", self.moviePlayerController.currentPlaybackTime, self.moviePlayerController.playableDuration);
-    [self updateTimeInfo];
+    [self timerHandler];
 }
 
 - (void)movieControlSourceExit:(id<MovieControlSource>)source
@@ -489,7 +489,7 @@
 }
 
 #pragma mark Control operation
-- (void)updateTimeInfo
+- (void)timerHandler
 {
     // FIXME: handle error
     
@@ -497,8 +497,12 @@
     NSTimeInterval playableDuration = self.moviePlayerController.playableDuration;
     NSTimeInterval duration = self.moviePlayerController.duration;
     
-    
-//    NSLog(@"updateTimeInfo %f, %f", currentPlaybackTime, playbackDuration);
+    if (currentPlaybackTime > playableDuration) {
+        NSLog(@"Buffering %f, %f, %f", duration, currentPlaybackTime, playableDuration);
+    }
+    else {
+        NSLog(@"No Buffer %f, %f, %f", duration, currentPlaybackTime, playableDuration);
+    }
     
     if ([self.controlSource respondsToSelector:@selector(setDuration:)]) {
         [self.controlSource setDuration:duration];
@@ -516,7 +520,7 @@
 
 - (void)startTimer
 {
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updateTimeInfo) userInfo:nil repeats:YES];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.5f target:self selector:@selector(timerHandler) userInfo:nil repeats:YES];
 }
 
 - (void)stopTimer
