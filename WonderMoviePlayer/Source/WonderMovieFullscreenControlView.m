@@ -6,6 +6,7 @@
 //  Copyright (c) 2013年 Tencent. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
 #import "WonderMovieFullscreenControlView.h"
 #import "WonderMovieProgressView.h"
 #import "UIView+Sizes.h"
@@ -32,6 +33,12 @@
 @property (nonatomic, retain) UIView *headerBar;
 @property (nonatomic, retain) UIButton *lockButton;
 @property (nonatomic, retain) UIButton *downloadButton;
+
+// buffering
+@property (nonatomic, retain) UIView *loadingView;
+@property (nonatomic, retain) UIImageView *loadingIndicator;
+@property (nonatomic, retain) UILabel *loadingPercentLabel;
+@property (nonatomic, retain) UILabel *loadingMessageLabel;
 
 @end
 
@@ -154,6 +161,7 @@
     [self.lockButton setImage:QQImage(@"videoplayer_unlock") forState:UIControlStateNormal];
     self.lockButton.frame = CGRectMake(self.batteryView.left - 50, 0, headerBarHeight, headerBarHeight);
     self.lockButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    [self.lockButton addTarget:self action:@selector(onClickLock:) forControlEvents:UIControlEventTouchUpInside];
     [self.headerBar addSubview:self.lockButton];
 
     
@@ -210,6 +218,59 @@
     LogFrame(self.frame);
     LogFrame(self.headerBar.frame);    
     LogFrame(self.bottomBar.frame);
+    LogFrame(self.loadingView.frame);
+}
+
+#pragma mark Loading View
+
+- (UIView *)loadingView
+{
+    if (!_loadingView) {
+        _loadingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 81, 101)];
+        _loadingView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+        
+        self.loadingIndicator = [[[UIImageView alloc] initWithImage:QQImage(@"videoplayer_loading")] autorelease];
+        self.loadingIndicator.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        [_loadingView addSubview:self.loadingIndicator];
+        
+        self.loadingPercentLabel = [[[UILabel alloc] initWithFrame:self.loadingIndicator.frame] autorelease];
+        self.loadingPercentLabel.text = @"0%";
+        self.loadingPercentLabel.textAlignment = UITextAlignmentCenter;
+        self.loadingPercentLabel.backgroundColor = [UIColor clearColor];
+        self.loadingPercentLabel.textColor = [UIColor whiteColor];
+        [_loadingView addSubview:self.loadingPercentLabel];
+        
+        self.loadingMessageLabel = [[[UILabel alloc] initWithFrame:CGRectMake(0, self.loadingIndicator.bottom, _loadingView.width, 20)] autorelease];
+        self.loadingMessageLabel.text = @"Loading...";
+        self.loadingMessageLabel.textAlignment = UITextAlignmentCenter;
+        self.loadingMessageLabel.backgroundColor = [UIColor clearColor];
+        self.loadingMessageLabel.textColor = [UIColor whiteColor];
+        [_loadingView addSubview:self.loadingMessageLabel];
+    }
+    return _loadingView;
+}
+
+- (void)startLoading
+{
+    NSLog(@"%@", self.loadingView.superview);
+    if (self.loadingView.superview != self) {
+        [self.loadingView removeFromSuperview];
+        [self addSubview:self.loadingView];
+        _loadingView.center = self.center;        
+    }
+    
+	CABasicAnimation *rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+    rotationAnimation.toValue = @(M_PI / 180 * 360);
+    rotationAnimation.duration = 1.0f;
+    rotationAnimation.cumulative = YES;
+    rotationAnimation.repeatCount = HUGE_VALF;
+    
+    [self.loadingIndicator.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+}
+
+- (void)stopLoading
+{
+    [self.loadingView removeFromSuperview];
 }
 
 #pragma mark State Manchine
@@ -350,11 +411,15 @@
 - (void)buffer
 {
     [self handleCommand:MovieControlCommandBuffer param:nil notify:NO];
+    
+    [self startLoading];
 }
 
 - (void)unbuffer
 {
     [self handleCommand:MovieControlCommandUnbuffer param:nil notify:NO];
+    
+    [self stopLoading];
 }
 
 - (void)end
@@ -412,9 +477,16 @@
 
 - (IBAction)onClickDownload:(id)sender
 {
-    if ([self.delegate respondsToSelector:@selector(movieControlSource:setFullscreen:)]) {
-        [self.delegate movieControlSource:self setFullscreen:NO];
-    }
+//    if ([self.delegate respondsToSelector:@selector(movieControlSource:setFullscreen:)]) {
+//        [self.delegate movieControlSource:self setFullscreen:NO];
+//    }
+    
+    [self startLoading];
+}
+
+- (IBAction)onClickLock:(id)sender
+{
+    [self stopLoading];
 }
 
 - (void)updateActionState

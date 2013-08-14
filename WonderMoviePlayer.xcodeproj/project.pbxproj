@@ -55,6 +55,7 @@
 		B517791217BA3880006B948E /* videoplayer_toolbar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B51778F817BA3880006B948E /* videoplayer_toolbar@2x.png */; };
 		B517791317BA3880006B948E /* videoplayer_unlock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B51778F917BA3880006B948E /* videoplayer_unlock@2x.png */; };
 		B517791617BB1E81006B948E /* BatteryIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = B517791517BB1E7F006B948E /* BatteryIconView.m */; };
+		B517791817BB485B006B948E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517791717BB485B006B948E /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -119,6 +120,7 @@
 		B51778F917BA3880006B948E /* videoplayer_unlock@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "videoplayer_unlock@2x.png"; sourceTree = "<group>"; };
 		B517791417BB1E7F006B948E /* BatteryIconView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BatteryIconView.h; sourceTree = "<group>"; };
 		B517791517BB1E7F006B948E /* BatteryIconView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BatteryIconView.m; sourceTree = "<group>"; };
+		B517791717BB485B006B948E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,6 +128,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B517791817BB485B006B948E /* QuartzCore.framework in Frameworks */,
 				B517777517B39C1F006B948E /* MediaPlayer.framework in Frameworks */,
 				B517773817B36D44006B948E /* UIKit.framework in Frameworks */,
 				B517773A17B36D44006B948E /* Foundation.framework in Frameworks */,
@@ -139,6 +142,7 @@
 		B517772B17B36D44006B948E = {
 			isa = PBXGroup;
 			children = (
+				B517791717BB485B006B948E /* QuartzCore.framework */,
 				B517777417B39C1F006B948E /* MediaPlayer.framework */,
 				B517773D17B36D44006B948E /* WonderMoviePlayer */,
 				B517773617B36D44006B948E /* Frameworks */,
