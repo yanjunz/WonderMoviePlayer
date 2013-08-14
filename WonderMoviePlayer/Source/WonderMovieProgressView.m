@@ -57,6 +57,7 @@
 //    self.progressIndicator.backgroundColor = [UIColor lightTextColor];
     [self addSubview:self.progressIndicator];
     
+    [self.progressIndicator addGestureRecognizer:[[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPan:)] autorelease]];
     [self addGestureRecognizer:[[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)] autorelease]];
     
     [self setProgress:0];
@@ -101,14 +102,52 @@
     }
 }
 
+- (void)notifyProgressBegin
+{
+    if ([self.delegate respondsToSelector:@selector(wonderMovieProgressViewBeginChangeProgress:)]) {
+        [self.delegate wonderMovieProgressViewBeginChangeProgress:self];
+    }
+}
+
+- (void)notifyProgressEnd
+{
+    if ([self.delegate respondsToSelector:@selector(wonderMovieProgressViewEndChangeProgress:)]) {
+        [self.delegate wonderMovieProgressViewEndChangeProgress:self];
+    }
+}
+
 #pragma mark UI Interaction
 - (void)onTap:(UITapGestureRecognizer *)gr
 {
     CGPoint pt = [gr locationInView:self];
     CGFloat progress = pt.x / self.width;
-    NSLog(@"onTap: %f", progress);
+//    NSLog(@"onTap: %f", progress);
     [self setProgress:progress];
+    
+    [self notifyProgressBegin];
     [self notifyProgressChanged:progress];
+    [self notifyProgressEnd];
+}
+
+- (void)onPan:(UIPanGestureRecognizer *)gr
+{
+    UIView *view = gr.view;
+    CGPoint pt = [gr locationInView:view.superview];
+    CGPoint offset = [gr translationInView:view.superview];
+//    NSLog(@"onPan %d %f", gr.state, offset.x);
+    CGFloat progress = (pt.x + offset.x) / self.width;
+    [self setProgress:progress];
+//    view.center = CGPointMake(view.center.x + offset.x, view.center.y);
+    
+    [gr setTranslation:CGPointZero inView:self];
+    
+    [self notifyProgressChanged:progress];
+    if (gr.state == UIGestureRecognizerStateBegan) {
+        [self notifyProgressBegin];
+    }
+    else if (gr.state == UIGestureRecognizerStateEnded) {
+        [self notifyProgressEnd];
+    }
 }
 
 @end

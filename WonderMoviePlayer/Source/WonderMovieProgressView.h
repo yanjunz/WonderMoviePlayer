@@ -12,8 +12,9 @@
 
 @protocol WonderMovieProgressViewDelegate <NSObject>
 
+- (void)wonderMovieProgressViewBeginChangeProgress:(WonderMovieProgressView *)progressView;
 - (void)wonderMovieProgressView:(WonderMovieProgressView *)progressView didChangeProgress:(CGFloat)progress;
-
+- (void)wonderMovieProgressViewEndChangeProgress:(WonderMovieProgressView *)progressView;
 @end
 
 @interface WonderMovieProgressView : UIView

@@ -17,11 +17,13 @@
     NSTimeInterval _playableDuration;
     NSTimeInterval _duration;
     
-    
     // for buffer loading
     BOOL _bufferFromPaused;
     BOOL _isLoading;
     NSTimeInterval _totalBufferingSize;
+    
+    // progress view
+    BOOL _isSettingProgress;
 }
 @property (nonatomic, retain) NSTimer *timer;
 @property (nonatomic, retain) WonderMovieProgressView *progressView;
@@ -215,9 +217,6 @@
     [self setupTimer];
     [self timerHandler]; // call to set info immediately
     [self updateActionState];
-    LogFrame(self.frame);
-    LogFrame(self.headerBar.frame);
-    LogFrame(self.bottomBar.frame);
 }
 
 - (void)dealloc
@@ -252,17 +251,6 @@
     [super dealloc];
 }
 
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    NSLog(@"layoutSubviews");
-    LogFrame([UIScreen mainScreen].applicationFrame);
-    LogFrame(self.frame);
-    LogFrame(self.headerBar.frame);    
-    LogFrame(self.bottomBar.frame);
-    LogFrame(self.loadingView.frame);
-}
-
 #pragma mark Loading View
 
 - (UIView *)loadingView
@@ -295,7 +283,6 @@
 - (void)startLoading
 {
     _isLoading = YES;
-    NSLog(@"%@", self.loadingView.superview);
     if (self.loadingView.superview != self) {
         [self.loadingView removeFromSuperview];
         [self addSubview:self.loadingView];
@@ -450,8 +437,10 @@
 
 - (void)setProgress:(CGFloat)progress
 {
-    [self.progressView setProgress:progress];
-    [self handleCommand:MovieControlCommandSetProgress param:@(progress) notify:NO];
+    if (!_isSettingProgress) {
+        [self.progressView setProgress:progress];
+        [self handleCommand:MovieControlCommandSetProgress param:@(progress) notify:NO];
+    }
 }
 
 - (void)buffer
@@ -564,8 +553,6 @@
 
 - (void)updateActionState
 {
-//    NSArray *titles = @[@"default", @"playing", @"paused", @"buffering", @"ended"];
-//    [self.actionButton setTitle:titles[self.controlState] forState:UIControlStateNormal];
     if (self.controlState == MovieControlStateDefault ||
         self.controlState == MovieControlStatePlaying ||
         (self.controlState == MovieControlStateBuffering && !_bufferFromPaused)) {
@@ -612,9 +599,19 @@
 
 @implementation WonderMovieFullscreenControlView (ProgressView)
 
+- (void)wonderMovieProgressViewBeginChangeProgress:(WonderMovieProgressView *)progressView
+{
+    _isSettingProgress = YES;
+}
+
 - (void)wonderMovieProgressView:(WonderMovieProgressView *)progressView didChangeProgress:(CGFloat)progress
 {
     [self handleCommand:MovieControlCommandSetProgress param:@(progress) notify:YES];
+}
+
+- (void)wonderMovieProgressViewEndChangeProgress:(WonderMovieProgressView *)progressView;
+{
+    _isSettingProgress = NO;
 }
 
 @end

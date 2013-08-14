@@ -479,7 +479,7 @@
 - (void)movieControlSource:(id<MovieControlSource>)source setProgress:(CGFloat)progress
 {
     self.moviePlayerController.currentPlaybackTime = progress * self.moviePlayerController.duration;
-//    NSLog(@"movieControlSource:setProgress %f, %f", self.moviePlayerController.currentPlaybackTime, self.moviePlayerController.playableDuration);
+    NSLog(@"movieControlSource:setProgress %f %f, %f", progress, self.moviePlayerController.currentPlaybackTime, self.moviePlayerController.playableDuration);
     [self timerHandler];
 }
 
