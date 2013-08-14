@@ -51,6 +51,8 @@
 @property (nonatomic, retain) UIButton *replayButton;
 @property (nonatomic, retain) UIButton *centerPlayButton;
 
+// utils
+@property (nonatomic, retain) NSArray *viewsToBeLocked;
 @end
 
 @interface WonderMovieFullscreenControlView (ProgressView) <WonderMovieProgressViewDelegate>
@@ -170,6 +172,7 @@
 
     self.lockButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.lockButton setImage:QQImage(@"videoplayer_unlock") forState:UIControlStateNormal];
+    [self.lockButton setImage:QQImage(@"videoplayer_locked") forState:UIControlStateSelected];
     self.lockButton.frame = CGRectMake(self.batteryView.left - 50, 0, headerBarHeight, headerBarHeight);
     self.lockButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [self.lockButton addTarget:self action:@selector(onClickLock:) forControlEvents:UIControlEventTouchUpInside];
@@ -199,6 +202,8 @@
     self.centerPlayButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;    
     [self.centerPlayButton addTarget:self action:@selector(onClickPlay:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.centerPlayButton];
+    
+    self.viewsToBeLocked = @[backButton, self.downloadButton, self.bottomBar];
     
     // Update control state
     if (self.autoPlayWhenStarted) {
@@ -231,6 +236,16 @@
     self.timeLabel = nil;
     self.startLabel = nil;
     self.durationLabel = nil;
+    
+    self.loadingView = nil;
+    self.loadingIndicator = nil;
+    self.loadingMessageLabel = nil;
+    self.loadingPercentLabel = nil;
+    
+    self.replayButton = nil;
+    self.centerPlayButton = nil;
+    
+    self.viewsToBeLocked = nil;
     
     self.delegate = nil;
 
@@ -531,7 +546,10 @@
 
 - (IBAction)onClickLock:(id)sender
 {
-    [self stopLoading];
+    self.lockButton.selected = !self.lockButton.selected;
+    for (UIView *view in self.viewsToBeLocked) {
+        view.hidden = self.lockButton.selected;
+    }
 }
 
 - (IBAction)onClickReplay:(id)sender
