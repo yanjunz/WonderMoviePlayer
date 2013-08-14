@@ -41,6 +41,9 @@
         self.backgroundView = [[[UIView alloc] initWithFrame:self.view.bounds] autorelease];
         self.backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         self.backgroundView.backgroundColor = [UIColor blackColor];
+        UIImageView *movieBgView = [[[UIImageView alloc] initWithImage:QQImage(@"videoplayer_loading_bg")] autorelease];
+        movieBgView.frame = self.backgroundView.bounds;
+        [self.backgroundView addSubview:movieBgView];
     }
     
     if (self.overlayView == nil) {
@@ -196,12 +199,13 @@
         /* Inset the movie frame in the parent view frame. */
         [[player view] setFrame:viewInsetRect];
         
-        [player view].backgroundColor = [UIColor lightGrayColor];
+        [player view].backgroundColor = [UIColor clearColor];
         
         /* To present a movie in your application, incorporate the view contained
          in a movie player’s view property into your application’s view hierarchy.
          Be sure to size the frame correctly. */
         [self.view addSubview: [player view]];
+        [self addOverlayView];
     }
 }
 
@@ -209,6 +213,7 @@
 {
     [self createAndConfigurePlayerWithURL:movieURL sourceType:sourceType];
     [self.moviePlayerController prepareToPlay];
+    [self.controlSource buffer];
     [self.moviePlayerController play];
 }
 
