@@ -47,6 +47,10 @@
 @property (nonatomic, retain) UILabel *loadingPercentLabel;
 @property (nonatomic, retain) UILabel *loadingMessageLabel;
 
+// center button
+@property (nonatomic, retain) UIButton *replayButton;
+@property (nonatomic, retain) UIButton *centerPlayButton;
+
 @end
 
 @interface WonderMovieFullscreenControlView (ProgressView) <WonderMovieProgressViewDelegate>
@@ -171,7 +175,6 @@
     [self.lockButton addTarget:self action:@selector(onClickLock:) forControlEvents:UIControlEventTouchUpInside];
     [self.headerBar addSubview:self.lockButton];
 
-    
     self.downloadButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.downloadButton setImage:QQImage(@"videoplayer_download") forState:UIControlStateNormal];
     self.downloadButton.frame = CGRectMake(self.lockButton.left - 50, 0, headerBarHeight, headerBarHeight);
@@ -179,6 +182,23 @@
     [self.downloadButton addTarget:self action:@selector(onClickDownload:) forControlEvents:UIControlEventTouchUpInside];
     [self.headerBar addSubview:self.downloadButton];
     
+    CGFloat centerButtonSize = 138 / 2;
+    self.replayButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.replayButton setImage:QQImage(@"videoplayer_replay") forState:UIControlStateNormal];
+    self.replayButton.size = CGSizeMake(centerButtonSize, centerButtonSize);
+    self.replayButton.center = self.center;
+    self.replayButton.hidden = YES;
+    self.replayButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+    [self.replayButton addTarget:self action:@selector(onClickReplay:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:self.replayButton];
+    
+    self.centerPlayButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.centerPlayButton setImage:QQImage(@"videoplayer_play") forState:UIControlStateNormal];
+    self.centerPlayButton.frame = self.replayButton.frame;
+    self.centerPlayButton.hidden = YES;
+    self.centerPlayButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;    
+    [self.centerPlayButton addTarget:self action:@selector(onClickPlay:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:self.centerPlayButton];
     
     // Update control state
     if (self.autoPlayWhenStarted) {
@@ -514,6 +534,16 @@
     [self stopLoading];
 }
 
+- (IBAction)onClickReplay:(id)sender
+{
+    [self handleCommand:MovieControlCommandReplay param:nil notify:YES];
+}
+
+- (IBAction)onClickPlay:(id)sender
+{
+    [self handleCommand:MovieControlCommandPlay param:nil notify:YES];
+}
+
 - (void)updateActionState
 {
 //    NSArray *titles = @[@"default", @"playing", @"paused", @"buffering", @"ended"];
@@ -523,15 +553,20 @@
         (self.controlState == MovieControlStateBuffering && !_bufferFromPaused)) {
         [self.actionButton setImage:QQImage(@"videoplayer_pause_normal") forState:UIControlStateNormal];
         [self.actionButton setImage:QQImage(@"videoplayer_pause_press") forState:UIControlStateHighlighted];
+        self.centerPlayButton.hidden = YES;
+        self.replayButton.hidden = YES;
     }
     else if (self.controlState == MovieControlStatePaused ||
              (self.controlState == MovieControlStateBuffering && _bufferFromPaused)) {
         [self.actionButton setImage:QQImage(@"videoplayer_play_normal") forState:UIControlStateNormal];
-        [self.actionButton setImage:QQImage(@"videoplayer_play_press") forState:UIControlStateHighlighted];        
+        [self.actionButton setImage:QQImage(@"videoplayer_play_press") forState:UIControlStateHighlighted];
+        self.centerPlayButton.hidden = NO;
     }
     else if (self.controlState == MovieControlStateEnded) {
         // set replay
-        
+        [self.actionButton setImage:QQImage(@"videoplayer_play_normal") forState:UIControlStateNormal];
+        [self.actionButton setImage:QQImage(@"videoplayer_play_press") forState:UIControlStateHighlighted];
+        self.replayButton.hidden = NO;
     }
 }
 

@@ -497,12 +497,12 @@
     NSTimeInterval playableDuration = self.moviePlayerController.playableDuration;
     NSTimeInterval duration = self.moviePlayerController.duration;
     
-    if (currentPlaybackTime > playableDuration) {
-        NSLog(@"Buffering %f, %f, %f", duration, currentPlaybackTime, playableDuration);
-    }
-    else {
-        NSLog(@"No Buffer %f, %f, %f", duration, currentPlaybackTime, playableDuration);
-    }
+//    if (currentPlaybackTime > playableDuration) {
+//        NSLog(@"Buffering %f, %f, %f", duration, currentPlaybackTime, playableDuration);
+//    }
+//    else {
+//        NSLog(@"No Buffer %f, %f, %f", duration, currentPlaybackTime, playableDuration);
+//    }
     
     if ([self.controlSource respondsToSelector:@selector(setDuration:)]) {
         [self.controlSource setDuration:duration];
