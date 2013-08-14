@@ -54,6 +54,7 @@
 		B517791117BA3880006B948E /* videoplayer_return@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B51778F717BA3880006B948E /* videoplayer_return@2x.png */; };
 		B517791217BA3880006B948E /* videoplayer_toolbar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B51778F817BA3880006B948E /* videoplayer_toolbar@2x.png */; };
 		B517791317BA3880006B948E /* videoplayer_unlock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B51778F917BA3880006B948E /* videoplayer_unlock@2x.png */; };
+		B517791617BB1E81006B948E /* BatteryIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = B517791517BB1E7F006B948E /* BatteryIconView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -116,6 +117,8 @@
 		B51778F717BA3880006B948E /* videoplayer_return@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "videoplayer_return@2x.png"; sourceTree = "<group>"; };
 		B51778F817BA3880006B948E /* videoplayer_toolbar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "videoplayer_toolbar@2x.png"; sourceTree = "<group>"; };
 		B51778F917BA3880006B948E /* videoplayer_unlock@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "videoplayer_unlock@2x.png"; sourceTree = "<group>"; };
+		B517791417BB1E7F006B948E /* BatteryIconView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BatteryIconView.h; sourceTree = "<group>"; };
+		B517791517BB1E7F006B948E /* BatteryIconView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BatteryIconView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -209,6 +212,8 @@
 				B517776617B37F44006B948E /* WonderMovieProgressView.m */,
 				B517776B17B3939B006B948E /* MoviePlayerUserPrefs.h */,
 				B517776C17B3939B006B948E /* MoviePlayerUserPrefs.m */,
+				B517791417BB1E7F006B948E /* BatteryIconView.h */,
+				B517791517BB1E7F006B948E /* BatteryIconView.m */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -350,6 +355,7 @@
 				B517776A17B37FEB006B948E /* UIView+Sizes.m in Sources */,
 				B517776D17B3939C006B948E /* MoviePlayerUserPrefs.m in Sources */,
 				B51778AF17B9DE32006B948E /* TestWebViewController.m in Sources */,
+				B517791617BB1E81006B948E /* BatteryIconView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

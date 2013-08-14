@@ -9,13 +9,16 @@
 #import "WonderMovieFullscreenControlView.h"
 #import "WonderMovieProgressView.h"
 #import "UIView+Sizes.h"
+#import "BatteryIconView.h"
 
 @interface WonderMovieFullscreenControlView () {
     NSTimeInterval _totalDuration;
     BOOL _bufferFromPaused;
 }
-
+@property (nonatomic, retain) NSTimer *timer;
 @property (nonatomic, retain) WonderMovieProgressView *progressView;
+@property (nonatomic, retain) BatteryIconView *batteryView;
+@property (nonatomic, retain) UILabel *timeLabel;
 
 // bottom bar
 @property (nonatomic, retain) UIView *bottomBar;
@@ -56,10 +59,11 @@
     self.backgroundColor = [UIColor clearColor];
     
     CGFloat bottomBarHeight = 50;
-    CGFloat headerBarHeight = 50;
+    CGFloat headerBarHeight = 44;
     CGFloat progressBarLeftPadding = self.nextEnabled ? 60+30 : 60;
     CGFloat progressBarRightPadding = 10;
     CGFloat durationLabelWidth = 100;
+    CGFloat batteryHeight = 10;
     
     // Setup bottomBar
     self.bottomBar = [[[UIView alloc] initWithFrame:CGRectMake(0, self.height - bottomBarHeight, self.width, bottomBarHeight)] autorelease];
@@ -84,7 +88,7 @@
     if (self.nextEnabled) {
         self.nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.nextButton setImage:QQImage(@"videoplayer_next_normal") forState:UIControlStateNormal];
-        self.nextButton.frame = CGRectMake(progressBarLeftPadding - 30, (self.bottomBar.height - 17) / 2, 15, 17);
+        self.nextButton.frame = CGRectMake(progressBarLeftPadding - 38, (self.bottomBar.height - 17 * 2) / 2, 15 * 2, 17 * 2);
         [self.bottomBar addSubview:self.nextButton];
     }
     
@@ -112,29 +116,54 @@
     
     // Setup headerBar
     self.headerBar = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, self.width, headerBarHeight)] autorelease];
-    self.headerBar.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];    
+    self.headerBar.backgroundColor = [UIColor colorWithPatternImage:QQImage(@"videoplayer_headerbar")];
     self.headerBar.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
     [self addSubview:self.headerBar];
     
-    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [backButton setTitle:@"B" forState:UIControlStateNormal];
-    backButton.frame = CGRectMake(0, 0, 40, 40);
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [backButton setImage:QQImage(@"videoplayer_return") forState:UIControlStateNormal];
+    backButton.frame = CGRectMake(0, 0, headerBarHeight, headerBarHeight);
     backButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
     [backButton addTarget:self action:@selector(onClickBack:) forControlEvents:UIControlEventTouchUpInside];
     [self.headerBar addSubview:backButton];
     
-    self.downloadButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [self.downloadButton setTitle:@"D" forState:UIControlStateNormal];
-    self.downloadButton.frame = CGRectMake(self.headerBar.width - 100, 0, 40, 40);
+    UIImageView *separatorView = [[[UIImageView alloc] initWithImage:QQImage(@"videoplayer_headerbar_separator")] autorelease];
+    separatorView.center = CGPointMake(backButton.right, self.headerBar.height / 2);
+    separatorView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
+    [self.headerBar addSubview:separatorView];
+    
+    separatorView = [[[UIImageView alloc] initWithImage:QQImage(@"videoplayer_headerbar_separator")] autorelease];
+    separatorView.center = CGPointMake(self.width - backButton.right, self.headerBar.height / 2);
+    separatorView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    [self.headerBar addSubview:separatorView];
+    
+    self.batteryView = [[[BatteryIconView alloc] initWithBatteryMonitoringEnabled:YES] autorelease];
+    self.batteryView.frame = CGRectMake(self.headerBar.width - 10 - 24, headerBarHeight / 2, 24, batteryHeight);
+    self.batteryView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    [self.headerBar addSubview:self.batteryView];
+    
+    self.timeLabel = [[[UILabel alloc] initWithFrame:CGRectOffset(self.batteryView.frame, -2, -batteryHeight)] autorelease];
+    self.timeLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    self.timeLabel.textAlignment = UITextAlignmentCenter;
+    self.timeLabel.textColor = [UIColor lightTextColor];
+    self.timeLabel.backgroundColor = [UIColor clearColor];
+    self.timeLabel.font = [UIFont systemFontOfSize:9];
+    [self.headerBar addSubview:self.timeLabel];
+
+    self.lockButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.lockButton setImage:QQImage(@"videoplayer_unlock") forState:UIControlStateNormal];
+    self.lockButton.frame = CGRectMake(self.batteryView.left - 50, 0, headerBarHeight, headerBarHeight);
+    self.lockButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    [self.headerBar addSubview:self.lockButton];
+
+    
+    self.downloadButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.downloadButton setImage:QQImage(@"videoplayer_download") forState:UIControlStateNormal];
+    self.downloadButton.frame = CGRectMake(self.lockButton.left - 50, 0, headerBarHeight, headerBarHeight);
     self.downloadButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [self.downloadButton addTarget:self action:@selector(onClickDownload:) forControlEvents:UIControlEventTouchUpInside];
     [self.headerBar addSubview:self.downloadButton];
     
-    self.lockButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [self.lockButton setTitle:@"L" forState:UIControlStateNormal];
-    self.lockButton.frame = CGRectMake(self.width - 50, 0, 40, 40);
-    self.lockButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;    
-    [self.headerBar addSubview:self.lockButton];
     
     // Update control state
     if (self.autoPlayWhenStarted) {
@@ -143,6 +172,8 @@
     else {
         self.controlState = MovieControlStateDefault;
     }
+    [self setupTimer];
+    [self timerHandler]; // call to set info immediately
     [self updateActionState];
     LogFrame(self.frame);
     LogFrame(self.headerBar.frame);
@@ -151,11 +182,23 @@
 
 - (void)dealloc
 {
+    [self removeTimer];
     self.progressView = nil;
     self.bottomBar = nil;
     self.headerBar = nil;
-
+    
+    self.downloadButton = nil;
+    self.lockButton = nil;
+    self.actionButton = nil;
+    self.nextButton = nil;
+    
+    self.batteryView = nil;
+    self.timeLabel = nil;
+    self.startLabel = nil;
+    self.durationLabel = nil;
+    
     self.delegate = nil;
+
     [super dealloc];
 }
 
@@ -393,6 +436,25 @@
         // set replay
         
     }
+}
+
+- (void)setupTimer
+{
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(timerHandler) userInfo:nil repeats:YES];
+}
+
+- (void)removeTimer
+{
+    [self.timer invalidate];
+    self.timer = nil;
+}
+
+- (void)timerHandler
+{
+    NSDate *date = [NSDate date];
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    df.dateFormat = @"hh:mm";
+    self.timeLabel.text = [df stringFromDate:date];
 }
 
 @end
