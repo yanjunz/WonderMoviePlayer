@@ -205,8 +205,9 @@
          in a movie player’s view property into your application’s view hierarchy.
          Be sure to size the frame correctly. */
         player.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        [self.view addSubview: [player view]];
+        [self.view addSubview:player.view];
         [self addOverlayView];
+        [player release];
     }
 }
 

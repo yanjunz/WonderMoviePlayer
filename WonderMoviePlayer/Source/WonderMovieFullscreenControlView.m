@@ -605,6 +605,7 @@
     NSDateFormatter *df = [[NSDateFormatter alloc] init];
     df.dateFormat = @"hh:mm";
     self.timeLabel.text = [df stringFromDate:date];
+    [df release];
 }
 
 @end

@@ -61,7 +61,7 @@
 }
 
 - (IBAction)onClickWebView:(id)sender {
-    [self.navigationController pushViewController:[[TestWebViewController alloc] init] animated:YES];
+    [self.navigationController pushViewController:[[[TestWebViewController alloc] init] autorelease] animated:YES];
 }
 
 - (void)dealloc {
