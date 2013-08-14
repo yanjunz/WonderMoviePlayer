@@ -106,18 +106,18 @@
     [self deletePlayerAndNotificationObservers];
 }
 
-/* Sent to the view controller after the user interface rotates. */
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
-{
-	/* Size movie view to fit parent view. */
-	CGRect viewInsetRect = CGRectInset ([self.view bounds],
-										0,
-										0 );
-	[[[self moviePlayerController] view] setFrame:viewInsetRect];
-    
-    /* Size the overlay view for the current orientation. */
-	[self resizeOverlayWindow];
-}
+///* Sent to the view controller after the user interface rotates. */
+//- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+//{
+//	/* Size movie view to fit parent view. */
+//	CGRect viewInsetRect = CGRectInset ([self.view bounds],
+//										0,
+//										0 );
+//	[[[self moviePlayerController] view] setFrame:viewInsetRect];
+//    
+//    /* Size the overlay view for the current orientation. */
+//	[self resizeOverlayWindow];
+//}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -136,7 +136,7 @@
         && ([player.view isDescendantOfView:self.view]))
     {
         // add an overlay view to the window view hierarchy
-        self.overlayView.frame = self.view.frame;
+        self.overlayView.frame = self.view.bounds;
         [self.view addSubview:self.overlayView];
     }
 }
@@ -204,6 +204,7 @@
         /* To present a movie in your application, incorporate the view contained
          in a movie player’s view property into your application’s view hierarchy.
          Be sure to size the frame correctly. */
+        player.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [self.view addSubview: [player view]];
         [self addOverlayView];
     }
