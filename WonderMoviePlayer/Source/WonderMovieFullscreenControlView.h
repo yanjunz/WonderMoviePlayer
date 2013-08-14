@@ -10,6 +10,7 @@
 #import "MovieControlSource.h"
 
 @interface WonderMovieFullscreenControlView : UIView<MovieControlSource>
-@property (nonatomic, assign) BOOL autoPlayWhenStarted;
-- (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted;
+@property (nonatomic, readonly) BOOL autoPlayWhenStarted;
+@property (nonatomic, readonly) BOOL nextEnabled;
+- (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted nextEnabled:(BOOL)nextEnabled;
 @end

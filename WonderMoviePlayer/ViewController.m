@@ -49,8 +49,8 @@
         NSLog(@"start to play");
 //        NSString *path = [[NSBundle mainBundle] pathForResource:@"Movie" ofType:@"m4v"];
         [controller playMovieStream:[NSURL URLWithString:
-                                     @"http://hot.vrs.sohu.com/ipad1259067_4587696266952_4460388.m3u8?plat=null"
-//                                     @"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"
+//                                     @"http://hot.vrs.sohu.com/ipad1259067_4587696266952_4460388.m3u8?plat=null"
+                                     @"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"
 //                                     @"http://v.youku.com/player/getM3U8/vid/148104913/type/flv/ts/1376293704/useKeyFrame/0/v.m3u8"
 //                                     @"http://v.youku.com/player/getM3U8/vid/148703242/type/flv/ts/1376296533/useKeyFrame/0/v.m3u8"
 //                                     @"http://v.youku.com/player/getRealM3U8/vid/XNDUwNjc4MzA4/type/video.m3u8"

@@ -78,6 +78,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [UIApplication sharedApplication].statusBarHidden = YES;
     
     /* Size the overlay view for the current orientation. */
 	[self resizeOverlayWindow];
@@ -90,6 +91,7 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    [UIApplication sharedApplication].statusBarHidden = NO;
     /* Remove the movie view from the current view hierarchy. */
 	[self removeMovieViewFromViewHierarchy];
     /* Removie the overlay view. */
@@ -131,6 +133,7 @@
         && ([player.view isDescendantOfView:self.view]))
     {
         // add an overlay view to the window view hierarchy
+        self.overlayView.frame = self.view.frame;
         [self.view addSubview:self.overlayView];
     }
 }
@@ -212,7 +215,7 @@
 - (void)setupControlSource:(BOOL)fullscreen
 {
     if (fullscreen) {
-        WonderMovieFullscreenControlView *fullscreenControlView = [[[WonderMovieFullscreenControlView alloc] initWithFrame:self.overlayView.bounds autoPlayWhenStarted:YES] autorelease];
+        WonderMovieFullscreenControlView *fullscreenControlView = [[[WonderMovieFullscreenControlView alloc] initWithFrame:self.overlayView.bounds autoPlayWhenStarted:YES nextEnabled:YES] autorelease];
         fullscreenControlView.delegate = self;
         fullscreenControlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         self.controlView = fullscreenControlView;
@@ -488,6 +491,8 @@
 #pragma mark Control operation
 - (void)updateTimeInfo
 {
+    // FIXME: handle error
+    
     NSTimeInterval currentPlaybackTime = self.moviePlayerController.currentPlaybackTime;
     NSTimeInterval playableDuration = self.moviePlayerController.playableDuration;
     NSTimeInterval duration = self.moviePlayerController.duration;

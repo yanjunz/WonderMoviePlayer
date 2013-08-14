@@ -20,9 +20,10 @@
 // bottom bar
 @property (nonatomic, retain) UIView *bottomBar;
 @property (nonatomic, retain) UIButton *actionButton;
+@property (nonatomic, retain) UIButton *nextButton;
 @property (nonatomic, retain) UILabel *startLabel;
 @property (nonatomic, retain) UILabel *durationLabel;
-@property (nonatomic, retain) UIButton *fullscreenButton;
+//@property (nonatomic, retain) UIButton *fullscreenButton;
 
 // header bar
 @property (nonatomic, retain) UIView *headerBar;
@@ -39,10 +40,12 @@
 @synthesize delegate;
 @synthesize controlState;
 
-- (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted
+- (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted nextEnabled:(BOOL)nextEnabled
 {
     if (self = [super initWithFrame:frame]) {
-        self.autoPlayWhenStarted = autoPlayWhenStarted;
+        _autoPlayWhenStarted = autoPlayWhenStarted;
+        _nextEnabled = nextEnabled;
+        self.autoresizesSubviews = YES;
         [self setupView];
     }
     return self;
@@ -52,14 +55,16 @@
 {
     self.backgroundColor = [UIColor clearColor];
     
-    CGFloat bottomBarHeight = 40;
-    CGFloat headerBarHeight = 40;
-    CGFloat progressBarLeftPadding = 100;
-    CGFloat progressBarRightPadding = 100;
+    CGFloat bottomBarHeight = 50;
+    CGFloat headerBarHeight = 50;
+    CGFloat progressBarLeftPadding = self.nextEnabled ? 60+30 : 60;
+    CGFloat progressBarRightPadding = 10;
+    CGFloat durationLabelWidth = 100;
     
     // Setup bottomBar
     self.bottomBar = [[[UIView alloc] initWithFrame:CGRectMake(0, self.height - bottomBarHeight, self.width, bottomBarHeight)] autorelease];
-    self.bottomBar.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+//    self.bottomBar.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+    self.bottomBar.backgroundColor = [UIColor colorWithPatternImage:QQImage(@"videoplayer_toolbar")];
     self.bottomBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
     [self addSubview:self.bottomBar];
     self.progressView = [[[WonderMovieProgressView alloc] initWithFrame:CGRectMake(progressBarLeftPadding, 0, self.bottomBar.width - progressBarLeftPadding - progressBarRightPadding, bottomBarHeight)] autorelease];
@@ -67,28 +72,39 @@
     self.progressView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     [self.bottomBar addSubview:self.progressView];
     
-    self.actionButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    self.actionButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.actionButton setImage:QQImage(@"videoplayer_play_normal") forState:UIControlStateNormal];
+    [self.actionButton setImage:QQImage(@"videoplayer_play_press") forState:UIControlStateHighlighted];
     self.actionButton.titleLabel.font = [UIFont systemFontOfSize:10];
-    self.actionButton.frame = CGRectMake(0, 0, 40, bottomBarHeight);
-    [self.actionButton setTitle:@"Play" forState:UIControlStateNormal];
+    self.actionButton.frame = CGRectMake(0, 0, 50, 50);
+//    [self.actionButton setTitle:@"Play" forState:UIControlStateNormal];
     [self.actionButton addTarget:self action:@selector(onClickAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.bottomBar addSubview:self.actionButton];
     
-    self.startLabel = [[[UILabel alloc] initWithFrame:CGRectMake(self.actionButton.right + 5, 0, progressBarLeftPadding - self.actionButton.right - 5, bottomBarHeight)] autorelease];
+    if (self.nextEnabled) {
+        self.nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self.nextButton setImage:QQImage(@"videoplayer_next_normal") forState:UIControlStateNormal];
+        self.nextButton.frame = CGRectMake(progressBarLeftPadding - 30, (self.bottomBar.height - 17) / 2, 15, 17);
+        [self.bottomBar addSubview:self.nextButton];
+    }
+    
+    self.startLabel = [[[UILabel alloc] initWithFrame:CGRectMake(self.progressView.left, bottomBarHeight / 2, durationLabelWidth, bottomBarHeight / 2)] autorelease];
     self.startLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight;
+    self.startLabel.textAlignment = UITextAlignmentLeft;
     self.startLabel.font = [UIFont systemFontOfSize:10];
     self.startLabel.backgroundColor = [UIColor clearColor];
     self.startLabel.textColor = [UIColor whiteColor];
     [self.bottomBar addSubview:self.startLabel];
     
-    self.fullscreenButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    self.fullscreenButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
-    [self.fullscreenButton setTitle:@"F" forState:UIControlStateNormal];
-    self.fullscreenButton.frame = CGRectMake(self.width - 45, 0, 40, bottomBarHeight);
-    [self.bottomBar addSubview:self.fullscreenButton];
+//    self.fullscreenButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+//    self.fullscreenButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
+//    [self.fullscreenButton setTitle:@"F" forState:UIControlStateNormal];
+//    self.fullscreenButton.frame = CGRectMake(self.width - 45, 0, 40, bottomBarHeight);
+//    [self.bottomBar addSubview:self.fullscreenButton];
     
-    self.durationLabel = [[[UILabel alloc] initWithFrame:CGRectMake(self.progressView.right + 5, 0, self.fullscreenButton.left - self.progressView.right - 5, bottomBarHeight)] autorelease];
+    self.durationLabel = [[[UILabel alloc] initWithFrame:CGRectMake(self.bottomBar.width - progressBarRightPadding - durationLabelWidth, self.startLabel.top, durationLabelWidth, bottomBarHeight / 2)] autorelease];
     self.durationLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
+    self.durationLabel.textAlignment = UITextAlignmentRight;
     self.durationLabel.font = [UIFont systemFontOfSize:10];
     self.durationLabel.backgroundColor = [UIColor clearColor];
     self.durationLabel.textColor = [UIColor whiteColor];
@@ -128,6 +144,9 @@
         self.controlState = MovieControlStateDefault;
     }
     [self updateActionState];
+    LogFrame(self.frame);
+    LogFrame(self.headerBar.frame);
+    LogFrame(self.bottomBar.frame);
 }
 
 - (void)dealloc
@@ -140,10 +159,20 @@
     [super dealloc];
 }
 
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    NSLog(@"layoutSubviews");
+    LogFrame([UIScreen mainScreen].applicationFrame);
+    LogFrame(self.frame);
+    LogFrame(self.headerBar.frame);    
+    LogFrame(self.bottomBar.frame);
+}
+
 #pragma mark State Manchine
 - (void)handleCommand:(MovieControlCommand)cmd param:(id)param notify:(BOOL)notify
 {
-    NSLog(@"handleCommand %d, %@, %d", cmd, param, notify);
+//    NSLog(@"handleCommand %d, %@, %d", cmd, param, notify);
     if (cmd == MovieControlCommandEnd) {
         self.controlState = MovieControlStateEnded;
         
@@ -347,8 +376,23 @@
 
 - (void)updateActionState
 {
-    NSArray *titles = @[@"default", @"playing", @"paused", @"buffering", @"ended"];
-    [self.actionButton setTitle:titles[self.controlState] forState:UIControlStateNormal];
+//    NSArray *titles = @[@"default", @"playing", @"paused", @"buffering", @"ended"];
+//    [self.actionButton setTitle:titles[self.controlState] forState:UIControlStateNormal];
+    if (self.controlState == MovieControlStateDefault ||
+        self.controlState == MovieControlStatePlaying ||
+        (self.controlState == MovieControlStateBuffering && !_bufferFromPaused)) {
+        [self.actionButton setImage:QQImage(@"videoplayer_pause_normal") forState:UIControlStateNormal];
+        [self.actionButton setImage:QQImage(@"videoplayer_pause_press") forState:UIControlStateHighlighted];
+    }
+    else if (self.controlState == MovieControlStatePaused ||
+             (self.controlState == MovieControlStateBuffering && _bufferFromPaused)) {
+        [self.actionButton setImage:QQImage(@"videoplayer_play_normal") forState:UIControlStateNormal];
+        [self.actionButton setImage:QQImage(@"videoplayer_play_press") forState:UIControlStateHighlighted];        
+    }
+    else if (self.controlState == MovieControlStateEnded) {
+        // set replay
+        
+    }
 }
 
 @end

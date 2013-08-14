@@ -12,3 +12,17 @@
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
 #endif
+
+#define X(frame) ((frame).origin.x)
+#define Y(frame) ((frame).origin.y)
+#define W(frame) ((frame).size.width)
+#define H(frame) ((frame).size.height)
+
+#define QQImage(src)         [UIImage imageNamed:src]
+
+#if !defined(QQImage)
+#define QQImage(src)        [UIImageEx loadAndCacheImageFromApp:src]
+#endif
+
+#define LogFrame(f)     NSLog(@"(%f,%f,%f,%f)", X(f), Y(f), W(f), H(f))
+#define LogPoint(p)     NSLog(@"(%f,%f)", p.x, p.y)

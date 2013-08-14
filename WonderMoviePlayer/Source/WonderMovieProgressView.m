@@ -14,7 +14,7 @@
 @property (nonatomic, retain) UIImageView *progressBottomView;
 @property (nonatomic, retain) UIImageView *progressCacheView;
 @property (nonatomic, retain) UIImageView *progressTopView;
-@property (nonatomic, retain) UIImageView *progressIndicator;
+@property (nonatomic, retain) UIButton *progressIndicator;
 @end
 
 @implementation WonderMovieProgressView
@@ -32,19 +32,29 @@
 - (void)setupView
 {
     self.progressBottomView = [[[UIImageView alloc] init] autorelease];
-    self.progressBottomView.backgroundColor = [UIColor blueColor];
+//    self.progressBottomView.backgroundColor = [UIColor blueColor];
+    self.progressBottomView.contentStretch = CGRectMake(0.5, 0.5, 0, 0);
+    self.progressBottomView.image = QQImage(@"videoplayer_progressbar_bottom");
     [self addSubview:self.progressBottomView];
     
     self.progressCacheView = [[[UIImageView alloc] init] autorelease];
-    self.progressCacheView.backgroundColor = [UIColor redColor];
+//    self.progressCacheView.backgroundColor = [UIColor redColor];
+    self.progressCacheView.contentStretch = CGRectMake(0.5, 0.5, 0, 0);
+    self.progressCacheView.image = QQImage(@"videoplayer_progressbar_cache");
     [self addSubview:self.progressCacheView];
     
     self.progressTopView = [[[UIImageView alloc] init] autorelease];
-    self.progressTopView.backgroundColor = [UIColor whiteColor];
+//    self.progressTopView.backgroundColor = [UIColor whiteColor];
+    self.progressTopView.contentStretch = CGRectMake(0.5, 0.5, 0, 0);
+    self.progressTopView.image = QQImage(@"videoplayer_progressbar_top");
     [self addSubview:self.progressTopView];
     
-    self.progressIndicator = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)] autorelease];
-    self.progressIndicator.backgroundColor = [UIColor lightTextColor];
+//    self.progressIndicator = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)] autorelease];
+    self.progressIndicator = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.progressIndicator setImage:QQImage(@"videoplayer_progressbar_indicator_normal") forState:UIControlStateNormal];
+    [self.progressIndicator setImage:QQImage(@"videoplayer_progressbar_indicator_press") forState:UIControlStateHighlighted];
+    self.progressIndicator.size = CGSizeMake(39, 39);
+//    self.progressIndicator.backgroundColor = [UIColor lightTextColor];
     [self addSubview:self.progressIndicator];
     
     [self addGestureRecognizer:[[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)] autorelease]];
@@ -56,7 +66,7 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    CGFloat progressHeight = 12;
+    CGFloat progressHeight = 6;
     self.progressBottomView.frame = CGRectMake(0, (self.height - progressHeight) / 2, self.width, progressHeight);
     self.progressCacheView.frame = self.progressBottomView.frame;
     self.progressCacheView.width = self.progressBottomView.width * self.cacheProgress;
@@ -68,7 +78,7 @@
 #pragma mark Progress action
 - (void)setProgress:(CGFloat)progress
 {
-    NSLog(@"setProgress %f, %f, %f", progress, self.progressTopView.width, self.progressCacheView.width);
+//    NSLog(@"setProgress %f, %f, %f", progress, self.progressTopView.width, self.progressCacheView.width);
     if (_progress != progress) {
         _progress = progress;
         [self setNeedsLayout];
@@ -77,7 +87,7 @@
 
 - (void)setCacheProgress:(CGFloat)cacheProgress
 {
-    NSLog(@"setCacheProgress %f", cacheProgress);
+//    NSLog(@"setCacheProgress %f", cacheProgress);
     if (_cacheProgress != cacheProgress) {
         _cacheProgress = cacheProgress;
         [self setNeedsLayout];
