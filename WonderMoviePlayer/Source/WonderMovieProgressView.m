@@ -79,7 +79,10 @@
 #pragma mark Progress action
 - (void)setProgress:(CGFloat)progress
 {
-//    NSLog(@"setProgress %f, %f, %f", progress, self.progressTopView.width, self.progressCacheView.width);
+    NSLog(@"setProgress %f, %f, %f", progress, self.progressTopView.width, self.progressCacheView.width);
+    if (self.progressTopView.width > 215) {
+        NSLog(@"setProgress NaN %f", progress);
+    }
     if (_progress != progress) {
         _progress = progress;
         [self setNeedsLayout];
@@ -88,7 +91,7 @@
 
 - (void)setCacheProgress:(CGFloat)cacheProgress
 {
-//    NSLog(@"setCacheProgress %f", cacheProgress);
+    NSLog(@"setCacheProgress %f", cacheProgress);
     if (_cacheProgress != cacheProgress) {
         _cacheProgress = cacheProgress;
         [self setNeedsLayout];
@@ -120,7 +123,7 @@
 - (void)onTap:(UITapGestureRecognizer *)gr
 {
     CGPoint pt = [gr locationInView:self];
-    CGFloat progress = pt.x / self.width;
+    CGFloat progress = self.width == 0 ? 1 : pt.x / self.width;
 //    NSLog(@"onTap: %f", progress);
     [self setProgress:progress];
     
@@ -135,18 +138,22 @@
     CGPoint pt = [gr locationInView:view.superview];
     CGPoint offset = [gr translationInView:view.superview];
 //    NSLog(@"onPan %d %f", gr.state, offset.x);
-    CGFloat progress = (pt.x + offset.x) / self.width;
+    CGFloat progress = self.width == 0 ? 1 : (pt.x + offset.x) / self.width;
     [self setProgress:progress];
 //    view.center = CGPointMake(view.center.x + offset.x, view.center.y);
     
     [gr setTranslation:CGPointZero inView:self];
     
-    [self notifyProgressChanged:progress];
     if (gr.state == UIGestureRecognizerStateBegan) {
         [self notifyProgressBegin];
+        [self notifyProgressChanged:progress];
     }
     else if (gr.state == UIGestureRecognizerStateEnded) {
+        [self notifyProgressChanged:progress];
         [self notifyProgressEnd];
+    }
+    else if (gr.state == UIGestureRecognizerStateChanged) {
+        [self notifyProgressChanged:progress];
     }
 }
 

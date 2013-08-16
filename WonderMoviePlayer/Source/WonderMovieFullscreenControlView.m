@@ -23,10 +23,12 @@
     NSTimeInterval _totalBufferingSize;
     
     // progress view
-    BOOL _isSettingProgress;
+    BOOL _isProgressViewPanning; // flag to ignore msg to set progress when the progress view is dragging
 }
 @property (nonatomic, retain) NSTimer *timer;
 @property (nonatomic, retain) WonderMovieProgressView *progressView;
+
+// battery
 @property (nonatomic, retain) BatteryIconView *batteryView;
 @property (nonatomic, retain) UILabel *timeLabel;
 
@@ -55,6 +57,9 @@
 
 // utils
 @property (nonatomic, retain) NSArray *viewsToBeLocked;
+
+// Only show when setting progress
+@property (nonatomic, retain) UILabel *progressTimeLabel;
 @end
 
 @interface WonderMovieFullscreenControlView (ProgressView) <WonderMovieProgressViewDelegate>
@@ -204,6 +209,20 @@
     self.centerPlayButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;    
     [self.centerPlayButton addTarget:self action:@selector(onClickPlay:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.centerPlayButton];
+    
+    UIFont *font = [UIFont boldSystemFontOfSize:23];
+    self.progressTimeLabel = [[[UILabel alloc] initWithFrame:CGRectMake(17, 18+self.headerBar.bottom, 100, 40)] autorelease];
+    self.progressTimeLabel.textAlignment = UITextAlignmentLeft;
+    self.progressTimeLabel.font = font;
+    self.progressTimeLabel.backgroundColor = [UIColor clearColor];
+    self.progressTimeLabel.textColor = [UIColor whiteColor];
+    self.progressTimeLabel.height = font.ascender + font.descender;
+//    self.progressTimeLabel.hidden = YES;
+    self.progressTimeLabel.layer.shadowOpacity = 0.5;
+    self.progressTimeLabel.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.progressTimeLabel.layer.shadowRadius = 1;
+    self.progressTimeLabel.layer.shadowOffset = CGSizeMake(0, 1);
+    [self addSubview:self.progressTimeLabel];
     
     self.viewsToBeLocked = @[backButton, self.downloadButton, self.bottomBar];
     
@@ -437,9 +456,16 @@
 
 - (void)setProgress:(CGFloat)progress
 {
-    if (!_isSettingProgress) {
+    if (!_isProgressViewPanning) {
         [self.progressView setProgress:progress];
         [self handleCommand:MovieControlCommandSetProgress param:@(progress) notify:NO];
+    }
+    else {
+        long time = _duration * progress;
+        int hour = time / 3600;
+        int minute = time / 60 - hour * 60;
+        int second = time % 60;
+        self.progressTimeLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d", hour, minute, second];
     }
 }
 
@@ -601,7 +627,7 @@
 
 - (void)wonderMovieProgressViewBeginChangeProgress:(WonderMovieProgressView *)progressView
 {
-    _isSettingProgress = YES;
+    _isProgressViewPanning = YES;
 }
 
 - (void)wonderMovieProgressView:(WonderMovieProgressView *)progressView didChangeProgress:(CGFloat)progress
@@ -611,7 +637,7 @@
 
 - (void)wonderMovieProgressViewEndChangeProgress:(WonderMovieProgressView *)progressView;
 {
-    _isSettingProgress = NO;
+    _isProgressViewPanning = NO;
 }
 
 @end

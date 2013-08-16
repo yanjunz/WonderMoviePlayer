@@ -507,6 +507,11 @@
 //        NSLog(@"No Buffer %f, %f, %f", duration, currentPlaybackTime, playableDuration);
 //    }
     
+    // bugfix
+    if (isnan(currentPlaybackTime)) {
+        currentPlaybackTime = duration;
+    }
+    
     if ([self.controlSource respondsToSelector:@selector(setDuration:)]) {
         [self.controlSource setDuration:duration];
     }
