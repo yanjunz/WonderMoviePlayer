@@ -106,18 +106,14 @@
     [self deletePlayerAndNotificationObservers];
 }
 
-///* Sent to the view controller after the user interface rotates. */
-//- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
-//{
-//	/* Size movie view to fit parent view. */
-//	CGRect viewInsetRect = CGRectInset ([self.view bounds],
-//										0,
-//										0 );
-//	[[[self moviePlayerController] view] setFrame:viewInsetRect];
-//    
-//    /* Size the overlay view for the current orientation. */
-//	[self resizeOverlayWindow];
-//}
+/* Sent to the view controller after the user interface rotates. */
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+	[[[self moviePlayerController] view] setFrame:self.view.bounds];
+    
+    /* Size the overlay view for the current orientation. */
+	[self resizeOverlayWindow];
+}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
