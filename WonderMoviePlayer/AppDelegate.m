@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 
 #import "ViewController.h"
+#import "NSNotificationCenter+SwizzleMethod.h"
 
 @implementation AppDelegate
 
@@ -28,6 +29,7 @@
         UINavigationController *navController = [[[UINavigationController alloc] initWithRootViewController:self.viewController] autorelease];
     self.window.rootViewController = navController;
     [self.window makeKeyAndVisible];
+//    [NSNotificationCenter swizzleMethod];
     return YES;
 }
 
