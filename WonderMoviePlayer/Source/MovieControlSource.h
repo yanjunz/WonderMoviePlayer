@@ -65,6 +65,7 @@ typedef enum {
 - (void)setPlayableDuration:(NSTimeInterval)playableDuration;
 - (void)setDuration:(NSTimeInterval)duration;
 
+- (CGFloat)getTimeControlWidth;
 
 @required
 @property (nonatomic, assign) MovieControlState controlState;
