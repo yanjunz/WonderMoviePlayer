@@ -61,6 +61,7 @@
 		B517792017C1AF7F006B948E /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517791F17C1AF7E006B948E /* AVFoundation.framework */; };
 		B517792217C1AFB6006B948E /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517792117C1AFB5006B948E /* CoreMedia.framework */; };
 		B517792517C1B896006B948E /* NSNotificationCenter+SwizzleMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = B517792417C1B894006B948E /* NSNotificationCenter+SwizzleMethod.m */; };
+		B517793017C20905006B948E /* videoplay.html in Resources */ = {isa = PBXBuildFile; fileRef = B517792F17C20904006B948E /* videoplay.html */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -134,6 +135,7 @@
 		B517792117C1AFB5006B948E /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		B517792317C1B892006B948E /* NSNotificationCenter+SwizzleMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNotificationCenter+SwizzleMethod.h"; sourceTree = "<group>"; };
 		B517792417C1B894006B948E /* NSNotificationCenter+SwizzleMethod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNotificationCenter+SwizzleMethod.m"; sourceTree = "<group>"; };
+		B517792F17C20904006B948E /* videoplay.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = videoplay.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -219,6 +221,7 @@
 				B517774917B36D44006B948E /* Default.png */,
 				B517774B17B36D44006B948E /* Default@2x.png */,
 				B517774D17B36D44006B948E /* Default-568h@2x.png */,
+				B517792F17C20904006B948E /* videoplay.html */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -363,6 +366,7 @@
 				B517791117BA3880006B948E /* videoplayer_return@2x.png in Resources */,
 				B517791217BA3880006B948E /* videoplayer_toolbar@2x.png in Resources */,
 				B517791317BA3880006B948E /* videoplayer_unlock@2x.png in Resources */,
+				B517793017C20905006B948E /* videoplay.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -471,6 +475,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WonderMoviePlayer/WonderMoviePlayer-Prefix.pch";
 				INFOPLIST_FILE = "WonderMoviePlayer/WonderMoviePlayer-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -482,6 +487,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WonderMoviePlayer/WonderMoviePlayer-Prefix.pch";
 				INFOPLIST_FILE = "WonderMoviePlayer/WonderMoviePlayer-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
