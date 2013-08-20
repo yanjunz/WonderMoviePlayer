@@ -33,6 +33,8 @@
                                ]];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(MPMoviePlayerDidEnterFullScreen:) name:[NSString stringWithFormat:@"%@%@", @"UIMoviePlayerControllerD", @"idEnterFullscreenNotification"] object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(MPMoviePlayerExitFullScreen:) name:[NSString stringWithFormat:@"%@%@", @"UIMoviePlayerControllerWil", @"lExitFullscreenNotification"] object:nil];
+    self.webview.allowsInlineMediaPlayback = YES;
+    self.webview.delegate = self;
 }
 
 - (void)didReceiveMemoryWarning
@@ -46,13 +48,47 @@
     [super dealloc];
 }
 - (IBAction)onClickBtn:(id)sender {
+    // v.setAttribute('webkit-playsinline', 'YES');"
+//    [self exeJS:@"\
+//     var v = document.getElementsByTagName(\'video\')[0];\
+//     v.play = function() {alert('hello');}"
+//     ];
+//                    v.play = function(){alert('aa');} 
+    NSString *src = [self getCurrentVideoSrc];
+    NSLog(@"src=%@", src);
     NSLog(@"%@\n", [self exeJS:@"\
                     var v = document.getElementsByTagName(\'video\')[0]; \
-                    alert(v.controls); \
-                    v.controls=false;\
-                    v.currentTime = 10; \
+                    v.play = function(){alert('aa');};\
+                    alert(v.play);\
                     v.play();"]);
                     //                    v.removeAttribute(\'controls\');
+}
+
+- (NSString *)getCurrentVideoSrc
+{
+    NSString *videoId = nil;
+    NSString *currentVideoSrc = nil;
+    
+    //获取网页video标签id
+    videoId = [self.webview stringByEvaluatingJavaScriptFromString:@"document.getElementsByTagName('video')[0].getAttribute('id')"];
+    
+    //获取网页视频src
+    currentVideoSrc = [self.webview stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"document.getElementById('%@').currentSrc", videoId]];
+    //MTTLOG(@"current video src:%@", currentVideoSrc);
+    //对乐视等类型html标签的适配
+    if (currentVideoSrc == nil || currentVideoSrc.length < 1)
+    {
+        currentVideoSrc = [self.webview stringByEvaluatingJavaScriptFromString:@"document.getElementsByTagName('video')[0].getAttribute('src')"];
+    }
+    //对豆瓣影评视频等类型html标签的适配
+    if (currentVideoSrc == nil || currentVideoSrc.length < 1)
+    {
+        NSString *regexString = @"\\bhttps?://[a-zA-Z0-9\\-.]+(?::(\\d+))?(?:(?:/[a-zA-Z0-9\\-._?,'+\\&%$=~*!():@\\\\]*)+)?";
+        currentVideoSrc = [self.webview stringByEvaluatingJavaScriptFromString:@"document.getElementsByTagName('video')[0].innerHTML"];
+        currentVideoSrc = [currentVideoSrc stringByMatching:regexString];
+    }
+    
+    return currentVideoSrc;
 }
 
 - (NSString *)exeJS:(NSString *)js {
@@ -73,5 +109,11 @@
 
 - (void)MPMoviePlayerProcessDidChanged:(NSNotification *)n{
     
+}
+
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+{
+    NSLog(@"shouldStartLoadWithRequest %@", request.URL);
+    return YES;
 }
 @end

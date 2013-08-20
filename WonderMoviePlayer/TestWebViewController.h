@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TestWebViewController : UIViewController
+@interface TestWebViewController : UIViewController<UIWebViewDelegate>
 @property (retain, nonatomic) IBOutlet UIWebView *webview;
 
 - (IBAction)onClickBtn:(id)sender;

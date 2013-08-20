@@ -62,6 +62,9 @@
 		B517792217C1AFB6006B948E /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517792117C1AFB5006B948E /* CoreMedia.framework */; };
 		B517792517C1B896006B948E /* NSNotificationCenter+SwizzleMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = B517792417C1B894006B948E /* NSNotificationCenter+SwizzleMethod.m */; };
 		B517793017C20905006B948E /* videoplay.html in Resources */ = {isa = PBXBuildFile; fileRef = B517792F17C20904006B948E /* videoplay.html */; };
+		B517795217C21AD1006B948E /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = B517795117C21ACF006B948E /* RegexKitLite.m */; };
+		B517795417C21B59006B948E /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517795317C21B58006B948E /* CoreFoundation.framework */; };
+		B517795617C21BD7006B948E /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B517795517C21BD6006B948E /* libicucore.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -136,6 +139,10 @@
 		B517792317C1B892006B948E /* NSNotificationCenter+SwizzleMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNotificationCenter+SwizzleMethod.h"; sourceTree = "<group>"; };
 		B517792417C1B894006B948E /* NSNotificationCenter+SwizzleMethod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNotificationCenter+SwizzleMethod.m"; sourceTree = "<group>"; };
 		B517792F17C20904006B948E /* videoplay.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = videoplay.html; sourceTree = "<group>"; };
+		B517795017C21ACC006B948E /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
+		B517795117C21ACF006B948E /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
+		B517795317C21B58006B948E /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		B517795517C21BD6006B948E /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -143,6 +150,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B517795617C21BD7006B948E /* libicucore.dylib in Frameworks */,
+				B517795417C21B59006B948E /* CoreFoundation.framework in Frameworks */,
 				B517792217C1AFB6006B948E /* CoreMedia.framework in Frameworks */,
 				B517792017C1AF7F006B948E /* AVFoundation.framework in Frameworks */,
 				B517791817BB485B006B948E /* QuartzCore.framework in Frameworks */,
@@ -159,6 +168,8 @@
 		B517772B17B36D44006B948E = {
 			isa = PBXGroup;
 			children = (
+				B517795517C21BD6006B948E /* libicucore.dylib */,
+				B517795317C21B58006B948E /* CoreFoundation.framework */,
 				B517792117C1AFB5006B948E /* CoreMedia.framework */,
 				B517791F17C1AF7E006B948E /* AVFoundation.framework */,
 				B517791717BB485B006B948E /* QuartzCore.framework */,
@@ -190,6 +201,8 @@
 		B517773D17B36D44006B948E /* WonderMoviePlayer */ = {
 			isa = PBXGroup;
 			children = (
+				B517795017C21ACC006B948E /* RegexKitLite.h */,
+				B517795117C21ACF006B948E /* RegexKitLite.m */,
 				B517775A17B36E04006B948E /* Source */,
 				B517774617B36D44006B948E /* AppDelegate.h */,
 				B517774717B36D44006B948E /* AppDelegate.m */,
@@ -390,6 +403,7 @@
 				B517791B17BE0059006B948E /* WonderAVMovieViewController.m in Sources */,
 				B517791E17BE0098006B948E /* WonderAVPlayerView.m in Sources */,
 				B517792517C1B896006B948E /* NSNotificationCenter+SwizzleMethod.m in Sources */,
+				B517795217C21AD1006B948E /* RegexKitLite.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

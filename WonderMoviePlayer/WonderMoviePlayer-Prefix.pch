@@ -11,6 +11,7 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
+#import "RegexKitLite.h"
 #endif
 
 #define X(frame) ((frame).origin.x)
@@ -26,3 +27,15 @@
 
 #define LogFrame(f)     NSLog(@"(%f,%f,%f,%f)", X(f), Y(f), W(f), H(f))
 #define LogPoint(p)     NSLog(@"(%f,%f)", p.x, p.y)
+
+#ifdef COMMON_LOG
+#define CommonLog_i(fmt,...) NSLog(INFO_NEW_FMT(fmt),##__VA_ARGS__,nil)
+#define CommonLog_d(fmt,...) NSLog(DEBUG_NEW_FMT(fmt),##__VA_ARGS__,nil)
+#define CommonLog_w(fmt,...) NSLog(WARNING_NEW_FMT(fmt),##__VA_ARGS__,nil)
+#define CommonLog_e(fmt,...) NSLog(ERROR_NEW_FMT(fmt),##__VA_ARGS__,nil)
+#else
+#define CommonLog_i(fmt,...)
+#define CommonLog_d(fmt,...)
+#define CommonLog_w(fmt,...)
+#define CommonLog_e(fmt,...)
+#endif

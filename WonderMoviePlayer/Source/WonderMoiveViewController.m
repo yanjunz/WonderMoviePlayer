@@ -17,7 +17,9 @@
 #define kWonderMovieHorizontalPanGestureCoordRatio  1.0f
 
 
-@interface WonderMoiveViewController ()
+@interface WonderMoiveViewController () {
+    BOOL _statusBarHiddenPrevious;    
+}
 @property (nonatomic, retain) NSTimer *timer;
 @property (nonatomic, retain) UIView *controlView;
 @end
@@ -80,6 +82,8 @@
 /* Notifies the view controller that its view is about to be become visible. */
 - (void)viewWillAppear:(BOOL)animated
 {
+    _statusBarHiddenPrevious = [UIApplication sharedApplication].statusBarHidden;
+    [UIApplication sharedApplication].statusBarHidden = YES;
     [super viewWillAppear:animated];
     [UIApplication sharedApplication].statusBarHidden = YES;
     
@@ -93,6 +97,7 @@
  covered, or otherwise hidden from view. */
 - (void)viewWillDisappear:(BOOL)animated
 {
+    [UIApplication sharedApplication].statusBarHidden = _statusBarHiddenPrevious;
     [super viewWillDisappear:animated];
     [UIApplication sharedApplication].statusBarHidden = NO;
     /* Remove the movie view from the current view hierarchy. */
@@ -109,6 +114,7 @@
 /* Sent to the view controller after the user interface rotates. */
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
+	[super didRotateFromInterfaceOrientation:fromInterfaceOrientation];    
 	[[[self moviePlayerController] view] setFrame:self.view.bounds];
     
     /* Size the overlay view for the current orientation. */
@@ -119,6 +125,17 @@
 {
     /* Return YES for supported orientations. */
     return YES;
+}
+
+// for IOS 6
+- (BOOL)shouldAutorotate{
+    return YES;
+}
+-(NSUInteger)supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskLandscape;
+}
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation{
+    return UIInterfaceOrientationLandscapeLeft;
 }
 
 #pragma mark add Overlay 
