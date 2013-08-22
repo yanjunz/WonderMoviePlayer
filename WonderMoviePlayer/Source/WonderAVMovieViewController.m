@@ -22,11 +22,10 @@
 
 #define WonderAVMovieObserverContextName(property) OBSERVER_CONTEXT_NAME(WonderAVMovieViewController, property)
 
-static void *WonderAVMovieViewController_TimedMetadataObserverContext = &WonderAVMovieViewController_TimedMetadataObserverContext;
-static void *WonderAVMovieViewController_RateObservationContext = &WonderAVMovieViewController_RateObservationContext;
-static void *WonderAVMovieViewController_CurrentItemObservationContext = &WonderAVMovieViewController_CurrentItemObservationContext;
-static void *WonderAVMovieViewController_PlayerItemStatusObserverContext = &WonderAVMovieViewController_PlayerItemStatusObserverContext;
-
+DECLARE_OBSERVER_CONTEXT(WonderAVMovieViewController, TimedMetadata)
+DECLARE_OBSERVER_CONTEXT(WonderAVMovieViewController, Rate)
+DECLARE_OBSERVER_CONTEXT(WonderAVMovieViewController, CurrentItem)
+DECLARE_OBSERVER_CONTEXT(WonderAVMovieViewController, PlayerItemStatus)
 DECLARE_OBSERVER_CONTEXT(WonderAVMovieViewController, PlaybackBufferEmpty)
 DECLARE_OBSERVER_CONTEXT(WonderAVMovieViewController, PlaybackLikelyToKeepUp)
 
@@ -165,7 +164,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     [self.playerItem addObserver:self
                       forKeyPath:kStatusKey
                          options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
-                         context:WonderAVMovieViewController_PlayerItemStatusObserverContext];
+                         context:WonderAVMovieObserverContextName(PlayerItemStatus)];
     
     [self.playerItem addObserver:self
                       forKeyPath:kPlaybackBufferEmpty
@@ -199,19 +198,19 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
         [self.player addObserver:self
                       forKeyPath:kCurrentItemKey
                          options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
-                         context:WonderAVMovieViewController_CurrentItemObservationContext];
+                         context:WonderAVMovieObserverContextName(CurrentItem)];
         
         /* A 'currentItem.timedMetadata' property observer to parse the media stream timed metadata. */
         [self.player addObserver:self
                       forKeyPath:kTimedMetadataKey
                          options:0
-                         context:WonderAVMovieViewController_TimedMetadataObserverContext];
+                         context:WonderAVMovieObserverContextName(TimedMetadata)];
         
         /* Observe the AVPlayer "rate" property to update the scrubber control. */
         [self.player addObserver:self
                       forKeyPath:kRateKey
                          options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
-                         context:WonderAVMovieViewController_RateObservationContext];
+                         context:WonderAVMovieObserverContextName(Rate)];
     }
     
     /* Make our new AVPlayerItem the AVPlayer's current item. */
@@ -251,7 +250,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
                        context:(void*)context
 {
 	/* AVPlayerItem "status" property value observer. */
-	if (context == WonderAVMovieViewController_PlayerItemStatusObserverContext) {
+	if (context == WonderAVMovieObserverContextName(PlayerItemStatus)) {
         AVPlayerStatus status = [change[NSKeyValueChangeNewKey] integerValue];
         NSLog(@"status changed: %d", status);
         switch (status) {
@@ -291,13 +290,13 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
         }
     }
     /* AVPlayer "rate" property value observer. */
-    else if (context == WonderAVMovieViewController_RateObservationContext) {
+    else if (context == WonderAVMovieObserverContextName(Rate)) {
         
     }
     /* AVPlayer "currentItem" property observer.
      Called when the AVPlayer replaceCurrentItemWithPlayerItem:
      replacement will/did occur. */
-    else if (context == WonderAVMovieViewController_CurrentItemObservationContext) {
+    else if (context == WonderAVMovieObserverContextName(CurrentItem)) {
         AVPlayerItem *newPlayerItem = [change objectForKey:NSKeyValueChangeNewKey];
         
         if (newPlayerItem == (id)[NSNull null]) {
@@ -534,11 +533,6 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     }
     return kCMTimeInvalid;
 }
-
-//- (BOOL)isPlaying
-//{
-//    
-//}
 
 #pragma mark MovieControlSourceDelegate
 - (void)movieControlSourcePlay:(id<MovieControlSource>)source
