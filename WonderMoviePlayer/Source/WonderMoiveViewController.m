@@ -509,12 +509,12 @@
 
 - (void)movieControlSourceBeginChangeProgress:(id<MovieControlSource>)source
 {
-    
+    [self beginScrubbing];
 }
 
 - (void)movieControlSourceEndChangeProgress:(id<MovieControlSource>)source
 {
-    
+    [self endScrubbing];
 }
 
 #pragma mark Control operation
@@ -561,6 +561,16 @@
 {
     [self.timer invalidate];
     self.timer = nil;
+}
+
+- (void)beginScrubbing
+{
+    [self stopTimer];
+}
+
+- (void)endScrubbing
+{
+    [self startTimer];
 }
      
 #pragma mark Gesture handler

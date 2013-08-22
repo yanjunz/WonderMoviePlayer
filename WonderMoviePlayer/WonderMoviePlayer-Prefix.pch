@@ -39,3 +39,5 @@
 #define CommonLog_w(fmt,...)
 #define CommonLog_e(fmt,...)
 #endif
+
+#define USE_AV_PLAYER

@@ -645,6 +645,7 @@
 
 - (void)wonderMovieProgressViewBeginChangeProgress:(WonderMovieProgressView *)progressView
 {
+    NSLog(@"wonderMovieProgressViewBeginChangeProgress");
     _isProgressViewPanning = YES;
     if ([self.delegate respondsToSelector:@selector(movieControlSourceBeginChangeProgress:)]) {
         [self.delegate movieControlSourceBeginChangeProgress:self];
@@ -653,11 +654,14 @@
 
 - (void)wonderMovieProgressView:(WonderMovieProgressView *)progressView didChangeProgress:(CGFloat)progress
 {
+    NSLog(@"didChangeProgress %f", progress);
     [self handleCommand:MovieControlCommandSetProgress param:@(progress) notify:YES];
+    [self setProgress:progress];
 }
 
 - (void)wonderMovieProgressViewEndChangeProgress:(WonderMovieProgressView *)progressView;
 {
+    NSLog(@"wonderMovieProgressViewEndChangeProgress");
     _isProgressViewPanning = NO;
     if ([self.delegate respondsToSelector:@selector(movieControlSourceEndChangeProgress:)]) {
         [self.delegate movieControlSourceEndChangeProgress:self];
