@@ -39,7 +39,9 @@ NSString *kTimedMetadataKey	= @"currentItem.timedMetadata";
 NSString *kPlaybackBufferEmpty = @"playbackBufferEmpty";
 NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 
-@interface WonderAVMovieViewController ()
+@interface WonderAVMovieViewController () {
+    BOOL _statusBarHiddenPrevious;        
+}
 @property (nonatomic, retain) UIView *controlView;
 @end
 
@@ -57,6 +59,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.view.backgroundColor = [UIColor blackColor];
 	// Do any additional setup after loading the view.
     if (self.playerLayerView == nil) {
         self.playerLayerView = [[[WonderAVPlayerView alloc] initWithFrame:self.view.bounds] autorelease];
@@ -77,6 +80,41 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     [self.overlayView addGestureRecognizer:[[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapOverlayView:)] autorelease]];
     [self.overlayView addGestureRecognizer:[[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPanOverlayView:)] autorelease]];
 }
+
+/* Notifies the view controller that its view is about to be become visible. */
+- (void)viewWillAppear:(BOOL)animated
+{
+    _statusBarHiddenPrevious = [UIApplication sharedApplication].statusBarHidden;
+    [UIApplication sharedApplication].statusBarHidden = YES;
+    [super viewWillAppear:animated];
+    [UIApplication sharedApplication].statusBarHidden = YES;
+}
+
+/* Notifies the view controller that its view is about to be dismissed,
+ covered, or otherwise hidden from view. */
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [UIApplication sharedApplication].statusBarHidden = _statusBarHiddenPrevious;
+    [super viewWillDisappear:animated];
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    /* Return YES for supported orientations. */
+    return YES;
+}
+
+// for IOS 6
+- (BOOL)shouldAutorotate{
+    return YES;
+}
+-(NSUInteger)supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskLandscape;
+}
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation{
+    return UIInterfaceOrientationLandscapeLeft;
+}
+
 
 - (void)didReceiveMemoryWarning
 {

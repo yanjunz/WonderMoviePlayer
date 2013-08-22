@@ -85,7 +85,6 @@
     _statusBarHiddenPrevious = [UIApplication sharedApplication].statusBarHidden;
     [UIApplication sharedApplication].statusBarHidden = YES;
     [super viewWillAppear:animated];
-    [UIApplication sharedApplication].statusBarHidden = YES;
     
     /* Size the overlay view for the current orientation. */
 	[self resizeOverlayWindow];
@@ -99,7 +98,7 @@
 {
     [UIApplication sharedApplication].statusBarHidden = _statusBarHiddenPrevious;
     [super viewWillDisappear:animated];
-    [UIApplication sharedApplication].statusBarHidden = NO;
+    
     /* Remove the movie view from the current view hierarchy. */
 	[self removeMovieViewFromViewHierarchy];
     /* Removie the overlay view. */
