@@ -561,7 +561,7 @@
 //        [self.delegate movieControlSource:self setFullscreen:NO];
 //    }
     
-    [self startLoading];
+//    [self startLoading];
 }
 
 - (IBAction)onClickLock:(id)sender

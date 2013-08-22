@@ -7,6 +7,7 @@
 //
 
 #import "TestWebViewController.h"
+#import "WonderAVMovieViewController.h"
 
 @interface TestWebViewController ()
 
@@ -28,8 +29,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     [self.webview loadRequest:[NSURLRequest requestWithURL:
-//                               [NSURL URLWithString:@"http://v.m.liebao.cn"]
-                               [[NSBundle mainBundle] URLForResource:@"videoplay" withExtension:@"html"]
+                               [NSURL URLWithString:@"http://v.m.liebao.cn"]
+//                               [[NSBundle mainBundle] URLForResource:@"videoplay" withExtension:@"html"]
                                ]];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(MPMoviePlayerDidEnterFullScreen:) name:[NSString stringWithFormat:@"%@%@", @"UIMoviePlayerControllerD", @"idEnterFullscreenNotification"] object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(MPMoviePlayerExitFullScreen:) name:[NSString stringWithFormat:@"%@%@", @"UIMoviePlayerControllerWil", @"lExitFullscreenNotification"] object:nil];
@@ -58,9 +59,8 @@
     NSLog(@"src=%@", src);
     NSLog(@"%@\n", [self exeJS:@"\
                     var v = document.getElementsByTagName(\'video\')[0]; \
-                    v.play = function(){alert('aa');};\
-                    alert(v.play);\
-                    v.play();"]);
+                    v.play = function(){alert('aa');window.location = 'qqvideo://play';};\
+                    alert(v.play);"]);
                     //                    v.removeAttribute(\'controls\');
 }
 
@@ -114,6 +114,13 @@
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
     NSLog(@"shouldStartLoadWithRequest %@", request.URL);
+    if ([@"qqvideo" isEqualToString:request.URL.scheme]) {
+        WonderAVMovieViewController *controller = [[WonderAVMovieViewController alloc] init];
+        [self presentViewController:controller animated:YES completion:^{
+            [controller playMovieStream:[NSURL URLWithString:[self getCurrentVideoSrc]]];
+        }];
+        return NO;
+    }
     return YES;
 }
 @end

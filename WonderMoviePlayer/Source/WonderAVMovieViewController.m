@@ -354,12 +354,16 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
         }
     }
     else if (context == WonderAVMovieObserverContextName(PlaybackBufferEmpty)) {
-        NSLog(@"buffer");
-        [self.controlSource buffer];
+        if (self.player.currentItem.playbackBufferEmpty) {
+            NSLog(@"buffer");
+            [self.controlSource buffer];
+        }
     }
     else if (context == WonderAVMovieObserverContextName(PlaybackLikelyToKeepUp)) {
-        NSLog(@"unbuffer");
-        [self.controlSource unbuffer];
+        if (self.player.currentItem.playbackLikelyToKeepUp) {
+            NSLog(@"unbuffer");
+            [self.controlSource unbuffer];
+        }
     }
     else {
         [super observeValueForKeyPath:path ofObject:object change:change context:context];
