@@ -79,10 +79,7 @@
 #pragma mark Progress action
 - (void)setProgress:(CGFloat)progress
 {
-    NSLog(@"setProgress %f, %f, %f", progress, self.progressTopView.width, self.progressCacheView.width);
-    if (self.progressTopView.width > 215) {
-        NSLog(@"setProgress NaN %f", progress);
-    }
+//    NSLog(@"setProgress %f, %f, %f", progress, self.progressTopView.width, self.progressCacheView.width);
     if (_progress != progress) {
         _progress = progress;
         [self setNeedsLayout];
@@ -91,7 +88,7 @@
 
 - (void)setCacheProgress:(CGFloat)cacheProgress
 {
-    NSLog(@"setCacheProgress %f", cacheProgress);
+//    NSLog(@"setCacheProgress %f", cacheProgress);
     if (_cacheProgress != cacheProgress) {
         _cacheProgress = cacheProgress;
         [self setNeedsLayout];

@@ -350,6 +350,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
             [self.playerLayerView setVideoFillMode:AVLayerVideoGravityResizeAspect];
             
             // FIXME
+            [self.player play];
         }
     }
     else if (context == WonderAVMovieObserverContextName(PlaybackBufferEmpty)) {
