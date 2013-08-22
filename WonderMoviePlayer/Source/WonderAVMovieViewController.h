@@ -14,7 +14,7 @@
 @class AVPlayer;
 @class AVPlayerItem;
 @class WonderAVPlayerView;
-@interface WonderAVMovieViewController : UIViewController {
+@interface WonderAVMovieViewController : UIViewController<MovieControlSourceDelegate> {
     BOOL isSeeking;
 	BOOL seekToZeroBeforePlay;
 	float restoreAfterScrubbingRate;
@@ -26,5 +26,6 @@
 @property (nonatomic, retain) AVPlayerItem *playerItem;
 @property (nonatomic, retain) IBOutlet WonderAVPlayerView *playerLayerView;
 @property (nonatomic, retain) id<MovieControlSource> controlSource;
+@property (nonatomic, retain) UIView *overlayView;
 - (void)playMovieStream:(NSURL *)movieURL;
 @end

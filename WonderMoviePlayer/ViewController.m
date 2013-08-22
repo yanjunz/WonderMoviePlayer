@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "WonderMoiveViewController.h"
 #import "TestWebViewController.h"
+#import "WonderAVMovieViewController.h"
 
 @interface ViewController ()
 
@@ -35,16 +36,21 @@
 }
 
 - (IBAction)onClickPlay:(id)sender {
-    WonderMoiveViewController *controller = [[WonderMoiveViewController alloc] init];
+//    WonderMoiveViewController *controller = [[WonderMoiveViewController alloc] init];
+//    [self presentViewController:controller animated:YES completion:^{
+//        NSLog(@"start to play");
+//        NSString *path = [[NSBundle mainBundle] pathForResource:@"Movie" ofType:@"m4v"];
+//        [controller playMovieFile:[NSURL fileURLWithPath:path]];
+//    }];
+    WonderAVMovieViewController *controller = [[WonderAVMovieViewController alloc] init];
     [self presentViewController:controller animated:YES completion:^{
-        NSLog(@"start to play");
-        NSString *path = [[NSBundle mainBundle] pathForResource:@"Movie" ofType:@"m4v"];
-        [controller playMovieFile:[NSURL fileURLWithPath:path]];
+        [controller playMovieStream:[[NSBundle mainBundle] URLForResource:@"Movie" withExtension:@"m4v"]];
     }];
 }
 
 - (IBAction)onClickPlayRemote:(id)sender {
-    WonderMoiveViewController *controller = [[WonderMoiveViewController alloc] init];
+//    WonderMoiveViewController *controller = [[WonderMoiveViewController alloc] init];
+    WonderAVMovieViewController *controller = [[WonderAVMovieViewController alloc] init];
     [self presentViewController:controller animated:YES completion:^{
         NSLog(@"start to play");
 //        NSString *path = [[NSBundle mainBundle] pathForResource:@"Movie" ofType:@"m4v"];

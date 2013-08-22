@@ -82,6 +82,9 @@ typedef enum {
 - (void)movieControlSourceExit:(id<MovieControlSource>)source;
 
 @optional
+- (void)movieControlSourceBeginChangeProgress:(id<MovieControlSource>)source;
+- (void)movieControlSourceEndChangeProgress:(id<MovieControlSource>)source;
+
 - (void)movieControlSourceBuffer:(id<MovieControlSource>)source;
 - (void)movieControlSourceUnbuffer:(id<MovieControlSource>)source;
 - (void)movieControlSource:(id<MovieControlSource>)source setFullscreen:(BOOL)fullscreen;

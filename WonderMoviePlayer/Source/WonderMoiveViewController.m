@@ -508,6 +508,16 @@
     [self.moviePlayerController setFullscreen:fullscreen animated:YES];
 }
 
+- (void)movieControlSourceBeginChangeProgress:(id<MovieControlSource>)source
+{
+    
+}
+
+- (void)movieControlSourceEndChangeProgress:(id<MovieControlSource>)source
+{
+    
+}
+
 #pragma mark Control operation
 - (void)timerHandler
 {
