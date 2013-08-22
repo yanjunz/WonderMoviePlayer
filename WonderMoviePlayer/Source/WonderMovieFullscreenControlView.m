@@ -44,6 +44,7 @@
 @property (nonatomic, retain) UIView *headerBar;
 @property (nonatomic, retain) UIButton *lockButton;
 @property (nonatomic, retain) UIButton *downloadButton;
+@property (nonatomic, retain) UIButton *crossScreenButton;
 
 // buffering
 @property (nonatomic, retain) UIView *loadingView;
@@ -187,10 +188,17 @@
 
     self.downloadButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.downloadButton setImage:QQImage(@"videoplayer_download") forState:UIControlStateNormal];
-    self.downloadButton.frame = CGRectMake(self.lockButton.left - 50, 0, headerBarHeight, headerBarHeight);
+    self.downloadButton.frame = CGRectOffset(self.lockButton.frame, -50, 0); //CGRectMake(self.lockButton.left - 50, 0, headerBarHeight, headerBarHeight);
     self.downloadButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [self.downloadButton addTarget:self action:@selector(onClickDownload:) forControlEvents:UIControlEventTouchUpInside];
     [self.headerBar addSubview:self.downloadButton];
+    
+    self.crossScreenButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.crossScreenButton setImage:QQImage(@"videoplayer_cross_screen") forState:UIControlStateNormal];
+    self.crossScreenButton.frame = CGRectOffset(self.downloadButton.frame, -50, 0);
+    self.crossScreenButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    [self.crossScreenButton addTarget:self action:@selector(onClickCrossScreen:) forControlEvents:UIControlEventTouchUpInside];
+    [self.headerBar addSubview:self.crossScreenButton];
     
     CGFloat centerButtonSize = 138 / 2;
     self.replayButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -224,7 +232,7 @@
     self.progressTimeLabel.layer.shadowOffset = CGSizeMake(0, 1);
     [self addSubview:self.progressTimeLabel];
     
-    self.viewsToBeLocked = @[backButton, self.downloadButton, self.bottomBar];
+    self.viewsToBeLocked = @[backButton, self.downloadButton, self.bottomBar, self.crossScreenButton];
     
     // Update control state
     if (self.autoPlayWhenStarted) {
@@ -562,6 +570,11 @@
 //    }
     
 //    [self startLoading];
+}
+
+- (IBAction)onClickCrossScreen:(id)sender
+{
+    
 }
 
 - (IBAction)onClickLock:(id)sender

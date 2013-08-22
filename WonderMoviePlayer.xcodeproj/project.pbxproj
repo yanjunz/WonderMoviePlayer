@@ -65,6 +65,7 @@
 		B517795217C21AD1006B948E /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = B517795117C21ACF006B948E /* RegexKitLite.m */; };
 		B517795417C21B59006B948E /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517795317C21B58006B948E /* CoreFoundation.framework */; };
 		B517795617C21BD7006B948E /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B517795517C21BD6006B948E /* libicucore.dylib */; };
+		B517795817C61383006B948E /* videoplayer_cross_screen@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B517795717C61383006B948E /* videoplayer_cross_screen@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -143,6 +144,7 @@
 		B517795117C21ACF006B948E /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
 		B517795317C21B58006B948E /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		B517795517C21BD6006B948E /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
+		B517795717C61383006B948E /* videoplayer_cross_screen@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "videoplayer_cross_screen@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -264,6 +266,7 @@
 		B51778DF17BA3880006B948E /* images */ = {
 			isa = PBXGroup;
 			children = (
+				B517795717C61383006B948E /* videoplayer_cross_screen@2x.png */,
 				B51778E017BA3880006B948E /* videoplayer_battery_bg@2x.png */,
 				B51778E117BA3880006B948E /* videoplayer_battery_electricity@2x.png */,
 				B51778E217BA3880006B948E /* videoplayer_download@2x.png */,
@@ -380,6 +383,7 @@
 				B517791217BA3880006B948E /* videoplayer_toolbar@2x.png in Resources */,
 				B517791317BA3880006B948E /* videoplayer_unlock@2x.png in Resources */,
 				B517793017C20905006B948E /* videoplay.html in Resources */,
+				B517795817C61383006B948E /* videoplayer_cross_screen@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
