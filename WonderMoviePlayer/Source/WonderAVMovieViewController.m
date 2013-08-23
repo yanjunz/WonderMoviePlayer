@@ -640,6 +640,8 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 {
     CGPoint offset = [gr translationInView:gr.view];
     CGPoint loc = [gr locationInView:gr.view];
+    [gr setTranslation:CGPointZero inView:gr.view];
+    
     if (fabs(offset.y) >= fabs(offset.x) * kWonderMovieVerticalPanGestureCoordRatio) {
         // vertical pan gesture, should be treated for volume or brightness
         if (loc.x < gr.view.width * 0.4) {
@@ -648,13 +650,33 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
         }
         else if (loc.x > gr.view.width * 0.6) {
             // volume
-            
+            CGFloat inc = -offset.y / gr.view.height;
+            NSLog(@"pan Volume %f, %f, %f", offset.y, gr.view.height, inc);
+            [self increaseVolume:inc];
         }
     }
     else if (fabs(offset.y) <= fabs(offset.x) * kWonderMovieHorizontalPanGestureCoordRatio) {
         // progress
         
     }
+}
+
+#pragma mark Update System Info
+- (void)increaseVolume:(CGFloat)volume
+{
+    MPMusicPlayerController *controller = [MPMusicPlayerController applicationMusicPlayer];
+    CGFloat newVolume = volume + controller.volume;
+    controller.volume = MIN(1, MAX(newVolume, 0));
+}
+
+- (void)setBrightness:(CGFloat)brightness
+{
+    
+}
+
+- (void)setProgress:(CGFloat)progress
+{
+    
 }
 
 @end

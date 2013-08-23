@@ -8,6 +8,7 @@
 
 #import "TestWebViewController.h"
 #import "WonderAVMovieViewController.h"
+#import "WonderMPMoiveViewController.h"
 
 @interface TestWebViewController ()
 
@@ -117,6 +118,11 @@
     if ([@"qqvideo" isEqualToString:request.URL.scheme]) {
 #ifdef MTT_FEATURE_WONDER_AVMOVIE_PLAYER
         WonderAVMovieViewController *controller = [[WonderAVMovieViewController alloc] init];
+        [self presentViewController:controller animated:YES completion:^{
+            [controller playMovieStream:[NSURL URLWithString:[self getCurrentVideoSrc]]];
+        }];
+#else 
+        WonderMPMoiveViewController *controller = [[WonderMPMoiveViewController alloc] init];
         [self presentViewController:controller animated:YES completion:^{
             [controller playMovieStream:[NSURL URLWithString:[self getCurrentVideoSrc]]];
         }];

@@ -11,6 +11,7 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import <CoreMedia/CoreMedia.h>
+#import <MediaPlayer/MediaPlayer.h>
 #import "MovieControlSource.h"
 
 @class AVPlayer;
