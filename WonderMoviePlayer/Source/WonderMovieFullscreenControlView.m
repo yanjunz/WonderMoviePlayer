@@ -256,6 +256,7 @@
     self.headerBar = nil;
     
     self.downloadButton = nil;
+    self.crossScreenButton = nil;
     self.lockButton = nil;
     self.actionButton = nil;
     self.nextButton = nil;
