@@ -14,7 +14,9 @@
 @interface WonderMovieFullscreenControlView : UIView<MovieControlSource>
 @property (nonatomic, readonly) BOOL autoPlayWhenStarted;
 @property (nonatomic, readonly) BOOL nextEnabled;
+
 - (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted nextEnabled:(BOOL)nextEnabled;
+- (void)installGestureHandlerForParentView;
 @end
 
 #endif // MTT_FEATURE_WONDER_VIDEO_PLAYER

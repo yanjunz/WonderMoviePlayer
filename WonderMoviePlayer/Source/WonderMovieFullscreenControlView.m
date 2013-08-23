@@ -14,6 +14,11 @@
 #import "UIView+Sizes.h"
 #import "BatteryIconView.h"
 
+// y / x
+#define kWonderMovieVerticalPanGestureCoordRatio    1.732050808f
+#define kWonderMovieHorizontalPanGestureCoordRatio  1.0f
+#define kWonderMoviePanDistanceThrehold             5.0f
+
 @interface WonderMovieFullscreenControlView () {
     NSTimeInterval _playbackTime;
     NSTimeInterval _playableDuration;
@@ -63,6 +68,8 @@
 
 // Only show when setting progress
 @property (nonatomic, retain) UILabel *progressTimeLabel;
+
+@property (nonatomic, retain) UIPanGestureRecognizer *panGestureRecognizer;
 @end
 
 @interface WonderMovieFullscreenControlView (ProgressView) <WonderMovieProgressViewDelegate>
@@ -248,6 +255,14 @@
     [self updateActionState];
 }
 
+- (void)installGestureHandlerForParentView
+{
+    // Setup tap GR
+    [self.superview addGestureRecognizer:[[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapOverlayView:)] autorelease]];
+    self.panGestureRecognizer = [[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPanOverlayView:)] autorelease];
+    [self.superview addGestureRecognizer:self.panGestureRecognizer];
+}
+
 - (void)dealloc
 {
     [self removeTimer];
@@ -277,6 +292,7 @@
     self.viewsToBeLocked = nil;
     
     self.delegate = nil;
+    self.panGestureRecognizer = nil;
 
     [super dealloc];
 }
@@ -588,6 +604,7 @@
     for (UIView *view in self.viewsToBeLocked) {
         view.hidden = self.lockButton.selected;
     }
+    self.panGestureRecognizer.enabled = !self.lockButton.selected;
     
     if ([self.delegate respondsToSelector:@selector(movieControlSource:lock:)]) {
         [self.delegate movieControlSource:self lock:self.lockButton.selected];
@@ -648,29 +665,123 @@
     [df release];
 }
 
-@end
-
-@implementation WonderMovieFullscreenControlView (ProgressView)
-
-- (void)wonderMovieProgressViewBeginChangeProgress:(WonderMovieProgressView *)progressView
+#pragma mark Gesture handler
+- (IBAction)onTapOverlayView:(UITapGestureRecognizer *)gr
 {
-    NSLog(@"wonderMovieProgressViewBeginChangeProgress");
+    BOOL animationToHide = self.alpha > 0;
+    [UIView animateWithDuration:0.5f animations:^{
+        if (animationToHide) {
+            self.alpha = 0;
+        }
+        else {
+            self.alpha = 1;
+        }
+    }];
+}
+
+- (IBAction)onPanOverlayView:(UIPanGestureRecognizer *)gr
+{
+    static enum WonderMoviePanAction {
+        WonderMoviePanAction_No,
+        WonderMoviePanAction_Progress,
+        WonderMoviePanAction_Volume,
+        WonderMoviePanAction_Brigitness,
+    } sPanAction = WonderMoviePanAction_No; // record the actual action of serial panning gesture
+    
+    CGPoint offset = [gr translationInView:gr.view];
+    CGPoint loc = [gr locationInView:gr.view];
+    NSLog(@"pan %d, (%f,%f), (%f, %f)", gr.state, loc.x, loc.y, offset.x, offset.y);
+    
+    if (fabs(offset.y) >= fabs(offset.x) * kWonderMovieVerticalPanGestureCoordRatio &&
+        fabs(offset.y) > kWonderMoviePanDistanceThrehold)
+    {
+        // vertical pan gesture, should be treated for volume or brightness
+        if (loc.x < gr.view.width * 0.4 &&
+            (sPanAction == WonderMoviePanAction_No || sPanAction == WonderMoviePanAction_Brigitness))
+        {
+            // brightness
+            sPanAction = WonderMoviePanAction_Brigitness;
+            CGFloat inc = -offset.y / gr.view.height;
+            NSLog(@"pan Brightness %f, (%f, %f), %f", offset.y, loc.x, loc.y, inc);
+            [self increaseBrightness:inc];
+        }
+        else if (loc.x > gr.view.width * 0.6 &&
+                 (sPanAction == WonderMoviePanAction_No || sPanAction == WonderMoviePanAction_Volume))
+        {
+            // volume
+            sPanAction = WonderMoviePanAction_Volume;
+            CGFloat inc = -offset.y / gr.view.height;
+            NSLog(@"pan Volume %f, %f, %f", offset.y, gr.view.height, inc);
+            [self increaseVolume:inc];
+        }
+        [gr setTranslation:CGPointZero inView:gr.view];
+    }
+    else if (fabs(offset.y) <= fabs(offset.x) * kWonderMovieHorizontalPanGestureCoordRatio &&
+             fabs(offset.x) > kWonderMoviePanDistanceThrehold &&
+             (sPanAction == WonderMoviePanAction_No || sPanAction == WonderMoviePanAction_Progress))
+    {
+        // progress
+        if (sPanAction == WonderMoviePanAction_No) { // just start
+            [self beginScrubbing];
+        }
+        
+        sPanAction = WonderMoviePanAction_Progress;
+        CGFloat inc = offset.x / (gr.view.width / 2) * 30; // 30s for width/2
+        NSLog(@"pan Progress %f, %f, %f", offset.x, gr.view.width, inc);
+        [self increaseProgress:inc];
+        [gr setTranslation:CGPointZero inView:gr.view];
+    }
+    
+    // clear the action when gesture end
+    if (gr.state == UIGestureRecognizerStateEnded) {
+        if (sPanAction == WonderMoviePanAction_Progress) {
+            [self endScrubbing];
+        }
+        sPanAction = WonderMoviePanAction_No;
+    }
+}
+
+#pragma mark Update System Info
+- (void)increaseVolume:(CGFloat)volume
+{
+    if ([self.delegate respondsToSelector:@selector(movieControlSource:increaseVolume:)]) {
+        [self.delegate movieControlSource:self increaseVolume:volume];
+    }
+}
+
+- (void)increaseBrightness:(CGFloat)brightness
+{
+    UIScreen *screen = [UIScreen mainScreen];
+    CGFloat newBrightness = screen.brightness + brightness;
+    newBrightness = MIN(1, MAX(newBrightness, 0));
+    screen.brightness = newBrightness;
+}
+
+- (void)increaseProgress:(CGFloat)progressBySec
+{
+    double time = _playbackTime + progressBySec;
+    if (isfinite(time) && isfinite(_duration) && _duration > 0) {
+        NSLog(@"increaseProgress %f, %f, %f => %f", progressBySec, _playbackTime, _playbackTime/_duration, time /_duration);
+        [self scrub:time / _duration];
+    }
+}
+
+- (void)beginScrubbing
+{
     _isProgressViewPanning = YES;
     if ([self.delegate respondsToSelector:@selector(movieControlSourceBeginChangeProgress:)]) {
         [self.delegate movieControlSourceBeginChangeProgress:self];
     }
 }
 
-- (void)wonderMovieProgressView:(WonderMovieProgressView *)progressView didChangeProgress:(CGFloat)progress
+- (void)scrub:(CGFloat)progress
 {
-    NSLog(@"didChangeProgress %f", progress);
     [self handleCommand:MovieControlCommandSetProgress param:@(progress) notify:YES];
     [self setProgress:progress];
 }
 
-- (void)wonderMovieProgressViewEndChangeProgress:(WonderMovieProgressView *)progressView;
+- (void)endScrubbing
 {
-    NSLog(@"wonderMovieProgressViewEndChangeProgress");
     _isProgressViewPanning = NO;
     if ([self.delegate respondsToSelector:@selector(movieControlSourceEndChangeProgress:)]) {
         [self.delegate movieControlSourceEndChangeProgress:self];
@@ -678,5 +789,29 @@
 }
 
 @end
+
+@implementation WonderMovieFullscreenControlView (ProgressView)
+
+- (void)wonderMovieProgressViewBeginChangeProgress:(WonderMovieProgressView *)progressView
+{
+    NSLog(@"wonderMovieProgressViewBeginChangeProgress");
+    [self beginScrubbing];
+}
+
+- (void)wonderMovieProgressView:(WonderMovieProgressView *)progressView didChangeProgress:(CGFloat)progress
+{
+    NSLog(@"didChangeProgress %f", progress);
+    [self scrub:progress];
+}
+
+- (void)wonderMovieProgressViewEndChangeProgress:(WonderMovieProgressView *)progressView;
+{
+    NSLog(@"wonderMovieProgressViewEndChangeProgress");
+    [self endScrubbing];
+}
+
+@end
+
+
 
 #endif // MTT_FEATURE_WONDER_VIDEO_PLAYER

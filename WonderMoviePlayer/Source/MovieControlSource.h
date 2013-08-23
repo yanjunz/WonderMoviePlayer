@@ -90,6 +90,8 @@ typedef enum {
 - (void)movieControlSource:(id<MovieControlSource>)source setFullscreen:(BOOL)fullscreen;
 - (void)movieControlSourceOnCrossScreen:(id<MovieControlSource>)source;
 - (void)movieControlSource:(id<MovieControlSource>)source lock:(BOOL)lock;
+
+- (void)movieControlSource:(id<MovieControlSource>)source increaseVolume:(CGFloat)volume;
 @end
 
 #endif // MTT_FEATURE_WONDER_VIDEO_PLAYER

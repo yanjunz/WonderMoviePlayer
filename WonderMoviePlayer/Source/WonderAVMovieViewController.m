@@ -13,10 +13,6 @@
 #import "WonderMovieFullscreenControlView.h"
 #import "UIView+Sizes.h"
 
-// y / x
-#define kWonderMovieVerticalPanGestureCoordRatio    1.732050808f
-#define kWonderMovieHorizontalPanGestureCoordRatio  1.0f
-#define kWonderMoviePanDistanceThrehold             5.0f
 
 #define OBSERVER_CONTEXT_NAME(prefix, property) prefix##property##_ObserverContext
 
@@ -46,7 +42,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     BOOL _statusBarHiddenPrevious;        
 }
 @property (nonatomic, retain) UIView *controlView;
-@property (nonatomic, retain) UIPanGestureRecognizer *panGestureRecognizer;
+
 @end
 
 @implementation WonderAVMovieViewController
@@ -70,7 +66,6 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     self.controlSource = nil;
     self.overlayView = nil;
     self.controlView = nil;
-    self.panGestureRecognizer = nil;
     [super dealloc];
 }
 
@@ -93,11 +88,6 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     
     [self setupControlSource:YES];
     [self addOverlayView];
-    
-    // Setup tap GR
-    [self.overlayView addGestureRecognizer:[[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapOverlayView:)] autorelease]];
-    self.panGestureRecognizer = [[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPanOverlayView:)] autorelease];
-    [self.overlayView addGestureRecognizer:self.panGestureRecognizer];
 }
 
 /* Notifies the view controller that its view is about to be become visible. */
@@ -448,6 +438,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
         fullscreenControlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         self.controlView = fullscreenControlView;
         [self.overlayView addSubview:fullscreenControlView];
+        [fullscreenControlView installGestureHandlerForParentView];
         self.controlSource = fullscreenControlView;
     }
 }
@@ -583,6 +574,8 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
         double time = duration * progress;
         [self.player seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC)];
     }
+    
+    [self syncScrubber];
 }
 
 
@@ -642,86 +635,10 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 
 - (void)movieControlSource:(id<MovieControlSource>)source lock:(BOOL)lock
 {
-    self.panGestureRecognizer.enabled = !lock;
+
 }
 
-#pragma mark Gesture handler
-- (IBAction)onTapOverlayView:(UITapGestureRecognizer *)gr
-{
-    BOOL animationToHide = self.controlView.alpha > 0;
-    [UIView animateWithDuration:0.5f animations:^{
-        if (animationToHide) {
-            self.controlView.alpha = 0;
-        }
-        else {
-            self.controlView.alpha = 1;
-        }
-    }];
-}
-
-- (IBAction)onPanOverlayView:(UIPanGestureRecognizer *)gr
-{
-    static enum WonderMoviePanAction {
-        WonderMoviePanAction_No,
-        WonderMoviePanAction_Progress,
-        WonderMoviePanAction_Volume,
-        WonderMoviePanAction_Brigitness,
-    } sPanAction = WonderMoviePanAction_No; // record the actual action of serial panning gesture
-    
-    CGPoint offset = [gr translationInView:gr.view];
-    CGPoint loc = [gr locationInView:gr.view];
-    
-    if (fabs(offset.y) >= fabs(offset.x) * kWonderMovieVerticalPanGestureCoordRatio &&
-        fabs(offset.y) > kWonderMoviePanDistanceThrehold)
-    {
-        // vertical pan gesture, should be treated for volume or brightness
-        if (loc.x < gr.view.width * 0.4 &&
-            (sPanAction == WonderMoviePanAction_No || sPanAction == WonderMoviePanAction_Brigitness))
-        {
-            // brightness
-            sPanAction = WonderMoviePanAction_Brigitness;
-            CGFloat inc = -offset.y / gr.view.height;
-            NSLog(@"pan Brightness %f, (%f, %f), %f", offset.y, loc.x, loc.y, inc);
-            [self increaseBrightness:inc];
-        }
-        else if (loc.x > gr.view.width * 0.6 &&
-                 (sPanAction == WonderMoviePanAction_No || sPanAction == WonderMoviePanAction_Volume))
-        {
-            // volume
-            sPanAction = WonderMoviePanAction_Volume;
-            CGFloat inc = -offset.y / gr.view.height;
-            NSLog(@"pan Volume %f, %f, %f", offset.y, gr.view.height, inc);
-            [self increaseVolume:inc];
-        }
-        [gr setTranslation:CGPointZero inView:gr.view];
-    }
-    else if (fabs(offset.y) <= fabs(offset.x) * kWonderMovieHorizontalPanGestureCoordRatio &&
-             fabs(offset.x) > kWonderMoviePanDistanceThrehold &&
-             (sPanAction == WonderMoviePanAction_No || sPanAction == WonderMoviePanAction_Progress))
-    {
-        // progress
-        if (sPanAction == WonderMoviePanAction_No) { // just start
-            [self beginScrubbing];
-        }
-        
-        sPanAction = WonderMoviePanAction_Progress;
-        CGFloat inc = offset.x / (gr.view.width / 2) * 30; // 30s for width/2
-        NSLog(@"pan Progress %f, %f, %f", offset.x, gr.view.width, inc);
-        [self increaseProgress:inc];
-        [gr setTranslation:CGPointZero inView:gr.view];
-    }
-    
-    // clear the action when gesture end
-    if (gr.state == UIGestureRecognizerStateEnded) {
-        if (sPanAction == WonderMoviePanAction_Progress) {
-            [self endScrubbing];
-        }
-        sPanAction = WonderMoviePanAction_No;
-    }
-}
-
-#pragma mark Update System Info
-- (void)increaseVolume:(CGFloat)volume
+- (void)movieControlSource:(id<MovieControlSource>)source increaseVolume:(CGFloat)volume
 {
     MPMusicPlayerController *controller = [MPMusicPlayerController applicationMusicPlayer];
     CGFloat newVolume = volume + controller.volume;
@@ -729,31 +646,6 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     controller.volume = newVolume;
 }
 
-- (void)increaseBrightness:(CGFloat)brightness
-{
-    UIScreen *screen = [UIScreen mainScreen];
-    CGFloat newBrightness = screen.brightness + brightness;
-    newBrightness = MIN(1, MAX(newBrightness, 0));
-    screen.brightness = newBrightness;
-}
-
-- (void)increaseProgress:(CGFloat)progressBySec
-{
-    CMTime playerDuration = [self playerItemDuration];
-    if (CMTIME_IS_INVALID(playerDuration)) {
-        return;
-    }
-    
-    double currentTime = CMTimeGetSeconds(self.player.currentTime);
-    double duration = CMTimeGetSeconds(playerDuration);
-    if (isfinite(duration) && isfinite(currentTime)) {
-        double time = currentTime + progressBySec;
-        if (time > duration) {
-            time = duration;
-        }
-        [self.player seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC)];
-    }
-}
 
 @end
 #endif // MTT_FEATURE_WONDER_AVMOVIE_PLAYER
