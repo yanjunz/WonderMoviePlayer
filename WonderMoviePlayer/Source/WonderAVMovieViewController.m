@@ -503,7 +503,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
             CMTimeRange tr = [timeRangeValue CMTimeRangeValue];
             playableDuration = CMTimeGetSeconds(tr.start) + CMTimeGetSeconds(tr.duration);
         }
-        
+//        NSLog(@"syncSrubber %f, %f", time, progress);
         if ([self.controlSource respondsToSelector:@selector(setDuration:)]) {
             [self.controlSource setDuration:duration];
         }
@@ -572,10 +572,9 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     double duration = CMTimeGetSeconds(playerDuration);
     if (isfinite(duration)) {
         double time = duration * progress;
+//        NSLog(@"scrub %f", time);
         [self.player seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC)];
     }
-    
-    [self syncScrubber];
 }
 
 

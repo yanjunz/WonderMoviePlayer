@@ -234,7 +234,7 @@
     self.progressTimeLabel.backgroundColor = [UIColor clearColor];
     self.progressTimeLabel.textColor = [UIColor whiteColor];
     self.progressTimeLabel.height = font.ascender + font.descender;
-//    self.progressTimeLabel.hidden = YES;
+    self.progressTimeLabel.hidden = YES;
     self.progressTimeLabel.layer.shadowOpacity = 0.5;
     self.progressTimeLabel.layer.shadowColor = [UIColor blackColor].CGColor;
     self.progressTimeLabel.layer.shadowRadius = 1;
@@ -483,8 +483,8 @@
 
 - (void)setProgress:(CGFloat)progress
 {
+    [self.progressView setProgress:progress];
     if (!_isProgressViewPanning) {
-        [self.progressView setProgress:progress];
         [self handleCommand:MovieControlCommandSetProgress param:@(progress) notify:NO];
     }
     else {
@@ -584,11 +584,6 @@
 
 - (IBAction)onClickDownload:(id)sender
 {
-//    if ([self.delegate respondsToSelector:@selector(movieControlSource:setFullscreen:)]) {
-//        [self.delegate movieControlSource:self setFullscreen:NO];
-//    }
-    
-//    [self startLoading];
 }
 
 - (IBAction)onClickCrossScreen:(id)sender
@@ -717,7 +712,7 @@
         [gr setTranslation:CGPointZero inView:gr.view];
     }
     else if (fabs(offset.y) <= fabs(offset.x) * kWonderMovieHorizontalPanGestureCoordRatio &&
-             fabs(offset.x) > kWonderMoviePanDistanceThrehold &&
+//             fabs(offset.x) > kWonderMoviePanDistanceThrehold &&
              (sPanAction == WonderMoviePanAction_No || sPanAction == WonderMoviePanAction_Progress))
     {
         // progress
@@ -727,7 +722,8 @@
         
         sPanAction = WonderMoviePanAction_Progress;
         CGFloat inc = offset.x / (gr.view.width / 2) * 30; // 30s for width/2
-        NSLog(@"pan Progress %f, %f, %f", offset.x, gr.view.width, inc);
+        NSLog(@"pan Progress %f, %f, %f, %f", offset.x, gr.view.width, inc, inc > 0 ? ceilf(inc) : floorf(inc));
+        inc = inc > 0 ? ceilf(inc) : floorf(inc);
         [self increaseProgress:inc];
         [gr setTranslation:CGPointZero inView:gr.view];
     }
@@ -760,15 +756,18 @@
 - (void)increaseProgress:(CGFloat)progressBySec
 {
     double time = _playbackTime + progressBySec;
+    time = MIN(_duration, MAX(time, 0));
     if (isfinite(time) && isfinite(_duration) && _duration > 0) {
         NSLog(@"increaseProgress %f, %f, %f => %f", progressBySec, _playbackTime, _playbackTime/_duration, time /_duration);
         [self scrub:time / _duration];
+        _playbackTime = time;
     }
 }
 
 - (void)beginScrubbing
 {
     _isProgressViewPanning = YES;
+    self.progressTimeLabel.hidden = NO;
     if ([self.delegate respondsToSelector:@selector(movieControlSourceBeginChangeProgress:)]) {
         [self.delegate movieControlSourceBeginChangeProgress:self];
     }
@@ -783,6 +782,7 @@
 - (void)endScrubbing
 {
     _isProgressViewPanning = NO;
+    self.progressTimeLabel.hidden = YES;
     if ([self.delegate respondsToSelector:@selector(movieControlSourceEndChangeProgress:)]) {
         [self.delegate movieControlSourceEndChangeProgress:self];
     }
