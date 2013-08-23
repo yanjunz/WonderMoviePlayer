@@ -661,32 +661,62 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 
 - (IBAction)onPanOverlayView:(UIPanGestureRecognizer *)gr
 {
+    static enum WonderMoviePanAction {
+        WonderMoviePanAction_No,
+        WonderMoviePanAction_Progress,
+        WonderMoviePanAction_Volume,
+        WonderMoviePanAction_Brigitness,
+    } sPanAction = WonderMoviePanAction_No; // record the actual action of serial panning gesture
+    
     CGPoint offset = [gr translationInView:gr.view];
     CGPoint loc = [gr locationInView:gr.view];
-//    NSLog(@"pan %d, (%f,%f), (%f,%f)", gr.state, loc.x, loc.y, offset.x, offset.y);
     
-    if (fabs(offset.y) >= fabs(offset.x) * kWonderMovieVerticalPanGestureCoordRatio && fabs(offset.y) > kWonderMoviePanDistanceThrehold) {
+    if (fabs(offset.y) >= fabs(offset.x) * kWonderMovieVerticalPanGestureCoordRatio &&
+        fabs(offset.y) > kWonderMoviePanDistanceThrehold)
+    {
         // vertical pan gesture, should be treated for volume or brightness
-        if (loc.x < gr.view.width * 0.4) {
+        if (loc.x < gr.view.width * 0.4 &&
+            (sPanAction == WonderMoviePanAction_No || sPanAction == WonderMoviePanAction_Brigitness))
+        {
             // brightness
+            sPanAction = WonderMoviePanAction_Brigitness;
             CGFloat inc = -offset.y / gr.view.height;
             NSLog(@"pan Brightness %f, (%f, %f), %f", offset.y, loc.x, loc.y, inc);
             [self increaseBrightness:inc];
         }
-        else if (loc.x > gr.view.width * 0.6) {
+        else if (loc.x > gr.view.width * 0.6 &&
+                 (sPanAction == WonderMoviePanAction_No || sPanAction == WonderMoviePanAction_Volume))
+        {
             // volume
+            sPanAction = WonderMoviePanAction_Volume;
             CGFloat inc = -offset.y / gr.view.height;
             NSLog(@"pan Volume %f, %f, %f", offset.y, gr.view.height, inc);
             [self increaseVolume:inc];
         }
         [gr setTranslation:CGPointZero inView:gr.view];
     }
-    else if (fabs(offset.y) <= fabs(offset.x) * kWonderMovieHorizontalPanGestureCoordRatio && fabs(offset.x) > kWonderMoviePanDistanceThrehold) {
+    else if (fabs(offset.y) <= fabs(offset.x) * kWonderMovieHorizontalPanGestureCoordRatio &&
+             fabs(offset.x) > kWonderMoviePanDistanceThrehold &&
+             (sPanAction == WonderMoviePanAction_No || sPanAction == WonderMoviePanAction_Progress))
+    {
         // progress
+        if (sPanAction == WonderMoviePanAction_No) { // just start
+            [self beginScrubbing];
+        }
+        
+        sPanAction = WonderMoviePanAction_Progress;
         CGFloat inc = offset.x / (gr.view.width / 2) * 30; // 30s for width/2
         NSLog(@"pan Progress %f, %f, %f", offset.x, gr.view.width, inc);
         [self increaseProgress:inc];
         [gr setTranslation:CGPointZero inView:gr.view];
+    }
+    
+    // clear the action when gesture end
+    if (gr.state == UIGestureRecognizerStateEnded) {
+        if (sPanAction == WonderMoviePanAction_Progress) {
+            [self endScrubbing];
+        }
+        sPanAction = WonderMoviePanAction_No;
     }
 }
 
@@ -695,14 +725,16 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 {
     MPMusicPlayerController *controller = [MPMusicPlayerController applicationMusicPlayer];
     CGFloat newVolume = volume + controller.volume;
-    controller.volume = MIN(1, MAX(newVolume, 0));
+    newVolume = MIN(1, MAX(newVolume, 0));
+    controller.volume = newVolume;
 }
 
 - (void)increaseBrightness:(CGFloat)brightness
 {
     UIScreen *screen = [UIScreen mainScreen];
     CGFloat newBrightness = screen.brightness + brightness;
-    screen.brightness = MIN(1, MAX(newBrightness, 0));
+    newBrightness = MIN(1, MAX(newBrightness, 0));
+    screen.brightness = newBrightness;
 }
 
 - (void)increaseProgress:(CGFloat)progressBySec
