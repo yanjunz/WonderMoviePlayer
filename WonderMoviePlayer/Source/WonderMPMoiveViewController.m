@@ -25,6 +25,7 @@
 }
 @property (nonatomic, retain) NSTimer *timer;
 @property (nonatomic, retain) UIView *controlView;
+@property (nonatomic, retain) UIPanGestureRecognizer *panGestureRecognizer;
 @end
 
 @implementation WonderMPMoiveViewController
@@ -36,6 +37,18 @@
         // Custom initialization
     }
     return self;
+}
+
+- (void)dealloc
+{
+    [self.timer invalidate];
+    self.timer = nil;
+    self.controlView = nil;
+    self.moviePlayerController = nil;
+    self.overlayView = nil;
+    self.backgroundView = nil;
+    self.controlSource = nil;
+    [super dealloc];
 }
 
 - (void)viewDidLoad
@@ -61,7 +74,8 @@
     
     // Setup tap GR
     [self.overlayView addGestureRecognizer:[[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapOverlayView:)] autorelease]];
-    [self.overlayView addGestureRecognizer:[[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPanOverlayView:)] autorelease]];
+    self.panGestureRecognizer = [[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPanOverlayView:)] autorelease];
+    [self.overlayView addGestureRecognizer:self.panGestureRecognizer];
 }
 
 - (void)didReceiveMemoryWarning
@@ -518,6 +532,11 @@
 - (void)movieControlSourceEndChangeProgress:(id<MovieControlSource>)source
 {
     [self endScrubbing];
+}
+
+- (void)movieControlSource:(id<MovieControlSource>)source lock:(BOOL)lock
+{
+    self.panGestureRecognizer.enabled = !lock;
 }
 
 #pragma mark Control operation

@@ -16,6 +16,7 @@
 // y / x
 #define kWonderMovieVerticalPanGestureCoordRatio    1.732050808f
 #define kWonderMovieHorizontalPanGestureCoordRatio  1.0f
+#define kWonderMoviePanDistanceThrehold             5.0f
 
 #define OBSERVER_CONTEXT_NAME(prefix, property) prefix##property##_ObserverContext
 
@@ -45,6 +46,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     BOOL _statusBarHiddenPrevious;        
 }
 @property (nonatomic, retain) UIView *controlView;
+@property (nonatomic, retain) UIPanGestureRecognizer *panGestureRecognizer;
 @end
 
 @implementation WonderAVMovieViewController
@@ -56,6 +58,20 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
         // Custom initialization
     }
     return self;
+}
+
+- (void)dealloc
+{
+    [self removePlayerTimeObserver];
+    
+    self.player = nil;
+    self.playerItem = nil;
+    self.playerLayerView = nil;
+    self.controlSource = nil;
+    self.overlayView = nil;
+    self.controlView = nil;
+    self.panGestureRecognizer = nil;
+    [super dealloc];
 }
 
 - (void)viewDidLoad
@@ -80,7 +96,8 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     
     // Setup tap GR
     [self.overlayView addGestureRecognizer:[[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapOverlayView:)] autorelease]];
-    [self.overlayView addGestureRecognizer:[[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPanOverlayView:)] autorelease]];
+    self.panGestureRecognizer = [[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPanOverlayView:)] autorelease];
+    [self.overlayView addGestureRecognizer:self.panGestureRecognizer];
 }
 
 /* Notifies the view controller that its view is about to be become visible. */
@@ -568,6 +585,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     }
 }
 
+
 #pragma mark Player
 
 - (CMTime)playerItemDuration
@@ -622,6 +640,11 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     [self endScrubbing];
 }
 
+- (void)movieControlSource:(id<MovieControlSource>)source lock:(BOOL)lock
+{
+    self.panGestureRecognizer.enabled = !lock;
+}
+
 #pragma mark Gesture handler
 - (IBAction)onTapOverlayView:(UITapGestureRecognizer *)gr
 {
@@ -640,13 +663,15 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 {
     CGPoint offset = [gr translationInView:gr.view];
     CGPoint loc = [gr locationInView:gr.view];
-    [gr setTranslation:CGPointZero inView:gr.view];
+//    NSLog(@"pan %d, (%f,%f), (%f,%f)", gr.state, loc.x, loc.y, offset.x, offset.y);
     
-    if (fabs(offset.y) >= fabs(offset.x) * kWonderMovieVerticalPanGestureCoordRatio) {
+    if (fabs(offset.y) >= fabs(offset.x) * kWonderMovieVerticalPanGestureCoordRatio && fabs(offset.y) > kWonderMoviePanDistanceThrehold) {
         // vertical pan gesture, should be treated for volume or brightness
         if (loc.x < gr.view.width * 0.4) {
             // brightness
-            
+            CGFloat inc = -offset.y / gr.view.height;
+            NSLog(@"pan Brightness %f, (%f, %f), %f", offset.y, loc.x, loc.y, inc);
+            [self increaseBrightness:inc];
         }
         else if (loc.x > gr.view.width * 0.6) {
             // volume
@@ -654,10 +679,14 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
             NSLog(@"pan Volume %f, %f, %f", offset.y, gr.view.height, inc);
             [self increaseVolume:inc];
         }
+        [gr setTranslation:CGPointZero inView:gr.view];
     }
-    else if (fabs(offset.y) <= fabs(offset.x) * kWonderMovieHorizontalPanGestureCoordRatio) {
+    else if (fabs(offset.y) <= fabs(offset.x) * kWonderMovieHorizontalPanGestureCoordRatio && fabs(offset.x) > kWonderMoviePanDistanceThrehold) {
         // progress
-        
+        CGFloat inc = offset.x / (gr.view.width / 2) * 30; // 30s for width/2
+        NSLog(@"pan Progress %f, %f, %f", offset.x, gr.view.width, inc);
+        [self increaseProgress:inc];
+        [gr setTranslation:CGPointZero inView:gr.view];
     }
 }
 
@@ -669,14 +698,29 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     controller.volume = MIN(1, MAX(newVolume, 0));
 }
 
-- (void)setBrightness:(CGFloat)brightness
+- (void)increaseBrightness:(CGFloat)brightness
 {
-    
+    UIScreen *screen = [UIScreen mainScreen];
+    CGFloat newBrightness = screen.brightness + brightness;
+    screen.brightness = MIN(1, MAX(newBrightness, 0));
 }
 
-- (void)setProgress:(CGFloat)progress
+- (void)increaseProgress:(CGFloat)progressBySec
 {
+    CMTime playerDuration = [self playerItemDuration];
+    if (CMTIME_IS_INVALID(playerDuration)) {
+        return;
+    }
     
+    double currentTime = CMTimeGetSeconds(self.player.currentTime);
+    double duration = CMTimeGetSeconds(playerDuration);
+    if (isfinite(duration) && isfinite(currentTime)) {
+        double time = currentTime + progressBySec;
+        if (time > duration) {
+            time = duration;
+        }
+        [self.player seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC)];
+    }
 }
 
 @end

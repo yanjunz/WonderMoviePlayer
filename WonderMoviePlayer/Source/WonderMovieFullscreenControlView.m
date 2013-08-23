@@ -588,6 +588,10 @@
     for (UIView *view in self.viewsToBeLocked) {
         view.hidden = self.lockButton.selected;
     }
+    
+    if ([self.delegate respondsToSelector:@selector(movieControlSource:lock:)]) {
+        [self.delegate movieControlSource:self lock:self.lockButton.selected];
+    }
 }
 
 - (IBAction)onClickReplay:(id)sender
