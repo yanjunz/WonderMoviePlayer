@@ -10,7 +10,7 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import <AVFoundation/AVAsset.h>
-#import "WonderMoiveViewController.h"
+#import "WonderMPMoiveViewController.h"
 #import "WonderMovieFullscreenControlView.h"
 #import "MoviePlayerUserPrefs.h"
 #import "UIView+Sizes.h"
@@ -20,14 +20,14 @@
 #define kWonderMovieHorizontalPanGestureCoordRatio  1.0f
 
 
-@interface WonderMoiveViewController () {
+@interface WonderMPMoiveViewController () {
     BOOL _statusBarHiddenPrevious;    
 }
 @property (nonatomic, retain) NSTimer *timer;
 @property (nonatomic, retain) UIView *controlView;
 @end
 
-@implementation WonderMoiveViewController
+@implementation WonderMPMoiveViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
