@@ -694,6 +694,8 @@
     CGPoint loc = [gr locationInView:gr.view];
     NSLog(@"pan %d, (%f,%f), (%f, %f)", gr.state, loc.x, loc.y, offset.x, offset.y);
     
+    CGRect progressValidRegion = CGRectMake(0, self.headerBar.bottom, gr.view.width, gr.view.height - self.headerBar.bottom - self.bottomBar.height);
+    
     if (fabs(offset.y) >= fabs(offset.x) * kWonderMovieVerticalPanGestureCoordRatio &&
         fabs(offset.y) > kWonderMoviePanDistanceThrehold)
     {
@@ -719,6 +721,7 @@
         [gr setTranslation:CGPointZero inView:gr.view];
     }
     else if (fabs(offset.y) <= fabs(offset.x) * kWonderMovieHorizontalPanGestureCoordRatio &&
+             CGRectContainsPoint(progressValidRegion, loc) &&
 //             fabs(offset.x) > kWonderMoviePanDistanceThrehold &&
              (sPanAction == WonderMoviePanAction_No || sPanAction == WonderMoviePanAction_Progress))
     {

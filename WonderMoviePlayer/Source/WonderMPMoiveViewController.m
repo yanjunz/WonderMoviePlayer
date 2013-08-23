@@ -15,9 +15,6 @@
 #import "MoviePlayerUserPrefs.h"
 #import "UIView+Sizes.h"
 
-// y / x
-#define kWonderMovieVerticalPanGestureCoordRatio    1.732050808f
-#define kWonderMovieHorizontalPanGestureCoordRatio  1.0f
 
 
 @interface WonderMPMoiveViewController () {
@@ -25,7 +22,6 @@
 }
 @property (nonatomic, retain) NSTimer *timer;
 @property (nonatomic, retain) UIView *controlView;
-@property (nonatomic, retain) UIPanGestureRecognizer *panGestureRecognizer;
 @end
 
 @implementation WonderMPMoiveViewController
@@ -71,11 +67,6 @@
     }
     
     [self setupControlSource:YES];
-    
-    // Setup tap GR
-    [self.overlayView addGestureRecognizer:[[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapOverlayView:)] autorelease]];
-    self.panGestureRecognizer = [[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPanOverlayView:)] autorelease];
-    [self.overlayView addGestureRecognizer:self.panGestureRecognizer];
 }
 
 - (void)didReceiveMemoryWarning
@@ -256,6 +247,7 @@
         fullscreenControlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         self.controlView = fullscreenControlView;
         [self.overlayView addSubview:fullscreenControlView];
+        [fullscreenControlView installGestureHandlerForParentView];
         self.controlSource = fullscreenControlView;
     }
 }
@@ -536,7 +528,15 @@
 
 - (void)movieControlSource:(id<MovieControlSource>)source lock:(BOOL)lock
 {
-    self.panGestureRecognizer.enabled = !lock;
+
+}
+
+- (void)movieControlSource:(id<MovieControlSource>)source increaseVolume:(CGFloat)volume
+{
+    MPMusicPlayerController *controller = [MPMusicPlayerController applicationMusicPlayer];
+    CGFloat newVolume = volume + controller.volume;
+    newVolume = MIN(1, MAX(newVolume, 0));
+    controller.volume = newVolume;
 }
 
 #pragma mark Control operation
@@ -594,64 +594,6 @@
 {
     [self startTimer];
 }
-     
-#pragma mark Gesture handler
-- (IBAction)onTapOverlayView:(UITapGestureRecognizer *)gr
-{
-    BOOL animationToHide = self.controlView.alpha > 0;
-    [UIView animateWithDuration:0.5f animations:^{
-        if (animationToHide) {
-            self.controlView.alpha = 0;
-        }
-        else {
-            self.controlView.alpha = 1;
-        }
-    }];
-}
-
-- (IBAction)onPanOverlayView:(UIPanGestureRecognizer *)gr
-{
-    CGPoint offset = [gr translationInView:gr.view];
-    CGPoint loc = [gr locationInView:gr.view];
-    [gr setTranslation:CGPointZero inView:gr.view];
-    
-    if (fabs(offset.y) >= fabs(offset.x) * kWonderMovieVerticalPanGestureCoordRatio) {
-        // vertical pan gesture, should be treated for volume or brightness
-        if (loc.x < gr.view.width * 0.4) {
-            // brightness
-            
-        }
-        else if (loc.x > gr.view.width * 0.6) {
-            // volume
-            CGFloat inc = -offset.y / gr.view.height;
-            NSLog(@"pan Volume %f, %f, %f", offset.y, gr.view.height, inc);
-            [self increaseVolume:inc];
-        }
-    }
-    else if (fabs(offset.y) <= fabs(offset.x) * kWonderMovieHorizontalPanGestureCoordRatio) {
-        // progress
-        
-    }
-}
-
-#pragma mark Update System Info
-- (void)increaseVolume:(CGFloat)volume
-{
-    MPMusicPlayerController *controller = [MPMusicPlayerController applicationMusicPlayer];
-    CGFloat newVolume = volume + controller.volume;
-    controller.volume = MIN(1, MAX(newVolume, 0));
-}
-
-- (void)setBrightness:(CGFloat)brightness
-{
-    
-}
-
-- (void)setProgress:(CGFloat)progress
-{
-    
-}
-
 
 @end
 
