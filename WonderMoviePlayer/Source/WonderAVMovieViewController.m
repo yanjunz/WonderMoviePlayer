@@ -614,6 +614,9 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 - (void)movieControlSource:(id<MovieControlSource>)source setProgress:(CGFloat)progress
 {
     [self scrub:progress];
+    if (seekToZeroBeforePlay) { // has been ended
+        [self.player play];
+    }
 }
 
 - (void)movieControlSourceExit:(id<MovieControlSource>)source

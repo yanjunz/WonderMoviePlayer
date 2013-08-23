@@ -406,6 +406,13 @@
                         [self.delegate movieControlSourceReplay:self];
                     }
                 }
+                else if (cmd == MovieControlCommandSetProgress) {
+                    self.controlState = MovieControlStatePlaying;
+                    
+                    if (notify && [self.delegate respondsToSelector:@selector(movieControlSource:setProgress:)]) {
+                        [self.delegate movieControlSource:self setProgress:[(NSNumber *)param floatValue]];
+                    }
+                }
                 break;
             case MovieControlStatePaused:
                 if (cmd == MovieControlCommandPlay) {
