@@ -6,6 +6,8 @@
 //  Copyright (c) 2013年 Tencent. All rights reserved.
 //
 
+#ifdef MTT_FEATURE_WONDER_AVMOVIE_PLAYER
+
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import <CoreMedia/CoreMedia.h>
@@ -29,3 +31,5 @@
 @property (nonatomic, retain) UIView *overlayView;
 - (void)playMovieStream:(NSURL *)movieURL;
 @end
+
+#endif // MTT_FEATURE_WONDER_AVMOVIE_PLAYER

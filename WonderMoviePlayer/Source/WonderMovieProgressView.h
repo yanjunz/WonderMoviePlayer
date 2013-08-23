@@ -6,6 +6,8 @@
 //  Copyright (c) 2013年 Tencent. All rights reserved.
 //
 
+#ifdef MTT_FEATURE_WONDER_VIDEO_PLAYER
+
 #import <UIKit/UIKit.h>
 
 @class WonderMovieProgressView;
@@ -22,3 +24,5 @@
 @property (nonatomic, assign) CGFloat progress;
 @property (nonatomic, assign) CGFloat cacheProgress;
 @end
+
+#endif // MTT_FEATURE_WONDER_VIDEO_PLAYER

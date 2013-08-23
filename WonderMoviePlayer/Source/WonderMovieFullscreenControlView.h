@@ -6,6 +6,8 @@
 //  Copyright (c) 2013年 Tencent. All rights reserved.
 //
 
+#ifdef MTT_FEATURE_WONDER_VIDEO_PLAYER
+
 #import <UIKit/UIKit.h>
 #import "MovieControlSource.h"
 
@@ -14,3 +16,5 @@
 @property (nonatomic, readonly) BOOL nextEnabled;
 - (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted nextEnabled:(BOOL)nextEnabled;
 @end
+
+#endif // MTT_FEATURE_WONDER_VIDEO_PLAYER

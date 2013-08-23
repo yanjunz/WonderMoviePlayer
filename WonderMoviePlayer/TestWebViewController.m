@@ -115,10 +115,12 @@
 {
     NSLog(@"shouldStartLoadWithRequest %@", request.URL);
     if ([@"qqvideo" isEqualToString:request.URL.scheme]) {
+#ifdef MTT_FEATURE_WONDER_AVMOVIE_PLAYER
         WonderAVMovieViewController *controller = [[WonderAVMovieViewController alloc] init];
         [self presentViewController:controller animated:YES completion:^{
             [controller playMovieStream:[NSURL URLWithString:[self getCurrentVideoSrc]]];
         }];
+#endif
         return NO;
     }
     return YES;

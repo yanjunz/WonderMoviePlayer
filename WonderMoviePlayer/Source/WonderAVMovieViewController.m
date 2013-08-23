@@ -6,6 +6,8 @@
 //  Copyright (c) 2013年 Tencent. All rights reserved.
 //
 
+#ifdef MTT_FEATURE_WONDER_AVMOVIE_PLAYER
+
 #import "WonderAVMovieViewController.h"
 #import "WonderAVPlayerView.h"
 #import "WonderMovieFullscreenControlView.h"
@@ -656,3 +658,4 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 }
 
 @end
+#endif // MTT_FEATURE_WONDER_AVMOVIE_PLAYER

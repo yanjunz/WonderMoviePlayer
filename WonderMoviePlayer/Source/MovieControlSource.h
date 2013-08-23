@@ -5,6 +5,7 @@
 //  Created by Zhuang Yanjun on 13-8-8.
 //  Copyright (c) 2013年 Tencent. All rights reserved.
 //
+#ifdef MTT_FEATURE_WONDER_VIDEO_PLAYER
 
 #import <Foundation/Foundation.h>
 
@@ -78,15 +79,16 @@ typedef enum {
 - (void)movieControlSourcePause:(id<MovieControlSource>)source;
 - (void)movieControlSourceResume:(id<MovieControlSource>)source;
 - (void)movieControlSourceReplay:(id<MovieControlSource>)source;
+- (void)movieControlSourceBeginChangeProgress:(id<MovieControlSource>)source;
+- (void)movieControlSourceEndChangeProgress:(id<MovieControlSource>)source;
 - (void)movieControlSource:(id<MovieControlSource>)source setProgress:(CGFloat)progress;
 - (void)movieControlSourceExit:(id<MovieControlSource>)source;
 
 @optional
-- (void)movieControlSourceBeginChangeProgress:(id<MovieControlSource>)source;
-- (void)movieControlSourceEndChangeProgress:(id<MovieControlSource>)source;
-
 - (void)movieControlSourceBuffer:(id<MovieControlSource>)source;
 - (void)movieControlSourceUnbuffer:(id<MovieControlSource>)source;
 - (void)movieControlSource:(id<MovieControlSource>)source setFullscreen:(BOOL)fullscreen;
-
+- (void)movieControlSourceOnCrossScreen:(id<MovieControlSource>)source;
 @end
+
+#endif // MTT_FEATURE_WONDER_VIDEO_PLAYER

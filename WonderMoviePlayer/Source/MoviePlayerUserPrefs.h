@@ -49,6 +49,8 @@
  
  */
 
+#ifdef MTT_FEATURE_WONDER_MPMOVIE_PLAYER
+
 #import <Foundation/Foundation.h>
 #import <MediaPlayer/MediaPlayer.h>
 
@@ -64,3 +66,5 @@
 + (BOOL)backgroundImageUserSetting;
 
 @end
+
+#endif // MTT_FEATURE_WONDER_MPMOVIE_PLAYER

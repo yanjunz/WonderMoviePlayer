@@ -6,6 +6,8 @@
 //  Copyright (c) 2013年 Tencent. All rights reserved.
 //
 
+#ifdef MTT_FEATURE_WONDER_MPMOVIE_PLAYER
+
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import "MovieControlSource.h"
@@ -19,3 +21,5 @@
 - (void)playMovieFile:(NSURL *)movieFileURL;
 - (void)playMovieStream:(NSURL *)movieFileURL;
 @end
+
+#endif // MTT_FEATURE_WONDER_MPMOVIE_PLAYER

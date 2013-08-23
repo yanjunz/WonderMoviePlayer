@@ -5,6 +5,9 @@
 //  Created by Zhuang Yanjun on 13-8-8.
 //  Copyright (c) 2013年 Tencent. All rights reserved.
 //
+
+#ifdef MTT_FEATURE_WONDER_MPMOVIE_PLAYER
+
 #import <AVFoundation/AVFoundation.h>
 #import <AVFoundation/AVAsset.h>
 #import "WonderMoiveViewController.h"
@@ -626,3 +629,5 @@
 
 
 @end
+
+#endif // MTT_FEATURE_WONDER_MPMOVIE_PLAYER

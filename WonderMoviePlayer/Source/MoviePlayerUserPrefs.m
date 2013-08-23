@@ -49,6 +49,8 @@
  
  */
 
+#ifdef MTT_FEATURE_WONDER_MPMOVIE_PLAYER
+
 #import "MoviePlayerUserPrefs.h"
 
 // Application preference keys
@@ -238,3 +240,5 @@ NSString *kMovieBackgroundImageKey			= @"useMovieBackgroundImage";
 }
 
 @end
+
+#endif // MTT_FEATURE_WONDER_MPMOVIE_PLAYER

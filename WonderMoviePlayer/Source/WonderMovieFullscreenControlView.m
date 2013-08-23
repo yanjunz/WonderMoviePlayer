@@ -6,6 +6,8 @@
 //  Copyright (c) 2013年 Tencent. All rights reserved.
 //
 
+#ifdef MTT_FEATURE_WONDER_VIDEO_PLAYER
+
 #import <QuartzCore/QuartzCore.h>
 #import "WonderMovieFullscreenControlView.h"
 #import "WonderMovieProgressView.h"
@@ -574,7 +576,9 @@
 
 - (IBAction)onClickCrossScreen:(id)sender
 {
-    
+    if ([self.delegate respondsToSelector:@selector(movieControlSourceOnCrossScreen:)]) {
+        [self.delegate movieControlSourceOnCrossScreen:self];
+    }
 }
 
 - (IBAction)onClickLock:(id)sender
@@ -669,3 +673,5 @@
 }
 
 @end
+
+#endif // MTT_FEATURE_WONDER_VIDEO_PLAYER

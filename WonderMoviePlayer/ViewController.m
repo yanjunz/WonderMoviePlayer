@@ -36,7 +36,7 @@
 }
 
 - (IBAction)onClickPlay:(id)sender {
-#ifdef USE_AV_PLAYER
+#ifdef MTT_FEATURE_WONDER_AVMOVIE_PLAYER
     WonderAVMovieViewController *controller = [[WonderAVMovieViewController alloc] init];
     [self presentViewController:controller animated:YES completion:^{
         NSLog(@"start to play av");
@@ -54,7 +54,7 @@
 }
 
 - (IBAction)onClickPlayRemote:(id)sender {
-#ifdef USE_AV_PLAYER
+#ifdef MTT_FEATURE_WONDER_AVMOVIE_PLAYER
     WonderAVMovieViewController *controller = [[WonderAVMovieViewController alloc] init];
     [self presentViewController:controller animated:YES completion:^{
         NSLog(@"start to play av");

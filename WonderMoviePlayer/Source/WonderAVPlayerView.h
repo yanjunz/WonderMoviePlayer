@@ -6,6 +6,8 @@
 //  Copyright (c) 2013年 Tencent. All rights reserved.
 //
 
+#ifdef MTT_FEATURE_WONDER_AVMOVIE_PLAYER
+
 #import <UIKit/UIKit.h>
 
 @class AVPlayerLayer;
@@ -15,3 +17,5 @@
 
 - (void)setVideoFillMode:(NSString *)fillMode;
 @end
+
+#endif // MTT_FEATURE_WONDER_AVMOVIE_PLAYER
