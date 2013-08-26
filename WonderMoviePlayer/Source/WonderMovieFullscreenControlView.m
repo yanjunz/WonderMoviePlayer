@@ -692,7 +692,7 @@
     
     CGPoint offset = [gr translationInView:gr.view];
     CGPoint loc = [gr locationInView:gr.view];
-    NSLog(@"pan %d, (%f,%f), (%f, %f)", gr.state, loc.x, loc.y, offset.x, offset.y);
+//    NSLog(@"pan %d, (%f,%f), (%f, %f)", gr.state, loc.x, loc.y, offset.x, offset.y);
     
     CGRect progressValidRegion = CGRectMake(0, self.headerBar.bottom, gr.view.width, gr.view.height - self.headerBar.bottom - self.bottomBar.height);
     
@@ -706,7 +706,7 @@
             // brightness
             sPanAction = WonderMoviePanAction_Brigitness;
             CGFloat inc = -offset.y / gr.view.height;
-            NSLog(@"pan Brightness %f, (%f, %f), %f", offset.y, loc.x, loc.y, inc);
+//            NSLog(@"pan Brightness %f, (%f, %f), %f", offset.y, loc.x, loc.y, inc);
             [self increaseBrightness:inc];
         }
         else if (loc.x > gr.view.width * 0.6 &&
@@ -715,7 +715,7 @@
             // volume
             sPanAction = WonderMoviePanAction_Volume;
             CGFloat inc = -offset.y / gr.view.height;
-            NSLog(@"pan Volume %f, %f, %f", offset.y, gr.view.height, inc);
+//            NSLog(@"pan Volume %f, %f, %f", offset.y, gr.view.height, inc);
             [self increaseVolume:inc];
         }
         [gr setTranslation:CGPointZero inView:gr.view];
@@ -732,7 +732,7 @@
         
         sPanAction = WonderMoviePanAction_Progress;
         CGFloat inc = offset.x / 10 ; // 1s for 10 pixel
-        NSLog(@"pan Progress %f, %f, %f, %f", offset.x, gr.view.width, inc, inc > 0 ? ceilf(inc) : floorf(inc));
+//        NSLog(@"pan Progress %f, %f, %f, %f", offset.x, gr.view.width, inc, inc > 0 ? ceilf(inc) : floorf(inc));
         inc = inc > 0 ? ceilf(inc) : floorf(inc);
         [self increaseProgress:inc];
         [gr setTranslation:CGPointZero inView:gr.view];
@@ -768,7 +768,7 @@
     double time = _playbackTime + progressBySec;
     time = MIN(_duration, MAX(time, 0));
     if (isfinite(time) && isfinite(_duration) && _duration > 0) {
-        NSLog(@"increaseProgress %f, %f, %f => %f", progressBySec, _playbackTime, _playbackTime/_duration, time /_duration);
+//        NSLog(@"increaseProgress %f, %f, %f => %f", progressBySec, _playbackTime, _playbackTime/_duration, time /_duration);
         [self scrub:time / _duration];
         _playbackTime = time;
     }
@@ -804,19 +804,19 @@
 
 - (void)wonderMovieProgressViewBeginChangeProgress:(WonderMovieProgressView *)progressView
 {
-    NSLog(@"wonderMovieProgressViewBeginChangeProgress");
+//    NSLog(@"wonderMovieProgressViewBeginChangeProgress");
     [self beginScrubbing];
 }
 
 - (void)wonderMovieProgressView:(WonderMovieProgressView *)progressView didChangeProgress:(CGFloat)progress
 {
-    NSLog(@"didChangeProgress %f", progress);
+//    NSLog(@"didChangeProgress %f", progress);
     [self scrub:progress];
 }
 
 - (void)wonderMovieProgressViewEndChangeProgress:(WonderMovieProgressView *)progressView;
 {
-    NSLog(@"wonderMovieProgressViewEndChangeProgress");
+//    NSLog(@"wonderMovieProgressViewEndChangeProgress");
     [self endScrubbing];
 }
 
