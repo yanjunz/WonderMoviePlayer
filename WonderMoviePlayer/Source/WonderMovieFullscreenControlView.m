@@ -6,7 +6,7 @@
 //  Copyright (c) 2013年 Tencent. All rights reserved.
 //
 
-#ifdef MTT_FEATURE_WONDER_VIDEO_PLAYER
+#ifdef MTT_FEATURE_WONDER_MOVIE_PLAYER
 
 #import <QuartzCore/QuartzCore.h>
 #import "WonderMoviePlayerConstants.h"
@@ -759,4 +759,4 @@
 
 
 
-#endif // MTT_FEATURE_WONDER_VIDEO_PLAYER
+#endif // MTT_FEATURE_WONDER_MOVIE_PLAYER

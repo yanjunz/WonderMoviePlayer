@@ -6,7 +6,7 @@
 //  Copyright (c) 2013年 Tencent. All rights reserved.
 //
 
-#ifdef MTT_FEATURE_WONDER_VIDEO_PLAYER
+#ifdef MTT_FEATURE_WONDER_MOVIE_PLAYER
 #import "WonderMoviePlayerConstants.h"
 #import "WonderMovieProgressView.h"
 #import "UIView+Sizes.h"
@@ -158,4 +158,4 @@
 
 @end
 
-#endif // MTT_FEATURE_WONDER_VIDEO_PLAYER
+#endif // MTT_FEATURE_WONDER_MOVIE_PLAYER

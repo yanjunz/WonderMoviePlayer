@@ -6,7 +6,7 @@
 //  Copyright (c) 2013年 Tencent. All rights reserved.
 //
 
-#ifdef MTT_FEATURE_WONDER_VIDEO_PLAYER
+#ifdef MTT_FEATURE_WONDER_MOVIE_PLAYER
 
 #import <UIKit/UIKit.h>
 #import "MovieControlSource.h"
@@ -21,4 +21,4 @@
 - (void)installGestureHandlerForParentView;
 @end
 
-#endif // MTT_FEATURE_WONDER_VIDEO_PLAYER
+#endif // MTT_FEATURE_WONDER_MOVIE_PLAYER

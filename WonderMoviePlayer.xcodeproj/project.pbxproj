@@ -19,7 +19,7 @@
 		B517774E17B36D44006B948E /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B517774D17B36D44006B948E /* Default-568h@2x.png */; };
 		B517775117B36D44006B948E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B517775017B36D44006B948E /* ViewController.m */; };
 		B517775417B36D44006B948E /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B517775217B36D44006B948E /* ViewController.xib */; };
-		B517775D17B36E6B006B948E /* WonderMPMoiveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B517775C17B36E6B006B948E /* WonderMPMoiveViewController.m */; };
+		B517775D17B36E6B006B948E /* WonderMPMovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B517775C17B36E6B006B948E /* WonderMPMovieViewController.m */; };
 		B517776117B3787D006B948E /* WonderMovieFullscreenControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = B517776017B3787C006B948E /* WonderMovieFullscreenControlView.m */; };
 		B517776717B37F44006B948E /* WonderMovieProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B517776617B37F44006B948E /* WonderMovieProgressView.m */; };
 		B517776A17B37FEB006B948E /* UIView+Sizes.m in Sources */ = {isa = PBXBuildFile; fileRef = B517776917B37FEB006B948E /* UIView+Sizes.m */; };
@@ -89,8 +89,8 @@
 		B517774F17B36D44006B948E /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		B517775017B36D44006B948E /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		B517775317B36D44006B948E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController.xib; sourceTree = "<group>"; };
-		B517775B17B36E6B006B948E /* WonderMPMoiveViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMPMoiveViewController.h; sourceTree = "<group>"; };
-		B517775C17B36E6B006B948E /* WonderMPMoiveViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderMPMoiveViewController.m; sourceTree = "<group>"; };
+		B517775B17B36E6B006B948E /* WonderMPMovieViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMPMovieViewController.h; sourceTree = "<group>"; };
+		B517775C17B36E6B006B948E /* WonderMPMovieViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderMPMovieViewController.m; sourceTree = "<group>"; };
 		B517775E17B375A5006B948E /* MovieControlSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MovieControlSource.h; sourceTree = "<group>"; };
 		B517775F17B3787C006B948E /* WonderMovieFullscreenControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMovieFullscreenControlView.h; sourceTree = "<group>"; };
 		B517776017B3787C006B948E /* WonderMovieFullscreenControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderMovieFullscreenControlView.m; sourceTree = "<group>"; };
@@ -248,8 +248,8 @@
 		B517775A17B36E04006B948E /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				B517775B17B36E6B006B948E /* WonderMPMoiveViewController.h */,
-				B517775C17B36E6B006B948E /* WonderMPMoiveViewController.m */,
+				B517775B17B36E6B006B948E /* WonderMPMovieViewController.h */,
+				B517775C17B36E6B006B948E /* WonderMPMovieViewController.m */,
 				B517775E17B375A5006B948E /* MovieControlSource.h */,
 				B517775F17B3787C006B948E /* WonderMovieFullscreenControlView.h */,
 				B517776017B3787C006B948E /* WonderMovieFullscreenControlView.m */,
@@ -404,7 +404,7 @@
 				B517774417B36D44006B948E /* main.m in Sources */,
 				B517774817B36D44006B948E /* AppDelegate.m in Sources */,
 				B517775117B36D44006B948E /* ViewController.m in Sources */,
-				B517775D17B36E6B006B948E /* WonderMPMoiveViewController.m in Sources */,
+				B517775D17B36E6B006B948E /* WonderMPMovieViewController.m in Sources */,
 				B517776117B3787D006B948E /* WonderMovieFullscreenControlView.m in Sources */,
 				B517776717B37F44006B948E /* WonderMovieProgressView.m in Sources */,
 				B517776A17B37FEB006B948E /* UIView+Sizes.m in Sources */,

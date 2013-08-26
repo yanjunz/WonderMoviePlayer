@@ -12,7 +12,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import "MovieControlSource.h"
 
-@interface WonderMPMoiveViewController : UIViewController<MovieControlSourceDelegate>
+@interface WonderMPMovieViewController : UIViewController<MovieControlSourceDelegate>
 @property (nonatomic, retain) MPMoviePlayerController *moviePlayerController;
 @property (nonatomic, retain) UIView *overlayView;
 @property (nonatomic, retain) IBOutlet UIView *backgroundView;

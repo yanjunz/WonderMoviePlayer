@@ -5,7 +5,7 @@
 //  Created by Zhuang Yanjun on 13-8-8.
 //  Copyright (c) 2013年 Tencent. All rights reserved.
 //
-#ifdef MTT_FEATURE_WONDER_VIDEO_PLAYER
+#ifdef MTT_FEATURE_WONDER_MOVIE_PLAYER
 
 #import <Foundation/Foundation.h>
 
@@ -94,4 +94,4 @@ typedef enum {
 - (void)movieControlSource:(id<MovieControlSource>)source increaseVolume:(CGFloat)volume;
 @end
 
-#endif // MTT_FEATURE_WONDER_VIDEO_PLAYER
+#endif // MTT_FEATURE_WONDER_MOVIE_PLAYER

@@ -11,21 +11,21 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AVFoundation/AVAsset.h>
 #import "WonderMoviePlayerConstants.h"
-#import "WonderMPMoiveViewController.h"
+#import "WonderMPMovieViewController.h"
 #import "WonderMovieFullscreenControlView.h"
 #import "MoviePlayerUserPrefs.h"
 #import "UIView+Sizes.h"
 
 
 
-@interface WonderMPMoiveViewController () {
+@interface WonderMPMovieViewController () {
     BOOL _statusBarHiddenPrevious;    
 }
 @property (nonatomic, retain) NSTimer *timer;
 @property (nonatomic, retain) UIView *controlView;
 @end
 
-@implementation WonderMPMoiveViewController
+@implementation WonderMPMovieViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {

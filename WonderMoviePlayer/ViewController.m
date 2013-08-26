@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "WonderMPMoiveViewController.h"
+#import "WonderMPMovieViewController.h"
 #import "TestWebViewController.h"
 #import "WonderAVMovieViewController.h"
 
@@ -43,7 +43,7 @@
         [controller playMovieStream:[[NSBundle mainBundle] URLForResource:@"Movie" withExtension:@"m4v"]];
     }];    
 #else
-    WonderMPMoiveViewController *controller = [[WonderMPMoiveViewController alloc] init];
+    WonderMPMovieViewController *controller = [[WonderMPMovieViewController alloc] init];
     [self presentViewController:controller animated:YES completion:^{
         NSLog(@"start to play");
         NSString *path = [[NSBundle mainBundle] pathForResource:@"Movie" ofType:@"m4v"];
@@ -73,7 +73,7 @@
     }];
 
 #else
-    WonderMPMoiveViewController *controller = [[WonderMPMoiveViewController alloc] init];
+    WonderMPMovieViewController *controller = [[WonderMPMovieViewController alloc] init];
     [self presentViewController:controller animated:YES completion:^{
         NSLog(@"start to play");
 //        NSString *path = [[NSBundle mainBundle] pathForResource:@"Movie" ofType:@"m4v"];
