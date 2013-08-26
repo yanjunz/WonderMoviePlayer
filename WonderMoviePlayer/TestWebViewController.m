@@ -28,6 +28,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [NSClassFromString(@"WebView") _enableRemoteInspector];
     // Do any additional setup after loading the view from its nib.
     [self.webview loadRequest:[NSURLRequest requestWithURL:
                                [NSURL URLWithString:@"http://v.m.liebao.cn"]

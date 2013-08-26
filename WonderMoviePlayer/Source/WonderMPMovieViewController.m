@@ -13,7 +13,6 @@
 #import "WonderMoviePlayerConstants.h"
 #import "WonderMPMovieViewController.h"
 #import "WonderMovieFullscreenControlView.h"
-#import "MoviePlayerUserPrefs.h"
 #import "UIView+Sizes.h"
 
 
@@ -317,20 +316,7 @@
     MPMoviePlayerController *player = self.moviePlayerController;
     if (player)
     {
-        player.scalingMode = [MoviePlayerUserPrefs scalingModeUserSetting];
-        player.controlStyle = MPMovieControlStyleNone; //[MoviePlayerUserPrefs controlStyleUserSetting];
-        player.backgroundView.backgroundColor = [MoviePlayerUserPrefs backgroundColorUserSetting];
-        player.repeatMode = [MoviePlayerUserPrefs repeatModeUserSetting];
-        player.useApplicationAudioSession = [MoviePlayerUserPrefs audioSessionUserSetting];
-//        if ([MoviePlayerUserPrefs backgroundImageUserSetting] == YES)
-//        {
-//            [self.movieBackgroundImageView setFrame:[self.view bounds]];
-//            [player.backgroundView addSubview:self.movieBackgroundImageView];
-//        }
-//        else
-//        {
-//            [self.movieBackgroundImageView removeFromSuperview];
-//        }
+        player.controlStyle = MPMovieControlStyleNone;
         
         /* Indicate the movie player allows AirPlay movie playback. */
         player.allowsAirPlay = YES;
