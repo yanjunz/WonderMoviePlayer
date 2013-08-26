@@ -6,6 +6,7 @@
 //  Copyright (c) 2013年 Tencent. All rights reserved.
 //
 #import <QuartzCore/QuartzCore.h>
+#import "WonderMoviePlayerConstants.h"
 #import "WonderMovieInfoView.h"
 #import "UIView+Sizes.h"
 

@@ -10,6 +10,7 @@
 #define WonderMoviePlayer_WonderMoviePlayerConstants_h
 
 #ifndef QQImage
+#include "UIImageEx.h"
 #define QQImage(src) [UIImageEx loadAndCacheImageFromApp:src]
 #endif
 
