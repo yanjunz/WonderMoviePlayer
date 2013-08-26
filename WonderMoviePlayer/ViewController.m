@@ -58,6 +58,9 @@
     WonderAVMovieViewController *controller = [[WonderAVMovieViewController alloc] init];
     [self presentViewController:controller animated:YES completion:^{
         NSLog(@"start to play av");
+        [controller setCrossScreenBlock:^{
+            NSLog(@"cross screen");
+        }];
         [controller playMovieStream:[NSURL URLWithString:
 //                                     @"http://hot.vrs.sohu.com/ipad1259067_4587696266952_4460388.m3u8?plat=null"
                                      @"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"

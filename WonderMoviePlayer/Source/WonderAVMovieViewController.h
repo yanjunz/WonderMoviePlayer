@@ -24,12 +24,15 @@
     
     id timeObserver;
 }
-
 @property (nonatomic, retain) AVPlayer *player;
 @property (nonatomic, retain) AVPlayerItem *playerItem;
 @property (nonatomic, retain) IBOutlet WonderAVPlayerView *playerLayerView;
 @property (nonatomic, retain) id<MovieControlSource> controlSource;
 @property (nonatomic, retain) UIView *overlayView;
+
+// handler block
+@property (nonatomic, copy) void(^crossScreenBlock)();
+
 - (void)playMovieStream:(NSURL *)movieURL;
 @end
 

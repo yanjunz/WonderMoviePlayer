@@ -67,6 +67,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     self.controlSource = nil;
     self.overlayView = nil;
     self.controlView = nil;
+    self.crossScreenBlock = nil;
     [super dealloc];
 }
 
@@ -642,9 +643,11 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     [self endScrubbing];
 }
 
-- (void)movieControlSource:(id<MovieControlSource>)source lock:(BOOL)lock
+- (void)movieControlSourceOnCrossScreen:(id<MovieControlSource>)source
 {
-
+    if (self.crossScreenBlock) {
+        self.crossScreenBlock();
+    }
 }
 
 - (void)movieControlSource:(id<MovieControlSource>)source increaseVolume:(CGFloat)volume

@@ -533,9 +533,11 @@
     [self endScrubbing];
 }
 
-- (void)movieControlSource:(id<MovieControlSource>)source lock:(BOOL)lock
+- (void)movieControlSourceOnCrossScreen:(id<MovieControlSource>)source
 {
-
+    if (self.crossScreenBlock) {
+        self.crossScreenBlock();
+    }
 }
 
 - (void)movieControlSource:(id<MovieControlSource>)source increaseVolume:(CGFloat)volume
