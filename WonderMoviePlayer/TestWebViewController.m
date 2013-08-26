@@ -61,8 +61,9 @@
     NSLog(@"src=%@", src);
     NSLog(@"%@\n", [self exeJS:@"\
                     var v = document.getElementsByTagName(\'video\')[0]; \
-                    v.play = function(){alert('aa');window.location = 'qqvideo://play';};\
-                    alert(v.play);"]);
+                    v.play = function(){window.location = 'qqvideo://play';};\
+                    v.autoplay=true;\
+                    "]);
                     //                    v.removeAttribute(\'controls\');
 }
 
@@ -111,6 +112,19 @@
 
 - (void)MPMoviePlayerProcessDidChanged:(NSNotification *)n{
     
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+    NSString *src = [self getCurrentVideoSrc];
+    if (src.length > 0) {
+        NSLog(@"src=%@", src);
+        NSLog(@"%@\n", [self exeJS:@"\
+                        var v = document.getElementsByTagName(\'video\')[0]; \
+                        v.play = function(){window.location = 'qqvideo://play';};\
+                        v.autoplay=true;\
+                        "]);
+    }
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType

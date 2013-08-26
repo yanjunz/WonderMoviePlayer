@@ -68,6 +68,10 @@
 
 @end
 
+@interface WonderMovieFullscreenControlView (Gesture) <UIGestureRecognizerDelegate>
+
+@end
+
 @implementation WonderMovieFullscreenControlView
 @synthesize delegate;
 @synthesize controlState;
@@ -236,7 +240,9 @@
 - (void)installGestureHandlerForParentView
 {
     // Setup tap GR
-    [self.superview addGestureRecognizer:[[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapOverlayView:)] autorelease]];
+    UITapGestureRecognizer *tapGR = [[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapOverlayView:)] autorelease];
+    tapGR.delegate = self;
+    [self.superview addGestureRecognizer:tapGR];
     self.panGestureRecognizer = [[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPanOverlayView:)] autorelease];
     [self.superview addGestureRecognizer:self.panGestureRecognizer];
 }
@@ -757,6 +763,17 @@
 
 @end
 
+@implementation WonderMovieFullscreenControlView (Gesture)
+
+
+// Bugfix: button doesn't repsond to any click if there is UITapGestureRecognizer in superview
+// http://stackoverflow.com/questions/13515539/uibutton-not-works-in-ios-5-x-everything-is-fine-in-ios-6-x
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    return !([touch.view isKindOfClass:[UIControl class]]);
+}
+
+@end
 
 
 #endif // MTT_FEATURE_WONDER_MOVIE_PLAYER
