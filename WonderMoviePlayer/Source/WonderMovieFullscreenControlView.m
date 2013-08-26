@@ -53,21 +53,12 @@
 @property (nonatomic, retain) UIButton *downloadButton;
 @property (nonatomic, retain) UIButton *crossScreenButton;
 
-// buffering
-@property (nonatomic, retain) UIView *loadingView;
-@property (nonatomic, retain) UIImageView *loadingIndicator;
-@property (nonatomic, retain) UILabel *loadingPercentLabel;
-@property (nonatomic, retain) UILabel *loadingMessageLabel;
-
 // center button
 @property (nonatomic, retain) UIButton *replayButton;
 @property (nonatomic, retain) UIButton *centerPlayButton;
 
 // utils
 @property (nonatomic, retain) NSArray *viewsToBeLocked;
-
-// Only show when setting progress
-@property (nonatomic, retain) UILabel *progressTimeLabel;
 
 @property (nonatomic, retain) UIPanGestureRecognizer *panGestureRecognizer;
 @end
@@ -227,20 +218,6 @@
     [self.centerPlayButton addTarget:self action:@selector(onClickPlay:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.centerPlayButton];
     
-    UIFont *font = [UIFont boldSystemFontOfSize:23];
-    self.progressTimeLabel = [[[UILabel alloc] initWithFrame:CGRectMake(17, 18+self.headerBar.bottom, 100, 40)] autorelease];
-    self.progressTimeLabel.textAlignment = UITextAlignmentLeft;
-    self.progressTimeLabel.font = font;
-    self.progressTimeLabel.backgroundColor = [UIColor clearColor];
-    self.progressTimeLabel.textColor = [UIColor whiteColor];
-    self.progressTimeLabel.height = font.ascender + font.descender;
-    self.progressTimeLabel.hidden = YES;
-    self.progressTimeLabel.layer.shadowOpacity = 0.5;
-    self.progressTimeLabel.layer.shadowColor = [UIColor blackColor].CGColor;
-    self.progressTimeLabel.layer.shadowRadius = 1;
-    self.progressTimeLabel.layer.shadowOffset = CGSizeMake(0, 1);
-    [self addSubview:self.progressTimeLabel];
-    
     self.viewsToBeLocked = @[backButton, self.downloadButton, self.bottomBar, self.crossScreenButton];
     
     // Update control state
@@ -281,10 +258,7 @@
     self.startLabel = nil;
     self.durationLabel = nil;
     
-    self.loadingView = nil;
-    self.loadingIndicator = nil;
-    self.loadingMessageLabel = nil;
-    self.loadingPercentLabel = nil;
+    
     
     self.replayButton = nil;
     self.centerPlayButton = nil;
@@ -297,60 +271,20 @@
     [super dealloc];
 }
 
-#pragma mark Loading View
-
-- (UIView *)loadingView
-{
-    if (!_loadingView) {
-        _loadingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 81, 101)];
-        _loadingView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
-        
-        self.loadingIndicator = [[[UIImageView alloc] initWithImage:QQImage(@"videoplayer_loading")] autorelease];
-        self.loadingIndicator.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-        [_loadingView addSubview:self.loadingIndicator];
-        
-        self.loadingPercentLabel = [[[UILabel alloc] initWithFrame:self.loadingIndicator.frame] autorelease];
-        self.loadingPercentLabel.text = @"0%";
-        self.loadingPercentLabel.textAlignment = UITextAlignmentCenter;
-        self.loadingPercentLabel.backgroundColor = [UIColor clearColor];
-        self.loadingPercentLabel.textColor = [UIColor whiteColor];
-        [_loadingView addSubview:self.loadingPercentLabel];
-        
-        self.loadingMessageLabel = [[[UILabel alloc] initWithFrame:CGRectMake(0, self.loadingIndicator.bottom, _loadingView.width, 20)] autorelease];
-        self.loadingMessageLabel.text = @"Loading...";
-        self.loadingMessageLabel.textAlignment = UITextAlignmentCenter;
-        self.loadingMessageLabel.backgroundColor = [UIColor clearColor];
-        self.loadingMessageLabel.textColor = [UIColor whiteColor];
-        [_loadingView addSubview:self.loadingMessageLabel];
-    }
-    return _loadingView;
-}
-
+#pragma mark Loading
 - (void)startLoading
 {
     _isLoading = YES;
-    if (self.loadingView.superview != self) {
-        [self.loadingView removeFromSuperview];
-        [self addSubview:self.loadingView];
-        _loadingView.center = self.center;        
-    }
-    
-	CABasicAnimation *rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
-    rotationAnimation.toValue = @(M_PI / 180 * 360);
-    rotationAnimation.duration = 1.0f;
-    rotationAnimation.cumulative = YES;
-    rotationAnimation.repeatCount = HUGE_VALF;
-    
-    [self.loadingIndicator.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+    [self.infoView startLoading];
 }
 
 - (void)stopLoading
 {
     _isLoading = NO;
     _totalBufferingSize = 0;
-    
-    [self.loadingView removeFromSuperview];
+    [self.infoView stopLoading];
 }
+
 
 #pragma mark State Manchine
 - (void)handleCommand:(MovieControlCommand)cmd param:(id)param notify:(BOOL)notify
@@ -499,7 +433,7 @@
         int hour = time / 3600;
         int minute = time / 60 - hour * 60;
         int second = time % 60;
-        self.progressTimeLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d", hour, minute, second];
+        self.infoView.progressTimeLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d", hour, minute, second];
     }
 }
 
@@ -547,7 +481,7 @@
             }
             
             CGFloat percent = 1 - ((_playbackTime - playableDuration) / _totalBufferingSize);
-            self.loadingPercentLabel.text = [NSString stringWithFormat:@"%d%%", (int)(percent * 100)];
+            self.infoView.loadingPercentLabel.text = [NSString stringWithFormat:@"%d%%", (int)(percent * 100)];
         }
     }
 }
@@ -777,7 +711,7 @@
 - (void)beginScrubbing
 {
     _isProgressViewPanning = YES;
-    self.progressTimeLabel.hidden = NO;
+    [self.infoView showProgressTime:YES animated:YES];
     if ([self.delegate respondsToSelector:@selector(movieControlSourceBeginChangeProgress:)]) {
         [self.delegate movieControlSourceBeginChangeProgress:self];
     }
@@ -792,7 +726,7 @@
 - (void)endScrubbing
 {
     _isProgressViewPanning = NO;
-    self.progressTimeLabel.hidden = YES;
+    [self.infoView showProgressTime:NO animated:YES];
     if ([self.delegate respondsToSelector:@selector(movieControlSourceEndChangeProgress:)]) {
         [self.delegate movieControlSourceEndChangeProgress:self];
     }

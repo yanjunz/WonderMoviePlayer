@@ -10,10 +10,12 @@
 
 #import <UIKit/UIKit.h>
 #import "MovieControlSource.h"
+#import "WonderMovieInfoView.h"
 
 @interface WonderMovieFullscreenControlView : UIView<MovieControlSource>
 @property (nonatomic, readonly) BOOL autoPlayWhenStarted;
 @property (nonatomic, readonly) BOOL nextEnabled;
+@property (nonatomic, retain) WonderMovieInfoView *infoView;
 
 - (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted nextEnabled:(BOOL)nextEnabled;
 - (void)installGestureHandlerForParentView;

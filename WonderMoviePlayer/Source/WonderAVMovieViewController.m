@@ -10,6 +10,7 @@
 
 #import "WonderAVMovieViewController.h"
 #import "WonderAVPlayerView.h"
+#import "WonderMovieInfoView.h"
 #import "WonderMovieFullscreenControlView.h"
 #import "UIView+Sizes.h"
 
@@ -433,6 +434,11 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 - (void)setupControlSource:(BOOL)fullscreen
 {
     if (fullscreen) {
+        WonderMovieInfoView *infoView = [[[WonderMovieInfoView alloc] initWithFrame:self.overlayView.bounds] autorelease];
+        infoView.backgroundColor = [UIColor clearColor];
+        infoView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [self.overlayView addSubview:infoView];
+        
         WonderMovieFullscreenControlView *fullscreenControlView = [[[WonderMovieFullscreenControlView alloc] initWithFrame:self.overlayView.bounds autoPlayWhenStarted:YES nextEnabled:YES] autorelease];
         fullscreenControlView.delegate = self;
         fullscreenControlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -440,6 +446,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
         [self.overlayView addSubview:fullscreenControlView];
         [fullscreenControlView installGestureHandlerForParentView];
         self.controlSource = fullscreenControlView;
+        fullscreenControlView.infoView = infoView;
     }
 }
 
