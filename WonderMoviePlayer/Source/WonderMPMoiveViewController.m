@@ -16,7 +16,6 @@
 #import "UIView+Sizes.h"
 
 
-
 @interface WonderMPMoiveViewController () {
     BOOL _statusBarHiddenPrevious;    
 }
@@ -242,6 +241,11 @@
 - (void)setupControlSource:(BOOL)fullscreen
 {
     if (fullscreen) {
+        WonderMovieInfoView *infoView = [[[WonderMovieInfoView alloc] initWithFrame:self.overlayView.bounds] autorelease];
+        infoView.backgroundColor = [UIColor clearColor];
+        infoView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [self.overlayView addSubview:infoView];
+
         WonderMovieFullscreenControlView *fullscreenControlView = [[[WonderMovieFullscreenControlView alloc] initWithFrame:self.overlayView.bounds autoPlayWhenStarted:YES nextEnabled:YES] autorelease];
         fullscreenControlView.delegate = self;
         fullscreenControlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -249,6 +253,7 @@
         [self.overlayView addSubview:fullscreenControlView];
         [fullscreenControlView installGestureHandlerForParentView];
         self.controlSource = fullscreenControlView;
+        fullscreenControlView.infoView = infoView;
     }
 }
 
