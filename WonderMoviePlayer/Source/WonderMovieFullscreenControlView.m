@@ -731,7 +731,7 @@
         }
         
         sPanAction = WonderMoviePanAction_Progress;
-        CGFloat inc = offset.x / (gr.view.width / 2) * 30; // 30s for width/2
+        CGFloat inc = offset.x / 10 ; // 1s for 10 pixel
         NSLog(@"pan Progress %f, %f, %f, %f", offset.x, gr.view.width, inc, inc > 0 ? ceilf(inc) : floorf(inc));
         inc = inc > 0 ? ceilf(inc) : floorf(inc);
         [self increaseProgress:inc];
