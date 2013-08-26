@@ -9,6 +9,7 @@
 #ifdef MTT_FEATURE_WONDER_VIDEO_PLAYER
 
 #import <QuartzCore/QuartzCore.h>
+#import "WonderMoviePlayerConstants.h"
 #import "WonderMovieFullscreenControlView.h"
 #import "WonderMovieProgressView.h"
 #import "UIView+Sizes.h"

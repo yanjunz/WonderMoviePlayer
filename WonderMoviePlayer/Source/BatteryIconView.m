@@ -5,7 +5,7 @@
 //  Created by Zhuang Yanjun on 13-8-14.
 //  Copyright (c) 2013年 Tencent. All rights reserved.
 //
-
+#import "WonderMoviePlayerConstants.h"
 #import "BatteryIconView.h"
 
 @interface BatteryIconView ()

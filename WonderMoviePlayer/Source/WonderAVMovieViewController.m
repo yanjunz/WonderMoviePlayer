@@ -7,7 +7,7 @@
 //
 
 #ifdef MTT_FEATURE_WONDER_AVMOVIE_PLAYER
-
+#import "WonderMoviePlayerConstants.h"
 #import "WonderAVMovieViewController.h"
 #import "WonderAVPlayerView.h"
 #import "WonderMovieInfoView.h"

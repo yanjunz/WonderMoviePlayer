@@ -10,10 +10,12 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import <AVFoundation/AVAsset.h>
+#import "WonderMoviePlayerConstants.h"
 #import "WonderMPMoiveViewController.h"
 #import "WonderMovieFullscreenControlView.h"
 #import "MoviePlayerUserPrefs.h"
 #import "UIView+Sizes.h"
+
 
 
 @interface WonderMPMoiveViewController () {

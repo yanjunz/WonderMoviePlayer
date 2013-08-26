@@ -72,6 +72,7 @@
 /* Begin PBXFileReference section */
 		B504649717CAFCBE00202E5A /* WonderMovieInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMovieInfoView.h; sourceTree = "<group>"; };
 		B504649817CAFCBE00202E5A /* WonderMovieInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderMovieInfoView.m; sourceTree = "<group>"; };
+		B504649A17CB050700202E5A /* WonderMoviePlayerConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMoviePlayerConstants.h; sourceTree = "<group>"; };
 		B517773417B36D44006B948E /* WonderMoviePlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WonderMoviePlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B517773717B36D44006B948E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B517773917B36D44006B948E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -264,6 +265,7 @@
 				B517791D17BE0096006B948E /* WonderAVPlayerView.m */,
 				B504649717CAFCBE00202E5A /* WonderMovieInfoView.h */,
 				B504649817CAFCBE00202E5A /* WonderMovieInfoView.m */,
+				B504649A17CB050700202E5A /* WonderMoviePlayerConstants.h */,
 			);
 			path = Source;
 			sourceTree = "<group>";

@@ -7,7 +7,7 @@
 //
 
 #ifdef MTT_FEATURE_WONDER_VIDEO_PLAYER
-
+#import "WonderMoviePlayerConstants.h"
 #import "WonderMovieProgressView.h"
 #import "UIView+Sizes.h"
 
