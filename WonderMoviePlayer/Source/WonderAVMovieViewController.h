@@ -33,9 +33,12 @@
 
 // handler block
 @property (nonatomic, copy) void(^crossScreenBlock)();
+@property (nonatomic, copy) void(^exitBlock)();
 
 - (void)playMovieStream:(NSURL *)movieURL;
 - (void)playMovieStream:(NSURL *)movieURL fromStartTime:(Float64)time;
+
+- (CMTime)playerItemDuration;
 @end
 
 #endif // MTT_FEATURE_WONDER_AVMOVIE_PLAYER

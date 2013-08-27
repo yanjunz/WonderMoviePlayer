@@ -642,6 +642,9 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 {
     [self.player pause];
     [self dismissViewControllerAnimated:YES completion:nil];
+    if (self.exitBlock) {
+        self.exitBlock();
+    }
 }
 
 - (void)movieControlSourceBeginChangeProgress:(id<MovieControlSource>)source
