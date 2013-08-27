@@ -135,7 +135,14 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 
 - (void)playMovieStream:(NSURL *)movieURL
 {
+    [self playMovieStream:movieURL fromStartTime:0];
+}
+
+- (void)playMovieStream:(NSURL *)movieURL fromStartTime:(Float64)time
+{
     if ([movieURL scheme]) {
+        startTime = time;
+        
         /*
          Create an asset for inspection of a resource referenced by a given URL.
          Load the values for the asset keys "tracks", "playable".
@@ -361,6 +368,10 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
             [self.playerLayerView setVideoFillMode:AVLayerVideoGravityResizeAspect];
             
             // FIXME
+            if (startTime > 0) {
+                [self.player seekToTime:CMTimeMakeWithSeconds(startTime, 1)];
+                startTime = 0;
+            }
             [self.player play];
         }
     }
