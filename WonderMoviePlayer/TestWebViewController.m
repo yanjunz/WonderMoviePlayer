@@ -59,11 +59,16 @@
 //                    v.play = function(){alert('aa');} 
     NSString *src = [self getCurrentVideoSrc];
     NSLog(@"src=%@", src);
-    NSLog(@"%@\n", [self exeJS:@"\
-                    var v = document.getElementsByTagName(\'video\')[0]; \
-                    v.play = function(){window.location = 'qqvideo://play';};\
-                    v.autoplay=true;\
-                    "]);
+    NSLog(@"%@", [[NSBundle mainBundle] pathForResource:@"video" ofType:@"js"]);
+    NSString *js = [NSString stringWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"video" withExtension:@"js"] encoding:NSUTF8StringEncoding error:NULL];
+    NSLog(@"js=%@", js);
+    [self exeJS:js];
+
+//    NSLog(@"%@\n", [self exeJS:@"\
+//                    var v = document.getElementsByTagName(\'video\')[0]; \
+//                    v.play = function(){window.location = 'qqvideo://play';};\
+//                    v.autoplay=true;\
+//                    "]);
                     //                    v.removeAttribute(\'controls\');
 }
 
@@ -116,15 +121,15 @@
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
-    NSString *src = [self getCurrentVideoSrc];
-    if (src.length > 0) {
-        NSLog(@"src=%@", src);
-        NSLog(@"%@\n", [self exeJS:@"\
-                        var v = document.getElementsByTagName(\'video\')[0]; \
-                        v.play = function(){window.location = 'qqvideo://play';};\
-                        v.autoplay=true;\
-                        "]);
-    }
+//    NSString *src = [self getCurrentVideoSrc];
+//    if (src.length > 0) {
+//        NSLog(@"src=%@", src);
+//        NSLog(@"%@\n", [self exeJS:@"\
+//                        var v = document.getElementsByTagName(\'video\')[0]; \
+//                        v.play = function(){window.location = 'qqvideo://play';};\
+//                        v.autoplay=true;\
+//                        "]);
+//    }
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType

@@ -10,6 +10,15 @@
 
 #import "ViewController.h"
 #import "NSNotificationCenter+SwizzleMethod.h"
+#import "JSURLProtocol.h"
+#import "JSVideoPlugin.h"
+#import "JSPluginEngine.h"
+
+void uncaughtExceptionHandler(NSException *exception)
+{
+    NSLog(@"Exception : %@", exception);
+    NSLog(@"CallTrace : %@", [exception callStackSymbols]);
+}
 
 @implementation AppDelegate
 
@@ -22,6 +31,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
+    NSLog(@"%@", NSHomeDirectory());
+    
+    [NSURLProtocol registerClass:[JSURLProtocol class]];
+    [[JSPluginEngine sharedInstance] registerPlugin:[[JSVideoPlugin alloc] init] withPluginName:@"qqvideo"];
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     // Override point for customization after application launch.
 
