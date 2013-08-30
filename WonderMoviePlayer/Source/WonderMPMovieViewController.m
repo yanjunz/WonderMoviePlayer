@@ -501,7 +501,9 @@
 {
     [self.moviePlayerController stop];
     
-    [self dismissViewControllerAnimated:YES completion:nil];
+    if (self.exitBlock) {
+        self.exitBlock();
+    }
 }
 
 - (void)movieControlSource:(id<MovieControlSource>)source setFullscreen:(BOOL)fullscreen

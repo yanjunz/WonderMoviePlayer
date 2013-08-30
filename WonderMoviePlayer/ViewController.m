@@ -38,14 +38,16 @@
 - (IBAction)onClickPlay:(id)sender {
     @autoreleasepool {
 #ifdef MTT_FEATURE_WONDER_AVMOVIE_PLAYER
-    WonderAVMovieViewController *controller = [[WonderAVMovieViewController alloc] init];
-//    __unsafe_unretained WonderAVMovieViewController*vc = controller;
+        DefineBlockVar(WonderAVMovieViewController *, controller, [[WonderAVMovieViewController alloc] init]);
+//    WonderAVMovieViewController *controller = [[WonderAVMovieViewController alloc] init];
+
     [self presentViewController:controller animated:YES completion:^{
-//        NSLog(@"retain count= %d", [controller retainCount]);
         NSLog(@"start to play av");
         [controller playMovieStream:[[NSBundle mainBundle] URLForResource:@"Movie" withExtension:@"m4v"]];
     }];
-        
+    [controller setExitBlock:^{
+        [controller dismissViewControllerAnimated:YES completion:nil];
+    }];
     [controller release];
     NSLog(@"retain count1= %d", [controller retainCount]);
 #else

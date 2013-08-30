@@ -40,6 +40,16 @@
 #define CommonLog_e(fmt,...)
 #endif
 
+
+#if __has_feature(objc_arc)
+#define DefineBlockVar(type, var, assignment)  \
+type __real_##var = assignment; \
+__weak type var = __real_##var
+#else
+#define DefineBlockVar(type, var, assignment)    __block type var = assignment
+#endif
+
+
 #undef YES
 #define YES 1
 #undef NO
