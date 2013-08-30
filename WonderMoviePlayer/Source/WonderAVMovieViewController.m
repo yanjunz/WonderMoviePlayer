@@ -22,8 +22,6 @@
 
 #define WonderAVMovieObserverContextName(property) OBSERVER_CONTEXT_NAME(WonderAVMovieViewController, property)
 
-DECLARE_OBSERVER_CONTEXT(WonderAVMovieViewController, TimedMetadata)
-DECLARE_OBSERVER_CONTEXT(WonderAVMovieViewController, Rate)
 DECLARE_OBSERVER_CONTEXT(WonderAVMovieViewController, CurrentItem)
 DECLARE_OBSERVER_CONTEXT(WonderAVMovieViewController, PlayerItemStatus)
 DECLARE_OBSERVER_CONTEXT(WonderAVMovieViewController, PlaybackBufferEmpty)
@@ -31,10 +29,8 @@ DECLARE_OBSERVER_CONTEXT(WonderAVMovieViewController, PlaybackLikelyToKeepUp)
 
 NSString *kTracksKey		= @"tracks";
 NSString *kStatusKey		= @"status";
-NSString *kRateKey			= @"rate";
 NSString *kPlayableKey		= @"playable";
 NSString *kCurrentItemKey	= @"currentItem";
-NSString *kTimedMetadataKey	= @"currentItem.timedMetadata";
 
 NSString *kPlaybackBufferEmpty = @"playbackBufferEmpty";
 NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
@@ -59,8 +55,6 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 
 - (void)dealloc
 {
-    [self removePlayerTimeObserver];
-    
     self.player = nil;
     self.playerItem = nil;
     self.playerLayerView = nil;
@@ -71,6 +65,27 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     self.exitBlock = nil;
     self.downloadBlock = nil;
     [super dealloc];
+}
+
+- (void)removeAllObservers
+{
+    [self removePlayerTimeObserver];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self.playerItem removeObserver:self
+                         forKeyPath:kStatusKey
+                            context:WonderAVMovieObserverContextName(PlayerItemStatus)];
+    
+    [self.playerItem removeObserver:self
+                         forKeyPath:kPlaybackBufferEmpty
+                            context:WonderAVMovieObserverContextName(PlaybackBufferEmpty)];
+    
+	[self.playerItem removeObserver:self
+                         forKeyPath:kPlaybackLikelyToKeeyUp
+                            context:WonderAVMovieObserverContextName(PlaybackLikelyToKeepUp)];
+    
+    [self.player removeObserver:self
+                     forKeyPath:kCurrentItemKey
+                        context:WonderAVMovieObserverContextName(CurrentItem)];
 }
 
 - (void)viewDidLoad
@@ -257,18 +272,6 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
                       forKeyPath:kCurrentItemKey
                          options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
                          context:WonderAVMovieObserverContextName(CurrentItem)];
-        
-        /* A 'currentItem.timedMetadata' property observer to parse the media stream timed metadata. */
-        [self.player addObserver:self
-                      forKeyPath:kTimedMetadataKey
-                         options:0
-                         context:WonderAVMovieObserverContextName(TimedMetadata)];
-        
-        /* Observe the AVPlayer "rate" property to update the scrubber control. */
-        [self.player addObserver:self
-                      forKeyPath:kRateKey
-                         options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
-                         context:WonderAVMovieObserverContextName(Rate)];
     }
     
     /* Make our new AVPlayerItem the AVPlayer's current item. */
@@ -310,7 +313,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 	/* AVPlayerItem "status" property value observer. */
 	if (context == WonderAVMovieObserverContextName(PlayerItemStatus)) {
         AVPlayerStatus status = [change[NSKeyValueChangeNewKey] integerValue];
-        NSLog(@"status changed: %d", status);
+//        NSLog(@"status changed: %d", status);
         switch (status) {
                 /* Indicates that the status of the player is not yet known because
                  it has not tried to load new media resources for playback */
@@ -347,10 +350,6 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
                 break;
         }
     }
-    /* AVPlayer "rate" property value observer. */
-    else if (context == WonderAVMovieObserverContextName(Rate)) {
-        
-    }
     /* AVPlayer "currentItem" property observer.
      Called when the AVPlayer replaceCurrentItemWithPlayerItem:
      replacement will/did occur. */
@@ -379,13 +378,13 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     }
     else if (context == WonderAVMovieObserverContextName(PlaybackBufferEmpty)) {
         if (self.player.currentItem.playbackBufferEmpty) {
-            NSLog(@"buffer");
+//            NSLog(@"buffer");
             [self.controlSource buffer];
         }
     }
     else if (context == WonderAVMovieObserverContextName(PlaybackLikelyToKeepUp)) {
         if (self.player.currentItem.playbackLikelyToKeepUp) {
-            NSLog(@"unbuffer");
+//            NSLog(@"unbuffer");
             [self.controlSource unbuffer];
         }
     }
@@ -647,6 +646,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     if (self.exitBlock) {
         self.exitBlock();
     }
+    [self removeAllObservers];
 }
 
 - (void)movieControlSourceBeginChangeProgress:(id<MovieControlSource>)source

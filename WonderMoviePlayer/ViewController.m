@@ -36,6 +36,7 @@
 }
 
 - (IBAction)onClickPlay:(id)sender {
+    @autoreleasepool {
 #ifdef MTT_FEATURE_WONDER_AVMOVIE_PLAYER
     WonderAVMovieViewController *controller = [[WonderAVMovieViewController alloc] init];
 //    __unsafe_unretained WonderAVMovieViewController*vc = controller;
@@ -44,6 +45,7 @@
         NSLog(@"start to play av");
         [controller playMovieStream:[[NSBundle mainBundle] URLForResource:@"Movie" withExtension:@"m4v"]];
     }];
+        
     [controller release];
     NSLog(@"retain count1= %d", [controller retainCount]);
 #else
@@ -55,6 +57,7 @@
     }];
     
 #endif
+    }
 }
 
 - (IBAction)onClickPlayRemote:(id)sender {
