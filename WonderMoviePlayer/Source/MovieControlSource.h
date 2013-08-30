@@ -92,6 +92,7 @@ typedef enum {
 - (void)movieControlSource:(id<MovieControlSource>)source lock:(BOOL)lock;
 
 - (void)movieControlSource:(id<MovieControlSource>)source increaseVolume:(CGFloat)volume;
+- (void)movieControlSourceOnDownload:(id<MovieControlSource>)source;
 @end
 
 #endif // MTT_FEATURE_WONDER_MOVIE_PLAYER

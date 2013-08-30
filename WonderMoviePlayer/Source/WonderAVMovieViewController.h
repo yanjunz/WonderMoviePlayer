@@ -25,6 +25,7 @@
     
     id timeObserver;
 }
+@property (nonatomic, retain) NSURL *movieURL;
 @property (nonatomic, retain) AVPlayer *player;
 @property (nonatomic, retain) AVPlayerItem *playerItem;
 @property (nonatomic, retain) IBOutlet WonderAVPlayerView *playerLayerView;
@@ -34,6 +35,7 @@
 // handler block
 @property (nonatomic, copy) void(^crossScreenBlock)();
 @property (nonatomic, copy) void(^exitBlock)();
+@property (nonatomic, copy) void(^downloadBlock)(NSURL *movieURL);
 
 - (void)playMovieStream:(NSURL *)movieURL;
 - (void)playMovieStream:(NSURL *)movieURL fromStartTime:(Float64)time;

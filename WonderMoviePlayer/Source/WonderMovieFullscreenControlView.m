@@ -508,6 +508,11 @@
     return self.progressView.width;
 }
 
+- (void)startToDownload
+{
+    self.downloadButton.enabled = NO;
+}
+
 #pragma mark UI Interaction
 - (IBAction)onClickAction:(UIButton *)sender
 {
@@ -532,6 +537,9 @@
 
 - (IBAction)onClickDownload:(id)sender
 {
+    if ([self.delegate respondsToSelector:@selector(movieControlSourceOnDownload:)]) {
+        [self.delegate movieControlSourceOnDownload:self];
+    }
 }
 
 - (IBAction)onClickCrossScreen:(id)sender

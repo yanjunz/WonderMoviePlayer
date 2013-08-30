@@ -68,6 +68,8 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     self.overlayView = nil;
     self.controlView = nil;
     self.crossScreenBlock = nil;
+    self.exitBlock = nil;
+    self.downloadBlock = nil;
     [super dealloc];
 }
 
@@ -142,7 +144,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 {
     if ([movieURL scheme]) {
         startTime = time;
-        
+        self.movieURL = movieURL;
         /*
          Create an asset for inspection of a resource referenced by a given URL.
          Load the values for the asset keys "tracks", "playable".
@@ -672,6 +674,14 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     controller.volume = newVolume;
 }
 
-
+- (void)movieControlSourceOnDownload:(id<MovieControlSource>)source
+{
+    if (self.downloadBlock) {
+        self.downloadBlock(self.movieURL);
+    }
+    if ([source respondsToSelector:@selector(startToDownload)]) {
+        [source startToDownload];
+    }
+}
 @end
 #endif // MTT_FEATURE_WONDER_AVMOVIE_PLAYER

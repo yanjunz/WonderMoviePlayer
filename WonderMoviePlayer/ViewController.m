@@ -38,10 +38,14 @@
 - (IBAction)onClickPlay:(id)sender {
 #ifdef MTT_FEATURE_WONDER_AVMOVIE_PLAYER
     WonderAVMovieViewController *controller = [[WonderAVMovieViewController alloc] init];
+//    __unsafe_unretained WonderAVMovieViewController*vc = controller;
     [self presentViewController:controller animated:YES completion:^{
+//        NSLog(@"retain count= %d", [controller retainCount]);
         NSLog(@"start to play av");
-        [controller playMovieStream:[[NSBundle mainBundle] URLForResource:@"Movie" withExtension:@"m4v"] fromStartTime:15];
+        [controller playMovieStream:[[NSBundle mainBundle] URLForResource:@"Movie" withExtension:@"m4v"]];
     }];
+    [controller release];
+    NSLog(@"retain count1= %d", [controller retainCount]);
 #else
     WonderMPMovieViewController *controller = [[WonderMPMovieViewController alloc] init];
     [self presentViewController:controller animated:YES completion:^{
