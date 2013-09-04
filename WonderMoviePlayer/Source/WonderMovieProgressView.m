@@ -55,6 +55,7 @@
     self.progressIndicator = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.progressIndicator setImage:QQImage(@"videoplayer_progressbar_indicator_normal") forState:UIControlStateNormal];
     [self.progressIndicator setImage:QQImage(@"videoplayer_progressbar_indicator_press") forState:UIControlStateHighlighted];
+    [self.progressIndicator setImage:QQImage(@"videoplayer_progressbar_indicator_press") forState:UIControlStateSelected];
     self.progressIndicator.size = CGSizeMake(39, 39);
 //    self.progressIndicator.backgroundColor = [UIColor lightTextColor];
     [self addSubview:self.progressIndicator];
@@ -106,6 +107,7 @@
 
 - (void)notifyProgressBegin
 {
+    self.progressIndicator.selected = YES;
     if ([self.delegate respondsToSelector:@selector(wonderMovieProgressViewBeginChangeProgress:)]) {
         [self.delegate wonderMovieProgressViewBeginChangeProgress:self];
     }
@@ -113,6 +115,7 @@
 
 - (void)notifyProgressEnd
 {
+    self.progressIndicator.selected = NO;
     if ([self.delegate respondsToSelector:@selector(wonderMovieProgressViewEndChangeProgress:)]) {
         [self.delegate wonderMovieProgressViewEndChangeProgress:self];
     }

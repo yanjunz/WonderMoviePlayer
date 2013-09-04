@@ -93,7 +93,7 @@
     
     CGFloat bottomBarHeight = 50;
     CGFloat headerBarHeight = 44;
-    CGFloat progressBarLeftPadding = self.nextEnabled ? 60+30 : 60;
+    CGFloat progressBarLeftPadding = self.nextEnabled ? 60+30+10 : 60;
     CGFloat progressBarRightPadding = 10;
     CGFloat durationLabelWidth = 100;
     CGFloat batteryHeight = 10;
@@ -121,7 +121,7 @@
     if (self.nextEnabled) {
         self.nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.nextButton setImage:QQImage(@"videoplayer_next_normal") forState:UIControlStateNormal];
-        self.nextButton.frame = CGRectMake(progressBarLeftPadding - 38, (self.bottomBar.height - 17 * 2) / 2, 15 * 2, 17 * 2);
+        self.nextButton.frame = CGRectMake(progressBarLeftPadding - 38 - 6, (self.bottomBar.height - 17 * 2) / 2, 15 * 2, 17 * 2);
         [self.bottomBar addSubview:self.nextButton];
     }
     
@@ -171,11 +171,11 @@
     [self.headerBar addSubview:separatorView];
     
     self.batteryView = [[[BatteryIconView alloc] initWithBatteryMonitoringEnabled:YES] autorelease];
-    self.batteryView.frame = CGRectMake(self.headerBar.width - 10 - 24, headerBarHeight / 2 + 2, 24, batteryHeight);
+    self.batteryView.frame = CGRectMake(self.headerBar.width - 10 - 24, headerBarHeight / 2, 24, batteryHeight);
     self.batteryView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [self.headerBar addSubview:self.batteryView];
     
-    self.timeLabel = [[[UILabel alloc] initWithFrame:CGRectOffset(self.batteryView.frame, -2, -batteryHeight - 2 * 2)] autorelease];
+    self.timeLabel = [[[UILabel alloc] initWithFrame:CGRectOffset(self.batteryView.frame, -2, -batteryHeight - 2)] autorelease];
     self.timeLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     self.timeLabel.textAlignment = UITextAlignmentCenter;
     self.timeLabel.textColor = [UIColor lightTextColor];
