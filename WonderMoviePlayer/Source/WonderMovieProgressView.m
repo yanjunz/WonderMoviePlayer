@@ -56,7 +56,8 @@
     [self.progressIndicator setImage:QQImage(@"videoplayer_progressbar_indicator_normal") forState:UIControlStateNormal];
     [self.progressIndicator setImage:QQImage(@"videoplayer_progressbar_indicator_press") forState:UIControlStateHighlighted];
     [self.progressIndicator setImage:QQImage(@"videoplayer_progressbar_indicator_press") forState:UIControlStateSelected];
-    self.progressIndicator.size = CGSizeMake(39, 39);
+//    self.progressIndicator.size = CGSizeMake(39, 39);
+    self.progressIndicator.size = CGSizeMake(39 + 10, 39 + 10);
 //    self.progressIndicator.backgroundColor = [UIColor lightTextColor];
     [self addSubview:self.progressIndicator];
     

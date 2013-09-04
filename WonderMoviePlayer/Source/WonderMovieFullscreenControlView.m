@@ -94,7 +94,7 @@
     CGFloat bottomBarHeight = 50;
     CGFloat headerBarHeight = 44;
     CGFloat progressBarLeftPadding = self.nextEnabled ? 60+30+10 : 60;
-    CGFloat progressBarRightPadding = 10;
+    CGFloat progressBarRightPadding = 16;
     CGFloat durationLabelWidth = 100;
     CGFloat batteryHeight = 10;
     
