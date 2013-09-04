@@ -64,11 +64,14 @@
 
 - (IBAction)onClickPlayRemote:(id)sender {
 #ifdef MTT_FEATURE_WONDER_AVMOVIE_PLAYER
-    WonderAVMovieViewController *controller = [[WonderAVMovieViewController alloc] init];
+    WonderAVMovieViewController *controller = [[[WonderAVMovieViewController alloc] init] autorelease];
     [self presentViewController:controller animated:YES completion:^{
         NSLog(@"start to play av");
         [controller setCrossScreenBlock:^{
             NSLog(@"cross screen");
+        }];
+        [controller setExitBlock:^{
+            [controller dismissViewControllerAnimated:YES completion:nil];
         }];
         [controller playMovieStream:[NSURL URLWithString:
 //                                     @"http://hot.vrs.sohu.com/ipad1259067_4587696266952_4460388.m3u8?plat=null"

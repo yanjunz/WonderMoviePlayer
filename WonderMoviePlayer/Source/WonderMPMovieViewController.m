@@ -504,6 +504,7 @@
     if (self.exitBlock) {
         self.exitBlock();
     }
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)movieControlSource:(id<MovieControlSource>)source setFullscreen:(BOOL)fullscreen

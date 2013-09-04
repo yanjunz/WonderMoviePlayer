@@ -35,7 +35,7 @@ void uncaughtExceptionHandler(NSException *exception)
     NSLog(@"%@", NSHomeDirectory());
     
 //    [NSURLProtocol registerClass:[JSURLProtocol class]];
-    [[JSPluginEngine sharedInstance] registerPlugin:[[JSVideoPlugin alloc] init] withPluginName:@"qqvideo"];
+//    [[JSPluginEngine sharedInstance] registerPlugin:[[JSVideoPlugin alloc] init] withPluginName:@"qqvideo"];
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     // Override point for customization after application launch.
 
