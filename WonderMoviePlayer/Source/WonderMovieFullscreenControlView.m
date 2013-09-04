@@ -125,7 +125,7 @@
         [self.bottomBar addSubview:self.nextButton];
     }
     
-    self.startLabel = [[[UILabel alloc] initWithFrame:CGRectMake(self.progressView.left, bottomBarHeight / 2, durationLabelWidth, bottomBarHeight / 2)] autorelease];
+    self.startLabel = [[[UILabel alloc] initWithFrame:CGRectMake(self.progressView.left, bottomBarHeight / 2 + 2, durationLabelWidth, bottomBarHeight / 2)] autorelease];
     self.startLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight;
     self.startLabel.textAlignment = UITextAlignmentLeft;
     self.startLabel.font = [UIFont systemFontOfSize:10];
