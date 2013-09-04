@@ -91,7 +91,8 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor blackColor];
+//    self.view.backgroundColor = [UIColor blackColor];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:QQImage(@"videoplayer_loading_bg")];
 	// Do any additional setup after loading the view.
     if (self.playerLayerView == nil) {
         self.playerLayerView = [[[WonderAVPlayerView alloc] initWithFrame:self.view.bounds] autorelease];
