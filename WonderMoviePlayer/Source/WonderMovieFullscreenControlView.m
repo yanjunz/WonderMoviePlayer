@@ -171,11 +171,11 @@
     [self.headerBar addSubview:separatorView];
     
     self.batteryView = [[[BatteryIconView alloc] initWithBatteryMonitoringEnabled:YES] autorelease];
-    self.batteryView.frame = CGRectMake(self.headerBar.width - 10 - 24, headerBarHeight / 2, 24, batteryHeight);
+    self.batteryView.frame = CGRectMake(self.headerBar.width - 10 - 24, headerBarHeight / 2 + 2, 24, batteryHeight);
     self.batteryView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [self.headerBar addSubview:self.batteryView];
     
-    self.timeLabel = [[[UILabel alloc] initWithFrame:CGRectOffset(self.batteryView.frame, -2, -batteryHeight)] autorelease];
+    self.timeLabel = [[[UILabel alloc] initWithFrame:CGRectOffset(self.batteryView.frame, -2, -batteryHeight - 2 * 2)] autorelease];
     self.timeLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     self.timeLabel.textAlignment = UITextAlignmentCenter;
     self.timeLabel.textColor = [UIColor lightTextColor];
