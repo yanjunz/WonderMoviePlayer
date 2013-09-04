@@ -234,7 +234,7 @@
     }
     [self setupTimer];
     [self timerHandler]; // call to set info immediately
-    [self updateActionState];
+    [self updateStates];
 }
 
 - (void)installGestureHandlerForParentView
@@ -282,7 +282,12 @@
 - (void)startLoading
 {
     _isLoading = YES;
-    [self.infoView startLoading];
+    
+    // If it is paused or ended, don't show loading indicator
+    if (self.controlState != MovieControlStatePaused && self.controlState != MovieControlStateEnded &&
+        !(self.controlState == MovieControlStateBuffering && _bufferFromPaused)) {
+        [self.infoView startLoading];
+    }
 }
 
 - (void)stopLoading
@@ -405,7 +410,7 @@
     }
     
     // Update States
-    [self updateActionState];
+    [self updateStates];
 }
 
 #pragma mark MovieControlSource
@@ -572,7 +577,7 @@
     [self handleCommand:MovieControlCommandPlay param:nil notify:YES];
 }
 
-- (void)updateActionState
+- (void)updateStates
 {
     if (self.controlState == MovieControlStateDefault ||
         self.controlState == MovieControlStatePlaying ||
@@ -587,12 +592,18 @@
         [self.actionButton setImage:QQImage(@"videoplayer_play_normal") forState:UIControlStateNormal];
         [self.actionButton setImage:QQImage(@"videoplayer_play_press") forState:UIControlStateHighlighted];
         self.centerPlayButton.hidden = NO;
+        self.replayButton.hidden = YES;
     }
     else if (self.controlState == MovieControlStateEnded) {
         // set replay
         [self.actionButton setImage:QQImage(@"videoplayer_play_normal") forState:UIControlStateNormal];
         [self.actionButton setImage:QQImage(@"videoplayer_play_press") forState:UIControlStateHighlighted];
         self.replayButton.hidden = NO;
+        self.centerPlayButton.hidden = YES;
+    }
+    
+    if (_isLoading) { // continue to loading
+        [self startLoading];
     }
 }
 

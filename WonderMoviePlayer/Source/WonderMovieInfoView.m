@@ -57,8 +57,19 @@
         _loadingView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         
         self.loadingIndicator = [[[UIImageView alloc] initWithImage:QQImage(@"videoplayer_loading")] autorelease];
-        self.loadingIndicator.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        self.loadingIndicator.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         [_loadingView addSubview:self.loadingIndicator];
+        [self addSubview:_loadingView];
+        _loadingView.center = self.center;
+        _loadingView.hidden = YES;
+        
+        CABasicAnimation *rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+        rotationAnimation.toValue = @(M_PI / 180 * 360);
+        rotationAnimation.duration = 1.0f;
+        rotationAnimation.cumulative = YES;
+        rotationAnimation.repeatCount = HUGE_VALF;
+        
+        [self.loadingIndicator.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
         
         self.loadingPercentLabel = [[[UILabel alloc] initWithFrame:self.loadingIndicator.frame] autorelease];
         self.loadingPercentLabel.text = @"0%";
@@ -80,24 +91,12 @@
 #pragma mark Public
 - (void)startLoading
 {
-    if (self.loadingView.superview != self) {
-        [self.loadingView removeFromSuperview];
-        [self addSubview:self.loadingView];
-        _loadingView.center = self.center;
-    }
-    
-	CABasicAnimation *rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
-    rotationAnimation.toValue = @(M_PI / 180 * 360);
-    rotationAnimation.duration = 1.0f;
-    rotationAnimation.cumulative = YES;
-    rotationAnimation.repeatCount = HUGE_VALF;
-    
-    [self.loadingIndicator.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+	self.loadingView.hidden = NO;
 }
 
 - (void)stopLoading
 {
-    [self.loadingView removeFromSuperview];
+    self.loadingView.hidden = YES;
 }
 
 
