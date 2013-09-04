@@ -18,13 +18,13 @@
     if (self) {
         // Initialization code
         UIFont *font = [UIFont boldSystemFontOfSize:23];
-        self.progressTimeLabel = [[[UILabel alloc] initWithFrame:CGRectMake(17, 18+50, 100, 40)] autorelease];
+        self.progressTimeLabel = [[[UILabel alloc] initWithFrame:CGRectMake(17, 18+50, 100, 100)] autorelease];
         self.progressTimeLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
         self.progressTimeLabel.textAlignment = UITextAlignmentLeft;
         self.progressTimeLabel.font = font;
         self.progressTimeLabel.backgroundColor = [UIColor clearColor];
         self.progressTimeLabel.textColor = [UIColor whiteColor];
-        self.progressTimeLabel.height = font.ascender + font.descender;
+        self.progressTimeLabel.height = font.lineHeight;
 //        self.progressTimeLabel.hidden = YES;
         self.progressTimeLabel.layer.shadowOpacity = 0.5;
         self.progressTimeLabel.layer.shadowColor = [UIColor blackColor].CGColor;
