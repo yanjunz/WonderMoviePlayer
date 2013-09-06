@@ -36,7 +36,8 @@ NSString *kPlaybackBufferEmpty = @"playbackBufferEmpty";
 NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 
 @interface WonderAVMovieViewController () {
-    BOOL _statusBarHiddenPrevious;        
+    BOOL _statusBarHiddenPrevious;
+    BOOL _wasPlaying;
 }
 @property (nonatomic, retain) UIView *controlView;
 
@@ -108,6 +109,10 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     
     [self setupControlSource:YES];
     [self addOverlayView];
+    
+    // Setup notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onEnterBackground:) name:UIApplicationWillResignActiveNotification object:nil];
 }
 
 /* Notifies the view controller that its view is about to be become visible. */
@@ -643,7 +648,6 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 - (void)movieControlSourceExit:(id<MovieControlSource>)source
 {
     [self.player pause];
-//    [self dismissViewControllerAnimated:YES completion:nil];
     if (self.exitBlock) {
         self.exitBlock();
     }
@@ -684,5 +688,25 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
         [source startToDownload];
     }
 }
+
+#pragma mark Notification
+- (void)onEnterForeground:(NSNotification *)n
+{
+    [self performSelector:@selector(resumePlayback) withObject:nil afterDelay:0.2f];
+}
+
+- (void)onEnterBackground:(NSNotification *)n
+{
+    _wasPlaying = self.player.rate != 0;
+    [self.player pause];
+}
+
+- (void)resumePlayback
+{
+    if (_wasPlaying) {
+        [self.player play];
+    }
+}
+
 @end
 #endif // MTT_FEATURE_WONDER_AVMOVIE_PLAYER

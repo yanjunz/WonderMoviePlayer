@@ -75,7 +75,7 @@
 
 - (IBAction)onClickPlayRemote:(id)sender {
 #ifdef MTT_FEATURE_WONDER_AVMOVIE_PLAYER
-    WonderAVMovieViewController *controller = [[[WonderAVMovieViewController alloc] init] autorelease];
+    DefineBlockVar(WonderAVMovieViewController *, controller, [[[WonderAVMovieViewController alloc] init] autorelease]);
     [self presentViewController:controller animated:YES completion:^{
         NSLog(@"start to play av");
         [controller setCrossScreenBlock:^{
