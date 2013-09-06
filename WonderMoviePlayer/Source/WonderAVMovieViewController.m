@@ -54,6 +54,20 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     return self;
 }
 
+// for debug
+//- (id)retain
+//{
+//    id r = [super retain];
+//    NSLog(@"retain %d", [self retainCount]);
+//    return r;
+//}
+//
+//- (oneway void)release
+//{
+//    NSLog(@"release %d", [self retainCount]);
+//    [super release];
+//}
+
 - (void)dealloc
 {
     self.player = nil;
@@ -92,7 +106,6 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-//    self.view.backgroundColor = [UIColor blackColor];
     self.view.backgroundColor = [UIColor colorWithPatternImage:QQImage(@"videoplayer_loading_bg")];
 	// Do any additional setup after loading the view.
     if (self.playerLayerView == nil) {
@@ -472,6 +485,10 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 #pragma mark scrubber timer
 - (void)initScrubberTimer
 {
+    if (timeObserver) {
+        return;
+    }
+    
     double interval = 1.0f;
     
     CMTime playerDuration = [self playerItemDuration];
@@ -556,30 +573,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 
 - (void)endScrubbing
 {
-    if (!timeObserver)
-	{
-		CMTime playerDuration = [self playerItemDuration];
-		if (CMTIME_IS_INVALID(playerDuration))
-		{
-			return;
-		}
-		
-		double duration = CMTimeGetSeconds(playerDuration);
-		if (isfinite(duration))
-		{
-            CGFloat width = self.view.frame.size.width;
-            if ([self.controlSource respondsToSelector:@selector(getTimeControlWidth)]) {
-                width = [self.controlSource getTimeControlWidth];
-            }
-			double tolerance = 0.5f * duration / width;
-            
-			timeObserver = [[self.player addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(tolerance, NSEC_PER_SEC) queue:dispatch_get_main_queue() usingBlock:
-                             ^(CMTime time)
-                             {
-                                 [self syncScrubber];
-                             }] retain];
-		}
-	}
+    [self initScrubberTimer];
     
 	if (restoreAfterScrubbingRate > 0)
 	{
@@ -652,6 +646,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
         self.exitBlock();
     }
     [self removeAllObservers];
+    NSLog(@"exit %d", [self retainCount]);
 }
 
 - (void)movieControlSourceBeginChangeProgress:(id<MovieControlSource>)source
