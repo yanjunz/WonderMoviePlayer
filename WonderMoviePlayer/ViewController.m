@@ -12,6 +12,8 @@
 #import "WonderAVMovieViewController.h"
 
 @interface ViewController ()
+@property (retain, nonatomic) IBOutlet UISlider *slider;
+@property (retain, nonatomic) IBOutlet UIProgressView *progressView;
 
 @end
 
@@ -21,6 +23,8 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    
+    [self.slider addTarget:self action:@selector(onSliderChanged:) forControlEvents:UIControlEventValueChanged];
 }
 
 - (void)didReceiveMemoryWarning
@@ -33,6 +37,13 @@
 {
     /* Return YES for supported orientations. */
     return YES;
+}
+- (IBAction)onSliderChanged:(UISlider *)sender
+{
+    NSLog(@"onSliderChanged %f", sender.value);
+}
+- (IBAction)changeSlider:(id)sender {
+    self.slider.value += 0.2;
 }
 
 - (IBAction)onClickPlay:(id)sender {
@@ -107,6 +118,13 @@
 }
 
 - (void)dealloc {
+    [_slider release];
+    [_progressView release];
     [super dealloc];
+}
+- (void)viewDidUnload {
+    [self setSlider:nil];
+    [self setProgressView:nil];
+    [super viewDidUnload];
 }
 @end
