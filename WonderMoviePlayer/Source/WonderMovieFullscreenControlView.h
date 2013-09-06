@@ -14,7 +14,7 @@
 
 @interface WonderMovieFullscreenControlView : UIView<MovieControlSource>
 @property (nonatomic, readonly) BOOL autoPlayWhenStarted;
-@property (nonatomic, readonly) BOOL nextEnabled;
+@property (nonatomic, readonly) BOOL nextEnabled;           // set to show next button
 @property (nonatomic, retain) WonderMovieInfoView *infoView;
 
 - (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted nextEnabled:(BOOL)nextEnabled;

@@ -281,6 +281,7 @@
 #pragma mark Loading
 - (void)startLoading
 {
+    // set the flag so that loading indicator can be resumed after play from pause
     _isLoading = YES;
     
     // If it is paused or ended, don't show loading indicator
@@ -301,7 +302,7 @@
 #pragma mark State Manchine
 - (void)handleCommand:(MovieControlCommand)cmd param:(id)param notify:(BOOL)notify
 {
-    NSLog(@"handleCommand %d, %@, %d", cmd, param, notify);
+//    NSLog(@"handleCommand %d, %@, %d", cmd, param, notify);
     if (cmd == MovieControlCommandEnd) {
         self.controlState = MovieControlStateEnded;
         
@@ -600,10 +601,14 @@
         [self.actionButton setImage:QQImage(@"videoplayer_play_press") forState:UIControlStateHighlighted];
         self.replayButton.hidden = NO;
         self.centerPlayButton.hidden = YES;
+        _isLoading = NO; // clear loading flag
     }
     
     if (_isLoading) { // continue to loading
         [self startLoading];
+    }
+    else {
+        [self stopLoading];
     }
 }
 
