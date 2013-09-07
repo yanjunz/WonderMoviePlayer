@@ -44,6 +44,10 @@
     self.overlayView = nil;
     self.backgroundView = nil;
     self.controlSource = nil;
+    self.movieURL = nil;
+    self.crossScreenBlock = nil;
+    self.exitBlock = nil;
+    self.downloadBlock = nil;
     [super dealloc];
 }
 
@@ -187,6 +191,7 @@
 
 -(void)createAndConfigurePlayerWithURL:(NSURL *)movieURL sourceType:(MPMovieSourceType)sourceType
 {
+    self.movieURL = movieURL;
     /* Create a new movie player object. */
     MPMoviePlayerController *player = [[MPMoviePlayerController alloc] initWithContentURL:movieURL];
     
@@ -247,7 +252,14 @@
         infoView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self.overlayView addSubview:infoView];
 
-        WonderMovieFullscreenControlView *fullscreenControlView = [[[WonderMovieFullscreenControlView alloc] initWithFrame:self.overlayView.bounds autoPlayWhenStarted:YES nextEnabled:YES] autorelease];
+        BOOL downloadEnabled = !!self.downloadBlock;
+        BOOL crossScreenEnabled = !!self.crossScreenBlock;
+        WonderMovieFullscreenControlView *fullscreenControlView = [[[WonderMovieFullscreenControlView alloc] initWithFrame:self.overlayView.bounds
+                                                                                                       autoPlayWhenStarted:YES
+                                                                                                               nextEnabled:NO
+                                                                                                           downloadEnabled:downloadEnabled
+                                                                                                        crossScreenEnabled:crossScreenEnabled] autorelease];
+
         fullscreenControlView.delegate = self;
         fullscreenControlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         self.controlView = fullscreenControlView;
@@ -535,6 +547,16 @@
     CGFloat newVolume = volume + controller.volume;
     newVolume = MIN(1, MAX(newVolume, 0));
     controller.volume = newVolume;
+}
+
+- (void)movieControlSourceOnDownload:(id<MovieControlSource>)source
+{
+    if (self.downloadBlock) {
+        self.downloadBlock(self.movieURL);
+    }
+    if ([source respondsToSelector:@selector(startToDownload)]) {
+        [source startToDownload];
+    }
 }
 
 #pragma mark Control operation

@@ -66,6 +66,7 @@ typedef enum {
 - (void)setPlayableDuration:(NSTimeInterval)playableDuration;
 - (void)setDuration:(NSTimeInterval)duration;
 
+// Return the length of time control such as a progressbar, used for calcuate the interval for progress timer
 - (CGFloat)getTimeControlWidth;
 
 @required

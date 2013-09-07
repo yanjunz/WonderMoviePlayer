@@ -15,9 +15,11 @@
 @interface WonderMovieFullscreenControlView : UIView<MovieControlSource>
 @property (nonatomic, readonly) BOOL autoPlayWhenStarted;
 @property (nonatomic, readonly) BOOL nextEnabled;           // set to show next button
+@property (nonatomic, readonly) BOOL downloadEnabled;
+@property (nonatomic, readonly) BOOL crossScreenEnabled;
 @property (nonatomic, retain) WonderMovieInfoView *infoView;
 
-- (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted nextEnabled:(BOOL)nextEnabled;
+- (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted nextEnabled:(BOOL)nextEnabled downloadEnabled:(BOOL)downloadEnabled crossScreenEnabled:(BOOL)crossScreenEnabled;
 - (void)installGestureHandlerForParentView;
 @end
 

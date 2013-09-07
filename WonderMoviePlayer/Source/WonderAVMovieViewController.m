@@ -471,7 +471,13 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
         infoView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self.overlayView addSubview:infoView];
         
-        WonderMovieFullscreenControlView *fullscreenControlView = [[[WonderMovieFullscreenControlView alloc] initWithFrame:self.overlayView.bounds autoPlayWhenStarted:YES nextEnabled:NO] autorelease];
+        BOOL downloadEnabled = !!self.downloadBlock;
+        BOOL crossScreenEnabled = !!self.crossScreenBlock;
+        WonderMovieFullscreenControlView *fullscreenControlView = [[[WonderMovieFullscreenControlView alloc] initWithFrame:self.overlayView.bounds
+                                                                                                       autoPlayWhenStarted:YES
+                                                                                                               nextEnabled:NO
+                                                                                                           downloadEnabled:downloadEnabled
+                                                                                                        crossScreenEnabled:crossScreenEnabled] autorelease];
         fullscreenControlView.delegate = self;
         fullscreenControlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         self.controlView = fullscreenControlView;
@@ -646,7 +652,6 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
         self.exitBlock();
     }
     [self removeAllObservers];
-    NSLog(@"exit %d", [self retainCount]);
 }
 
 - (void)movieControlSourceBeginChangeProgress:(id<MovieControlSource>)source

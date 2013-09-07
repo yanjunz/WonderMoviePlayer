@@ -18,8 +18,11 @@
 @property (nonatomic, retain) IBOutlet UIView *backgroundView;
 @property (nonatomic, retain) id<MovieControlSource> controlSource;
 
+@property (nonatomic, retain) NSURL *movieURL;
 // handler block
 @property (nonatomic, copy) void(^crossScreenBlock)();
+@property (nonatomic, copy) void(^exitBlock)();
+@property (nonatomic, copy) void(^downloadBlock)(NSURL *movieURL);
 
 - (void)playMovieFile:(NSURL *)movieFileURL;
 - (void)playMovieStream:(NSURL *)movieFileURL;

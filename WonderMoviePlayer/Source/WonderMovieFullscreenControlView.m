@@ -76,11 +76,13 @@
 @synthesize delegate;
 @synthesize controlState;
 
-- (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted nextEnabled:(BOOL)nextEnabled
+- (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted nextEnabled:(BOOL)nextEnabled downloadEnabled:(BOOL)downloadEnabled crossScreenEnabled:(BOOL)crossScreenEnabled
 {
     if (self = [super initWithFrame:frame]) {
         _autoPlayWhenStarted = autoPlayWhenStarted;
         _nextEnabled = nextEnabled;
+        _downloadEnabled = downloadEnabled;
+        _crossScreenEnabled = crossScreenEnabled;
         self.autoresizesSubviews = YES;
         [self setupView];
     }
@@ -190,20 +192,27 @@
     self.lockButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [self.lockButton addTarget:self action:@selector(onClickLock:) forControlEvents:UIControlEventTouchUpInside];
     [self.headerBar addSubview:self.lockButton];
-
-    self.downloadButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.downloadButton setImage:QQImage(@"videoplayer_download") forState:UIControlStateNormal];
-    self.downloadButton.frame = CGRectOffset(self.lockButton.frame, -50, 0); //CGRectMake(self.lockButton.left - 50, 0, headerBarHeight, headerBarHeight);
-    self.downloadButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-    [self.downloadButton addTarget:self action:@selector(onClickDownload:) forControlEvents:UIControlEventTouchUpInside];
-    [self.headerBar addSubview:self.downloadButton];
     
-    self.crossScreenButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.crossScreenButton setImage:QQImage(@"videoplayer_cross_screen") forState:UIControlStateNormal];
-    self.crossScreenButton.frame = CGRectOffset(self.downloadButton.frame, -50, 0);
-    self.crossScreenButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-    [self.crossScreenButton addTarget:self action:@selector(onClickCrossScreen:) forControlEvents:UIControlEventTouchUpInside];
-    [self.headerBar addSubview:self.crossScreenButton];
+    CGRect btnRect = self.lockButton.frame;
+
+    if (_downloadEnabled) {
+        self.downloadButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self.downloadButton setImage:QQImage(@"videoplayer_download") forState:UIControlStateNormal];
+        self.downloadButton.frame = CGRectOffset(btnRect, -50, 0);
+        self.downloadButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+        [self.downloadButton addTarget:self action:@selector(onClickDownload:) forControlEvents:UIControlEventTouchUpInside];
+        [self.headerBar addSubview:self.downloadButton];
+        btnRect = self.downloadButton.frame;
+    }
+    
+    if (_crossScreenEnabled) {
+        self.crossScreenButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self.crossScreenButton setImage:QQImage(@"videoplayer_cross_screen") forState:UIControlStateNormal];
+        self.crossScreenButton.frame = CGRectOffset(btnRect, -50, 0);
+        self.crossScreenButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+        [self.crossScreenButton addTarget:self action:@selector(onClickCrossScreen:) forControlEvents:UIControlEventTouchUpInside];
+        [self.headerBar addSubview:self.crossScreenButton];
+    }
     
     CGFloat centerButtonSize = 138 / 2;
     self.replayButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -223,7 +232,16 @@
     [self.centerPlayButton addTarget:self action:@selector(onClickPlay:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.centerPlayButton];
     
-    self.viewsToBeLocked = @[backButton, self.downloadButton, self.bottomBar, self.crossScreenButton];
+    NSMutableArray *lockedViews = [NSMutableArray array];
+    [lockedViews addObject:backButton];
+    [lockedViews addObject:self.bottomBar];
+    if (self.downloadButton) {
+        [lockedViews addObject:self.downloadButton];
+    }
+    if (self.crossScreenButton) {
+        [lockedViews addObject:self.crossScreenButton];
+    }
+    self.viewsToBeLocked = lockedViews;
     
     // Update control state
     if (self.autoPlayWhenStarted) {
