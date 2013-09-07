@@ -51,6 +51,7 @@ typedef enum {
 
 // Auxiliary Utils
 - (void)startToDownload;
+- (void)finishDownload;
 - (void)pauseDownload;
 - (void)lockScreen;
 

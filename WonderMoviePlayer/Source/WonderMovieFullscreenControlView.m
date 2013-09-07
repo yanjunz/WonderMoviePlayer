@@ -54,6 +54,9 @@
 @property (nonatomic, retain) UIButton *downloadButton;
 @property (nonatomic, retain) UIButton *crossScreenButton;
 
+// download animation view
+@property (nonatomic, retain) UIView *downloadingView;
+
 // center button
 @property (nonatomic, retain) UIButton *replayButton;
 @property (nonatomic, retain) UIButton *centerPlayButton;
@@ -203,6 +206,12 @@
         [self.downloadButton addTarget:self action:@selector(onClickDownload:) forControlEvents:UIControlEventTouchUpInside];
         [self.headerBar addSubview:self.downloadButton];
         btnRect = self.downloadButton.frame;
+        
+        UIImageView *downloadingArrow = [[[UIImageView alloc] initWithImage:QQImage(@"videoplayer_download_fg")] autorelease];
+        downloadingArrow.contentMode = UIViewContentModeCenter;
+        downloadingArrow.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+        
+        self.downloadingView = downloadingArrow;
     }
     
     if (_crossScreenEnabled) {
@@ -237,6 +246,7 @@
     [lockedViews addObject:self.bottomBar];
     if (self.downloadButton) {
         [lockedViews addObject:self.downloadButton];
+        [lockedViews addObject:self.downloadingView];
     }
     if (self.crossScreenButton) {
         [lockedViews addObject:self.crossScreenButton];
@@ -277,6 +287,7 @@
     self.lockButton = nil;
     self.actionButton = nil;
     self.nextButton = nil;
+    self.downloadingView = nil;
     
     self.batteryView = nil;
     self.timeLabel = nil;
@@ -534,7 +545,26 @@
 
 - (void)startToDownload
 {
+    [self.downloadButton setImage:QQImage(@"videoplayer_download_bg") forState:UIControlStateNormal];
+    if (self.downloadingView.superview == nil) {
+        self.downloadingView.frame = self.downloadButton.frame;
+        [self.headerBar addSubview:self.downloadingView];
+        
+        CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"position.y"];
+        animation.fromValue = @(self.downloadingView.center.y * 2 /3);
+        animation.toValue = @(self.downloadingView.center.y);
+        animation.repeatCount = HUGE_VALF;
+        animation.duration = 0.8f;
+        [self.downloadingView.layer addAnimation:animation forKey:@"downloadingAnimation"];
+    }
     self.downloadButton.enabled = NO;
+}
+
+- (void)finishDownload
+{
+    [self.downloadButton setImage:QQImage(@"videoplayer_download") forState:UIControlStateNormal];
+    [self.downloadingView removeFromSuperview];
+    [self.downloadingView.layer removeAnimationForKey:@"downloadingAnimation"];
 }
 
 #pragma mark UI Interaction
