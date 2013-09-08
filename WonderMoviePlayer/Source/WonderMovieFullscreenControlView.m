@@ -32,6 +32,9 @@
     
     // progress view
     BOOL _isProgressViewPanning; // flag to ignore msg to set progress when the progress view is dragging
+    
+    CGFloat _aculmuatedProgressBySec;
+    NSTimeInterval _lastProgressTime;
 }
 @property (nonatomic, retain) NSTimer *timer;
 @property (nonatomic, retain) WonderMovieProgressView *progressView;
@@ -778,13 +781,40 @@
 
 - (void)increaseProgress:(CGFloat)progressBySec
 {
-    double time = _playbackTime + progressBySec;
+    if (_lastProgressTime == 0) {
+        _lastProgressTime = [[NSDate date] timeIntervalSince1970];
+        _aculmuatedProgressBySec = progressBySec;
+    }
+    else {
+        NSTimeInterval newProgressTime = [[NSDate date] timeIntervalSince1970];
+        if (newProgressTime - _lastProgressTime >= 0.2) {
+//            NSLog(@"call immediately %f, %f, %f, %f", _lastProgressTime, newProgressTime, progressBySec, _aculmuatedProgressBySec);
+            _lastProgressTime = newProgressTime;
+            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(delayIncreaseProgress) object:nil];
+            [self delayIncreaseProgress];
+        }
+        else {
+//            NSLog(@"call delay       %f, %f, %f, %f", _lastProgressTime, newProgressTime, progressBySec, _aculmuatedProgressBySec);
+            _aculmuatedProgressBySec += progressBySec;
+            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(delayIncreaseProgress) object:nil];
+            [self performSelector:@selector(delayIncreaseProgress) withObject:nil afterDelay:0.2];
+        }
+        
+    }
+}
+
+- (void)delayIncreaseProgress
+{
+    double time = _playbackTime + _aculmuatedProgressBySec;
     time = MIN(_duration, MAX(time, 0));
-    if (isfinite(time) && isfinite(_duration) && _duration > 0) {
-//        NSLog(@"increaseProgress %f, %f, %f => %f", progressBySec, _playbackTime, _playbackTime/_duration, time /_duration);
+    if (isfinite(time) && isfinite(_duration) && _duration > 0 && _aculmuatedProgressBySec != 0) {
+//        NSLog(@"delayIncreaseProgress %f, %f, %f => %f", _aculmuatedProgressBySec, _playbackTime, _playbackTime/_duration, time /_duration);
         [self scrub:time / _duration];
         _playbackTime = time;
     }
+    
+    _lastProgressTime = 0;
+    _aculmuatedProgressBySec = 0;
 }
 
 - (void)beginScrubbing
