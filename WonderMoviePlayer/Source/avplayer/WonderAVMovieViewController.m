@@ -44,6 +44,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 @end
 
 @implementation WonderAVMovieViewController
+@synthesize crossScreenBlock, downloadBlock, exitBlock;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {

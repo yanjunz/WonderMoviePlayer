@@ -7,9 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B504649917CAFCBE00202E5A /* WonderMovieInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = B504649817CAFCBE00202E5A /* WonderMovieInfoView.m */; };
 		B516CA0D17DD6A4100D8E3A2 /* Reveal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B516CA0C17DD6A4100D8E3A2 /* Reveal.framework */; };
 		B516CA0F17DD6AA100D8E3A2 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B516CA0E17DD6AA100D8E3A2 /* CFNetwork.framework */; };
+		B516CA2E17DDC46A00D8E3A2 /* WonderAVMovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B516CA1B17DDC46A00D8E3A2 /* WonderAVMovieViewController.m */; };
+		B516CA2F17DDC46A00D8E3A2 /* WonderAVPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = B516CA1D17DDC46A00D8E3A2 /* WonderAVPlayerView.m */; };
+		B516CA3017DDC46A00D8E3A2 /* WonderMPMovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B516CA1F17DDC46A00D8E3A2 /* WonderMPMovieViewController.m */; };
+		B516CA3117DDC46A00D8E3A2 /* BatteryIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = B516CA2617DDC46A00D8E3A2 /* BatteryIconView.m */; };
+		B516CA3217DDC46A00D8E3A2 /* WonderMovieFullscreenControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = B516CA2817DDC46A00D8E3A2 /* WonderMovieFullscreenControlView.m */; };
+		B516CA3317DDC46A00D8E3A2 /* WonderMovieInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = B516CA2A17DDC46A00D8E3A2 /* WonderMovieInfoView.m */; };
+		B516CA3417DDC46A00D8E3A2 /* WonderMovieProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B516CA2C17DDC46A00D8E3A2 /* WonderMovieProgressView.m */; };
 		B517773817B36D44006B948E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517773717B36D44006B948E /* UIKit.framework */; };
 		B517773A17B36D44006B948E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517773917B36D44006B948E /* Foundation.framework */; };
 		B517773C17B36D44006B948E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517773B17B36D44006B948E /* CoreGraphics.framework */; };
@@ -21,9 +27,6 @@
 		B517774E17B36D44006B948E /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B517774D17B36D44006B948E /* Default-568h@2x.png */; };
 		B517775117B36D44006B948E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B517775017B36D44006B948E /* ViewController.m */; };
 		B517775417B36D44006B948E /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B517775217B36D44006B948E /* ViewController.xib */; };
-		B517775D17B36E6B006B948E /* WonderMPMovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B517775C17B36E6B006B948E /* WonderMPMovieViewController.m */; };
-		B517776117B3787D006B948E /* WonderMovieFullscreenControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = B517776017B3787C006B948E /* WonderMovieFullscreenControlView.m */; };
-		B517776717B37F44006B948E /* WonderMovieProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B517776617B37F44006B948E /* WonderMovieProgressView.m */; };
 		B517776A17B37FEB006B948E /* UIView+Sizes.m in Sources */ = {isa = PBXBuildFile; fileRef = B517776917B37FEB006B948E /* UIView+Sizes.m */; };
 		B517777117B3960E006B948E /* Movie.m4v in Resources */ = {isa = PBXBuildFile; fileRef = B517777017B3960E006B948E /* Movie.m4v */; };
 		B517777317B3961C006B948E /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B517777217B3961C006B948E /* Settings.bundle */; };
@@ -56,10 +59,7 @@
 		B517791117BA3880006B948E /* videoplayer_return@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B51778F717BA3880006B948E /* videoplayer_return@2x.png */; };
 		B517791217BA3880006B948E /* videoplayer_toolbar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B51778F817BA3880006B948E /* videoplayer_toolbar@2x.png */; };
 		B517791317BA3880006B948E /* videoplayer_unlock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B51778F917BA3880006B948E /* videoplayer_unlock@2x.png */; };
-		B517791617BB1E81006B948E /* BatteryIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = B517791517BB1E7F006B948E /* BatteryIconView.m */; };
 		B517791817BB485B006B948E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517791717BB485B006B948E /* QuartzCore.framework */; };
-		B517791B17BE0059006B948E /* WonderAVMovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B517791A17BE004F006B948E /* WonderAVMovieViewController.m */; };
-		B517791E17BE0098006B948E /* WonderAVPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = B517791D17BE0096006B948E /* WonderAVPlayerView.m */; };
 		B517792017C1AF7F006B948E /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517791F17C1AF7E006B948E /* AVFoundation.framework */; };
 		B517792217C1AFB6006B948E /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517792117C1AFB5006B948E /* CoreMedia.framework */; };
 		B517792517C1B896006B948E /* NSNotificationCenter+SwizzleMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = B517792417C1B894006B948E /* NSNotificationCenter+SwizzleMethod.m */; };
@@ -80,11 +80,25 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		B504649717CAFCBE00202E5A /* WonderMovieInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMovieInfoView.h; sourceTree = "<group>"; };
-		B504649817CAFCBE00202E5A /* WonderMovieInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderMovieInfoView.m; sourceTree = "<group>"; };
-		B504649A17CB050700202E5A /* WonderMoviePlayerConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMoviePlayerConstants.h; sourceTree = "<group>"; };
 		B516CA0C17DD6A4100D8E3A2 /* Reveal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Reveal.framework; sourceTree = "<group>"; };
 		B516CA0E17DD6AA100D8E3A2 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		B516CA1A17DDC46A00D8E3A2 /* WonderAVMovieViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderAVMovieViewController.h; sourceTree = "<group>"; };
+		B516CA1B17DDC46A00D8E3A2 /* WonderAVMovieViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderAVMovieViewController.m; sourceTree = "<group>"; };
+		B516CA1C17DDC46A00D8E3A2 /* WonderAVPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderAVPlayerView.h; sourceTree = "<group>"; };
+		B516CA1D17DDC46A00D8E3A2 /* WonderAVPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderAVPlayerView.m; sourceTree = "<group>"; };
+		B516CA1E17DDC46A00D8E3A2 /* WonderMPMovieViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMPMovieViewController.h; sourceTree = "<group>"; };
+		B516CA1F17DDC46A00D8E3A2 /* WonderMPMovieViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderMPMovieViewController.m; sourceTree = "<group>"; };
+		B516CA2117DDC46A00D8E3A2 /* MovieControlSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovieControlSource.h; sourceTree = "<group>"; };
+		B516CA2217DDC46A00D8E3A2 /* MoviePlayerHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoviePlayerHandler.h; sourceTree = "<group>"; };
+		B516CA2317DDC46A00D8E3A2 /* WonderMoviePlayerConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMoviePlayerConstants.h; sourceTree = "<group>"; };
+		B516CA2517DDC46A00D8E3A2 /* BatteryIconView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BatteryIconView.h; sourceTree = "<group>"; };
+		B516CA2617DDC46A00D8E3A2 /* BatteryIconView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BatteryIconView.m; sourceTree = "<group>"; };
+		B516CA2717DDC46A00D8E3A2 /* WonderMovieFullscreenControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMovieFullscreenControlView.h; sourceTree = "<group>"; };
+		B516CA2817DDC46A00D8E3A2 /* WonderMovieFullscreenControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderMovieFullscreenControlView.m; sourceTree = "<group>"; };
+		B516CA2917DDC46A00D8E3A2 /* WonderMovieInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMovieInfoView.h; sourceTree = "<group>"; };
+		B516CA2A17DDC46A00D8E3A2 /* WonderMovieInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderMovieInfoView.m; sourceTree = "<group>"; };
+		B516CA2B17DDC46A00D8E3A2 /* WonderMovieProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMovieProgressView.h; sourceTree = "<group>"; };
+		B516CA2C17DDC46A00D8E3A2 /* WonderMovieProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderMovieProgressView.m; sourceTree = "<group>"; };
 		B517773417B36D44006B948E /* WonderMoviePlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WonderMoviePlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B517773717B36D44006B948E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B517773917B36D44006B948E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -101,13 +115,6 @@
 		B517774F17B36D44006B948E /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		B517775017B36D44006B948E /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		B517775317B36D44006B948E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController.xib; sourceTree = "<group>"; };
-		B517775B17B36E6B006B948E /* WonderMPMovieViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMPMovieViewController.h; sourceTree = "<group>"; };
-		B517775C17B36E6B006B948E /* WonderMPMovieViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderMPMovieViewController.m; sourceTree = "<group>"; };
-		B517775E17B375A5006B948E /* MovieControlSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MovieControlSource.h; sourceTree = "<group>"; };
-		B517775F17B3787C006B948E /* WonderMovieFullscreenControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMovieFullscreenControlView.h; sourceTree = "<group>"; };
-		B517776017B3787C006B948E /* WonderMovieFullscreenControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderMovieFullscreenControlView.m; sourceTree = "<group>"; };
-		B517776517B37F43006B948E /* WonderMovieProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMovieProgressView.h; sourceTree = "<group>"; };
-		B517776617B37F44006B948E /* WonderMovieProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderMovieProgressView.m; sourceTree = "<group>"; };
 		B517776817B37FEB006B948E /* UIView+Sizes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Sizes.h"; sourceTree = "<group>"; };
 		B517776917B37FEB006B948E /* UIView+Sizes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Sizes.m"; sourceTree = "<group>"; };
 		B517777017B3960E006B948E /* Movie.m4v */ = {isa = PBXFileReference; lastKnownFileType = file; path = Movie.m4v; sourceTree = "<group>"; };
@@ -142,13 +149,7 @@
 		B51778F717BA3880006B948E /* videoplayer_return@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "videoplayer_return@2x.png"; sourceTree = "<group>"; };
 		B51778F817BA3880006B948E /* videoplayer_toolbar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "videoplayer_toolbar@2x.png"; sourceTree = "<group>"; };
 		B51778F917BA3880006B948E /* videoplayer_unlock@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "videoplayer_unlock@2x.png"; sourceTree = "<group>"; };
-		B517791417BB1E7F006B948E /* BatteryIconView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BatteryIconView.h; sourceTree = "<group>"; };
-		B517791517BB1E7F006B948E /* BatteryIconView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BatteryIconView.m; sourceTree = "<group>"; };
 		B517791717BB485B006B948E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		B517791917BE004C006B948E /* WonderAVMovieViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderAVMovieViewController.h; sourceTree = "<group>"; };
-		B517791A17BE004F006B948E /* WonderAVMovieViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderAVMovieViewController.m; sourceTree = "<group>"; };
-		B517791C17BE0095006B948E /* WonderAVPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderAVPlayerView.h; sourceTree = "<group>"; };
-		B517791D17BE0096006B948E /* WonderAVPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderAVPlayerView.m; sourceTree = "<group>"; };
 		B517791F17C1AF7E006B948E /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		B517792117C1AFB5006B948E /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		B517792317C1B892006B948E /* NSNotificationCenter+SwizzleMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNotificationCenter+SwizzleMethod.h"; sourceTree = "<group>"; };
@@ -198,6 +199,44 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B516CA1717DDC46A00D8E3A2 /* avplayer */ = {
+			isa = PBXGroup;
+			children = (
+				B516CA1A17DDC46A00D8E3A2 /* WonderAVMovieViewController.h */,
+				B516CA1B17DDC46A00D8E3A2 /* WonderAVMovieViewController.m */,
+				B516CA1C17DDC46A00D8E3A2 /* WonderAVPlayerView.h */,
+				B516CA1D17DDC46A00D8E3A2 /* WonderAVPlayerView.m */,
+				B516CA1E17DDC46A00D8E3A2 /* WonderMPMovieViewController.h */,
+				B516CA1F17DDC46A00D8E3A2 /* WonderMPMovieViewController.m */,
+			);
+			path = avplayer;
+			sourceTree = "<group>";
+		};
+		B516CA2017DDC46A00D8E3A2 /* base */ = {
+			isa = PBXGroup;
+			children = (
+				B516CA2117DDC46A00D8E3A2 /* MovieControlSource.h */,
+				B516CA2217DDC46A00D8E3A2 /* MoviePlayerHandler.h */,
+				B516CA2317DDC46A00D8E3A2 /* WonderMoviePlayerConstants.h */,
+			);
+			path = base;
+			sourceTree = "<group>";
+		};
+		B516CA2417DDC46A00D8E3A2 /* ui */ = {
+			isa = PBXGroup;
+			children = (
+				B516CA2517DDC46A00D8E3A2 /* BatteryIconView.h */,
+				B516CA2617DDC46A00D8E3A2 /* BatteryIconView.m */,
+				B516CA2717DDC46A00D8E3A2 /* WonderMovieFullscreenControlView.h */,
+				B516CA2817DDC46A00D8E3A2 /* WonderMovieFullscreenControlView.m */,
+				B516CA2917DDC46A00D8E3A2 /* WonderMovieInfoView.h */,
+				B516CA2A17DDC46A00D8E3A2 /* WonderMovieInfoView.m */,
+				B516CA2B17DDC46A00D8E3A2 /* WonderMovieProgressView.h */,
+				B516CA2C17DDC46A00D8E3A2 /* WonderMovieProgressView.m */,
+			);
+			path = ui;
+			sourceTree = "<group>";
+		};
 		B517772B17B36D44006B948E = {
 			isa = PBXGroup;
 			children = (
@@ -279,22 +318,9 @@
 		B517775A17B36E04006B948E /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				B517775B17B36E6B006B948E /* WonderMPMovieViewController.h */,
-				B517775C17B36E6B006B948E /* WonderMPMovieViewController.m */,
-				B517775E17B375A5006B948E /* MovieControlSource.h */,
-				B517775F17B3787C006B948E /* WonderMovieFullscreenControlView.h */,
-				B517776017B3787C006B948E /* WonderMovieFullscreenControlView.m */,
-				B517776517B37F43006B948E /* WonderMovieProgressView.h */,
-				B517776617B37F44006B948E /* WonderMovieProgressView.m */,
-				B517791417BB1E7F006B948E /* BatteryIconView.h */,
-				B517791517BB1E7F006B948E /* BatteryIconView.m */,
-				B517791917BE004C006B948E /* WonderAVMovieViewController.h */,
-				B517791A17BE004F006B948E /* WonderAVMovieViewController.m */,
-				B517791C17BE0095006B948E /* WonderAVPlayerView.h */,
-				B517791D17BE0096006B948E /* WonderAVPlayerView.m */,
-				B504649717CAFCBE00202E5A /* WonderMovieInfoView.h */,
-				B504649817CAFCBE00202E5A /* WonderMovieInfoView.m */,
-				B504649A17CB050700202E5A /* WonderMoviePlayerConstants.h */,
+				B516CA1717DDC46A00D8E3A2 /* avplayer */,
+				B516CA2017DDC46A00D8E3A2 /* base */,
+				B516CA2417DDC46A00D8E3A2 /* ui */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -455,17 +481,10 @@
 				B517774417B36D44006B948E /* main.m in Sources */,
 				B517774817B36D44006B948E /* AppDelegate.m in Sources */,
 				B517775117B36D44006B948E /* ViewController.m in Sources */,
-				B517775D17B36E6B006B948E /* WonderMPMovieViewController.m in Sources */,
-				B517776117B3787D006B948E /* WonderMovieFullscreenControlView.m in Sources */,
-				B517776717B37F44006B948E /* WonderMovieProgressView.m in Sources */,
 				B517776A17B37FEB006B948E /* UIView+Sizes.m in Sources */,
 				B51778AF17B9DE32006B948E /* TestWebViewController.m in Sources */,
-				B517791617BB1E81006B948E /* BatteryIconView.m in Sources */,
-				B517791B17BE0059006B948E /* WonderAVMovieViewController.m in Sources */,
-				B517791E17BE0098006B948E /* WonderAVPlayerView.m in Sources */,
 				B517792517C1B896006B948E /* NSNotificationCenter+SwizzleMethod.m in Sources */,
 				B517795217C21AD1006B948E /* RegexKitLite.m in Sources */,
-				B504649917CAFCBE00202E5A /* WonderMovieInfoView.m in Sources */,
 				B5AD785217CDA50E00C08E51 /* video.js in Sources */,
 				B5AD78A817CDD30600C08E51 /* JSURLProtocol.m in Sources */,
 				B5AD78AB17CDD35700C08E51 /* JSPlugin.m in Sources */,
@@ -474,6 +493,13 @@
 				B5AD78B517CDF01700C08E51 /* JSInvokedUrlCommand.m in Sources */,
 				B5AD78B817CDF06100C08E51 /* JSJSON.m in Sources */,
 				B5AD78BE17CE043B00C08E51 /* JSCommandQueue.m in Sources */,
+				B516CA2E17DDC46A00D8E3A2 /* WonderAVMovieViewController.m in Sources */,
+				B516CA2F17DDC46A00D8E3A2 /* WonderAVPlayerView.m in Sources */,
+				B516CA3017DDC46A00D8E3A2 /* WonderMPMovieViewController.m in Sources */,
+				B516CA3117DDC46A00D8E3A2 /* BatteryIconView.m in Sources */,
+				B516CA3217DDC46A00D8E3A2 /* WonderMovieFullscreenControlView.m in Sources */,
+				B516CA3317DDC46A00D8E3A2 /* WonderMovieInfoView.m in Sources */,
+				B516CA3417DDC46A00D8E3A2 /* WonderMovieProgressView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
