@@ -32,7 +32,21 @@
         self.progressTimeLabel.layer.shadowOffset = CGSizeMake(0, 1);
         [self addSubview:self.progressTimeLabel];
         
+        CGFloat centerButtonSize = 138 / 2;
+        self.replayButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self.replayButton setImage:QQImage(@"videoplayer_replay") forState:UIControlStateNormal];
+        self.replayButton.size = CGSizeMake(centerButtonSize, centerButtonSize);
+        self.replayButton.center = self.center;
+        self.replayButton.hidden = YES;
+        self.replayButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+        [self addSubview:self.replayButton];
         
+        self.centerPlayButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self.centerPlayButton setImage:QQImage(@"videoplayer_play") forState:UIControlStateNormal];
+        self.centerPlayButton.frame = self.replayButton.frame;
+        self.centerPlayButton.hidden = YES;
+        self.centerPlayButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+        [self addSubview:self.centerPlayButton];
     }
     return self;
 }
@@ -45,6 +59,9 @@
     self.loadingIndicator = nil;
     self.loadingMessageLabel = nil;
     self.loadingPercentLabel = nil;
+    
+    self.replayButton = nil;
+    self.centerPlayButton = nil;
     [super dealloc];
 }
 

@@ -80,7 +80,7 @@
         NSLog(@"cross screen");
     }];
     [controller setDownloadBlock:^(NSURL *url) {
-        
+//        [controller performSelector:@selector(finishDownload) withObject:nil afterDelay:3];
     }];
     [controller setExitBlock:^{
         [controller dismissViewControllerAnimated:YES completion:nil];

@@ -18,6 +18,9 @@
 @property (nonatomic, retain) UILabel *loadingPercentLabel;
 @property (nonatomic, retain) UILabel *loadingMessageLabel;
 
+// center button
+@property (nonatomic, retain) UIButton *replayButton;
+@property (nonatomic, retain) UIButton *centerPlayButton;
 
 - (void)showProgressTime:(BOOL)show animated:(BOOL)animated;
 - (void)startLoading;
