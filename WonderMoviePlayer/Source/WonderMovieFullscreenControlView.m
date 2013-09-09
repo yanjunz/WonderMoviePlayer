@@ -102,7 +102,7 @@
     
     CGFloat bottomBarHeight = 50;
     CGFloat headerBarHeight = 44;
-    CGFloat progressBarLeftPadding = self.nextEnabled ? 60+30+10 : 60;
+    CGFloat progressBarLeftPadding = (self.nextEnabled ? 60+30+10 : 60) + 8;
     CGFloat progressBarRightPadding = 16;
     CGFloat durationLabelWidth = 100;
     CGFloat batteryHeight = 10;
@@ -122,7 +122,7 @@
     [self.actionButton setImage:QQImage(@"videoplayer_play_normal") forState:UIControlStateNormal];
     [self.actionButton setImage:QQImage(@"videoplayer_play_press") forState:UIControlStateHighlighted];
     self.actionButton.titleLabel.font = [UIFont systemFontOfSize:10];
-    self.actionButton.frame = CGRectMake(0, 0, 50, 50);
+    self.actionButton.frame = CGRectMake(8, 0, 50, 50);
 //    [self.actionButton setTitle:@"Play" forState:UIControlStateNormal];
     [self.actionButton addTarget:self action:@selector(onClickAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.bottomBar addSubview:self.actionButton];
@@ -175,7 +175,7 @@
     [self.headerBar addSubview:separatorView];
     
     separatorView = [[[UIImageView alloc] initWithImage:QQImage(@"videoplayer_headerbar_separator")] autorelease];
-    separatorView.center = CGPointMake(self.width - backButton.right, self.headerBar.height / 2);
+    separatorView.center = CGPointMake(self.width - backButton.right - 4, self.headerBar.height / 2);
     separatorView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [self.headerBar addSubview:separatorView];
     
@@ -195,7 +195,7 @@
     self.lockButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.lockButton setImage:QQImage(@"videoplayer_unlock") forState:UIControlStateNormal];
     [self.lockButton setImage:QQImage(@"videoplayer_locked") forState:UIControlStateSelected];
-    self.lockButton.frame = CGRectMake(self.batteryView.left - 50, 0, headerBarHeight, headerBarHeight);
+    self.lockButton.frame = CGRectMake(self.batteryView.left - 58, 0, headerBarHeight, headerBarHeight);
     self.lockButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [self.lockButton addTarget:self action:@selector(onClickLock:) forControlEvents:UIControlEventTouchUpInside];
     [self.headerBar addSubview:self.lockButton];
