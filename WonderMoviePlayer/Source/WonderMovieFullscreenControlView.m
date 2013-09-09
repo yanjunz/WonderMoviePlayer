@@ -123,7 +123,6 @@
     [self.actionButton setImage:QQImage(@"videoplayer_play_press") forState:UIControlStateHighlighted];
     self.actionButton.titleLabel.font = [UIFont systemFontOfSize:10];
     self.actionButton.frame = CGRectMake(8, 0, 50, 50);
-//    [self.actionButton setTitle:@"Play" forState:UIControlStateNormal];
     [self.actionButton addTarget:self action:@selector(onClickAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.bottomBar addSubview:self.actionButton];
     
@@ -267,6 +266,7 @@
     [self setupTimer];
     [self timerHandler]; // call to set info immediately
     [self updateStates];
+    [self cancelPreviousAndPrepareToDimControl];
 }
 
 - (void)installGestureHandlerForParentView
@@ -589,6 +589,8 @@
     else if (self.controlState == MovieControlStateEnded) {
         [self handleCommand:MovieControlCommandReplay param:nil notify:YES];
     }
+
+    [self cancelPreviousAndPrepareToDimControl];
 }
 
 - (IBAction)onClickBack:(id)sender
@@ -601,6 +603,7 @@
     if ([self.delegate respondsToSelector:@selector(movieControlSourceOnDownload:)]) {
         [self.delegate movieControlSourceOnDownload:self];
     }
+    [self cancelPreviousAndPrepareToDimControl];
 }
 
 - (IBAction)onClickCrossScreen:(id)sender
@@ -608,6 +611,7 @@
     if ([self.delegate respondsToSelector:@selector(movieControlSourceOnCrossScreen:)]) {
         [self.delegate movieControlSourceOnCrossScreen:self];
     }
+    [self cancelPreviousAndPrepareToDimControl];
 }
 
 - (IBAction)onClickLock:(id)sender
@@ -621,16 +625,19 @@
     if ([self.delegate respondsToSelector:@selector(movieControlSource:lock:)]) {
         [self.delegate movieControlSource:self lock:self.lockButton.selected];
     }
+    [self cancelPreviousAndPrepareToDimControl];
 }
 
 - (IBAction)onClickReplay:(id)sender
 {
     [self handleCommand:MovieControlCommandReplay param:nil notify:YES];
+    [self cancelPreviousAndPrepareToDimControl];
 }
 
 - (IBAction)onClickPlay:(id)sender
 {
     [self handleCommand:MovieControlCommandPlay param:nil notify:YES];
+    [self cancelPreviousAndPrepareToDimControl];    
 }
 
 - (void)updateStates
@@ -670,6 +677,7 @@
 
 - (void)setupTimer
 {
+    // for update the date time above battery
     self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(timerHandler) userInfo:nil repeats:YES];
 }
 
@@ -700,6 +708,7 @@
             self.alpha = 1;
         }
     }];
+    [self cancelPreviousAndPrepareToDimControl];
 }
 
 - (IBAction)onPanOverlayView:(UIPanGestureRecognizer *)gr
@@ -774,6 +783,7 @@
     if ([self.delegate respondsToSelector:@selector(movieControlSource:increaseVolume:)]) {
         [self.delegate movieControlSource:self increaseVolume:volume];
     }
+    [self cancelPreviousAndPrepareToDimControl];
 }
 
 - (void)increaseBrightness:(CGFloat)brightness
@@ -785,6 +795,7 @@
     if ([self.delegate respondsToSelector:@selector(movieControlSource:increaseBrightness:)]) {
         [self.delegate movieControlSource:self increaseBrightness:brightness];
     }
+    [self cancelPreviousAndPrepareToDimControl];
 }
 
 - (void)increaseProgress:(CGFloat)progressBySec
@@ -809,6 +820,7 @@
         }
         
     }
+    [self cancelPreviousAndPrepareToDimControl];
 }
 
 - (void)delayIncreaseProgress
@@ -832,12 +844,14 @@
     if ([self.delegate respondsToSelector:@selector(movieControlSourceBeginChangeProgress:)]) {
         [self.delegate movieControlSourceBeginChangeProgress:self];
     }
+    [self cancelPreviousAndPrepareToDimControl];    
 }
 
 - (void)scrub:(CGFloat)progress
 {
     [self handleCommand:MovieControlCommandSetProgress param:@(progress) notify:YES];
     [self setProgress:progress];
+    [self cancelPreviousAndPrepareToDimControl];
 }
 
 - (void)endScrubbing
@@ -846,6 +860,22 @@
     [self.infoView showProgressTime:NO animated:YES];
     if ([self.delegate respondsToSelector:@selector(movieControlSourceEndChangeProgress:)]) {
         [self.delegate movieControlSourceEndChangeProgress:self];
+    }
+    [self cancelPreviousAndPrepareToDimControl];
+}
+
+- (void)cancelPreviousAndPrepareToDimControl
+{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dimControl) object:nil];
+    [self performSelector:@selector(dimControl) withObject:nil afterDelay:5.0f];
+}
+
+- (void)dimControl
+{
+    if (self.alpha == 1 && self.controlState != MovieControlStatePaused && self.controlState != MovieControlStateEnded) {
+        [UIView animateWithDuration:0.5f animations:^{
+            self.alpha = 0;
+        }];
     }
 }
 
