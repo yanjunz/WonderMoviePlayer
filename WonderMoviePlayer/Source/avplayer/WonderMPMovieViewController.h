@@ -11,18 +11,15 @@
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import "MovieControlSource.h"
+#import "MoviePlayerHandler.h"
 
-@interface WonderMPMovieViewController : UIViewController<MovieControlSourceDelegate>
+@interface WonderMPMovieViewController : UIViewController<MovieControlSourceDelegate, MoviePlayerHandler>
 @property (nonatomic, retain) MPMoviePlayerController *moviePlayerController;
 @property (nonatomic, retain) UIView *overlayView;
 @property (nonatomic, retain) IBOutlet UIView *backgroundView;
 @property (nonatomic, retain) id<MovieControlSource> controlSource;
 
 @property (nonatomic, retain) NSURL *movieURL;
-// handler block
-@property (nonatomic, copy) void(^crossScreenBlock)();
-@property (nonatomic, copy) void(^exitBlock)();
-@property (nonatomic, copy) void(^downloadBlock)(NSURL *movieURL);
 
 - (void)playMovieFile:(NSURL *)movieFileURL;
 - (void)playMovieStream:(NSURL *)movieFileURL;

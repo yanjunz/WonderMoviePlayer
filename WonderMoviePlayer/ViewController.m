@@ -63,6 +63,10 @@
     NSLog(@"retain count1= %d", [controller retainCount]);
 #else
     WonderMPMovieViewController *controller = [[WonderMPMovieViewController alloc] init];
+    [controller setExitBlock:^{
+        [controller dismissViewControllerAnimated:YES completion:nil];
+    }];
+        
     [self presentViewController:controller animated:YES completion:^{
         NSLog(@"start to play");
         NSString *path = [[NSBundle mainBundle] pathForResource:@"Movie" ofType:@"m4v"];
@@ -100,6 +104,9 @@
 
 #else
     WonderMPMovieViewController *controller = [[WonderMPMovieViewController alloc] init];
+    [controller setExitBlock:^{
+        [controller dismissViewControllerAnimated:YES completion:nil];
+    }];
     [self presentViewController:controller animated:YES completion:^{
         NSLog(@"start to play");
 //        NSString *path = [[NSBundle mainBundle] pathForResource:@"Movie" ofType:@"m4v"];
