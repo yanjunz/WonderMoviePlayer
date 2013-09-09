@@ -36,6 +36,11 @@
     // for delay increasing progress by pan gesture
     CGFloat _aculmuatedProgressBySec;
     NSTimeInterval _lastProgressTime;
+    
+#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
+    // bottom bar will hide util the movie start to play
+    BOOL _hasStarted;
+#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
 }
 @property (nonatomic, retain) NSTimer *timer;
 @property (nonatomic, retain) WonderMovieProgressView *progressView;
@@ -109,6 +114,11 @@
     
     // Setup bottomBar
     self.bottomBar = [[[UIView alloc] initWithFrame:CGRectMake(0, self.height - bottomBarHeight, self.width, bottomBarHeight)] autorelease];
+    
+#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
+    self.bottomBar.top = self.bottom; // hide bottom bar until movie started
+#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
+    
 //    self.bottomBar.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
     self.bottomBar.backgroundColor = [UIColor colorWithPatternImage:QQImage(@"videoplayer_toolbar")];
     self.bottomBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
@@ -447,6 +457,15 @@
     
     // Update States
     [self updateStates];
+    
+#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
+    if (!_hasStarted && self.controlState == MovieControlStatePlaying) {
+        _hasStarted = YES; // start to play now, should show bottom bar
+        [UIView animateWithDuration:0.5f animations:^{
+            self.bottomBar.bottom = self.bottom;
+        }];
+    }
+#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
 }
 
 #pragma mark MovieControlSource

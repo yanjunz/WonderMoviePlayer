@@ -101,3 +101,6 @@ __weak type var = __real_##var
 #error "MTT_FEATURE_WONDER_MPMOVIE_PLAYER and MTT_FEATURE_WONDER_AVMOVIE_PLAYER can cause conflict. Define only one from them!"
 #endif
 
+
+#define MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
+
