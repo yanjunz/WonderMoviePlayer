@@ -33,6 +33,7 @@
     // progress view
     BOOL _isProgressViewPanning; // flag to ignore msg to set progress when the progress view is dragging
     
+    // for delay increasing progress by pan gesture
     CGFloat _aculmuatedProgressBySec;
     NSTimeInterval _lastProgressTime;
 }
@@ -526,6 +527,7 @@
             }
             
             CGFloat percent = 1 - ((_playbackTime - playableDuration) / _totalBufferingSize);
+            percent = MAX(0, MIN(1, percent));
             self.infoView.loadingPercentLabel.text = [NSString stringWithFormat:@"%d%%", (int)(percent * 100)];
         }
     }
