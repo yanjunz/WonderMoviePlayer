@@ -386,7 +386,9 @@
                         [self.delegate movieControlSourceReplay:self];
                     }
                 }
-                else if (cmd == MovieControlCommandSetProgress) {
+                else if (cmd == MovieControlCommandSetProgress &&
+                         [(NSNumber *)param floatValue] != 1) // iOS5 issue: setProgress cmd will be issued after the movie is end, just skip it
+                {
                     self.controlState = MovieControlStatePlaying;
                     
                     if (notify && [self.delegate respondsToSelector:@selector(movieControlSource:setProgress:)]) {
@@ -654,6 +656,7 @@
         [self.actionButton setImage:QQImage(@"videoplayer_play_press") forState:UIControlStateHighlighted];
         self.replayButton.hidden = NO;
         self.centerPlayButton.hidden = YES;
+        [self.replayButton.superview bringSubviewToFront:self.replayButton];
         _isLoading = NO; // clear loading flag
     }
     
