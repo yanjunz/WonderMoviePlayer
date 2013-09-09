@@ -31,6 +31,7 @@
 @property (nonatomic, retain) IBOutlet WonderAVPlayerView *playerLayerView;
 @property (nonatomic, retain) id<MovieControlSource> controlSource;
 @property (nonatomic, retain) UIView *overlayView;
+@property (nonatomic, retain) IBOutlet UIView *maskView;
 
 // handler block
 @property (nonatomic, copy) void(^crossScreenBlock)();

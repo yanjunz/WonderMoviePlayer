@@ -111,8 +111,17 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     if (self.playerLayerView == nil) {
         self.playerLayerView = [[[WonderAVPlayerView alloc] initWithFrame:self.view.bounds] autorelease];
         self.playerLayerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [self.view addSubview:self.playerLayerView];
     }
+    [self.view addSubview:self.playerLayerView];
+    
+    if (self.maskView == nil) {
+        self.maskView = [[[UIView alloc] initWithFrame:self.view.bounds] autorelease];
+        self.maskView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        self.maskView.backgroundColor = [UIColor blackColor];
+    }
+    self.maskView.userInteractionEnabled = NO;
+    self.maskView.alpha = 0;
+    [self.view addSubview:self.maskView];    
     
     if (self.overlayView == nil) {
         self.overlayView = [[[UIView alloc] initWithFrame:self.view.bounds] autorelease];
@@ -669,6 +678,12 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     if (self.crossScreenBlock) {
         self.crossScreenBlock();
     }
+}
+
+- (void)movieControlSource:(id<MovieControlSource>)source increaseBrightness:(CGFloat)brightness
+{
+    CGFloat alpha = self.maskView.alpha + brightness;
+    self.maskView.alpha = MAX(0, MIN(1, alpha));
 }
 
 - (void)movieControlSource:(id<MovieControlSource>)source increaseVolume:(CGFloat)volume

@@ -93,6 +93,7 @@ typedef enum {
 - (void)movieControlSourceOnCrossScreen:(id<MovieControlSource>)source;
 - (void)movieControlSource:(id<MovieControlSource>)source lock:(BOOL)lock;
 
+- (void)movieControlSource:(id<MovieControlSource>)source increaseBrightness:(CGFloat)brightness;
 - (void)movieControlSource:(id<MovieControlSource>)source increaseVolume:(CGFloat)volume;
 - (void)movieControlSourceOnDownload:(id<MovieControlSource>)source;
 @end

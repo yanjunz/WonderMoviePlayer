@@ -778,10 +778,13 @@
 
 - (void)increaseBrightness:(CGFloat)brightness
 {
-    UIScreen *screen = [UIScreen mainScreen];
-    CGFloat newBrightness = screen.brightness + brightness;
-    newBrightness = MIN(1, MAX(newBrightness, 0));
-    screen.brightness = newBrightness;
+//    UIScreen *screen = [UIScreen mainScreen];
+//    CGFloat newBrightness = screen.brightness + brightness;
+//    newBrightness = MIN(1, MAX(newBrightness, 0));
+//    screen.brightness = newBrightness;
+    if ([self.delegate respondsToSelector:@selector(movieControlSource:increaseBrightness:)]) {
+        [self.delegate movieControlSource:self increaseBrightness:brightness];
+    }
 }
 
 - (void)increaseProgress:(CGFloat)progressBySec
