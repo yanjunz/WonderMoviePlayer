@@ -620,11 +620,16 @@
 - (IBAction)onClickLock:(id)sender
 {
     self.lockButton.selected = !self.lockButton.selected;
-    for (UIView *view in self.viewsToBeLocked) {
-        view.hidden = self.lockButton.selected;
-    }
     self.panGestureRecognizer.enabled = !self.lockButton.selected;
-    
+    [UIView animateWithDuration:0.5f animations:^{
+        for (UIView *view in self.viewsToBeLocked) {
+            view.alpha = self.lockButton.selected ? 0 : 1;
+        }
+    } completion:^(BOOL finished) {
+//        for (UIView *view in self.viewsToBeLocked) {
+//            view.hidden = self.lockButton.selected;
+//        }
+    }];
     if ([self.delegate respondsToSelector:@selector(movieControlSource:lock:)]) {
         [self.delegate movieControlSource:self lock:self.lockButton.selected];
     }
