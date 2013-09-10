@@ -49,6 +49,7 @@
 //    self.progressTopView.backgroundColor = [UIColor whiteColor];
     self.progressTopView.contentStretch = CGRectMake(0.5, 0.5, 0, 0);
     self.progressTopView.image = QQImage(@"videoplayer_progressbar_top");
+    self.progressTopView.clipsToBounds = YES;
     [self addSubview:self.progressTopView];
     
 //    self.progressIndicator = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)] autorelease];
@@ -78,6 +79,14 @@
     self.progressTopView.frame = self.progressCacheView.frame;
     self.progressTopView.width = self.progressBottomView.width * self.progress;
     self.progressIndicator.center = CGPointMake(self.progressBottomView.left + self.progressBottomView.width * self.progress, self.progressBottomView.center.y);
+    
+    // ugly tuning
+    if (self.progressTopView.width < self.progressTopView.image.size.width) {
+        self.progressTopView.contentMode = UIViewContentModeLeft;
+    }
+    else {
+        self.progressTopView.contentMode = UIViewContentModeScaleToFill;
+    }
 }
 
 #pragma mark Progress action

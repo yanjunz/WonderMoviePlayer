@@ -144,7 +144,7 @@
     self.startLabel.textAlignment = UITextAlignmentLeft;
     self.startLabel.font = [UIFont systemFontOfSize:10];
     self.startLabel.backgroundColor = [UIColor clearColor];
-    self.startLabel.textColor = [UIColor whiteColor];
+    self.startLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
     [self.bottomBar addSubview:self.startLabel];
     
 //    self.fullscreenButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -158,7 +158,7 @@
     self.durationLabel.textAlignment = UITextAlignmentRight;
     self.durationLabel.font = [UIFont systemFontOfSize:10];
     self.durationLabel.backgroundColor = [UIColor clearColor];
-    self.durationLabel.textColor = [UIColor whiteColor];
+    self.durationLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
     [self.bottomBar addSubview:self.durationLabel];
     
     // Setup headerBar
@@ -192,7 +192,7 @@
     self.timeLabel = [[[UILabel alloc] initWithFrame:CGRectOffset(self.batteryView.frame, -2, -batteryHeight - 2)] autorelease];
     self.timeLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     self.timeLabel.textAlignment = UITextAlignmentCenter;
-    self.timeLabel.textColor = [UIColor lightTextColor];
+    self.timeLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
     self.timeLabel.backgroundColor = [UIColor clearColor];
     self.timeLabel.font = [UIFont systemFontOfSize:9];
     [self.headerBar addSubview:self.timeLabel];

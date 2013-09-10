@@ -109,7 +109,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     [super viewDidLoad];
 //    self.view.backgroundColor = [UIColor colorWithPatternImage:QQImage(@"videoplayer_loading_bg")];
     UIImageView *backgroundView = [[[UIImageView alloc] initWithImage:QQImage(@"videoplayer_loading_bg")] autorelease];
-    backgroundView.contentMode = UIViewContentModeScaleAspectFill;
+    backgroundView.contentMode = UIViewContentModeBottom;
     backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     backgroundView.frame = self.view.bounds;
     [self.view addSubview:backgroundView];
@@ -689,7 +689,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 
 - (void)movieControlSource:(id<MovieControlSource>)source increaseBrightness:(CGFloat)brightness
 {
-    CGFloat alpha = self.maskView.alpha + brightness;
+    CGFloat alpha = self.maskView.alpha - brightness;
     self.maskView.alpha = MAX(0, MIN(1, alpha));
 }
 

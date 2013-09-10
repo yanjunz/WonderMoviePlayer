@@ -123,16 +123,17 @@
 					<object class="IBUIImageView" id="106005365">
 						<reference key="NSNextResponder" ref="774585933"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{53, 464}, {240, 17}}</string>
+						<string key="NSFrame">{{53, 464}, {240, 12}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="IBUIContentStretch">{{0.5, 0.5}, {0, 0}}</string>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						<object class="NSCustomResource" key="IBUIImage">
+						<object class="NSCustomResource" key="IBUIImage" id="9953164">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">videoplayer_progressbar_bottom@2x.png</string>
+							<string key="NSResourceName">videoplayer_progressbar_top@2x.png</string>
 						</object>
 					</object>
 					<object class="IBUIButton" id="187864569">
@@ -141,7 +142,7 @@
 						<string key="NSFrame">{{235, 252}, {65, 60}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="106005365"/>
+						<reference key="NSNextKeyView" ref="167194106"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -166,6 +167,7 @@
 						<string key="NSFrame">{{101, 32}, {118, 23}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="867142183"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -179,26 +181,41 @@
 						<string key="NSFrame">{{85, 62}, {150, 9}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="343035407"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<float key="IBUIProgress">0.5</float>
 					</object>
+					<object class="IBUIImageView" id="167194106">
+						<reference key="NSNextResponder" ref="774585933"/>
+						<int key="NSvFlags">292</int>
+						<string key="NSFrame">{{53, 431}, {31, 12}}</string>
+						<reference key="NSSuperview" ref="774585933"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="106005365"/>
+						<string key="NSReuseIdentifierKey">_NS:9</string>
+						<int key="IBUIContentMode">7</int>
+						<bool key="IBUIUserInteractionEnabled">NO</bool>
+						<string key="IBUIContentStretch">{{1, 0.5}, {0, 0}}</string>
+						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+						<reference key="IBUIImage" ref="9953164"/>
+					</object>
 				</array>
 				<string key="NSFrame">{{0, 20}, {320, 548}}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView" ref="343035407"/>
+				<reference key="NSNextKeyView" ref="543761502"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">3</int>
 					<bytes key="NSWhite">MC43NQA</bytes>
-					<object class="NSColorSpace" key="NSCustomColorSpace">
+					<object class="NSColorSpace" key="NSCustomColorSpace" id="285715444">
 						<int key="NSID">2</int>
 					</object>
 				</object>
 				<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 				<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics"/>
-				<object class="IBUIScreenMetrics" key="IBUISimulatedDestinationMetrics">
+				<object class="IBUIScreenMetrics" key="IBUISimulatedDestinationMetrics" id="819484251">
 					<string key="IBUISimulatedSizeMetricsClass">IBUIScreenMetrics</string>
 					<object class="NSMutableDictionary" key="IBUINormalizedOrientationToSizeMap">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -215,6 +232,44 @@
 					<string key="IBUIDisplayName">Retina 4 Full Screen</string>
 					<int key="IBUIType">2</int>
 				</object>
+				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+			</object>
+			<object class="IBUIView" id="1020145972">
+				<reference key="NSNextResponder"/>
+				<int key="NSvFlags">292</int>
+				<array class="NSMutableArray" key="NSSubviews">
+					<object class="IBUIImageView" id="696354560">
+						<reference key="NSNextResponder" ref="1020145972"/>
+						<int key="NSvFlags">274</int>
+						<string key="NSFrameSize">{568, 320}</string>
+						<reference key="NSSuperview" ref="1020145972"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
+						<string key="NSReuseIdentifierKey">_NS:9</string>
+						<int key="IBUIContentMode">2</int>
+						<bool key="IBUIUserInteractionEnabled">NO</bool>
+						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+						<object class="NSCustomResource" key="IBUIImage">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">videoplayer_loading_bg@2x.png</string>
+						</object>
+					</object>
+				</array>
+				<string key="NSFrameSize">{568, 320}</string>
+				<reference key="NSSuperview"/>
+				<reference key="NSWindow"/>
+				<reference key="NSNextKeyView" ref="696354560"/>
+				<string key="NSReuseIdentifierKey">_NS:9</string>
+				<object class="NSColor" key="IBUIBackgroundColor">
+					<int key="NSColorSpace">3</int>
+					<bytes key="NSWhite">MQA</bytes>
+					<reference key="NSCustomColorSpace" ref="285715444"/>
+				</object>
+				<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">
+					<int key="IBUIInterfaceOrientation">3</int>
+					<int key="interfaceOrientation">3</int>
+				</object>
+				<reference key="IBUISimulatedDestinationMetrics" ref="819484251"/>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 			</object>
 		</array>
@@ -311,6 +366,7 @@
 							<reference ref="187864569"/>
 							<reference ref="543761502"/>
 							<reference ref="867142183"/>
+							<reference ref="167194106"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -349,6 +405,24 @@
 						<reference key="object" ref="867142183"/>
 						<reference key="parent" ref="774585933"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">33</int>
+						<reference key="object" ref="1020145972"/>
+						<array class="NSMutableArray" key="children">
+							<reference ref="696354560"/>
+						</array>
+						<reference key="parent" ref="0"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">34</int>
+						<reference key="object" ref="696354560"/>
+						<reference key="parent" ref="1020145972"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">35</int>
+						<reference key="object" ref="167194106"/>
+						<reference key="parent" ref="774585933"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -362,6 +436,9 @@
 				<string key="27.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="28.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="29.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="33.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="34.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="35.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="6.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="8.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
@@ -369,7 +446,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">32</int>
+			<int key="maxID">35</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -377,12 +454,17 @@
 					<string key="className">ViewController</string>
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="changeSlider:">id</string>
 						<string key="onClickPlay:">id</string>
 						<string key="onClickPlayRemote:">id</string>
 						<string key="onClickWebView:">id</string>
 						<string key="onSliderChanged:">UISlider</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="changeSlider:">
+							<string key="name">changeSlider:</string>
+							<string key="candidateClassName">id</string>
+						</object>
 						<object class="IBActionInfo" key="onClickPlay:">
 							<string key="name">onClickPlay:</string>
 							<string key="candidateClassName">id</string>
@@ -426,8 +508,9 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
+			<string key="videoplayer_loading_bg@2x.png">{1136, 640}</string>
 			<string key="videoplayer_play_normal@2x.png">{104, 104}</string>
-			<string key="videoplayer_progressbar_bottom@2x.png">{108, 12}</string>
+			<string key="videoplayer_progressbar_top@2x.png">{108, 12}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">2083</string>
 	</data>

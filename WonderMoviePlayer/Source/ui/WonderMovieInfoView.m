@@ -70,11 +70,13 @@
 - (UIView *)loadingView
 {
     if (!_loadingView) {
-        _loadingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 81, 101)];
+        _loadingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 181, 101)];
         _loadingView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         
         self.loadingIndicator = [[[UIImageView alloc] initWithImage:QQImage(@"videoplayer_loading")] autorelease];
         self.loadingIndicator.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+        self.loadingIndicator.contentMode = UIViewContentModeCenter;
+        self.loadingIndicator.frame = _loadingView.bounds;
         [_loadingView addSubview:self.loadingIndicator];
         [self addSubview:_loadingView];
         _loadingView.center = self.center;
@@ -96,7 +98,7 @@
         [_loadingView addSubview:self.loadingPercentLabel];
         
         self.loadingMessageLabel = [[[UILabel alloc] initWithFrame:CGRectMake(0, self.loadingIndicator.bottom, _loadingView.width, 20)] autorelease];
-        self.loadingMessageLabel.text = @"Loading...";
+        self.loadingMessageLabel.text = NSLocalizedString(@" 正在缓冲...", @"");
         self.loadingMessageLabel.textAlignment = UITextAlignmentCenter;
         self.loadingMessageLabel.backgroundColor = [UIColor clearColor];
         self.loadingMessageLabel.textColor = [UIColor whiteColor];
