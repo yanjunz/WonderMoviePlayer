@@ -147,7 +147,7 @@
     return UIInterfaceOrientationMaskLandscape;
 }
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation{
-    return UIInterfaceOrientationLandscapeLeft;
+    return UIInterfaceOrientationLandscapeRight;
 }
 
 #pragma mark add Overlay 
