@@ -51,6 +51,10 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        
+        // observe parentViewController to get notification of dismiss from parent view controller
+        // http://stackoverflow.com/questions/2444112/method-called-when-dismissing-a-uiviewcontroller
+        [self addObserver:self forKeyPath:@"parentViewController" options:0 context:NULL];
     }
     return self;
 }
@@ -71,6 +75,8 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 
 - (void)dealloc
 {
+    [self removeObserver:self forKeyPath:@"parentViewController"];
+    
     self.player = nil;
     self.playerItem = nil;
     self.playerLayerView = nil;
@@ -345,6 +351,17 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
                         change:(NSDictionary*)change
                        context:(void*)context
 {
+    // get notification of dismiss from parent view controller
+    // http://stackoverflow.com/questions/2444112/method-called-when-dismissing-a-uiviewcontroller
+    if ([@"parentViewController" isEqualToString:path] && object == self) {
+        if (!self.parentViewController) {
+            // dismiss this viewcontroller
+            [self removeAllObservers];
+        }
+        return;
+    }
+    
+    
 	/* AVPlayerItem "status" property value observer. */
 	if (context == WonderAVMovieObserverContextName(PlayerItemStatus)) {
         AVPlayerStatus status = [change[NSKeyValueChangeNewKey] integerValue];
@@ -667,7 +684,6 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     if (self.exitBlock) {
         self.exitBlock();
     }
-    [self removeAllObservers];
 }
 
 - (void)movieControlSourceBeginChangeProgress:(id<MovieControlSource>)source
