@@ -38,6 +38,8 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 @interface WonderAVMovieViewController () {
     BOOL _statusBarHiddenPrevious;
     BOOL _wasPlaying;
+    
+    BOOL _observersHasBeenRemoved; // if the observers has been removed, need to remove observers correctly to avoid memeory leak
 }
 @property (nonatomic, retain) UIView *controlView;
 
@@ -91,6 +93,12 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 
 - (void)removeAllObservers
 {
+    if (_observersHasBeenRemoved) {
+        return;
+    }
+    
+    _observersHasBeenRemoved = YES;
+    
     [self removePlayerTimeObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.playerItem removeObserver:self
@@ -684,6 +692,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     if (self.exitBlock) {
         self.exitBlock();
     }
+    [self removeAllObservers];
 }
 
 - (void)movieControlSourceBeginChangeProgress:(id<MovieControlSource>)source
