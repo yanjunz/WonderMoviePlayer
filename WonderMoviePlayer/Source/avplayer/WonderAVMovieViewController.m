@@ -653,8 +653,8 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     double duration = CMTimeGetSeconds(playerDuration);
     if (isfinite(duration)) {
         double time = duration * progress;
-//        NSLog(@"scrub %f", time);
-        [self.player seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC)];
+//        NSLog(@"scrub %f, %f", progress, time);
+        [self.player seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
     }
 }
 
