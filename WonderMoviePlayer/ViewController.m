@@ -11,13 +11,32 @@
 #import "TestWebViewController.h"
 #import "WonderAVMovieViewController.h"
 
-@interface ViewController ()
+@interface ViewController () {
+    NSString *_testString;
+}
+@property (nonatomic, retain) WonderAVMovieViewController *player;
+@property (nonatomic, retain) NSString *testString;
 @property (retain, nonatomic) IBOutlet UISlider *slider;
 @property (retain, nonatomic) IBOutlet UIProgressView *progressView;
 
 @end
 
 @implementation ViewController
+@synthesize testString=_testString;
+
+// for debug
+- (id)retain
+{
+    id r = [super retain];
+    NSLog(@"retain %d", [self retainCount]);
+    return r;
+}
+
+- (oneway void)release
+{
+    NSLog(@"release %d", [self retainCount]);
+    [super release];
+}
 
 - (void)viewDidLoad
 {
@@ -51,12 +70,15 @@
 #ifdef MTT_FEATURE_WONDER_AVMOVIE_PLAYER
         DefineBlockVar(WonderAVMovieViewController *, controller, [[WonderAVMovieViewController alloc] init]);
 //    WonderAVMovieViewController *controller = [[WonderAVMovieViewController alloc] init];
-
+        self.player = controller;
     [self presentViewController:controller animated:YES completion:^{
         NSLog(@"start to play av");
         [controller playMovieStream:[[NSBundle mainBundle] URLForResource:@"Movie" withExtension:@"m4v"]];
     }];
     [controller setExitBlock:^{
+        _testString = @"Hello";
+        self.testString = @"YEs";
+        self.player = nil;
         [controller dismissViewControllerAnimated:YES completion:nil];
     }];
     [controller release];

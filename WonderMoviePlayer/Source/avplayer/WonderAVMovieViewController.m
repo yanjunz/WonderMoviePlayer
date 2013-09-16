@@ -272,7 +272,17 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     {
         /* Remove existing player item key value observers and notifications. */
         
-        [self.playerItem removeObserver:self forKeyPath:kStatusKey];
+        [self.playerItem removeObserver:self
+                             forKeyPath:kStatusKey
+                                context:WonderAVMovieObserverContextName(PlayerItemStatus)];
+        
+        [self.playerItem removeObserver:self
+                             forKeyPath:kPlaybackBufferEmpty
+                                context:WonderAVMovieObserverContextName(PlaybackBufferEmpty)];
+        
+        [self.playerItem removeObserver:self
+                             forKeyPath:kPlaybackLikelyToKeeyUp
+                                context:WonderAVMovieObserverContextName(PlaybackLikelyToKeepUp)];
 		
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:AVPlayerItemDidPlayToEndTimeNotification
