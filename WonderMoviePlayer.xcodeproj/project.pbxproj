@@ -160,6 +160,7 @@
 		B517795317C21B58006B948E /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		B517795517C21BD6006B948E /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		B517795717C61383006B948E /* videoplayer_cross_screen@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "videoplayer_cross_screen@2x.png"; sourceTree = "<group>"; };
+		B518C96917E6E17000FD9D8B /* BaseMoviePlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseMoviePlayer.h; sourceTree = "<group>"; };
 		B5AD785117CDA50E00C08E51 /* video.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = video.js; sourceTree = "<group>"; };
 		B5AD78A617CDD30600C08E51 /* JSURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSURLProtocol.h; sourceTree = "<group>"; };
 		B5AD78A717CDD30600C08E51 /* JSURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSURLProtocol.m; sourceTree = "<group>"; };
@@ -215,6 +216,7 @@
 		B516CA2017DDC46A00D8E3A2 /* base */ = {
 			isa = PBXGroup;
 			children = (
+				B518C96917E6E17000FD9D8B /* BaseMoviePlayer.h */,
 				B516CA2117DDC46A00D8E3A2 /* MovieControlSource.h */,
 				B516CA2217DDC46A00D8E3A2 /* MoviePlayerHandler.h */,
 				B516CA2317DDC46A00D8E3A2 /* WonderMoviePlayerConstants.h */,

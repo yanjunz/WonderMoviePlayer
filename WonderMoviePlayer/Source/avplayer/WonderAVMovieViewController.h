@@ -12,13 +12,12 @@
 #import <AVFoundation/AVFoundation.h>
 #import <CoreMedia/CoreMedia.h>
 #import <MediaPlayer/MediaPlayer.h>
-#import "MovieControlSource.h"
-#import "MoviePlayerHandler.h"
+#import "BaseMoviePlayer.h"
 
 @class AVPlayer;
 @class AVPlayerItem;
 @class WonderAVPlayerView;
-@interface WonderAVMovieViewController : UIViewController<MovieControlSourceDelegate, MoviePlayerHandler> {
+@interface WonderAVMovieViewController : UIViewController<BaseMoviePlayer> {
     BOOL isSeeking;
 	BOOL seekToZeroBeforePlay;
 	float restoreAfterScrubbingRate;
@@ -30,7 +29,6 @@
 @property (nonatomic, retain) AVPlayer *player;
 @property (nonatomic, retain) AVPlayerItem *playerItem;
 @property (nonatomic, retain) IBOutlet WonderAVPlayerView *playerLayerView;
-@property (nonatomic, retain) id<MovieControlSource> controlSource;
 @property (nonatomic, retain) UIView *overlayView;
 @property (nonatomic, retain) IBOutlet UIView *maskView;
 

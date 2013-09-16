@@ -47,6 +47,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 
 @implementation WonderAVMovieViewController
 @synthesize crossScreenBlock, downloadBlock, exitBlock;
+@synthesize controlSource, isLiveCast;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -531,6 +532,9 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
                                                                                                         crossScreenEnabled:crossScreenEnabled] autorelease];
         fullscreenControlView.delegate = self;
         fullscreenControlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        fullscreenControlView.isLiveCast = self.isLiveCast;
+        [fullscreenControlView setupView];
+        
         self.controlView = fullscreenControlView;
         [self.overlayView addSubview:fullscreenControlView];
         [fullscreenControlView installGestureHandlerForParentView];

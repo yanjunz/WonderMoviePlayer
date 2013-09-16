@@ -83,6 +83,7 @@
 @implementation WonderMovieFullscreenControlView
 @synthesize delegate;
 @synthesize controlState;
+@synthesize isLiveCast;
 
 - (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted nextEnabled:(BOOL)nextEnabled downloadEnabled:(BOOL)downloadEnabled crossScreenEnabled:(BOOL)crossScreenEnabled
 {
@@ -92,7 +93,6 @@
         _downloadEnabled = downloadEnabled;
         _crossScreenEnabled = crossScreenEnabled;
         self.autoresizesSubviews = YES;
-        [self setupView];
     }
     return self;
 }
@@ -122,6 +122,9 @@
     self.progressView = [[[WonderMovieProgressView alloc] initWithFrame:CGRectMake(progressBarLeftPadding, 0, self.bottomBar.width - progressBarLeftPadding - progressBarRightPadding, bottomBarHeight)] autorelease];
     self.progressView.delegate = self;
     self.progressView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    if (self.isLiveCast) {
+        self.progressView.userInteractionEnabled = NO;
+    }
     [self.bottomBar addSubview:self.progressView];
     
     self.actionButton = [UIButton buttonWithType:UIButtonTypeCustom];

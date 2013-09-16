@@ -70,6 +70,8 @@ typedef enum {
 // Return the length of time control such as a progressbar, used for calcuate the interval for progress timer
 - (CGFloat)getTimeControlWidth;
 
+@property (nonatomic, assign) BOOL isLiveCast;
+
 @required
 @property (nonatomic, assign) MovieControlState controlState;
 @property (nonatomic, assign) id<MovieControlSourceDelegate> delegate;

@@ -20,6 +20,7 @@
 @property (nonatomic, retain) WonderMovieInfoView *infoView;
 
 - (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted nextEnabled:(BOOL)nextEnabled downloadEnabled:(BOOL)downloadEnabled crossScreenEnabled:(BOOL)crossScreenEnabled;
+- (void)setupView;
 - (void)installGestureHandlerForParentView;
 @end
 
