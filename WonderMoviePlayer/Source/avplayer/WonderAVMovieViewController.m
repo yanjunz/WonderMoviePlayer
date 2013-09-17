@@ -632,27 +632,35 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     }
 }
 
+- (BOOL)isScrubbingWhenPlaying
+{
+    return restoreAfterScrubbingRate > 0 && self.player.rate == 0;
+}
+
 - (void)beginScrubbing
 {
-    restoreAfterScrubbingRate = [self.player rate];
-    [self.player setRate:0];
-    
-    /* Remove previous timer. */
-	[self removePlayerTimeObserver];
+    if (![self isScrubbingWhenPlaying]) {
+        restoreAfterScrubbingRate = [self.player rate];
+        [self.player setRate:0];
+        
+        /* Remove previous timer. */
+        [self removePlayerTimeObserver];
+    }
 }
 
-- (void)endScrubbing
+- (void)endScrubbing:(CGFloat)progress
 {
-    [self initScrubberTimer];
-    
-	if (restoreAfterScrubbingRate > 0)
-	{
-		[self.player setRate:restoreAfterScrubbingRate];
-		restoreAfterScrubbingRate = 0.f;
-	}
+    [self scrub:progress completion:^(BOOL finished) {
+        [self initScrubberTimer];
+        if (restoreAfterScrubbingRate > 0)
+        {
+            [self.player setRate:restoreAfterScrubbingRate];
+            restoreAfterScrubbingRate = 0.f;
+        }
+    }];
 }
 
-- (void)scrub:(CGFloat)progress
+- (void)scrub:(CGFloat)progress completion:(void (^)(BOOL finished))completion
 {
     CMTime playerDuration = [self playerItemDuration];
     if (CMTIME_IS_INVALID(playerDuration)) {
@@ -663,7 +671,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     if (isfinite(duration)) {
         double time = duration * progress;
 //        NSLog(@"scrub %f, %f", progress, time);
-        [self.player seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
+        [self.player seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:completion];
     }
 }
 
@@ -707,7 +715,10 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 
 - (void)movieControlSource:(id<MovieControlSource>)source setProgress:(CGFloat)progress
 {
-    [self scrub:progress];
+    if (![self isScrubbingWhenPlaying]) { // not scrubbing, this should be a tap or single setting progress action
+        [self scrub:progress completion:nil];
+    }
+    
     if (seekToZeroBeforePlay) { // has been ended
         [self.player play];
     }
@@ -727,9 +738,9 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     [self beginScrubbing];
 }
 
-- (void)movieControlSourceEndChangeProgress:(id<MovieControlSource>)source
+- (void)movieControlSource:(id<MovieControlSource>)source endChangeProgress:(CGFloat)progress
 {
-    [self endScrubbing];
+    [self endScrubbing:progress];
 }
 
 - (void)movieControlSourceOnCrossScreen:(id<MovieControlSource>)source

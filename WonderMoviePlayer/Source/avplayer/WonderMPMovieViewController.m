@@ -542,9 +542,9 @@
     [self beginScrubbing];
 }
 
-- (void)movieControlSourceEndChangeProgress:(id<MovieControlSource>)source
+- (void)movieControlSource:(id<MovieControlSource>)source endChangeProgress:(CGFloat)progress
 {
-    [self endScrubbing];
+    [self endScrubbing:progress];
 }
 
 - (void)movieControlSourceOnCrossScreen:(id<MovieControlSource>)source
@@ -623,7 +623,7 @@
     [self stopTimer];
 }
 
-- (void)endScrubbing
+- (void)endScrubbing:(CGFloat)progress
 {
     [self startTimer];
 }

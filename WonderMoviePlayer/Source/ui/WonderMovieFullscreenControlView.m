@@ -794,7 +794,7 @@
     // clear the action when gesture end
     if (gr.state == UIGestureRecognizerStateEnded) {
         if (sPanAction == WonderMoviePanAction_Progress) {
-            [self endScrubbing];
+            [self endScrubbing:self.progressView.progress];
         }
         sPanAction = WonderMoviePanAction_No;
     }
@@ -877,12 +877,12 @@
     [self cancelPreviousAndPrepareToDimControl];
 }
 
-- (void)endScrubbing
+- (void)endScrubbing:(CGFloat)progress
 {
     _isProgressViewPanning = NO;
     [self.infoView showProgressTime:NO animated:YES];
-    if ([self.delegate respondsToSelector:@selector(movieControlSourceEndChangeProgress:)]) {
-        [self.delegate movieControlSourceEndChangeProgress:self];
+    if ([self.delegate respondsToSelector:@selector(movieControlSource:endChangeProgress:)]) {
+        [self.delegate movieControlSource:self endChangeProgress:progress];
     }
     [self cancelPreviousAndPrepareToDimControl];
 }
@@ -921,7 +921,7 @@
 - (void)wonderMovieProgressViewEndChangeProgress:(WonderMovieProgressView *)progressView;
 {
 //    NSLog(@"wonderMovieProgressViewEndChangeProgress");
-    [self endScrubbing];
+    [self endScrubbing:progressView.progress];
 }
 
 @end

@@ -84,7 +84,7 @@ typedef enum {
 - (void)movieControlSourceResume:(id<MovieControlSource>)source;
 - (void)movieControlSourceReplay:(id<MovieControlSource>)source;
 - (void)movieControlSourceBeginChangeProgress:(id<MovieControlSource>)source;
-- (void)movieControlSourceEndChangeProgress:(id<MovieControlSource>)source;
+- (void)movieControlSource:(id<MovieControlSource>)source endChangeProgress:(CGFloat)progress;
 - (void)movieControlSource:(id<MovieControlSource>)source setProgress:(CGFloat)progress;
 - (void)movieControlSourceExit:(id<MovieControlSource>)source;
 
