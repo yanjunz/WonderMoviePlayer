@@ -210,6 +210,8 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     if ([movieURL scheme]) {
         startTime = time;
         self.movieURL = movieURL;
+        _wasPlaying = YES; // start to play automatically
+        
         /*
          Create an asset for inspection of a resource referenced by a given URL.
          Load the values for the asset keys "tracks", "playable".
@@ -673,21 +675,25 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 #pragma mark MovieControlSourceDelegate
 - (void)movieControlSourcePlay:(id<MovieControlSource>)source
 {
+    _wasPlaying = YES;
     [self.player play];
 }
 
 - (void)movieControlSourcePause:(id<MovieControlSource>)source
 {
+    _wasPlaying = NO;
     [self.player pause];
 }
 
 - (void)movieControlSourceResume:(id<MovieControlSource>)source
 {
+    _wasPlaying = YES;
     [self.player play];
 }
 
 - (void)movieControlSourceReplay:(id<MovieControlSource>)source
 {
+    _wasPlaying = YES;    
     [self.player seekToTime:kCMTimeZero];
     [self.player play];
 }
@@ -758,7 +764,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 
 - (void)onEnterBackground:(NSNotification *)n
 {
-    _wasPlaying = self.player.rate != 0;
+    // Even though the player will pause when entering background in theory, but still pause here to make sure it is paused
     [self.player pause];
 }
 

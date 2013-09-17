@@ -115,8 +115,8 @@
         NSLog(@"start to play av");
         [controller playMovieStream:[NSURL URLWithString:
 //                                     @"http://hot.vrs.sohu.com/ipad1259067_4587696266952_4460388.m3u8?plat=null"
-                                     @"http://hot.vrs.sohu.com/ipad1319252_4580514014865_4520573.m3u8"
-//                                     @"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"
+//                                     @"http://hot.vrs.sohu.com/ipad1319252_4580514014865_4520573.m3u8"
+                                     @"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"
 //                                     @"http://60.217.237.167/39/46/75/letv-uts/6832899-AVC-250149-AAC-31999-2705333-96164792-89fb45dba4f12a8999ddf90b4a8e998c-1378719409675.m3u8?crypt=9aa7f2e94&b=284&nlh=3072&bf=27&gn=750&p2p=1&video_type=mp4&opck=1&check=0&tm=1379221200&key=0f3dc586b05e2b82e5df292c6a3074ee&proxy=1020915110&cips=61.135.172.70&geo=CN-1-9-2&lgn=letv&mmsid=3111163&platid=3&splatid=304&playid=0&tss=ios&retry=1"
 //                                     @"http://v.youku.com/player/getM3U8/vid/148104913/type/flv/ts/1376293704/useKeyFrame/0/v.m3u8"
 //                                     @"http://v.youku.com/player/getM3U8/vid/148703242/type/flv/ts/1376296533/useKeyFrame/0/v.m3u8"
