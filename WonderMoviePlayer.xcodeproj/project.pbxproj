@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B516CA0D17DD6A4100D8E3A2 /* Reveal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B516CA0C17DD6A4100D8E3A2 /* Reveal.framework */; };
 		B516CA0F17DD6AA100D8E3A2 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B516CA0E17DD6AA100D8E3A2 /* CFNetwork.framework */; };
 		B516CA2E17DDC46A00D8E3A2 /* WonderAVMovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B516CA1B17DDC46A00D8E3A2 /* WonderAVMovieViewController.m */; };
 		B516CA2F17DDC46A00D8E3A2 /* WonderAVPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = B516CA1D17DDC46A00D8E3A2 /* WonderAVPlayerView.m */; };
@@ -80,7 +79,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		B516CA0C17DD6A4100D8E3A2 /* Reveal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Reveal.framework; sourceTree = "<group>"; };
 		B516CA0E17DD6AA100D8E3A2 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		B516CA1A17DDC46A00D8E3A2 /* WonderAVMovieViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderAVMovieViewController.h; sourceTree = "<group>"; };
 		B516CA1B17DDC46A00D8E3A2 /* WonderAVMovieViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderAVMovieViewController.m; sourceTree = "<group>"; };
@@ -193,7 +191,6 @@
 				B517773817B36D44006B948E /* UIKit.framework in Frameworks */,
 				B517773A17B36D44006B948E /* Foundation.framework in Frameworks */,
 				B517773C17B36D44006B948E /* CoreGraphics.framework in Frameworks */,
-				B516CA0D17DD6A4100D8E3A2 /* Reveal.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,7 +257,6 @@
 			isa = PBXGroup;
 			children = (
 				B516CA0E17DD6AA100D8E3A2 /* CFNetwork.framework */,
-				B516CA0C17DD6A4100D8E3A2 /* Reveal.framework */,
 				B517795517C21BD6006B948E /* libicucore.dylib */,
 				B517795317C21B58006B948E /* CoreFoundation.framework */,
 				B517792117C1AFB5006B948E /* CoreMedia.framework */,
@@ -591,7 +587,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WonderMoviePlayer/WonderMoviePlayer-Prefix.pch";
 				INFOPLIST_FILE = "WonderMoviePlayer/WonderMoviePlayer-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -608,7 +604,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WonderMoviePlayer/WonderMoviePlayer-Prefix.pch";
 				INFOPLIST_FILE = "WonderMoviePlayer/WonderMoviePlayer-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;

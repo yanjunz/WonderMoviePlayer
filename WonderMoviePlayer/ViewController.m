@@ -69,20 +69,28 @@
     @autoreleasepool {
 #ifdef MTT_FEATURE_WONDER_AVMOVIE_PLAYER
         DefineBlockVar(WonderAVMovieViewController *, controller, [[WonderAVMovieViewController alloc] init]);
-//    WonderAVMovieViewController *controller = [[WonderAVMovieViewController alloc] init];
         self.player = controller;
-    [self presentViewController:controller animated:YES completion:^{
+        if ([self respondsToSelector:@selector(presentViewController:animated:completion:)]) {
+            [self presentViewController:controller animated:YES completion:nil];
+        }
+        else {
+            [self presentModalViewController:controller animated:YES];
+        }
+        [controller setExitBlock:^{
+            _testString = @"Hello";
+            self.testString = @"YEs";
+            self.player = nil;
+            if ([controller respondsToSelector:@selector(dismissViewControllerAnimated:completion:)]) {
+                [controller dismissViewControllerAnimated:YES completion:nil];
+            }
+            else {
+                [controller dismissModalViewControllerAnimated:YES];
+            }
+        }];
         NSLog(@"start to play av");
         [controller playMovieStream:[[NSBundle mainBundle] URLForResource:@"Movie" withExtension:@"m4v"]];
-    }];
-    [controller setExitBlock:^{
-        _testString = @"Hello";
-        self.testString = @"YEs";
-        self.player = nil;
-        [controller dismissViewControllerAnimated:YES completion:nil];
-    }];
-    [controller release];
-    NSLog(@"retain count1= %d", [controller retainCount]);
+        [controller release];
+        NSLog(@"retain count1= %d", [controller retainCount]);
 #else
     WonderMPMovieViewController *controller = [[WonderMPMovieViewController alloc] init];
     [controller setExitBlock:^{

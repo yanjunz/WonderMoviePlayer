@@ -103,31 +103,28 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     [self removePlayerTimeObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.playerItem removeObserver:self
-                         forKeyPath:kStatusKey
-                            context:WonderAVMovieObserverContextName(PlayerItemStatus)];
+                         forKeyPath:kStatusKey];
     
     [self.playerItem removeObserver:self
-                         forKeyPath:kPlaybackBufferEmpty
-                            context:WonderAVMovieObserverContextName(PlaybackBufferEmpty)];
+                         forKeyPath:kPlaybackBufferEmpty];
     
 	[self.playerItem removeObserver:self
-                         forKeyPath:kPlaybackLikelyToKeeyUp
-                            context:WonderAVMovieObserverContextName(PlaybackLikelyToKeepUp)];
+                         forKeyPath:kPlaybackLikelyToKeeyUp];
     
     [self.player removeObserver:self
-                     forKeyPath:kCurrentItemKey
-                        context:WonderAVMovieObserverContextName(CurrentItem)];
+                     forKeyPath:kCurrentItemKey];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.view.backgroundColor = [UIColor redColor];
 //    self.view.backgroundColor = [UIColor colorWithPatternImage:QQImage(@"videoplayer_loading_bg")];
     UIImageView *backgroundView = [[[UIImageView alloc] initWithImage:QQImage(@"videoplayer_loading_bg")] autorelease];
     backgroundView.contentMode = UIViewContentModeBottom;
     backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     backgroundView.frame = self.view.bounds;
-    [self.view addSubview:backgroundView];
+//    [self.view addSubview:backgroundView];
     
 	// Do any additional setup after loading the view.
     if (self.playerLayerView == nil) {
@@ -211,7 +208,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
         startTime = time;
         self.movieURL = movieURL;
         _wasPlaying = YES; // start to play automatically
-        
+        return;
         /*
          Create an asset for inspection of a resource referenced by a given URL.
          Load the values for the asset keys "tracks", "playable".
@@ -276,16 +273,13 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
         /* Remove existing player item key value observers and notifications. */
         
         [self.playerItem removeObserver:self
-                             forKeyPath:kStatusKey
-                                context:WonderAVMovieObserverContextName(PlayerItemStatus)];
+                             forKeyPath:kStatusKey];
         
         [self.playerItem removeObserver:self
-                             forKeyPath:kPlaybackBufferEmpty
-                                context:WonderAVMovieObserverContextName(PlaybackBufferEmpty)];
+                             forKeyPath:kPlaybackBufferEmpty];
         
         [self.playerItem removeObserver:self
-                             forKeyPath:kPlaybackLikelyToKeeyUp
-                                context:WonderAVMovieObserverContextName(PlaybackLikelyToKeepUp)];
+                             forKeyPath:kPlaybackLikelyToKeeyUp];
 		
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:AVPlayerItemDidPlayToEndTimeNotification
