@@ -495,7 +495,12 @@
         int hour = time / 3600;
         int minute = time / 60 - hour * 60;
         int second = time % 60;
-        self.infoView.progressTimeLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d", hour, minute, second];
+        if (hour > 0) {
+            self.infoView.progressTimeLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d", hour, minute, second];
+        }
+        else {
+            self.infoView.progressTimeLabel.text = [NSString stringWithFormat:@"%02d:%02d", minute, second];
+        }
     }
 }
 

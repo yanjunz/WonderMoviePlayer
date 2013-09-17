@@ -346,6 +346,8 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
         
         // FIXME
     }
+    // show buffer immediately
+    [self.controlSource buffer];
 }
 
 #pragma mark -
