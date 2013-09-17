@@ -185,7 +185,13 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     return UIInterfaceOrientationMaskLandscape;
 }
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation{
-    return UIInterfaceOrientationLandscapeRight;
+    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+    if (UIInterfaceOrientationIsLandscape(orientation)) {
+        return orientation;
+    }
+    else {
+        return UIInterfaceOrientationLandscapeRight;
+    }
 }
 
 
