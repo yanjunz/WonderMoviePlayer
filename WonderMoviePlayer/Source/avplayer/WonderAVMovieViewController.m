@@ -118,13 +118,11 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor redColor];
-//    self.view.backgroundColor = [UIColor colorWithPatternImage:QQImage(@"videoplayer_loading_bg")];
     UIImageView *backgroundView = [[[UIImageView alloc] initWithImage:QQImage(@"videoplayer_loading_bg")] autorelease];
     backgroundView.contentMode = UIViewContentModeBottom;
     backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     backgroundView.frame = self.view.bounds;
-//    [self.view addSubview:backgroundView];
+    [self.view addSubview:backgroundView];
     
 	// Do any additional setup after loading the view.
     if (self.playerLayerView == nil) {
