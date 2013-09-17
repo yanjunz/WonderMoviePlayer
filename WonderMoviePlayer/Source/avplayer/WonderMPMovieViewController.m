@@ -18,7 +18,7 @@
 
 
 @interface WonderMPMovieViewController () {
-    BOOL _statusBarHiddenPrevious;    
+//    BOOL _statusBarHiddenPrevious;    
 }
 @property (nonatomic, retain) NSTimer *timer;
 @property (nonatomic, retain) UIView *controlView;
@@ -96,8 +96,8 @@
 /* Notifies the view controller that its view is about to be become visible. */
 - (void)viewWillAppear:(BOOL)animated
 {
-    _statusBarHiddenPrevious = [UIApplication sharedApplication].statusBarHidden;
-    [UIApplication sharedApplication].statusBarHidden = YES;
+//    _statusBarHiddenPrevious = [UIApplication sharedApplication].statusBarHidden;
+//    [UIApplication sharedApplication].statusBarHidden = YES;
     [super viewWillAppear:animated];
     
     /* Size the overlay view for the current orientation. */
@@ -110,7 +110,7 @@
  covered, or otherwise hidden from view. */
 - (void)viewWillDisappear:(BOOL)animated
 {
-    [UIApplication sharedApplication].statusBarHidden = _statusBarHiddenPrevious;
+//    [UIApplication sharedApplication].statusBarHidden = _statusBarHiddenPrevious;
     [super viewWillDisappear:animated];
     
     /* Remove the movie view from the current view hierarchy. */

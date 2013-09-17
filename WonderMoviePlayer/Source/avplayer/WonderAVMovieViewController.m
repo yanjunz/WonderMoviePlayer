@@ -36,7 +36,7 @@ NSString *kPlaybackBufferEmpty = @"playbackBufferEmpty";
 NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 
 @interface WonderAVMovieViewController () {
-    BOOL _statusBarHiddenPrevious;
+//    BOOL _statusBarHiddenPrevious;
     BOOL _wasPlaying;
     
     BOOL _observersHasBeenRemoved; // if the observers has been removed, need to remove observers correctly to avoid memeory leak
@@ -156,22 +156,22 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onEnterBackground:) name:UIApplicationWillResignActiveNotification object:nil];
 }
 
-/* Notifies the view controller that its view is about to be become visible. */
-- (void)viewWillAppear:(BOOL)animated
-{
-    _statusBarHiddenPrevious = [UIApplication sharedApplication].statusBarHidden;
-    [UIApplication sharedApplication].statusBarHidden = YES;
-    [super viewWillAppear:animated];
-    [UIApplication sharedApplication].statusBarHidden = YES;
-}
-
-/* Notifies the view controller that its view is about to be dismissed,
- covered, or otherwise hidden from view. */
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [UIApplication sharedApplication].statusBarHidden = _statusBarHiddenPrevious;
-    [super viewWillDisappear:animated];
-}
+///* Notifies the view controller that its view is about to be become visible. */
+//- (void)viewWillAppear:(BOOL)animated
+//{
+//    _statusBarHiddenPrevious = [UIApplication sharedApplication].statusBarHidden;
+//    [UIApplication sharedApplication].statusBarHidden = YES;
+//    [super viewWillAppear:animated];
+//    [UIApplication sharedApplication].statusBarHidden = YES;
+//}
+//
+///* Notifies the view controller that its view is about to be dismissed,
+// covered, or otherwise hidden from view. */
+//- (void)viewWillDisappear:(BOOL)animated
+//{
+//    [UIApplication sharedApplication].statusBarHidden = _statusBarHiddenPrevious;
+//    [super viewWillDisappear:animated];
+//}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -208,7 +208,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
         startTime = time;
         self.movieURL = movieURL;
         _wasPlaying = YES; // start to play automatically
-        return;
+//        return;
         /*
          Create an asset for inspection of a resource referenced by a given URL.
          Load the values for the asset keys "tracks", "playable".

@@ -70,16 +70,21 @@
 #ifdef MTT_FEATURE_WONDER_AVMOVIE_PLAYER
         DefineBlockVar(WonderAVMovieViewController *, controller, [[WonderAVMovieViewController alloc] init]);
         self.player = controller;
+        [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeRight animated:YES];
+        [UIApplication sharedApplication].statusBarHidden = YES;
+        
         if ([self respondsToSelector:@selector(presentViewController:animated:completion:)]) {
             [self presentViewController:controller animated:YES completion:nil];
         }
         else {
             [self presentModalViewController:controller animated:YES];
         }
+        
         [controller setExitBlock:^{
             _testString = @"Hello";
             self.testString = @"YEs";
             self.player = nil;
+            [UIApplication sharedApplication].statusBarHidden = NO;
             if ([controller respondsToSelector:@selector(dismissViewControllerAnimated:completion:)]) {
                 [controller dismissViewControllerAnimated:YES completion:nil];
             }
@@ -110,6 +115,8 @@
 - (IBAction)onClickPlayRemote:(id)sender {
 #ifdef MTT_FEATURE_WONDER_AVMOVIE_PLAYER
     DefineBlockVar(WonderAVMovieViewController *, controller, [[[WonderAVMovieViewController alloc] init] autorelease]);
+    [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeRight animated:YES];
+    [UIApplication sharedApplication].statusBarHidden = YES;
     [controller setCrossScreenBlock:^{
         NSLog(@"cross screen");
     }];
@@ -117,9 +124,21 @@
 //        [controller performSelector:@selector(finishDownload) withObject:nil afterDelay:3];
     }];
     [controller setExitBlock:^{
-        [controller dismissViewControllerAnimated:YES completion:nil];
+        [UIApplication sharedApplication].statusBarHidden = NO;
+        if ([controller respondsToSelector:@selector(dismissViewControllerAnimated:completion:)]) {
+            [controller dismissViewControllerAnimated:YES completion:nil];
+        }
+        else {
+            [controller dismissModalViewControllerAnimated:YES];
+        }
     }];
-    [self presentViewController:controller animated:YES completion:^{
+    if ([self respondsToSelector:@selector(presentViewController:animated:completion:)]) {
+        [self presentViewController:controller animated:YES completion:nil];
+    }
+    else {
+        [self presentModalViewController:controller animated:YES];
+    }
+    
         NSLog(@"start to play av");
         [controller playMovieStream:[NSURL URLWithString:
 //                                     @"http://hot.vrs.sohu.com/ipad1259067_4587696266952_4460388.m3u8?plat=null"
@@ -132,7 +151,7 @@
 //                                     @"http://jq.v.ismartv.tv/cdn/1/81/95e68bbdce46b5b8963b504bf73d1b/normal/slice/index.m3u8"
 //                                     @"http://att.livem3u8.na.itv.cn/live/97acb1b2cbed4a4281a68356f8c2bd00.m3u8"
                                      ] fromStartTime:10];
-    }];
+    
 
 #else
     WonderMPMovieViewController *controller = [[WonderMPMovieViewController alloc] init];
