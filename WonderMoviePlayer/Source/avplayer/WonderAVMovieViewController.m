@@ -507,6 +507,8 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 	/* After the movie has played to its end time, seek back to time zero
      to play it again */
 	seekToZeroBeforePlay = YES;
+    _wasPlaying = NO;
+    [self removePlayerTimeObserver];
 }
 
 #pragma mark add Overlay
@@ -574,6 +576,9 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
             interval = 1.0f;
         }
     }
+
+    self.isLiveCast = !isfinite(duration); // check live cast here
+    self.controlSource.isLiveCast = self.isLiveCast;
     
     timeObserver = [[self.player addPeriodicTimeObserverForInterval:CMTimeMake(interval, NSEC_PER_SEC)
                                                               queue:NULL usingBlock:^(CMTime time) {

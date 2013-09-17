@@ -83,7 +83,7 @@
 @implementation WonderMovieFullscreenControlView
 @synthesize delegate;
 @synthesize controlState;
-@synthesize isLiveCast;
+@synthesize isLiveCast = _isLiveCast;
 
 - (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted nextEnabled:(BOOL)nextEnabled downloadEnabled:(BOOL)downloadEnabled crossScreenEnabled:(BOOL)crossScreenEnabled
 {
@@ -216,6 +216,7 @@
         self.downloadButton.frame = CGRectOffset(btnRect, -50, 0);
         self.downloadButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
         [self.downloadButton addTarget:self action:@selector(onClickDownload:) forControlEvents:UIControlEventTouchUpInside];
+        self.downloadButton.enabled = NO; // disable download until confirmed that if video is live cast or not
         [self.headerBar addSubview:self.downloadButton];
         btnRect = self.downloadButton.frame;
         
@@ -306,6 +307,13 @@
     self.panGestureRecognizer = nil;
     self.infoView = nil;
     [super dealloc];
+}
+
+- (void)setIsLiveCast:(BOOL)isLiveCast
+{
+    _isLiveCast = isLiveCast;
+    self.progressView.userInteractionEnabled = !isLiveCast;
+    self.downloadButton.enabled = !isLiveCast;
 }
 
 #pragma mark Loading
