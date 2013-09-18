@@ -44,6 +44,14 @@
 	// Do any additional setup after loading the view, typically from a nib.
     
     [self.slider addTarget:self action:@selector(onSliderChanged:) forControlEvents:UIControlEventValueChanged];
+    
+    CABasicAnimation *rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+    rotationAnimation.toValue = @(M_PI / 180 * 360);
+    rotationAnimation.duration = 1.0f;
+    rotationAnimation.cumulative = YES;
+    rotationAnimation.repeatCount = HUGE_VALF;
+    
+    [self.loadingIndicator.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
 }
 
 - (void)didReceiveMemoryWarning
@@ -63,6 +71,7 @@
 }
 - (IBAction)changeSlider:(id)sender {
     self.slider.value += 0.2;
+    self.loadingIndicator.hidden = !self.loadingIndicator.hidden;
 }
 
 - (IBAction)onClickPlay:(id)sender {
@@ -181,11 +190,13 @@
 - (void)dealloc {
     [_slider release];
     [_progressView release];
+    [_loadingIndicator release];
     [super dealloc];
 }
 - (void)viewDidUnload {
     [self setSlider:nil];
     [self setProgressView:nil];
+    [self setLoadingIndicator:nil];
     [super viewDidUnload];
 }
 @end

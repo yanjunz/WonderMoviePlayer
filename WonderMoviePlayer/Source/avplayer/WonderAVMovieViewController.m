@@ -230,6 +230,9 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
                 [self prepareToPlayAsset:asset withKeys:requestedKeys];
             });
         }];
+        
+        // show buffer immediately
+        [self.controlSource buffer];
     }
 }
 
@@ -346,8 +349,6 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
         
         // FIXME
     }
-    // show buffer immediately
-    [self.controlSource buffer];
 }
 
 #pragma mark -

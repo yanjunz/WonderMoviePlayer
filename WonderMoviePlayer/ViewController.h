@@ -13,4 +13,5 @@
 - (IBAction)onClickPlayRemote:(id)sender;
 - (IBAction)onClickWebView:(id)sender;
 
+@property (retain, nonatomic) IBOutlet UIImageView *loadingIndicator;
 @end

@@ -37,6 +37,8 @@
     CGFloat _aculmuatedProgressBySec;
     NSTimeInterval _lastProgressTime;
     
+    BOOL _isDownloading;
+    
 #ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
     // bottom bar will hide util the movie start to play
     BOOL _hasStarted;
@@ -313,7 +315,7 @@
 {
     _isLiveCast = isLiveCast;
     self.progressView.userInteractionEnabled = !isLiveCast;
-    self.downloadButton.enabled = !isLiveCast;
+    self.downloadButton.enabled = ![self isDownloading] && !isLiveCast;
 }
 
 #pragma mark Loading
@@ -323,8 +325,10 @@
     _isLoading = YES;
     
     // If it is paused or ended, don't show loading indicator
-    if (self.controlState != MovieControlStatePaused && self.controlState != MovieControlStateEnded &&
-        !(self.controlState == MovieControlStateBuffering && _bufferFromPaused)) {
+    if ((self.controlState != MovieControlStatePaused && self.controlState != MovieControlStateEnded &&
+        !(self.controlState == MovieControlStateBuffering && _bufferFromPaused)) ||
+        self.controlState == MovieControlStateDefault
+        ) {
         [self.infoView startLoading];
     }
 }
@@ -571,26 +575,34 @@
 
 - (void)startToDownload
 {
-    [self.downloadButton setImage:QQImage(@"videoplayer_download_bg") forState:UIControlStateNormal];
-    if (self.downloadingView.superview == nil) {
-        self.downloadingView.frame = self.downloadButton.frame;
-        [self.headerBar addSubview:self.downloadingView];
-        
-        CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"position.y"];
-        animation.fromValue = @(self.downloadingView.center.y * 2 /3);
-        animation.toValue = @(self.downloadingView.center.y);
-        animation.repeatCount = HUGE_VALF;
-        animation.duration = 0.8f;
-        [self.downloadingView.layer addAnimation:animation forKey:@"downloadingAnimation"];
-    }
+//    [self.downloadButton setImage:QQImage(@"videoplayer_download_bg") forState:UIControlStateNormal];
+//    if (self.downloadingView.superview == nil) {
+//        self.downloadingView.frame = self.downloadButton.frame;
+//        [self.headerBar addSubview:self.downloadingView];
+//        
+//        CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"position.y"];
+//        animation.fromValue = @(self.downloadingView.center.y * 2 /3);
+//        animation.toValue = @(self.downloadingView.center.y);
+//        animation.repeatCount = HUGE_VALF;
+//        animation.duration = 0.8f;
+//        [self.downloadingView.layer addAnimation:animation forKey:@"downloadingAnimation"];
+//    }
     self.downloadButton.enabled = NO;
+    _isDownloading = YES;
 }
 
 - (void)finishDownload
 {
-    [self.downloadButton setImage:QQImage(@"videoplayer_download") forState:UIControlStateNormal];
-    [self.downloadingView removeFromSuperview];
-    [self.downloadingView.layer removeAnimationForKey:@"downloadingAnimation"];
+//    [self.downloadButton setImage:QQImage(@"videoplayer_download") forState:UIControlStateNormal];
+//    [self.downloadingView removeFromSuperview];
+//    [self.downloadingView.layer removeAnimationForKey:@"downloadingAnimation"];
+    _isDownloading = NO;
+}
+
+- (BOOL)isDownloading
+{
+//    return self.downloadingView.superview != nil;
+    return _isDownloading;
 }
 
 #pragma mark UI Interaction

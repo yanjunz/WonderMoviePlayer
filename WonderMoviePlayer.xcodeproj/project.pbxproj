@@ -76,6 +76,7 @@
 		B5AD78B517CDF01700C08E51 /* JSInvokedUrlCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = B5AD78B417CDF01700C08E51 /* JSInvokedUrlCommand.m */; };
 		B5AD78B817CDF06100C08E51 /* JSJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = B5AD78B717CDF06100C08E51 /* JSJSON.m */; };
 		B5AD78BE17CE043B00C08E51 /* JSCommandQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = B5AD78BD17CE043A00C08E51 /* JSCommandQueue.m */; };
+		B5F45FC617E986D600F0873B /* Reveal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5F45FC517E986D600F0873B /* Reveal.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -174,6 +175,7 @@
 		B5AD78B717CDF06100C08E51 /* JSJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSJSON.m; sourceTree = "<group>"; };
 		B5AD78BC17CE043900C08E51 /* JSCommandQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSCommandQueue.h; sourceTree = "<group>"; };
 		B5AD78BD17CE043A00C08E51 /* JSCommandQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSCommandQueue.m; sourceTree = "<group>"; };
+		B5F45FC517E986D600F0873B /* Reveal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Reveal.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -182,6 +184,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B516CA0F17DD6AA100D8E3A2 /* CFNetwork.framework in Frameworks */,
+				B5F45FC617E986D600F0873B /* Reveal.framework in Frameworks */,
 				B517795617C21BD7006B948E /* libicucore.dylib in Frameworks */,
 				B517795417C21B59006B948E /* CoreFoundation.framework in Frameworks */,
 				B517792217C1AFB6006B948E /* CoreMedia.framework in Frameworks */,
@@ -256,6 +259,7 @@
 		B517773617B36D44006B948E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B5F45FC517E986D600F0873B /* Reveal.framework */,
 				B516CA0E17DD6AA100D8E3A2 /* CFNetwork.framework */,
 				B517795517C21BD6006B948E /* libicucore.dylib */,
 				B517795317C21B58006B948E /* CoreFoundation.framework */,
@@ -582,7 +586,8 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)\"",
+					"$(SRCROOT)",
+					/Users/yanjunz/dev/WonderMoviePlayer,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WonderMoviePlayer/WonderMoviePlayer-Prefix.pch";
@@ -599,7 +604,8 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)\"",
+					"$(SRCROOT)",
+					/Users/yanjunz/dev/WonderMoviePlayer,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WonderMoviePlayer/WonderMoviePlayer-Prefix.pch";
