@@ -10,6 +10,7 @@
 #import "WonderMPMovieViewController.h"
 #import "TestWebViewController.h"
 #import "WonderAVMovieViewController.h"
+#import "Test2ViewController.h"
 
 @interface ViewController () {
     NSString *_testString;
@@ -199,4 +200,11 @@
     [self setLoadingIndicator:nil];
     [super viewDidUnload];
 }
+- (IBAction)onClickTest2:(id)sender {
+    Test2ViewController *controller = [[Test2ViewController alloc] init];
+    [self presentViewController:controller animated:YES completion:nil];
+}
+
+
+
 @end

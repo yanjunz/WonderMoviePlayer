@@ -82,14 +82,6 @@
         _loadingView.center = self.center;
         _loadingView.hidden = YES;
         
-        CABasicAnimation *rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
-        rotationAnimation.toValue = @(M_PI / 180 * 360);
-        rotationAnimation.duration = 1.0f;
-        rotationAnimation.cumulative = YES;
-        rotationAnimation.repeatCount = HUGE_VALF;
-        
-        [self.loadingIndicator.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
-        
         self.loadingPercentLabel = [[[UILabel alloc] initWithFrame:self.loadingIndicator.frame] autorelease];
         self.loadingPercentLabel.text = @"0%";
         self.loadingPercentLabel.textAlignment = UITextAlignmentCenter;
@@ -111,6 +103,19 @@
 - (void)startLoading
 {
 	self.loadingView.hidden = NO;
+    
+    // Bugfix for iOS7
+    // animation will be miss if it is created before presentation, so create animation on demand
+    static NSString *animationKey = @"rotationAnimation";
+    if (![self.loadingIndicator.layer.animationKeys containsObject:animationKey]) {
+        CABasicAnimation *rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+        rotationAnimation.toValue = @(M_PI / 180 * 360);
+        rotationAnimation.duration = 1.0f;
+        rotationAnimation.cumulative = YES;
+        rotationAnimation.repeatCount = HUGE_VALF;
+        
+        [self.loadingIndicator.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+    }
 }
 
 - (void)stopLoading

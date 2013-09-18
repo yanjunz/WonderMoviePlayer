@@ -67,6 +67,8 @@
 		B517795417C21B59006B948E /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517795317C21B58006B948E /* CoreFoundation.framework */; };
 		B517795617C21BD7006B948E /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B517795517C21BD6006B948E /* libicucore.dylib */; };
 		B517795817C61383006B948E /* videoplayer_cross_screen@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B517795717C61383006B948E /* videoplayer_cross_screen@2x.png */; };
+		B51F619617E9ADC200344122 /* Test2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B51F619417E9ADC200344122 /* Test2ViewController.m */; };
+		B51F619717E9ADC200344122 /* Test2ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B51F619517E9ADC200344122 /* Test2ViewController.xib */; };
 		B5AD785217CDA50E00C08E51 /* video.js in Sources */ = {isa = PBXBuildFile; fileRef = B5AD785117CDA50E00C08E51 /* video.js */; };
 		B5AD785317CDA5E800C08E51 /* video.js in Resources */ = {isa = PBXBuildFile; fileRef = B5AD785117CDA50E00C08E51 /* video.js */; };
 		B5AD78A817CDD30600C08E51 /* JSURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = B5AD78A717CDD30600C08E51 /* JSURLProtocol.m */; };
@@ -160,6 +162,9 @@
 		B517795517C21BD6006B948E /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		B517795717C61383006B948E /* videoplayer_cross_screen@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "videoplayer_cross_screen@2x.png"; sourceTree = "<group>"; };
 		B518C96917E6E17000FD9D8B /* BaseMoviePlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseMoviePlayer.h; sourceTree = "<group>"; };
+		B51F619317E9ADC200344122 /* Test2ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Test2ViewController.h; sourceTree = "<group>"; };
+		B51F619417E9ADC200344122 /* Test2ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Test2ViewController.m; sourceTree = "<group>"; };
+		B51F619517E9ADC200344122 /* Test2ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Test2ViewController.xib; sourceTree = "<group>"; };
 		B5AD785117CDA50E00C08E51 /* video.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = video.js; sourceTree = "<group>"; };
 		B5AD78A617CDD30600C08E51 /* JSURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSURLProtocol.h; sourceTree = "<group>"; };
 		B5AD78A717CDD30600C08E51 /* JSURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSURLProtocol.m; sourceTree = "<group>"; };
@@ -291,6 +296,9 @@
 				B51778AC17B9DE2E006B948E /* TestWebViewController.h */,
 				B51778AD17B9DE2F006B948E /* TestWebViewController.m */,
 				B51778AE17B9DE30006B948E /* TestWebViewController.xib */,
+				B51F619317E9ADC200344122 /* Test2ViewController.h */,
+				B51F619417E9ADC200344122 /* Test2ViewController.m */,
+				B51F619517E9ADC200344122 /* Test2ViewController.xib */,
 				B517777017B3960E006B948E /* Movie.m4v */,
 				B517777217B3961C006B948E /* Settings.bundle */,
 				B517773E17B36D44006B948E /* Supporting Files */,
@@ -464,6 +472,7 @@
 				B517790D17BA3880006B948E /* videoplayer_progressbar_indicator_normal@2x.png in Resources */,
 				B517790E17BA3880006B948E /* videoplayer_progressbar_indicator_press@2x.png in Resources */,
 				B517790F17BA3880006B948E /* videoplayer_progressbar_top@2x.png in Resources */,
+				B51F619717E9ADC200344122 /* Test2ViewController.xib in Resources */,
 				B517791017BA3880006B948E /* videoplayer_replay@2x.png in Resources */,
 				B517791117BA3880006B948E /* videoplayer_return@2x.png in Resources */,
 				B517791217BA3880006B948E /* videoplayer_toolbar@2x.png in Resources */,
@@ -496,6 +505,7 @@
 				B5AD78B817CDF06100C08E51 /* JSJSON.m in Sources */,
 				B5AD78BE17CE043B00C08E51 /* JSCommandQueue.m in Sources */,
 				B516CA2E17DDC46A00D8E3A2 /* WonderAVMovieViewController.m in Sources */,
+				B51F619617E9ADC200344122 /* Test2ViewController.m in Sources */,
 				B516CA2F17DDC46A00D8E3A2 /* WonderAVPlayerView.m in Sources */,
 				B516CA3017DDC46A00D8E3A2 /* WonderMPMovieViewController.m in Sources */,
 				B516CA3117DDC46A00D8E3A2 /* BatteryIconView.m in Sources */,
