@@ -344,7 +344,7 @@
 #pragma mark State Manchine
 - (void)handleCommand:(MovieControlCommand)cmd param:(id)param notify:(BOOL)notify
 {
-//    NSLog(@"handleCommand %d, %@, %d", cmd, param, notify);
+//    NSLog(@"handleCommand cmd=%d, state=%d, %@, %d", cmd, self.controlState, param, notify);
     if (cmd == MovieControlCommandEnd) {
         self.controlState = MovieControlStateEnded;
         

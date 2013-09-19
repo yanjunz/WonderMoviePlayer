@@ -709,9 +709,11 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 
 - (void)movieControlSourceReplay:(id<MovieControlSource>)source
 {
-    _wasPlaying = YES;    
+    _wasPlaying = YES;
+    seekToZeroBeforePlay = NO;
     [self.player seekToTime:kCMTimeZero];
     [self.player play];
+    [self initScrubberTimer];
 }
 
 - (void)movieControlSource:(id<MovieControlSource>)source setProgress:(CGFloat)progress
@@ -721,6 +723,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     }
     
     if (seekToZeroBeforePlay) { // has been ended
+        seekToZeroBeforePlay = NO;
         [self.player play];
     }
 }
