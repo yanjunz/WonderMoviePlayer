@@ -621,7 +621,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
             CMTimeRange tr = [timeRangeValue CMTimeRangeValue];
             playableDuration = CMTimeGetSeconds(tr.start) + CMTimeGetSeconds(tr.duration);
         }
-        NSLog(@"syncSrubber %f, %f", time, progress);
+//        NSLog(@"syncSrubber %f, %f", time, progress);
         if ([self.controlSource respondsToSelector:@selector(setDuration:)]) {
             [self.controlSource setDuration:duration];
         }

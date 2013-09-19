@@ -19,7 +19,7 @@
 - (void)wonderMovieProgressViewEndChangeProgress:(WonderMovieProgressView *)progressView;
 @end
 
-@interface WonderMovieProgressView : UIView
+@interface WonderMovieProgressView : UIView<UIGestureRecognizerDelegate>
 @property (nonatomic, assign) id<WonderMovieProgressViewDelegate> delegate;
 @property (nonatomic, assign) CGFloat progress;
 @property (nonatomic, assign) CGFloat cacheProgress;

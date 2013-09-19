@@ -39,10 +39,7 @@
     
     BOOL _isDownloading;
     
-#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
-    // bottom bar will hide util the movie start to play
     BOOL _hasStarted;
-#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
 }
 @property (nonatomic, retain) NSTimer *timer;
 @property (nonatomic, retain) WonderMovieProgressView *progressView;
@@ -453,18 +450,21 @@
                 break;
         }
     }
-    
+//    NSLog(@"state = %d", self.controlState);
     // Update States
     [self updateStates];
     
-#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
+
     if (!_hasStarted && self.controlState == MovieControlStatePlaying) {
         _hasStarted = YES; // start to play now, should show bottom bar
+        
+#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
         [UIView animateWithDuration:0.5f animations:^{
             self.bottomBar.bottom = self.bottom;
         }];
-    }
 #endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
+    }
+
 }
 
 #pragma mark MovieControlSource
@@ -790,16 +790,19 @@
 //             fabs(offset.x) > kWonderMoviePanDistanceThrehold &&
              (sPanAction == WonderMoviePanAction_No || sPanAction == WonderMoviePanAction_Progress))
     {
-        // progress
-        if (sPanAction == WonderMoviePanAction_No) { // just start
-            [self beginScrubbing];
+        if (_hasStarted) {
+            // progress
+            if (sPanAction == WonderMoviePanAction_No) { // just start
+                [self beginScrubbing];
+            }
+            
+            sPanAction = WonderMoviePanAction_Progress;
+            CGFloat inc = offset.x / 10 ; // 1s for 10 pixel
+            //        NSLog(@"pan Progress %f, %f, %f, %f", offset.x, gr.view.width, inc, inc > 0 ? ceilf(inc) : floorf(inc));
+            inc = inc > 0 ? ceilf(inc) : floorf(inc);
+            [self increaseProgress:inc];
         }
         
-        sPanAction = WonderMoviePanAction_Progress;
-        CGFloat inc = offset.x / 10 ; // 1s for 10 pixel
-//        NSLog(@"pan Progress %f, %f, %f, %f", offset.x, gr.view.width, inc, inc > 0 ? ceilf(inc) : floorf(inc));
-        inc = inc > 0 ? ceilf(inc) : floorf(inc);
-        [self increaseProgress:inc];
         [gr setTranslation:CGPointZero inView:gr.view];
     }
     
@@ -921,7 +924,9 @@
 - (void)wonderMovieProgressViewBeginChangeProgress:(WonderMovieProgressView *)progressView
 {
 //    NSLog(@"wonderMovieProgressViewBeginChangeProgress");
-    [self beginScrubbing];
+    if (_hasStarted) {
+        [self beginScrubbing];
+    }
 }
 
 - (void)wonderMovieProgressView:(WonderMovieProgressView *)progressView didChangeProgress:(CGFloat)progress

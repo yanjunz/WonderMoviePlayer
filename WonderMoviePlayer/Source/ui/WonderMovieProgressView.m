@@ -63,7 +63,9 @@
 //    self.progressIndicator.backgroundColor = [UIColor lightTextColor];
     [self addSubview:self.progressIndicator];
     
-    [self addGestureRecognizer:[[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPan:)] autorelease]];
+    UIPanGestureRecognizer *panGesture = [[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPan:)] autorelease];
+    panGesture.delegate = self;
+    [self addGestureRecognizer:panGesture];
     [self addGestureRecognizer:[[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)] autorelease]];
     
     [self setProgress:0];
@@ -174,6 +176,11 @@
     else if (gr.state == UIGestureRecognizerStateChanged) {
         [self notifyProgressChanged:progress];
     }
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    return YES;
 }
 
 @end
