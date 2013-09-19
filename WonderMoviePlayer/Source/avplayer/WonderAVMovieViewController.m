@@ -40,6 +40,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     BOOL _wasPlaying;
     BOOL _isScrubbing;
     BOOL _observersHasBeenRemoved; // if the observers has been removed, need to remove observers correctly to avoid memeory leak
+    BOOL _isExited;
 }
 @property (nonatomic, retain) UIView *controlView;
 @property (nonatomic, assign) BOOL isEnd;
@@ -556,7 +557,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 #pragma mark scrubber timer
 - (void)initScrubberTimer
 {
-    if (timeObserver) {
+    if (timeObserver || _isExited) {
         return;
     }
     
@@ -620,7 +621,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
             CMTimeRange tr = [timeRangeValue CMTimeRangeValue];
             playableDuration = CMTimeGetSeconds(tr.start) + CMTimeGetSeconds(tr.duration);
         }
-//        NSLog(@"syncSrubber %f, %f", time, progress);
+        NSLog(@"syncSrubber %f, %f", time, progress);
         if ([self.controlSource respondsToSelector:@selector(setDuration:)]) {
             [self.controlSource setDuration:duration];
         }
@@ -643,6 +644,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 
 - (void)beginScrubbing
 {
+//    NSLog(@"beginScrubbing %d", _isScrubbing);
     if (!_isScrubbing) {
         _isScrubbing = YES;
         restoreAfterScrubbingRate = [self.player rate];
@@ -656,10 +658,13 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 - (void)endScrubbing:(CGFloat)progress
 {
     [self scrub:progress completion:^(BOOL finished) {
+//        NSLog(@"endScrubbing %f, %d", progress, _isScrubbing);
         if (_isScrubbing) {
             _isScrubbing = NO;
-            [self initScrubberTimer];
-            [self.player setRate:restoreAfterScrubbingRate];
+            if (!_isExited) {
+                [self initScrubberTimer];
+                [self.player setRate:restoreAfterScrubbingRate];
+            }
             restoreAfterScrubbingRate = 0.f;
         }
     }];
@@ -735,7 +740,9 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 
 - (void)movieControlSourceExit:(id<MovieControlSource>)source
 {
+    _isExited = YES;
     [self.player pause];
+    [self.player cancelPendingPrerolls];
     if (self.exitBlock) {
         self.exitBlock();
     }
