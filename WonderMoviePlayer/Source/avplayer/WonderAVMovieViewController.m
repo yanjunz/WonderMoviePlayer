@@ -642,21 +642,25 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 
 - (void)beginScrubbing
 {
-    _isScrubbing = YES;
-    restoreAfterScrubbingRate = [self.player rate];
-    [self.player setRate:0];
-    
-    /* Remove previous timer. */
-    [self removePlayerTimeObserver];
+    if (!_isScrubbing) {
+        _isScrubbing = YES;
+        restoreAfterScrubbingRate = [self.player rate];
+        [self.player setRate:0];
+        
+        /* Remove previous timer. */
+        [self removePlayerTimeObserver];
+    }
 }
 
 - (void)endScrubbing:(CGFloat)progress
 {
-    _isScrubbing = NO;
     [self scrub:progress completion:^(BOOL finished) {
-        [self initScrubberTimer];
-        [self.player setRate:restoreAfterScrubbingRate];
-        restoreAfterScrubbingRate = 0.f;
+        if (_isScrubbing) {
+            _isScrubbing = NO;
+            [self initScrubberTimer];
+            [self.player setRate:restoreAfterScrubbingRate];
+            restoreAfterScrubbingRate = 0.f;
+        }
     }];
 }
 
