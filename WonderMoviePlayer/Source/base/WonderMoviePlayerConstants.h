@@ -14,4 +14,6 @@
 #define QQImage(src) [UIImageEx loadAndCacheImageFromApp:src]
 #endif
 
+#define kProgressViewPadding 16
+
 #endif

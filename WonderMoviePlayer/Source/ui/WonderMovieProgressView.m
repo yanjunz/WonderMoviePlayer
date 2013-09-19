@@ -10,6 +10,7 @@
 #import "WonderMoviePlayerConstants.h"
 #import "WonderMovieProgressView.h"
 #import "UIView+Sizes.h"
+#import "WonderMoviePlayerConstants.h"
 
 @interface WonderMovieProgressView ()
 //@property (nonatomic, retain) UIProgressView *progressView;
@@ -62,7 +63,7 @@
 //    self.progressIndicator.backgroundColor = [UIColor lightTextColor];
     [self addSubview:self.progressIndicator];
     
-    [self.progressIndicator addGestureRecognizer:[[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPan:)] autorelease]];
+    [self addGestureRecognizer:[[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPan:)] autorelease]];
     [self addGestureRecognizer:[[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)] autorelease]];
     
     [self setProgress:0];
@@ -73,7 +74,12 @@
 {
     [super layoutSubviews];
     CGFloat progressHeight = 6;
-    self.progressBottomView.frame = CGRectMake(0, (self.height - progressHeight) / 2, self.width, progressHeight);
+    /*
+     * NOTE: the inner progress view width should not be the same as self.width,
+     * otherwise the progressIndicator will be hard to pressed since half of it is outside the superview
+     */
+    CGFloat width = self.width - kProgressViewPadding * 2;
+    self.progressBottomView.frame = CGRectMake((self.width - width) / 2, (self.height - progressHeight) / 2, width, progressHeight);
     self.progressCacheView.frame = self.progressBottomView.frame;
     self.progressCacheView.width = self.progressBottomView.width * self.cacheProgress;
     self.progressTopView.frame = self.progressCacheView.frame;
@@ -146,9 +152,8 @@
 
 - (void)onPan:(UIPanGestureRecognizer *)gr
 {
-    UIView *view = gr.view;
-    CGPoint pt = [gr locationInView:view.superview];
-    CGPoint offset = [gr translationInView:view.superview];
+    CGPoint pt = [gr locationInView:self.progressIndicator.superview];
+    CGPoint offset = [gr translationInView:self.progressIndicator.superview];
     
     CGFloat progress = self.width == 0 ? 1 : (pt.x + offset.x) / self.width;
     progress = MIN(1, MAX(0, progress));

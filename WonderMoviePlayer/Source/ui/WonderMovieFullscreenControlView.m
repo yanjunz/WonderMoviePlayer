@@ -105,8 +105,8 @@
     
     CGFloat bottomBarHeight = 50;
     CGFloat headerBarHeight = 44;
-    CGFloat progressBarLeftPadding = (self.nextEnabled ? 60+30+10 : 60) + 8;
-    CGFloat progressBarRightPadding = 16;
+    CGFloat progressBarLeftPadding = (self.nextEnabled ? 60+30+10 : 60) + 8 - 10;
+    CGFloat progressBarRightPadding = 0;
     CGFloat durationLabelWidth = 100;
     CGFloat batteryHeight = 10;
     
@@ -144,7 +144,7 @@
         [self.bottomBar addSubview:self.nextButton];
     }
     
-    self.startLabel = [[[UILabel alloc] initWithFrame:CGRectMake(self.progressView.left, bottomBarHeight / 2 + 2, durationLabelWidth, bottomBarHeight / 2)] autorelease];
+    self.startLabel = [[[UILabel alloc] initWithFrame:CGRectMake(self.progressView.left + kProgressViewPadding, bottomBarHeight / 2 + 2, durationLabelWidth, bottomBarHeight / 2)] autorelease];
     self.startLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight;
     self.startLabel.textAlignment = UITextAlignmentLeft;
     self.startLabel.font = [UIFont systemFontOfSize:10];
@@ -158,7 +158,7 @@
 //    self.fullscreenButton.frame = CGRectMake(self.width - 45, 0, 40, bottomBarHeight);
 //    [self.bottomBar addSubview:self.fullscreenButton];
     
-    self.durationLabel = [[[UILabel alloc] initWithFrame:CGRectMake(self.bottomBar.width - progressBarRightPadding - durationLabelWidth, self.startLabel.top, durationLabelWidth, bottomBarHeight / 2)] autorelease];
+    self.durationLabel = [[[UILabel alloc] initWithFrame:CGRectMake(self.bottomBar.width - progressBarRightPadding - durationLabelWidth - kProgressViewPadding, self.startLabel.top, durationLabelWidth, bottomBarHeight / 2)] autorelease];
     self.durationLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
     self.durationLabel.textAlignment = UITextAlignmentRight;
     self.durationLabel.font = [UIFont systemFontOfSize:10];
