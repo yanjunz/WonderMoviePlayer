@@ -105,7 +105,7 @@
 	self.loadingView.hidden = NO;
     
     // Bugfix for iOS7
-    // animation will be miss if it is created before presentation, so create animation on demand
+    // Animation will be missed if it is created before presentation in iOS7, so create animation on demand.
     static NSString *animationKey = @"rotationAnimation";
     if (![self.loadingIndicator.layer.animationKeys containsObject:animationKey]) {
         CABasicAnimation *rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
