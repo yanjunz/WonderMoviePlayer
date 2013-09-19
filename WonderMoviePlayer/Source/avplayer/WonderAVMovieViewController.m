@@ -508,8 +508,8 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 - (void) playerItemDidReachEnd:(NSNotification*) aNotification
 {
 	/* Hide the 'Pause' button, show the 'Play' button in the slider control */
-    [self.controlSource end];
     [self syncScrubber];
+    [self.controlSource end];
     
 	/* After the movie has played to its end time, seek back to time zero
      to play it again */
