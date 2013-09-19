@@ -149,9 +149,10 @@
     UIView *view = gr.view;
     CGPoint pt = [gr locationInView:view.superview];
     CGPoint offset = [gr translationInView:view.superview];
-//    NSLog(@"onPan %d %f", gr.state, offset.x);
+    
     CGFloat progress = self.width == 0 ? 1 : (pt.x + offset.x) / self.width;
     progress = MIN(1, MAX(0, progress));
+//    NSLog(@"onPan %d %f, %f", gr.state, offset.x, progress);
     [self setProgress:progress];
 //    view.center = CGPointMake(view.center.x + offset.x, view.center.y);
     

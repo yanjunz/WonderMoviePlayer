@@ -19,7 +19,6 @@
 @class WonderAVPlayerView;
 @interface WonderAVMovieViewController : UIViewController<BaseMoviePlayer> {
     BOOL isSeeking;
-	BOOL seekToZeroBeforePlay;
 	float restoreAfterScrubbingRate;
     Float64 startTime;
     

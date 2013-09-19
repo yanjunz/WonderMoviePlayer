@@ -38,16 +38,18 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 @interface WonderAVMovieViewController () {
 //    BOOL _statusBarHiddenPrevious;
     BOOL _wasPlaying;
-    
+    BOOL _isScrubbing;
     BOOL _observersHasBeenRemoved; // if the observers has been removed, need to remove observers correctly to avoid memeory leak
 }
 @property (nonatomic, retain) UIView *controlView;
+@property (nonatomic, assign) BOOL isEnd;
 
 @end
 
 @implementation WonderAVMovieViewController
 @synthesize crossScreenBlock, downloadBlock, exitBlock;
 @synthesize controlSource, isLiveCast;
+@synthesize isEnd;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -322,7 +324,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
                                                  name:AVPlayerItemDidPlayToEndTimeNotification
                                                object:self.playerItem];
     
-    seekToZeroBeforePlay = NO;
+    self.isEnd = NO;
     
     /* Create new player, if we don't already have one. */
     if (![self player])
@@ -509,7 +511,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     
 	/* After the movie has played to its end time, seek back to time zero
      to play it again */
-	seekToZeroBeforePlay = YES;
+	self.isEnd = YES;
     _wasPlaying = NO;
     [self removePlayerTimeObserver];
 }
@@ -633,31 +635,28 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     }
 }
 
-- (BOOL)isScrubbingWhenPlaying
-{
-    return restoreAfterScrubbingRate > 0 && self.player.rate == 0;
-}
+//- (BOOL)isScrubbingWhenPlaying
+//{
+//    return restoreAfterScrubbingRate > 0 && self.player.rate == 0;
+//}
 
 - (void)beginScrubbing
 {
-    if (![self isScrubbingWhenPlaying]) {
-        restoreAfterScrubbingRate = [self.player rate];
-        [self.player setRate:0];
-        
-        /* Remove previous timer. */
-        [self removePlayerTimeObserver];
-    }
+    _isScrubbing = YES;
+    restoreAfterScrubbingRate = [self.player rate];
+    [self.player setRate:0];
+    
+    /* Remove previous timer. */
+    [self removePlayerTimeObserver];
 }
 
 - (void)endScrubbing:(CGFloat)progress
 {
+    _isScrubbing = NO;
     [self scrub:progress completion:^(BOOL finished) {
         [self initScrubberTimer];
-        if (restoreAfterScrubbingRate > 0)
-        {
-            [self.player setRate:restoreAfterScrubbingRate];
-            restoreAfterScrubbingRate = 0.f;
-        }
+        [self.player setRate:restoreAfterScrubbingRate];
+        restoreAfterScrubbingRate = 0.f;
     }];
 }
 
@@ -710,7 +709,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 - (void)movieControlSourceReplay:(id<MovieControlSource>)source
 {
     _wasPlaying = YES;
-    seekToZeroBeforePlay = NO;
+    self.isEnd = NO;
     [self.player seekToTime:kCMTimeZero];
     [self.player play];
     [self initScrubberTimer];
@@ -718,12 +717,13 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 
 - (void)movieControlSource:(id<MovieControlSource>)source setProgress:(CGFloat)progress
 {
-    if (![self isScrubbingWhenPlaying]) { // not scrubbing, this should be a tap or single setting progress action
+    if (!_isScrubbing) { // not scrubbing, this should be a tap or single setting progress action
         [self scrub:progress completion:nil];
     }
     
-    if (seekToZeroBeforePlay) { // has been ended
-        seekToZeroBeforePlay = NO;
+    if (self.isEnd) { // has been ended
+        _wasPlaying = YES;
+        self.isEnd = NO;
         [self.player play];
     }
 }
@@ -739,6 +739,10 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 
 - (void)movieControlSourceBeginChangeProgress:(id<MovieControlSource>)source
 {
+    if (self.isEnd) { // if ended, simulate replay before begin scrubbing
+        [self movieControlSourceReplay:source];
+    }
+    
     [self beginScrubbing];
 }
 
