@@ -26,14 +26,16 @@ DECLARE_OBSERVER_CONTEXT(WonderAVMovieViewController, CurrentItem)
 DECLARE_OBSERVER_CONTEXT(WonderAVMovieViewController, PlayerItemStatus)
 DECLARE_OBSERVER_CONTEXT(WonderAVMovieViewController, PlaybackBufferEmpty)
 DECLARE_OBSERVER_CONTEXT(WonderAVMovieViewController, PlaybackLikelyToKeepUp)
+DECLARE_OBSERVER_CONTEXT(WonderAVMovieViewController, LoadedTimeRanges)
 
 NSString *kTracksKey		= @"tracks";
 NSString *kStatusKey		= @"status";
 NSString *kPlayableKey		= @"playable";
 NSString *kCurrentItemKey	= @"currentItem";
 
-NSString *kPlaybackBufferEmpty = @"playbackBufferEmpty";
-NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
+NSString *kPlaybackBufferEmpty      = @"playbackBufferEmpty";
+NSString *kPlaybackLikelyToKeeyUp   = @"playbackLikelyToKeepUp";
+NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
 
 @interface WonderAVMovieViewController () {
 //    BOOL _statusBarHiddenPrevious;
@@ -44,13 +46,12 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 }
 @property (nonatomic, retain) UIView *controlView;
 @property (nonatomic, assign) BOOL isEnd;
-
 @end
 
 @implementation WonderAVMovieViewController
 @synthesize crossScreenBlock, downloadBlock, exitBlock;
 @synthesize controlSource, isLiveCast;
-@synthesize isEnd;
+@synthesize isEnd = _isEnd;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -105,6 +106,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     
     [self removePlayerTimeObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
     [self.playerItem removeObserver:self
                          forKeyPath:kStatusKey];
     
@@ -116,6 +118,9 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     
     [self.player removeObserver:self
                      forKeyPath:kCurrentItemKey];
+    
+    [self.playerItem removeObserver:self
+                     forKeyPath:kLoadedTimeRanges];
 }
 
 - (void)viewDidLoad
@@ -280,7 +285,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     // FIXME
     
     /* Stop observing our prior AVPlayerItem, if we have one. */
-    if (self.playerItem)
+    if (self.playerItem && !_observersHasBeenRemoved)
     {
         /* Remove existing player item key value observers and notifications. */
         
@@ -293,6 +298,9 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
         [self.playerItem removeObserver:self
                              forKeyPath:kPlaybackLikelyToKeeyUp];
 		
+        [self.playerItem removeObserver:self
+                             forKeyPath:kLoadedTimeRanges];
+        
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:AVPlayerItemDidPlayToEndTimeNotification
                                                       object:self.playerItem];
@@ -302,6 +310,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     self.playerItem = [AVPlayerItem playerItemWithAsset:asset];
     
     /* Observe the player item "status" key to determine when it is ready to play. */
+
     [self.playerItem addObserver:self
                       forKeyPath:kStatusKey
                          options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
@@ -316,6 +325,11 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
                       forKeyPath:kPlaybackLikelyToKeeyUp
                          options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
                          context:WonderAVMovieObserverContextName(PlaybackLikelyToKeepUp)];
+    
+    [self.playerItem addObserver:self
+                      forKeyPath:kLoadedTimeRanges
+                         options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
+                         context:WonderAVMovieObserverContextName(LoadedTimeRanges)];
     
     
     /* When the player item has played to its end time we'll toggle
@@ -449,6 +463,11 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
             
             // FIXME
             if (startTime > 0) {
+                CMTime playerDuration = [self playerItemDuration];
+                double totalTime = CMTimeGetSeconds(playerDuration);
+                if (startTime >= totalTime) {
+                    startTime = 0;
+                }
                 [self.player seekToTime:CMTimeMakeWithSeconds(startTime, 1)];
                 startTime = 0;
             }
@@ -465,6 +484,13 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
         if (self.player.currentItem.playbackLikelyToKeepUp) {
 //            NSLog(@"unbuffer");
             [self.controlSource unbuffer];
+        }
+    }
+    else if (context == WonderAVMovieObserverContextName(LoadedTimeRanges)) {
+        NSArray *timeRanges = (NSArray *)[change objectForKey:NSKeyValueChangeNewKey];
+        if (timeRanges && [timeRanges count]) {
+            CMTimeRange timerange = [[timeRanges lastObject] CMTimeRangeValue];
+            
         }
     }
     else {
@@ -493,13 +519,15 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 //    [self disablePlayerButtons];
     
     /* Display the error. */
+    NSString *errorMsg = [NSString stringWithFormat:@"%@ [%d] URL=%@", [error localizedFailureReason], error.code, [self.movieURL absoluteString]];
 	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:[error localizedDescription]
-														message:[error localizedFailureReason]
+														message:errorMsg
 													   delegate:nil
-											  cancelButtonTitle:@"OK"
+											  cancelButtonTitle:NSLocalizedString(@"确认", @"")
 											  otherButtonTitles:nil];
 	[alertView show];
 	[alertView release];
+    NSLog(@"[VideoPlayer] %@", errorMsg);
 }
 
 #pragma mark Player Notifications
@@ -619,7 +647,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
         if (loadedTimeRanges.count > 0) {
             NSValue *timeRangeValue = [loadedTimeRanges lastObject];
             CMTimeRange tr = [timeRangeValue CMTimeRangeValue];
-            playableDuration = CMTimeGetSeconds(tr.start) + CMTimeGetSeconds(tr.duration);
+            playableDuration = CMTimeGetSeconds(CMTimeAdd(tr.start, tr.duration));
         }
 //        NSLog(@"syncSrubber %f, %f", time, progress);
         if ([self.controlSource respondsToSelector:@selector(setDuration:)]) {
@@ -644,7 +672,8 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 
 - (void)beginScrubbing
 {
-//    NSLog(@"beginScrubbing %d", _isScrubbing);
+    // NOTE: rate is 0 if buffering
+//    NSLog(@"beginScrubbing %d, %f", _isScrubbing, [self.player rate]);
     if (!_isScrubbing) {
         _isScrubbing = YES;
         restoreAfterScrubbingRate = [self.player rate];
@@ -658,7 +687,7 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 - (void)endScrubbing:(CGFloat)progress
 {
     [self scrub:progress completion:^(BOOL finished) {
-//        NSLog(@"endScrubbing %f, %d", progress, _isScrubbing);
+//        NSLog(@"endScrubbing %f, %d, %f", progress, _isScrubbing, restoreAfterScrubbingRate);
         if (_isScrubbing) {
             _isScrubbing = NO;
             if (!_isExited) {
@@ -678,9 +707,10 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
     }
     
     double duration = CMTimeGetSeconds(playerDuration);
+    progress = MAX(0, MIN(1, progress));
     if (isfinite(duration)) {
         double time = duration * progress;
-//        NSLog(@"scrub %f, %f", progress, time);
+//        NSLog(@"scrub %f, %f, %f", progress, time, duration);
         [self.player seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:completion];
     }
 }
@@ -742,7 +772,12 @@ NSString *kPlaybackLikelyToKeeyUp = @"playbackLikelyToKeepUp";
 {
     _isExited = YES;
     [self.player pause];
-    [self.player cancelPendingPrerolls];
+    if([self.player respondsToSelector:@selector(cancelPendingPrerolls)]){
+        [self.player cancelPendingPrerolls];
+    }
+    if ([self.playerItem respondsToSelector:@selector(cancelPendingSeeks)]) {
+        [self.playerItem cancelPendingSeeks];
+    }
     if (self.exitBlock) {
         self.exitBlock();
     }

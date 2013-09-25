@@ -23,6 +23,10 @@
         return 0;
     }
     else {
+        // send end point is meanless
+        if (_isEnd) {
+            return 0;
+        }
         double time = CMTimeGetSeconds(currentTime);
         return (long)time;
     }

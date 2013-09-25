@@ -341,7 +341,10 @@
 #pragma mark State Manchine
 - (void)handleCommand:(MovieControlCommand)cmd param:(id)param notify:(BOOL)notify
 {
-//    NSLog(@"handleCommand cmd=%d, state=%d, %@, %d", cmd, self.controlState, param, notify);
+//    if (cmd != MovieControlCommandSetProgress) {
+//        NSLog(@"handleCommand cmd=%d, state=%d, %@, %d", cmd, self.controlState, param, notify);
+//    }
+    
     if (cmd == MovieControlCommandEnd) {
         self.controlState = MovieControlStateEnded;
         
@@ -435,6 +438,13 @@
                         [self.delegate movieControlSourcePlay:self];
                     }
                 }
+                else if (cmd == MovieControlCommandPause) {
+                    self.controlState = MovieControlStatePaused;
+                    
+                    if (notify && [self.delegate respondsToSelector:@selector(movieControlSourcePause:)]) {
+                        [self.delegate movieControlSourcePause:self];
+                    }
+                }
                 else if (cmd == MovieControlCommandUnbuffer) {
                     if (_bufferFromPaused) {
                         self.controlState = MovieControlStatePaused;
@@ -450,7 +460,9 @@
                 break;
         }
     }
-//    NSLog(@"state = %d", self.controlState);
+//    if (cmd != MovieControlCommandSetProgress) {
+//        NSLog(@"state = %d", self.controlState);
+//    }
     // Update States
     [self updateStates];
     
@@ -620,6 +632,14 @@
     else if (self.controlState == MovieControlStateEnded) {
         [self handleCommand:MovieControlCommandReplay param:nil notify:YES];
     }
+//    else if (self.controlState == MovieControlStateBuffering) {
+//        if (_bufferFromPaused) {
+//            [self handleCommand:MovieControlCommandPlay param:nil notify:YES];
+//        }
+//        else {
+//            [self handleCommand:MovieControlCommandPause param:nil notify:YES];
+//        }
+//    }
 
     [self cancelPreviousAndPrepareToDimControl];
 }

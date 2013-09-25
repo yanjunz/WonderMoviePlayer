@@ -23,6 +23,7 @@
     Float64 startTime;
     
     id timeObserver;
+    BOOL _isEnd;
 }
 @property (nonatomic, retain) NSURL *movieURL;
 @property (nonatomic, retain) AVPlayer *player;
