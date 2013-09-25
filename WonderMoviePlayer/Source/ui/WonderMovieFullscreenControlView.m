@@ -587,6 +587,7 @@
 
 - (void)setBufferProgress:(CGFloat)progress
 {
+    progress = MAX(0, MIN(1, progress));
     self.infoView.loadingPercentLabel.text = [NSString stringWithFormat:@"%d%%", (int)(progress * 100)];
 }
 

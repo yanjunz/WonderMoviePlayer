@@ -719,7 +719,7 @@ NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
     progress = MAX(0, MIN(1, progress));
     if (isfinite(duration)) {
         double time = duration * progress;
-        NSLog(@"scrub %f, %f, %f", progress, time, duration);
+//        NSLog(@"scrub %f, %f, %f", progress, time, duration);
         [self.player seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:completion];
     }
 }
