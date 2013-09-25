@@ -27,15 +27,17 @@ DECLARE_OBSERVER_CONTEXT(WonderAVMovieViewController, PlayerItemStatus)
 DECLARE_OBSERVER_CONTEXT(WonderAVMovieViewController, PlaybackBufferEmpty)
 DECLARE_OBSERVER_CONTEXT(WonderAVMovieViewController, PlaybackLikelyToKeepUp)
 DECLARE_OBSERVER_CONTEXT(WonderAVMovieViewController, LoadedTimeRanges)
+DECLARE_OBSERVER_CONTEXT(WonderAVMovieViewController, Rate)
 
 NSString *kTracksKey		= @"tracks";
 NSString *kStatusKey		= @"status";
 NSString *kPlayableKey		= @"playable";
 NSString *kCurrentItemKey	= @"currentItem";
+NSString *kRateKey          = @"rate";
 
-NSString *kPlaybackBufferEmpty      = @"playbackBufferEmpty";
-NSString *kPlaybackLikelyToKeeyUp   = @"playbackLikelyToKeepUp";
-NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
+NSString *kPlaybackBufferEmptyKey     = @"playbackBufferEmpty";
+NSString *kPlaybackLikelyToKeeyUpKey  = @"playbackLikelyToKeepUp";
+NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 
 @interface WonderAVMovieViewController () {
 //    BOOL _statusBarHiddenPrevious;
@@ -44,11 +46,11 @@ NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
     BOOL _observersHasBeenRemoved; // if the observers has been removed, need to remove observers correctly to avoid memeory leak
     BOOL _isExited;
     
-    // for fade buffer progress
+    // for fake buffer progress
     BOOL _isBuffering;
-#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
-    CGFloat _fadeBufferProgress;
-#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
+#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
+    CGFloat _fakeBufferProgress;
+#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
 }
 @property (nonatomic, retain) UIView *controlView;
 @property (nonatomic, assign) BOOL isEnd;
@@ -120,18 +122,21 @@ NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
                          forKeyPath:kStatusKey];
     
     [self.playerItem removeObserver:self
-                         forKeyPath:kPlaybackBufferEmpty];
+                         forKeyPath:kPlaybackBufferEmptyKey];
     
 	[self.playerItem removeObserver:self
-                         forKeyPath:kPlaybackLikelyToKeeyUp];
+                         forKeyPath:kPlaybackLikelyToKeeyUpKey];
     
     [self.player removeObserver:self
                      forKeyPath:kCurrentItemKey];
     
-#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
+//    [self.player removeObserver:self
+//                     forKeyPath:kRateKey];
+    
+#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
     [self.playerItem removeObserver:self
-                     forKeyPath:kLoadedTimeRanges];
-#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
+                     forKeyPath:kLoadedTimeRangesKey];
+#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
 }
 
 - (void)viewDidLoad
@@ -307,15 +312,15 @@ NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
                              forKeyPath:kStatusKey];
         
         [self.playerItem removeObserver:self
-                             forKeyPath:kPlaybackBufferEmpty];
+                             forKeyPath:kPlaybackBufferEmptyKey];
         
         [self.playerItem removeObserver:self
-                             forKeyPath:kPlaybackLikelyToKeeyUp];
+                             forKeyPath:kPlaybackLikelyToKeeyUpKey];
         
-#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
+#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
         [self.playerItem removeObserver:self
-                             forKeyPath:kLoadedTimeRanges];
-#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
+                             forKeyPath:kLoadedTimeRangesKey];
+#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
         
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:AVPlayerItemDidPlayToEndTimeNotification
@@ -333,21 +338,21 @@ NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
                          context:WonderAVMovieObserverContextName(PlayerItemStatus)];
     
     [self.playerItem addObserver:self
-                      forKeyPath:kPlaybackBufferEmpty
+                      forKeyPath:kPlaybackBufferEmptyKey
                          options:NSKeyValueObservingOptionNew
                          context:WonderAVMovieObserverContextName(PlaybackBufferEmpty)];
     
 	[self.playerItem addObserver:self
-                      forKeyPath:kPlaybackLikelyToKeeyUp
+                      forKeyPath:kPlaybackLikelyToKeeyUpKey
                          options:NSKeyValueObservingOptionNew
                          context:WonderAVMovieObserverContextName(PlaybackLikelyToKeepUp)];
     
-#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
+#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
     [self.playerItem addObserver:self
-                      forKeyPath:kLoadedTimeRanges
+                      forKeyPath:kLoadedTimeRangesKey
                          options:NSKeyValueObservingOptionNew
                          context:WonderAVMovieObserverContextName(LoadedTimeRanges)];
-#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
+#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
     
     
     /* When the player item has played to its end time we'll toggle
@@ -372,6 +377,11 @@ NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
                       forKeyPath:kCurrentItemKey
                          options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
                          context:WonderAVMovieObserverContextName(CurrentItem)];
+        
+//        [self.player addObserver:self
+//                      forKeyPath:kRateKey
+//                         options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
+//                         context:WonderAVMovieObserverContextName(Rate)];
     }
     
     /* Make our new AVPlayerItem the AVPlayer's current item. */
@@ -494,6 +504,20 @@ NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
             [self.player play];
         }
     }
+    else if (context == WonderAVMovieObserverContextName(Rate)) {
+        NSLog(@"rate = %f", self.player.rate);
+        if (_isEnd) {
+            [self.controlSource end];
+        }
+        else {
+            if (self.player.rate == 0) {
+                [self.controlSource pause];
+            }
+            else {
+                [self.controlSource play];
+            }
+        }
+    }
     else if (context == WonderAVMovieObserverContextName(PlaybackBufferEmpty)) {
         if (self.player.currentItem.playbackBufferEmpty) {
 //            NSLog(@"buffer");
@@ -506,11 +530,11 @@ NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
             [self unbuffer];
         }
     }
-#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
+#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
     else if (context == WonderAVMovieObserverContextName(LoadedTimeRanges)) {
         [self onLoadedTimeRangesChanged];
     }
-#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
+#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
     else {
         [super observeValueForKeyPath:path ofObject:object change:change context:context];
     }
@@ -733,7 +757,7 @@ NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
     }
 }
 
-#pragma mark Fade Buffer Progress
+
 - (void)buffer
 {
     _isBuffering = YES;
@@ -742,30 +766,31 @@ NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
 
 - (void)unbuffer
 {
-#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
-    _fadeBufferProgress = 0;
-#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
+#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
+    _fakeBufferProgress = 0;
+#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
     
     _isBuffering = NO;
     [self.controlSource unbuffer];
 }
 
-#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
+#pragma mark Fake Buffer Progress
+#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
 - (void)onLoadedTimeRangesChanged
 {
-    // figure out fade buffer progress
+    // figure out fake buffer progress
     if (_isBuffering) {
-        CGFloat remainingProgress = 1 - _fadeBufferProgress;
-        _fadeBufferProgress += remainingProgress * 0.1;
-        CGFloat fadeProgress = _fadeBufferProgress;
+        CGFloat remainingProgress = 1 - _fakeBufferProgress;
+        _fakeBufferProgress += remainingProgress * 0.1;
+        CGFloat fakeProgress = _fakeBufferProgress;
         
-//        NSLog(@"onLoadedTimeRangesChanged %f", fadeProgress);
+//        NSLog(@"onLoadedTimeRangesChanged %f", fakeProgress);
         if ([self.controlSource respondsToSelector:@selector(setBufferProgress:)]) {
-            [self.controlSource setBufferProgress:fadeProgress];
+            [self.controlSource setBufferProgress:fakeProgress];
         }
     }
 }
-#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
+#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
 
 #pragma mark Player
 

@@ -88,9 +88,9 @@
         self.loadingPercentLabel.backgroundColor = [UIColor clearColor];
         self.loadingPercentLabel.textColor = [UIColor whiteColor];
         
-#ifndef MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
+#ifndef MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
         self.loadingPercentLabel.hidden = YES;
-#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
+#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
         
         [_loadingView addSubview:self.loadingPercentLabel];
         
