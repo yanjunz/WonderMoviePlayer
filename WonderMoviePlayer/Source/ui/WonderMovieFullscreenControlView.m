@@ -208,7 +208,7 @@
     [self.headerBar addSubview:self.lockButton];
     
     CGRect btnRect = self.lockButton.frame;
-
+#ifdef MTT_TWEAK_WONDER_MOVIE_ENABLE_DOWNLOAD
     if (_downloadEnabled) {
         self.downloadButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.downloadButton setImage:QQImage(@"videoplayer_download") forState:UIControlStateNormal];
@@ -224,6 +224,7 @@
         downloadingArrow.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
         self.downloadingView = downloadingArrow;
     }
+#endif // MTT_TWEAK_WONDER_MOVIE_ENABLE_DOWNLOAD
     
     if (_crossScreenEnabled) {
         self.crossScreenButton = [UIButton buttonWithType:UIButtonTypeCustom];

@@ -68,6 +68,7 @@ NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
         // observe parentViewController to get notification of dismiss from parent view controller
         // http://stackoverflow.com/questions/2444112/method-called-when-dismissing-a-uiviewcontroller
         [self addObserver:self forKeyPath:@"parentViewController" options:0 context:NULL];
+//        NSLog(@"[WonderAVMovieViewController] init    0x%0x -->", self.hash);
     }
     return self;
 }
@@ -88,6 +89,7 @@ NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
 
 - (void)dealloc
 {
+//    NSLog(@"[WonderAVMovieViewController] dealloc 0x%0x <--", self.hash);
     [self removeObserver:self forKeyPath:@"parentViewController"];
     
     self.player = nil;
@@ -104,10 +106,11 @@ NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
 
 - (void)removeAllObservers
 {
-    if (_observersHasBeenRemoved) {
+//    NSLog(@"[WonderAVMovieViewController] removeAllObservers, 0x%x", self.hash);
+    if (_observersHasBeenRemoved || self.player == nil) {
         return;
     }
-    
+//    NSLog(@"[WonderAVMovieViewController] removeAllObservers, 0x%x, %0x, %0x", self.hash, self.playerItem.hash, self.player.hash);
     _observersHasBeenRemoved = YES;
     
     [self removePlayerTimeObserver];
@@ -124,6 +127,7 @@ NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
     
     [self.player removeObserver:self
                      forKeyPath:kCurrentItemKey];
+    
 #ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
     [self.playerItem removeObserver:self
                      forKeyPath:kLoadedTimeRanges];
@@ -242,7 +246,9 @@ NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
         [asset loadValuesAsynchronouslyForKeys:requestedKeys completionHandler:^{
             dispatch_async(dispatch_get_main_queue(), ^{
                 /* IMPORTANT: Must dispatch to main queue in order to operate on the AVPlayer and AVPlayerItem. */
-                [self prepareToPlayAsset:asset withKeys:requestedKeys];
+                if (!_isExited) { // _isExited means play has been cancel, so skip the next play
+                    [self prepareToPlayAsset:asset withKeys:requestedKeys];
+                }
             });
         }];
         
@@ -260,6 +266,7 @@ NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
  */
 - (void)prepareToPlayAsset:(AVURLAsset *)asset withKeys:(NSArray *)requestedKeys
 {
+//    NSLog(@"[WonderAVMovieViewController] prepareToPlayAsset %0x", self.hash);
     /* Make sure that the value of each key has loaded successfully. */
 	for (NSString *thisKey in requestedKeys) {
         NSError *error = nil;
@@ -322,17 +329,17 @@ NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
 
     [self.playerItem addObserver:self
                       forKeyPath:kStatusKey
-                         options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
+                         options:NSKeyValueObservingOptionNew
                          context:WonderAVMovieObserverContextName(PlayerItemStatus)];
     
     [self.playerItem addObserver:self
                       forKeyPath:kPlaybackBufferEmpty
-                         options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
+                         options:NSKeyValueObservingOptionNew
                          context:WonderAVMovieObserverContextName(PlaybackBufferEmpty)];
     
 	[self.playerItem addObserver:self
                       forKeyPath:kPlaybackLikelyToKeeyUp
-                         options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
+                         options:NSKeyValueObservingOptionNew
                          context:WonderAVMovieObserverContextName(PlaybackLikelyToKeepUp)];
     
 #ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
@@ -405,8 +412,10 @@ NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
 {
     // get notification of dismiss from parent view controller
     // http://stackoverflow.com/questions/2444112/method-called-when-dismissing-a-uiviewcontroller
+//    NSLog(@"[WonderAVMovieViewController] observe 0x%0x %@, %d", self.hash, path, self.parentViewController!=nil);
     if ([@"parentViewController" isEqualToString:path] && object == self) {
         if (!self.parentViewController) {
+            _isExited = YES;
             // dismiss this viewcontroller
             [self removeAllObservers];
         }
