@@ -585,6 +585,11 @@
     return self.progressView.width;
 }
 
+- (void)setBufferProgress:(CGFloat)progress
+{
+    self.infoView.loadingPercentLabel.text = [NSString stringWithFormat:@"%d%%", (int)(progress * 100)];
+}
+
 - (void)startToDownload
 {
 //    [self.downloadButton setImage:QQImage(@"videoplayer_download_bg") forState:UIControlStateNormal];

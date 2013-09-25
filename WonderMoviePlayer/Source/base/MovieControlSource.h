@@ -54,6 +54,7 @@ typedef enum {
 - (void)finishDownload;
 - (void)pauseDownload;
 - (void)lockScreen;
+- (void)setBufferProgress:(CGFloat)progress;
 
 // Set movie screen state
 - (void)setFullscreen:(BOOL)fullscreen animated:(BOOL)animated;

@@ -43,6 +43,12 @@ NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
     BOOL _isScrubbing;
     BOOL _observersHasBeenRemoved; // if the observers has been removed, need to remove observers correctly to avoid memeory leak
     BOOL _isExited;
+    
+    // for fade buffer progress
+    BOOL _isBuffering;
+#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
+    CGFloat _fadeBufferProgress;
+#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
 }
 @property (nonatomic, retain) UIView *controlView;
 @property (nonatomic, assign) BOOL isEnd;
@@ -118,9 +124,10 @@ NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
     
     [self.player removeObserver:self
                      forKeyPath:kCurrentItemKey];
-    
+#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
     [self.playerItem removeObserver:self
                      forKeyPath:kLoadedTimeRanges];
+#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
 }
 
 - (void)viewDidLoad
@@ -240,7 +247,7 @@ NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
         }];
         
         // show buffer immediately
-        [self.controlSource buffer];
+        [self buffer];
     }
 }
 
@@ -297,9 +304,11 @@ NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
         
         [self.playerItem removeObserver:self
                              forKeyPath:kPlaybackLikelyToKeeyUp];
-		
+        
+#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
         [self.playerItem removeObserver:self
                              forKeyPath:kLoadedTimeRanges];
+#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
         
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:AVPlayerItemDidPlayToEndTimeNotification
@@ -326,10 +335,12 @@ NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
                          options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
                          context:WonderAVMovieObserverContextName(PlaybackLikelyToKeepUp)];
     
+#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
     [self.playerItem addObserver:self
                       forKeyPath:kLoadedTimeRanges
-                         options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
+                         options:NSKeyValueObservingOptionNew
                          context:WonderAVMovieObserverContextName(LoadedTimeRanges)];
+#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
     
     
     /* When the player item has played to its end time we'll toggle
@@ -414,7 +425,7 @@ NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
             {
                 [self removePlayerTimeObserver];
                 
-                [self.controlSource buffer];
+                [self buffer];
             }
                 break;
             case AVPlayerStatusReadyToPlay:
@@ -424,7 +435,7 @@ NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
                  its duration can be fetched from the item. */
                 self.playerLayerView.playerLayer.hidden = NO;
                 
-                [self.controlSource unbuffer];
+                [self unbuffer];
             
                 self.playerLayerView.playerLayer.backgroundColor = [[UIColor blackColor] CGColor];
                 
@@ -477,22 +488,20 @@ NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
     else if (context == WonderAVMovieObserverContextName(PlaybackBufferEmpty)) {
         if (self.player.currentItem.playbackBufferEmpty) {
 //            NSLog(@"buffer");
-            [self.controlSource buffer];
+            [self buffer];
         }
     }
     else if (context == WonderAVMovieObserverContextName(PlaybackLikelyToKeepUp)) {
         if (self.player.currentItem.playbackLikelyToKeepUp) {
 //            NSLog(@"unbuffer");
-            [self.controlSource unbuffer];
+            [self unbuffer];
         }
     }
+#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
     else if (context == WonderAVMovieObserverContextName(LoadedTimeRanges)) {
-        NSArray *timeRanges = (NSArray *)[change objectForKey:NSKeyValueChangeNewKey];
-        if (timeRanges && [timeRanges count]) {
-            CMTimeRange timerange = [[timeRanges lastObject] CMTimeRangeValue];
-            
-        }
+        [self onLoadedTimeRangesChanged];
     }
+#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
     else {
         [super observeValueForKeyPath:path ofObject:object change:change context:context];
     }
@@ -710,11 +719,44 @@ NSString *kLoadedTimeRanges         = @"loadedTimeRanges";
     progress = MAX(0, MIN(1, progress));
     if (isfinite(duration)) {
         double time = duration * progress;
-//        NSLog(@"scrub %f, %f, %f", progress, time, duration);
+        NSLog(@"scrub %f, %f, %f", progress, time, duration);
         [self.player seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:completion];
     }
 }
 
+#pragma mark Fade Buffer Progress
+- (void)buffer
+{
+    _isBuffering = YES;
+    [self.controlSource buffer];
+}
+
+- (void)unbuffer
+{
+#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
+    _fadeBufferProgress = 0;
+#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
+    
+    _isBuffering = NO;
+    [self.controlSource unbuffer];
+}
+
+#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
+- (void)onLoadedTimeRangesChanged
+{
+    // figure out fade buffer progress
+    if (_isBuffering) {
+        CGFloat remainingProgress = 1 - _fadeBufferProgress;
+        _fadeBufferProgress += remainingProgress * 0.1;
+        CGFloat fadeProgress = _fadeBufferProgress;
+        
+//        NSLog(@"onLoadedTimeRangesChanged %f", fadeProgress);
+        if ([self.controlSource respondsToSelector:@selector(setBufferProgress:)]) {
+            [self.controlSource setBufferProgress:fadeProgress];
+        }
+    }
+}
+#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
 
 #pragma mark Player
 

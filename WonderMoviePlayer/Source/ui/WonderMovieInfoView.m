@@ -87,6 +87,11 @@
         self.loadingPercentLabel.textAlignment = UITextAlignmentCenter;
         self.loadingPercentLabel.backgroundColor = [UIColor clearColor];
         self.loadingPercentLabel.textColor = [UIColor whiteColor];
+        
+#ifndef MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
+        self.loadingPercentLabel.hidden = YES;
+#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FADE_BUFFER_PROGRESS
+        
         [_loadingView addSubview:self.loadingPercentLabel];
         
         self.loadingMessageLabel = [[[UILabel alloc] initWithFrame:CGRectMake(0, self.loadingIndicator.bottom, _loadingView.width, 20)] autorelease];
@@ -102,6 +107,7 @@
 #pragma mark Public
 - (void)startLoading
 {
+    //NSLog(@"startLoading %d, %d", self.loadingView.hidden, [self.loadingIndicator.layer.animationKeys containsObject:@"rotationAnimation"]);
 	self.loadingView.hidden = NO;
     
     // Bugfix for iOS7
@@ -113,6 +119,8 @@
         rotationAnimation.duration = 1.0f;
         rotationAnimation.cumulative = YES;
         rotationAnimation.repeatCount = HUGE_VALF;
+        rotationAnimation.removedOnCompletion = NO;
+//        rotationAnimation.delegate = self;
         
         [self.loadingIndicator.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
     }
@@ -131,4 +139,8 @@
     }];
 }
 
+//- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag
+//{
+//    NSLog(@"animationDidStop %@ %d", [(CABasicAnimation *)anim keyPath], flag);
+//}
 @end
