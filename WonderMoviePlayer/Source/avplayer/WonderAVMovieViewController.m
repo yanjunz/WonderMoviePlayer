@@ -498,6 +498,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
                 if (startTime >= totalTime) {
                     startTime = 0;
                 }
+                [self.playerItem cancelPendingSeeks];
                 [self.player seekToTime:CMTimeMakeWithSeconds(startTime, 1)];
                 startTime = 0;
             }
@@ -753,7 +754,9 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     if (isfinite(duration)) {
         double time = duration * progress;
 //        NSLog(@"scrub %f, %f, %f", progress, time, duration);
-        [self.player seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:completion];
+        
+        [self.playerItem cancelPendingSeeks];
+        [self.player seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC) completionHandler:completion];
     }
 }
 
@@ -826,6 +829,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 {
     _wasPlaying = YES;
     self.isEnd = NO;
+    [self.playerItem cancelPendingSeeks];
     [self.player seekToTime:kCMTimeZero];
     [self.player play];
     [self initScrubberTimer];

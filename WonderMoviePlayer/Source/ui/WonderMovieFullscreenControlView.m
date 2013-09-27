@@ -98,6 +98,8 @@
 
 - (void)setupView
 {
+    NSMutableArray *lockedViews = [NSMutableArray array];
+    
     self.backgroundColor = [UIColor clearColor];
     
     CGFloat bottomBarHeight = 50;
@@ -180,6 +182,7 @@
     separatorView.center = CGPointMake(backButton.right, self.headerBar.height / 2);
     separatorView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
     [self.headerBar addSubview:separatorView];
+    [lockedViews addObject:separatorView];
     
     separatorView = [[[UIImageView alloc] initWithImage:QQImage(@"videoplayer_headerbar_separator")] autorelease];
     separatorView.center = CGPointMake(self.width - backButton.right - 4, self.headerBar.height / 2);
@@ -235,7 +238,7 @@
         [self.headerBar addSubview:self.crossScreenButton];
     }
     
-    NSMutableArray *lockedViews = [NSMutableArray array];
+    
     [lockedViews addObject:backButton];
     [lockedViews addObject:self.bottomBar];
     if (self.downloadButton) {
