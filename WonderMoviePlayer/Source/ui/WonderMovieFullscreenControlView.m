@@ -110,7 +110,9 @@
     CGFloat batteryHeight = 10;
     
     // Setup bottomBar
-    self.bottomBar = [[[UIView alloc] initWithFrame:CGRectMake(0, self.height - bottomBarHeight, self.width, bottomBarHeight)] autorelease];
+    UIView *bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.height - bottomBarHeight, self.width, bottomBarHeight)];
+    self.bottomBar = bottomBar;
+    [bottomBar release];
     
 #ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
     self.bottomBar.top = self.bottom; // hide bottom bar until movie started
@@ -120,7 +122,10 @@
     self.bottomBar.backgroundColor = [UIColor colorWithPatternImage:QQImage(@"videoplayer_toolbar")];
     self.bottomBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
     [self addSubview:self.bottomBar];
-    self.progressView = [[[WonderMovieProgressView alloc] initWithFrame:CGRectMake(progressBarLeftPadding, 0, self.bottomBar.width - progressBarLeftPadding - progressBarRightPadding, bottomBarHeight)] autorelease];
+    WonderMovieProgressView *progressView = [[WonderMovieProgressView alloc] initWithFrame:CGRectMake(progressBarLeftPadding, 0, self.bottomBar.width - progressBarLeftPadding - progressBarRightPadding, bottomBarHeight)];
+    self.progressView = progressView;
+    [progressView release];
+    
     self.progressView.delegate = self;
     self.progressView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     if (self.isLiveCast) {
@@ -143,7 +148,9 @@
         [self.bottomBar addSubview:self.nextButton];
     }
     
-    self.startLabel = [[[UILabel alloc] initWithFrame:CGRectMake(self.progressView.left + kProgressViewPadding, bottomBarHeight / 2 + 2, durationLabelWidth, bottomBarHeight / 2)] autorelease];
+    UILabel *startLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.progressView.left + kProgressViewPadding, bottomBarHeight / 2 + 2, durationLabelWidth, bottomBarHeight / 2)];
+    self.startLabel = startLabel;
+    [startLabel release];
     self.startLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight;
     self.startLabel.textAlignment = UITextAlignmentLeft;
     self.startLabel.font = [UIFont systemFontOfSize:10];
@@ -157,7 +164,9 @@
 //    self.fullscreenButton.frame = CGRectMake(self.width - 45, 0, 40, bottomBarHeight);
 //    [self.bottomBar addSubview:self.fullscreenButton];
     
-    self.durationLabel = [[[UILabel alloc] initWithFrame:CGRectMake(self.bottomBar.width - progressBarRightPadding - durationLabelWidth - kProgressViewPadding, self.startLabel.top, durationLabelWidth, bottomBarHeight / 2)] autorelease];
+    UILabel *durationLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.bottomBar.width - progressBarRightPadding - durationLabelWidth - kProgressViewPadding, self.startLabel.top, durationLabelWidth, bottomBarHeight / 2)];
+    self.durationLabel = durationLabel;
+    [durationLabel release];
     self.durationLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
     self.durationLabel.textAlignment = UITextAlignmentRight;
     self.durationLabel.font = [UIFont systemFontOfSize:10];
@@ -166,7 +175,9 @@
     [self.bottomBar addSubview:self.durationLabel];
     
     // Setup headerBar
-    self.headerBar = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, self.width, headerBarHeight)] autorelease];
+    UIView *headerBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.width, headerBarHeight)];
+    self.headerBar = headerBar;
+    [headerBar release];
     self.headerBar.backgroundColor = [UIColor colorWithPatternImage:QQImage(@"videoplayer_headerbar")];
     self.headerBar.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
     [self addSubview:self.headerBar];
@@ -178,23 +189,29 @@
     [backButton addTarget:self action:@selector(onClickBack:) forControlEvents:UIControlEventTouchUpInside];
     [self.headerBar addSubview:backButton];
     
-    UIImageView *separatorView = [[[UIImageView alloc] initWithImage:QQImage(@"videoplayer_headerbar_separator")] autorelease];
+    UIImageView *separatorView = [[UIImageView alloc] initWithImage:QQImage(@"videoplayer_headerbar_separator")];
     separatorView.center = CGPointMake(backButton.right, self.headerBar.height / 2);
     separatorView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
     [self.headerBar addSubview:separatorView];
     [lockedViews addObject:separatorView];
+    [separatorView release];
     
-    separatorView = [[[UIImageView alloc] initWithImage:QQImage(@"videoplayer_headerbar_separator")] autorelease];
+    separatorView = [[UIImageView alloc] initWithImage:QQImage(@"videoplayer_headerbar_separator")];
     separatorView.center = CGPointMake(self.width - backButton.right - 4, self.headerBar.height / 2);
     separatorView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [self.headerBar addSubview:separatorView];
+    [separatorView release];
     
-    self.batteryView = [[[BatteryIconView alloc] initWithBatteryMonitoringEnabled:YES] autorelease];
+    BatteryIconView *batteryView = [[BatteryIconView alloc] initWithBatteryMonitoringEnabled:YES];
+    self.batteryView = batteryView;
+    [batteryView release];
     self.batteryView.frame = CGRectMake(self.headerBar.width - 10 - 24, headerBarHeight / 2, 24, batteryHeight);
     self.batteryView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [self.headerBar addSubview:self.batteryView];
     
-    self.timeLabel = [[[UILabel alloc] initWithFrame:CGRectOffset(self.batteryView.frame, -2, -batteryHeight - 2)] autorelease];
+    UILabel *timeLabel = [[UILabel alloc] initWithFrame:CGRectOffset(self.batteryView.frame, -2, -batteryHeight - 2)];
+    self.timeLabel = timeLabel;
+    [timeLabel release];
     self.timeLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     self.timeLabel.textAlignment = UITextAlignmentCenter;
     self.timeLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
@@ -222,10 +239,11 @@
         [self.headerBar addSubview:self.downloadButton];
         btnRect = self.downloadButton.frame;
         
-        UIImageView *downloadingArrow = [[[UIImageView alloc] initWithImage:QQImage(@"videoplayer_download_fg")] autorelease];
+        UIImageView *downloadingArrow = [[UIImageView alloc] initWithImage:QQImage(@"videoplayer_download_fg")];
         downloadingArrow.contentMode = UIViewContentModeCenter;
         downloadingArrow.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
         self.downloadingView = downloadingArrow;
+        [downloadingArrow release];
     }
 #endif // MTT_TWEAK_WONDER_MOVIE_ENABLE_DOWNLOAD
     
@@ -266,11 +284,15 @@
 - (void)installGestureHandlerForParentView
 {
     // Setup tap GR
-    UITapGestureRecognizer *tapGR = [[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapOverlayView:)] autorelease];
+    UITapGestureRecognizer *tapGR = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapOverlayView:)];
     tapGR.delegate = self;
     [self.superview addGestureRecognizer:tapGR];
-    self.panGestureRecognizer = [[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPanOverlayView:)] autorelease];
+    [tapGR release];
+    
+    UIPanGestureRecognizer *panGR = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPanOverlayView:)];
+    self.panGestureRecognizer = panGR;
     [self.superview addGestureRecognizer:self.panGestureRecognizer];
+    [panGR release];
 }
 
 - (void)setInfoView:(WonderMovieInfoView *)infoView

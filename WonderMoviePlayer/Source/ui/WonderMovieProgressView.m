@@ -34,26 +34,31 @@
 
 - (void)setupView
 {
-    self.progressBottomView = [[[UIImageView alloc] init] autorelease];
+    UIImageView *progressBottomView = [[UIImageView alloc] init];
+    self.progressBottomView = progressBottomView;
 //    self.progressBottomView.backgroundColor = [UIColor blueColor];
     self.progressBottomView.contentStretch = CGRectMake(0.5, 0.5, 0, 0);
     self.progressBottomView.image = QQImage(@"videoplayer_progressbar_bottom");
     [self addSubview:self.progressBottomView];
+    [progressBottomView release];
     
-    self.progressCacheView = [[[UIImageView alloc] init] autorelease];
+    UIImageView *progressCacheView = [[UIImageView alloc] init];
+    self.progressCacheView = progressCacheView;
 //    self.progressCacheView.backgroundColor = [UIColor redColor];
     self.progressCacheView.contentStretch = CGRectMake(0.5, 0.5, 0, 0);
     self.progressCacheView.image = QQImage(@"videoplayer_progressbar_cache");
     [self addSubview:self.progressCacheView];
+    [progressCacheView release];
     
-    self.progressTopView = [[[UIImageView alloc] init] autorelease];
+    UIImageView *progressTopView = [[UIImageView alloc] init];
+    self.progressTopView = progressTopView;
 //    self.progressTopView.backgroundColor = [UIColor whiteColor];
     self.progressTopView.contentStretch = CGRectMake(0.5, 0.5, 0, 0);
     self.progressTopView.image = QQImage(@"videoplayer_progressbar_top");
     self.progressTopView.clipsToBounds = YES;
     [self addSubview:self.progressTopView];
+    [progressTopView release];
     
-//    self.progressIndicator = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)] autorelease];
     self.progressIndicator = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.progressIndicator setImage:QQImage(@"videoplayer_progressbar_indicator_normal") forState:UIControlStateNormal];
     [self.progressIndicator setImage:QQImage(@"videoplayer_progressbar_indicator_press") forState:UIControlStateHighlighted];
@@ -63,9 +68,11 @@
 //    self.progressIndicator.backgroundColor = [UIColor lightTextColor];
     [self addSubview:self.progressIndicator];
     
-    UIPanGestureRecognizer *panGesture = [[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPan:)] autorelease];
+    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPan:)];
     panGesture.delegate = self;
     [self addGestureRecognizer:panGesture];
+    [panGesture release];
+    
     [self addGestureRecognizer:[[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)] autorelease]];
     
     [self setProgress:0];

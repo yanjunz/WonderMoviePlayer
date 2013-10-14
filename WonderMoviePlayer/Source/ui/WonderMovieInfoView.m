@@ -18,7 +18,8 @@
     if (self) {
         // Initialization code
         UIFont *font = [UIFont boldSystemFontOfSize:23];
-        self.progressTimeLabel = [[[UILabel alloc] initWithFrame:CGRectMake(15, 18+50, 100, 100)] autorelease];
+        UILabel *progressTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 18+50, 100, 100)];
+        self.progressTimeLabel = progressTimeLabel;
         self.progressTimeLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
         self.progressTimeLabel.textAlignment = UITextAlignmentLeft;
         self.progressTimeLabel.font = font;
@@ -31,6 +32,7 @@
         self.progressTimeLabel.layer.shadowRadius = 1;
         self.progressTimeLabel.layer.shadowOffset = CGSizeMake(0, 1);
         [self addSubview:self.progressTimeLabel];
+        [progressTimeLabel release];
         
         CGFloat centerButtonSize = 138 / 2;
         self.replayButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -73,16 +75,19 @@
         _loadingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 181, 101)];
         _loadingView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         
-        self.loadingIndicator = [[[UIImageView alloc] initWithImage:QQImage(@"videoplayer_loading")] autorelease];
+        UIImageView *loadingIndicator = [[UIImageView alloc] initWithImage:QQImage(@"videoplayer_loading")];
+        self.loadingIndicator = loadingIndicator;
         self.loadingIndicator.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         self.loadingIndicator.contentMode = UIViewContentModeCenter;
         self.loadingIndicator.frame = _loadingView.bounds;
         [_loadingView addSubview:self.loadingIndicator];
+        [loadingIndicator release];
         [self addSubview:_loadingView];
         _loadingView.center = self.center;
         _loadingView.hidden = YES;
         
-        self.loadingPercentLabel = [[[UILabel alloc] initWithFrame:self.loadingIndicator.frame] autorelease];
+        UILabel *loadingPercentLabel = [[UILabel alloc] initWithFrame:self.loadingIndicator.frame];
+        self.loadingPercentLabel = loadingPercentLabel;
         self.loadingPercentLabel.text = @"0%";
         self.loadingPercentLabel.textAlignment = UITextAlignmentCenter;
         self.loadingPercentLabel.backgroundColor = [UIColor clearColor];
@@ -93,13 +98,16 @@
 #endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
         
         [_loadingView addSubview:self.loadingPercentLabel];
+        [loadingPercentLabel release];
         
-        self.loadingMessageLabel = [[[UILabel alloc] initWithFrame:CGRectMake(0, self.loadingIndicator.bottom, _loadingView.width, 20)] autorelease];
+        UILabel *loadingMessageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, self.loadingIndicator.bottom, _loadingView.width, 20)];
+        self.loadingMessageLabel = loadingPercentLabel;
         self.loadingMessageLabel.text = NSLocalizedString(@" 正在缓冲...", @"");
         self.loadingMessageLabel.textAlignment = UITextAlignmentCenter;
         self.loadingMessageLabel.backgroundColor = [UIColor clearColor];
         self.loadingMessageLabel.textColor = [UIColor whiteColor];
         [_loadingView addSubview:self.loadingMessageLabel];
+        [loadingMessageLabel release];
     }
     return _loadingView;
 }

@@ -142,32 +142,39 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    UIImageView *backgroundView = [[[UIImageView alloc] initWithImage:QQImage(@"videoplayer_loading_bg")] autorelease];
+    UIImageView *backgroundView = [[UIImageView alloc] initWithImage:QQImage(@"videoplayer_loading_bg")];
     backgroundView.contentMode = UIViewContentModeBottom;
     backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     backgroundView.frame = self.view.bounds;
     [self.view addSubview:backgroundView];
+    [backgroundView release];
     
 	// Do any additional setup after loading the view.
     if (self.playerLayerView == nil) {
-        self.playerLayerView = [[[WonderAVPlayerView alloc] initWithFrame:self.view.bounds] autorelease];
+        WonderAVPlayerView *playerLayerView = [[WonderAVPlayerView alloc] initWithFrame:self.view.bounds];
+        self.playerLayerView = playerLayerView;
         self.playerLayerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [playerLayerView release];
     }
     [self.view addSubview:self.playerLayerView];
     
     if (self.maskView == nil) {
-        self.maskView = [[[UIView alloc] initWithFrame:self.view.bounds] autorelease];
+        UIView *maskView = [[UIView alloc] initWithFrame:self.view.bounds];
+        self.maskView = maskView;
         self.maskView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         self.maskView.backgroundColor = [UIColor blackColor];
+        [maskView release];
     }
     self.maskView.userInteractionEnabled = NO;
     self.maskView.alpha = 0;
     [self.view addSubview:self.maskView];    
     
     if (self.overlayView == nil) {
-        self.overlayView = [[[UIView alloc] initWithFrame:self.view.bounds] autorelease];
+        UIView *overlayView = [[UIView alloc] initWithFrame:self.view.bounds];
+        self.overlayView = overlayView;
         self.overlayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         self.overlayView.backgroundColor = [UIColor clearColor];
+        [overlayView release];
     }
     
     [self setupControlSource:YES];
@@ -600,18 +607,19 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 - (void)setupControlSource:(BOOL)fullscreen
 {
     if (fullscreen) {
-        WonderMovieInfoView *infoView = [[[WonderMovieInfoView alloc] initWithFrame:self.overlayView.bounds] autorelease];
+        WonderMovieInfoView *infoView = [[WonderMovieInfoView alloc] initWithFrame:self.overlayView.bounds];
         infoView.backgroundColor = [UIColor clearColor];
         infoView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self.overlayView addSubview:infoView];
+        [infoView release];
         
         BOOL downloadEnabled = !!self.downloadBlock;
         BOOL crossScreenEnabled = !!self.crossScreenBlock;
-        WonderMovieFullscreenControlView *fullscreenControlView = [[[WonderMovieFullscreenControlView alloc] initWithFrame:self.overlayView.bounds
+        WonderMovieFullscreenControlView *fullscreenControlView = [[WonderMovieFullscreenControlView alloc] initWithFrame:self.overlayView.bounds
                                                                                                        autoPlayWhenStarted:YES
                                                                                                                nextEnabled:NO
                                                                                                            downloadEnabled:downloadEnabled
-                                                                                                        crossScreenEnabled:crossScreenEnabled] autorelease];
+                                                                                                        crossScreenEnabled:crossScreenEnabled];
         fullscreenControlView.delegate = self;
         fullscreenControlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         fullscreenControlView.isLiveCast = self.isLiveCast;
@@ -622,6 +630,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
         [fullscreenControlView installGestureHandlerForParentView];
         self.controlSource = fullscreenControlView;
         fullscreenControlView.infoView = infoView;
+        [fullscreenControlView release];
     }
 }
 
