@@ -41,6 +41,8 @@
 {
     [self.timer invalidate];
     self.timer = nil;
+    [self.controlSource uninstallControlSource];
+    
     self.controlView = nil;
     self.moviePlayerController = nil;
     self.overlayView = nil;
@@ -257,29 +259,30 @@
 - (void)setupControlSource:(BOOL)fullscreen
 {
     if (fullscreen) {
-        WonderMovieInfoView *infoView = [[[WonderMovieInfoView alloc] initWithFrame:self.overlayView.bounds] autorelease];
+        WonderMovieInfoView *infoView = [[WonderMovieInfoView alloc] initWithFrame:self.overlayView.bounds];
         infoView.backgroundColor = [UIColor clearColor];
         infoView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self.overlayView addSubview:infoView];
-
+        [infoView release];
+        
         BOOL downloadEnabled = !!self.downloadBlock;
         BOOL crossScreenEnabled = !!self.crossScreenBlock;
-        WonderMovieFullscreenControlView *fullscreenControlView = [[[WonderMovieFullscreenControlView alloc] initWithFrame:self.overlayView.bounds
-                                                                                                       autoPlayWhenStarted:YES
-                                                                                                               nextEnabled:NO
-                                                                                                           downloadEnabled:downloadEnabled
-                                                                                                        crossScreenEnabled:crossScreenEnabled] autorelease];
-
+        WonderMovieFullscreenControlView *fullscreenControlView = [[WonderMovieFullscreenControlView alloc] initWithFrame:self.overlayView.bounds
+                                                                                                      autoPlayWhenStarted:YES
+                                                                                                              nextEnabled:NO
+                                                                                                          downloadEnabled:downloadEnabled
+                                                                                                       crossScreenEnabled:crossScreenEnabled];
         fullscreenControlView.delegate = self;
         fullscreenControlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        fullscreenControlView.isLiveCast = self.isLiveCast;        
-        [fullscreenControlView setupView];
+        fullscreenControlView.isLiveCast = self.isLiveCast;
+        [fullscreenControlView installControlSource];
         
         self.controlView = fullscreenControlView;
         [self.overlayView addSubview:fullscreenControlView];
         [fullscreenControlView installGestureHandlerForParentView];
         self.controlSource = fullscreenControlView;
         fullscreenControlView.infoView = infoView;
+        [fullscreenControlView release];
     }
 }
 
@@ -529,6 +532,9 @@
     if (self.exitBlock) {
         self.exitBlock();
     }
+    
+    [self.timer invalidate];
+    self.timer = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
