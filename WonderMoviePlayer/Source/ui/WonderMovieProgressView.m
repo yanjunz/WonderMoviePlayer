@@ -32,6 +32,15 @@
     return self;
 }
 
+- (void)dealloc
+{
+    [_progressBottomView release];
+    [_progressCacheView release];
+    [_progressTopView release];
+    [_progressIndicator release];
+    [super dealloc];
+}
+
 - (void)setupView
 {
     UIImageView *progressBottomView = [[UIImageView alloc] init];

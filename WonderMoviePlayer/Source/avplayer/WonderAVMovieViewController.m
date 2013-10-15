@@ -94,12 +94,15 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 //    NSLog(@"[WonderAVMovieViewController] dealloc 0x%0x <--", self.hash);
     [self removeObserver:self forKeyPath:@"parentViewController"];
     
+    self.movieURL = nil;
     self.player = nil;
     self.playerItem = nil;
     self.playerLayerView = nil;
     self.controlSource = nil;
     self.overlayView = nil;
+    self.maskView = nil;
     self.controlView = nil;
+    
     self.crossScreenBlock = nil;
     self.exitBlock = nil;
     self.downloadBlock = nil;

@@ -53,6 +53,10 @@
     rotationAnimation.repeatCount = HUGE_VALF;
     
     [self.loadingIndicator.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+    
+    
+    
+    
 }
 
 - (void)didReceiveMemoryWarning

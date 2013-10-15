@@ -310,27 +310,29 @@
 - (void)dealloc
 {
     [self removeTimer];
+    self.infoView = nil;
+    
     self.progressView = nil;
-    self.bottomBar = nil;
-    self.headerBar = nil;
-    
-    self.downloadButton = nil;
-    self.crossScreenButton = nil;
-    self.lockButton = nil;
-    self.actionButton = nil;
-    self.nextButton = nil;
-    self.downloadingView = nil;
-    
     self.batteryView = nil;
     self.timeLabel = nil;
+    
+    self.bottomBar = nil;
+    self.actionButton = nil;
+    self.nextButton = nil;
     self.startLabel = nil;
     self.durationLabel = nil;
+    
+    self.headerBar = nil;
+    self.lockButton = nil;
+    self.downloadButton = nil;
+    self.crossScreenButton = nil;
+
+    self.downloadingView = nil;
     
     self.viewsToBeLocked = nil;
     
     self.delegate = nil;
     self.panGestureRecognizer = nil;
-    self.infoView = nil;
     [super dealloc];
 }
 
