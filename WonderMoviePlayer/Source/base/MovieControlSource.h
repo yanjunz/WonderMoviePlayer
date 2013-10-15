@@ -47,6 +47,10 @@ typedef enum {
 - (void)unbuffer;
 - (void)end;
 
+// Resource install & uninstall
+- (void)installControlSource;
+- (void)uninstallControlSource;
+
 @optional
 
 // Auxiliary Utils

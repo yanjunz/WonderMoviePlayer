@@ -26,18 +26,18 @@
 @synthesize testString=_testString;
 
 // for debug
-- (id)retain
-{
-    id r = [super retain];
-    NSLog(@"retain %d", [self retainCount]);
-    return r;
-}
-
-- (oneway void)release
-{
-    NSLog(@"release %d", [self retainCount]);
-    [super release];
-}
+//- (id)retain
+//{
+//    id r = [super retain];
+//    NSLog(@"retain %d", [self retainCount]);
+//    return r;
+//}
+//
+//- (oneway void)release
+//{
+//    NSLog(@"release %d", [self retainCount]);
+//    [super release];
+//}
 
 - (void)viewDidLoad
 {

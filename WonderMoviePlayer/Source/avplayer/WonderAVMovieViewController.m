@@ -93,6 +93,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 {
 //    NSLog(@"[WonderAVMovieViewController] dealloc 0x%0x <--", self.hash);
     [self removeObserver:self forKeyPath:@"parentViewController"];
+    [self.controlSource uninstallControlSource];
     
     self.movieURL = nil;
     self.player = nil;
@@ -626,7 +627,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
         fullscreenControlView.delegate = self;
         fullscreenControlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         fullscreenControlView.isLiveCast = self.isLiveCast;
-        [fullscreenControlView setupView];
+        [fullscreenControlView installControlSource];
         
         self.controlView = fullscreenControlView;
         [self.overlayView addSubview:fullscreenControlView];

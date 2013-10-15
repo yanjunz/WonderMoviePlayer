@@ -84,6 +84,20 @@
 @synthesize controlState;
 @synthesize isLiveCast = _isLiveCast;
 
+//- (id)retain
+//{
+//    id r = [super retain];
+//    NSLog(@"retain %d", [self retainCount]);
+//    return r;
+//}
+//
+//- (oneway void)release
+//{
+//    NSLog(@"release %d", [self retainCount]);
+//    [super release];
+//}
+
+
 - (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted nextEnabled:(BOOL)nextEnabled downloadEnabled:(BOOL)downloadEnabled crossScreenEnabled:(BOOL)crossScreenEnabled
 {
     if (self = [super initWithFrame:frame]) {
@@ -281,6 +295,16 @@
     [self cancelPreviousAndPrepareToDimControl];
 }
 
+- (void)installControlSource
+{
+    [self setupView];
+}
+
+- (void)uninstallControlSource
+{
+    [self removeTimer];
+}
+
 - (void)installGestureHandlerForParentView
 {
     // Setup tap GR
@@ -301,7 +325,7 @@
         [_infoView.replayButton removeTarget:self action:@selector(onClickReplay:) forControlEvents:UIControlEventTouchUpInside];
         [_infoView.centerPlayButton removeTarget:self action:@selector(onClickPlay:) forControlEvents:UIControlEventTouchUpInside];
         [_infoView release];
-        _infoView = infoView;
+        _infoView = [infoView retain];
         [_infoView.replayButton addTarget:self action:@selector(onClickReplay:) forControlEvents:UIControlEventTouchUpInside];
         [_infoView.centerPlayButton addTarget:self action:@selector(onClickPlay:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -772,8 +796,10 @@
 
 - (void)removeTimer
 {
-    [self.timer invalidate];
-    self.timer = nil;
+    if (self.timer) {
+        [self.timer invalidate];
+        self.timer = nil;
+    }
 }
 
 - (void)timerHandler
