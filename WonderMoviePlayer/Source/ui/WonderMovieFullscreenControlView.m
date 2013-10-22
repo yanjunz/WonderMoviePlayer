@@ -305,10 +305,19 @@
 - (void)installGestureHandlerForParentView
 {
     // Setup tap GR
-    UITapGestureRecognizer *tapGR = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapOverlayView:)];
-    tapGR.delegate = self;
-    [self.superview addGestureRecognizer:tapGR];
-    [tapGR release];
+    UITapGestureRecognizer *singleTapGR = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onSingleTapOverlayView:)];
+    singleTapGR.delegate = self;
+    singleTapGR.numberOfTapsRequired = 1;
+    [self.superview addGestureRecognizer:singleTapGR];
+    [singleTapGR release];
+    
+    UITapGestureRecognizer *doubleTapGR = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onDoubleTapOverlayView:)];
+    doubleTapGR.delegate = self;
+    doubleTapGR.numberOfTapsRequired = 2;
+    [self.superview addGestureRecognizer:doubleTapGR];
+    [doubleTapGR release];
+    
+    [singleTapGR requireGestureRecognizerToFail:doubleTapGR];
     
     UIPanGestureRecognizer *panGR = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPanOverlayView:)];
     self.panGestureRecognizer = panGR;
@@ -819,7 +828,7 @@
 }
 
 #pragma mark Gesture handler
-- (IBAction)onTapOverlayView:(UITapGestureRecognizer *)gr
+- (IBAction)onSingleTapOverlayView:(UITapGestureRecognizer *)gr
 {
     BOOL animationToHide = self.alpha > 0;
     [UIView animateWithDuration:0.5f animations:^{
@@ -831,6 +840,13 @@
         }
     }];
     [self cancelPreviousAndPrepareToDimControl];
+}
+
+- (IBAction)onDoubleTapOverlayView:(UITapGestureRecognizer *)gr
+{
+    if ([self.delegate respondsToSelector:@selector(movieControlSourceSwitchVideoGravity:)]) {
+        [self.delegate movieControlSourceSwitchVideoGravity:self];
+    }
 }
 
 - (IBAction)onPanOverlayView:(UIPanGestureRecognizer *)gr

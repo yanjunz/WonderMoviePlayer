@@ -891,6 +891,17 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     }
 }
 
+- (void)movieControlSourceSwitchVideoGravity:(id<MovieControlSource>)source
+{
+    if ([self.playerLayerView.playerLayer.videoGravity isEqualToString:AVLayerVideoGravityResizeAspectFill]) {
+        self.playerLayerView.playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
+    }
+    else {
+        self.playerLayerView.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+    }
+    self.playerLayerView.playerLayer.bounds = self.playerLayerView.playerLayer.bounds;
+}
+
 #pragma mark Notification
 - (void)onEnterForeground:(NSNotification *)n
 {
