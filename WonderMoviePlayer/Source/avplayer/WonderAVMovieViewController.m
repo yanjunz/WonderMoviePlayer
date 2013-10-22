@@ -40,7 +40,6 @@ NSString *kPlaybackLikelyToKeeyUpKey  = @"playbackLikelyToKeepUp";
 NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 
 @interface WonderAVMovieViewController () {
-//    BOOL _statusBarHiddenPrevious;
     BOOL _wasPlaying;
     BOOL _isScrubbing;
     BOOL _observersHasBeenRemoved; // if the observers has been removed, need to remove observers correctly to avoid memeory leak
@@ -134,8 +133,8 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     [self.player removeObserver:self
                      forKeyPath:kCurrentItemKey];
     
-//    [self.player removeObserver:self
-//                     forKeyPath:kRateKey];
+    [self.player removeObserver:self
+                     forKeyPath:kRateKey];
     
 #ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
     [self.playerItem removeObserver:self
@@ -189,27 +188,16 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onEnterBackground:) name:UIApplicationWillResignActiveNotification object:nil];
 }
 
-///* Notifies the view controller that its view is about to be become visible. */
-//- (void)viewWillAppear:(BOOL)animated
-//{
-//    _statusBarHiddenPrevious = [UIApplication sharedApplication].statusBarHidden;
-//    [UIApplication sharedApplication].statusBarHidden = YES;
-//    [super viewWillAppear:animated];
-//    [UIApplication sharedApplication].statusBarHidden = YES;
-//}
-//
-///* Notifies the view controller that its view is about to be dismissed,
-// covered, or otherwise hidden from view. */
-//- (void)viewWillDisappear:(BOOL)animated
-//{
-//    [UIApplication sharedApplication].statusBarHidden = _statusBarHiddenPrevious;
-//    [super viewWillDisappear:animated];
-//}
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     /* Return YES for supported orientations. */
     return interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight;
+}
+
+// iOS7
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
 }
 
 // for IOS 6
@@ -389,10 +377,10 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
                          options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
                          context:WonderAVMovieObserverContextName(CurrentItem)];
         
-//        [self.player addObserver:self
-//                      forKeyPath:kRateKey
-//                         options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
-//                         context:WonderAVMovieObserverContextName(Rate)];
+        [self.player addObserver:self
+                      forKeyPath:kRateKey
+                         options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
+                         context:WonderAVMovieObserverContextName(Rate)];
     }
     
     /* Make our new AVPlayerItem the AVPlayer's current item. */
@@ -675,11 +663,13 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
                                                               queue:NULL usingBlock:^(CMTime time) {
                                                                   [self syncScrubber];
                                                               }] retain];
+    NSLog(@"initScrubberTimer");
 }
 
 - (void)removePlayerTimeObserver
 {
     if (timeObserver) {
+        NSLog(@"removePlayerTimeObserver");
         [self.player removeTimeObserver:timeObserver];
         [timeObserver release];
         timeObserver = nil;
@@ -721,38 +711,15 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     }
 }
 
-//- (BOOL)isScrubbingWhenPlaying
-//{
-//    return restoreAfterScrubbingRate > 0 && self.player.rate == 0;
-//}
-
 - (void)beginScrubbing
 {
-    // NOTE: rate is 0 if buffering
-//    NSLog(@"beginScrubbing %d, %f", _isScrubbing, [self.player rate]);
-    if (!_isScrubbing) {
-        _isScrubbing = YES;
-        restoreAfterScrubbingRate = [self.player rate];
-        [self.player setRate:0];
-        
-        /* Remove previous timer. */
-        [self removePlayerTimeObserver];
-    }
+    _isScrubbing = YES;
 }
 
 - (void)endScrubbing:(CGFloat)progress
 {
-    [self scrub:progress completion:^(BOOL finished) {
-//        NSLog(@"endScrubbing %f, %d, %f", progress, _isScrubbing, restoreAfterScrubbingRate);
-        if (_isScrubbing) {
-            _isScrubbing = NO;
-            if (!_isExited) {
-                [self initScrubberTimer];
-                [self.player setRate:restoreAfterScrubbingRate];
-            }
-            restoreAfterScrubbingRate = 0.f;
-        }
-    }];
+    _isScrubbing = NO;    
+    [self scrub:progress completion:nil];
 }
 
 - (void)scrub:(CGFloat)progress completion:(void (^)(BOOL finished))completion

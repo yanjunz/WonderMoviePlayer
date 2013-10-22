@@ -72,6 +72,11 @@
                     //                    v.removeAttribute(\'controls\');
 }
 
+- (IBAction)onClickPlayOrg:(id)sender {
+    [self.webview loadRequest:[NSURLRequest requestWithURL:
+                               [NSURL URLWithString:@"http://v.m.liebao.cn"]]];
+}
+
 - (NSString *)getCurrentVideoSrc
 {
     NSString *videoId = nil;
@@ -137,7 +142,10 @@
     NSLog(@"shouldStartLoadWithRequest %@", request.URL);
     if ([@"qqvideo" isEqualToString:request.URL.scheme]) {
 #ifdef MTT_FEATURE_WONDER_AVMOVIE_PLAYER
-        WonderAVMovieViewController *controller = [[WonderAVMovieViewController alloc] init];
+        __block WonderAVMovieViewController *controller = [[[WonderAVMovieViewController alloc] init] autorelease];
+        [controller setExitBlock:^{
+            [controller dismissViewControllerAnimated:YES completion:nil];
+        }];
         [self presentViewController:controller animated:YES completion:^{
             [controller playMovieStream:[NSURL URLWithString:[self getCurrentVideoSrc]]];
         }];

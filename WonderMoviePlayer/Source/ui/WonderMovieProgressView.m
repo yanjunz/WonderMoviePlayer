@@ -175,7 +175,7 @@
     
     CGFloat progress = self.width == 0 ? 1 : (pt.x + offset.x) / self.width;
     progress = MIN(1, MAX(0, progress));
-//    NSLog(@"onPan %d %f, %f", gr.state, offset.x, progress);
+    NSLog(@"onPan %d %f, %f", gr.state, offset.x, progress);
     [self setProgress:progress];
 //    view.center = CGPointMake(view.center.x + offset.x, view.center.y);
     
@@ -195,6 +195,11 @@
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
     return YES;
 }

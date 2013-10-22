@@ -30,15 +30,12 @@
     BOOL _isLoading;
     NSTimeInterval _totalBufferingSize;
     
-    // progress view
-    BOOL _isProgressViewPanning; // flag to ignore msg to set progress when the progress view is dragging
-    
-    // for delay increasing progress by pan gesture
-    CGFloat _aculmuatedProgressBySec;
-    NSTimeInterval _lastProgressTime;
+    // scrubbing related
+    BOOL _isScrubbing; // flag to ignore msg to set progress when scrubbing
+    CGFloat _progressWhenStartScrubbing;
+    CGFloat _accumulatedProgressBySec;
     
     BOOL _isDownloading;
-    
     BOOL _hasStarted;
 }
 @property (nonatomic, retain) NSTimer *timer;
@@ -554,21 +551,11 @@
 
 - (void)setProgress:(CGFloat)progress
 {
-    [self.progressView setProgress:progress];
-    if (!_isProgressViewPanning) {
-        [self handleCommand:MovieControlCommandSetProgress param:@(progress) notify:NO];
-    }
-    else {
-        long time = _duration * progress;
-        int hour = time / 3600;
-        int minute = time / 60 - hour * 60;
-        int second = time % 60;
-        if (hour > 0) {
-            self.infoView.progressTimeLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d", hour, minute, second];
-        }
-        else {
-            self.infoView.progressTimeLabel.text = [NSString stringWithFormat:@"%02d:%02d", minute, second];
-        }
+    [self handleCommand:MovieControlCommandSetProgress param:@(progress) notify:NO];
+    
+    // will not set progress when scrubbing
+    if (!_isScrubbing) {
+        [self.progressView setProgress:progress];
     }
 }
 
@@ -788,6 +775,21 @@
     }
 }
 
+- (void)updateInfoViewProgress:(CGFloat)progress
+{
+    long time = _duration * progress;
+    int hour = time / 3600;
+    int minute = time / 60 - hour * 60;
+    int second = time % 60;
+    if (hour > 0) {
+        self.infoView.progressTimeLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d", hour, minute, second];
+    }
+    else {
+        self.infoView.progressTimeLabel.text = [NSString stringWithFormat:@"%02d:%02d", minute, second];
+    }
+}
+
+#pragma mark Timer to update timeLabel in bettery
 - (void)setupTimer
 {
     // for update the date time above battery
@@ -874,13 +876,15 @@
             // progress
             if (sPanAction == WonderMoviePanAction_No) { // just start
                 [self beginScrubbing];
+                _progressWhenStartScrubbing = self.progressView.progress;
             }
             
             sPanAction = WonderMoviePanAction_Progress;
-            CGFloat inc = offset.x / 10 ; // 1s for 10 pixel
-            //        NSLog(@"pan Progress %f, %f, %f, %f", offset.x, gr.view.width, inc, inc > 0 ? ceilf(inc) : floorf(inc));
+            CGFloat inc = offset.x * 1 / 10 ; // 1s for 10 pixel
+//          NSLog(@"pan Progress %f, %f, %f, %f", offset.x, gr.view.width, inc, inc > 0 ? ceilf(inc) : floorf(inc));
             inc = inc > 0 ? ceilf(inc) : floorf(inc);
-            [self increaseProgress:inc];
+//            [self increaseProgress:inc];
+            [self accumulateProgress:inc];
         }
         
         [gr setTranslation:CGPointZero inView:gr.view];
@@ -889,7 +893,11 @@
     // clear the action when gesture end
     if (gr.state == UIGestureRecognizerStateEnded) {
         if (sPanAction == WonderMoviePanAction_Progress) {
-            [self endScrubbing:self.progressView.progress];
+            CGFloat newProgress = _progressWhenStartScrubbing + _accumulatedProgressBySec / _duration;
+            newProgress = MIN(MAX(0, newProgress), 1);
+            _progressWhenStartScrubbing = 0;
+            _accumulatedProgressBySec = 0;
+            [self endScrubbing:newProgress];
         }
         sPanAction = WonderMoviePanAction_No;
     }
@@ -910,54 +918,29 @@
 //    CGFloat newBrightness = screen.brightness + brightness;
 //    newBrightness = MIN(1, MAX(newBrightness, 0));
 //    screen.brightness = newBrightness;
+    
     if ([self.delegate respondsToSelector:@selector(movieControlSource:increaseBrightness:)]) {
         [self.delegate movieControlSource:self increaseBrightness:brightness];
     }
     [self cancelPreviousAndPrepareToDimControl];
 }
 
-- (void)increaseProgress:(CGFloat)progressBySec
+- (void)accumulateProgress:(CGFloat)progressBySec
 {
-    if (_lastProgressTime == 0) {
-        _lastProgressTime = [[NSDate date] timeIntervalSince1970];
-        _aculmuatedProgressBySec = progressBySec;
-    }
-    else {
-        NSTimeInterval newProgressTime = [[NSDate date] timeIntervalSince1970];
-        if (newProgressTime - _lastProgressTime >= 0.2) {
-//            NSLog(@"call immediately %f, %f, %f, %f", _lastProgressTime, newProgressTime, progressBySec, _aculmuatedProgressBySec);
-            _lastProgressTime = newProgressTime;
-            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(delayIncreaseProgress) object:nil];
-            [self delayIncreaseProgress];
-        }
-        else {
-//            NSLog(@"call delay       %f, %f, %f, %f", _lastProgressTime, newProgressTime, progressBySec, _aculmuatedProgressBySec);
-            _aculmuatedProgressBySec += progressBySec;
-            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(delayIncreaseProgress) object:nil];
-            [self performSelector:@selector(delayIncreaseProgress) withObject:nil afterDelay:0.2];
-        }
-        
-    }
+    _accumulatedProgressBySec += progressBySec;
+    CGFloat newProgress = _progressWhenStartScrubbing + _accumulatedProgressBySec / _duration;
+    newProgress = MIN(MAX(0, newProgress), 1);
+    NSLog(@"accumulateProgress %f,%f,%f", _accumulatedProgressBySec, _progressWhenStartScrubbing, newProgress);
+    // update UI
+    [self updateInfoViewProgress:newProgress];
     [self cancelPreviousAndPrepareToDimControl];
 }
 
-- (void)delayIncreaseProgress
-{
-    double time = _playbackTime + _aculmuatedProgressBySec;
-    time = MIN(_duration, MAX(time, 0));
-    if (isfinite(time) && isfinite(_duration) && _duration > 0 && _aculmuatedProgressBySec != 0) {
-//        NSLog(@"delayIncreaseProgress %f, %f, %f => %f", _aculmuatedProgressBySec, _playbackTime, _playbackTime/_duration, time /_duration);
-        [self scrub:time / _duration];
-        _playbackTime = time;
-    }
-    
-    _lastProgressTime = 0;
-    _aculmuatedProgressBySec = 0;
-}
 
 - (void)beginScrubbing
 {
-    _isProgressViewPanning = YES;
+    NSLog(@"control.beginScrubbing");
+    _isScrubbing = YES;
     [self.infoView showProgressTime:YES animated:YES];
     if ([self.delegate respondsToSelector:@selector(movieControlSourceBeginChangeProgress:)]) {
         [self.delegate movieControlSourceBeginChangeProgress:self];
@@ -967,14 +950,17 @@
 
 - (void)scrub:(CGFloat)progress
 {
+    NSLog(@"control.scrub %f", progress);
     [self handleCommand:MovieControlCommandSetProgress param:@(progress) notify:YES];
     [self setProgress:progress];
+    [self updateInfoViewProgress:progress];
     [self cancelPreviousAndPrepareToDimControl];
 }
 
 - (void)endScrubbing:(CGFloat)progress
 {
-    _isProgressViewPanning = NO;
+    NSLog(@"control.endScrubbing %f", progress);
+    _isScrubbing = NO;
     [self.infoView showProgressTime:NO animated:YES];
     if ([self.delegate respondsToSelector:@selector(movieControlSource:endChangeProgress:)]) {
         [self.delegate movieControlSource:self endChangeProgress:progress];
@@ -990,7 +976,7 @@
 
 - (void)dimControl
 {
-    if (self.alpha == 1 && self.controlState != MovieControlStatePaused && self.controlState != MovieControlStateEnded) {
+    if (self.alpha == 1 && self.controlState != MovieControlStatePaused && self.controlState != MovieControlStateEnded && !_isScrubbing) {
         [UIView animateWithDuration:0.5f animations:^{
             self.alpha = 0;
         }];
@@ -1003,7 +989,7 @@
 
 - (void)wonderMovieProgressViewBeginChangeProgress:(WonderMovieProgressView *)progressView
 {
-//    NSLog(@"wonderMovieProgressViewBeginChangeProgress");
+    NSLog(@"wonderMovieProgressViewBeginChangeProgress");
     if (_hasStarted) {
         [self beginScrubbing];
     }
@@ -1011,13 +997,14 @@
 
 - (void)wonderMovieProgressView:(WonderMovieProgressView *)progressView didChangeProgress:(CGFloat)progress
 {
-//    NSLog(@"didChangeProgress %f", progress);
-    [self scrub:progress];
+    NSLog(@"didChangeProgress %f", progress);
+//    [self scrub:progress];
+    [self updateInfoViewProgress:progress];
 }
 
 - (void)wonderMovieProgressViewEndChangeProgress:(WonderMovieProgressView *)progressView;
 {
-//    NSLog(@"wonderMovieProgressViewEndChangeProgress");
+    NSLog(@"wonderMovieProgressViewEndChangeProgress");
     [self endScrubbing:progressView.progress];
 }
 

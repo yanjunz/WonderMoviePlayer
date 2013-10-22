@@ -142,7 +142,7 @@
 
 - (void)showProgressTime:(BOOL)show animated:(BOOL)animated
 {
-    [UIView animateWithDuration:animated ? 0.4f : 0 animations:^{
+    [UIView animateWithDuration:animated ? 1.f : 0 animations:^{
         self.progressTimeLabel.alpha = show ? 1 : 0;
     }];
 }

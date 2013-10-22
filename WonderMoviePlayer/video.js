@@ -25,28 +25,58 @@ function qqvideo() {
             v.qqvideoInstance = qqv;
             v.orgPlay = v.play;
             v.play = function () {
-                alert('play ' + window.orientation + "," +  window.isFullscreen);
+                this.qqvideoInstance.workaroundBefore(v);
                 this.qqvideoInstance.newPlay(v);
-                this.qqvideoInstance.workaround(v);
+                this.qqvideoInstance.workaroundAfter(v);
             };
             v.orgLoad = v.load;
             v.load = function () {
                 if (this.autoplay) {
+                    this.qqvideoInstance.workaroundBefore(v);
                     this.qqvideoInstance.newPlay(v);
-                    this.qqvideoInstance.workaround(v);
+                    this.qqvideoInstance.workaroundAfter(v);
                 }
             };
-            window.onorientationchange = function() {
-                alert(window.orientation + "," + window.isFullscreen);
-            };
+            v.qqvideoInstance.workaroundInit(v);
         }
-    }
+    };
+    
     this.newPlay = function(v) {
         new qqbridge().send('qqvideo://play');
-    }
+    };
     
-    this.workaround = function(v) {
-        // workaround
+    this.workaroundInit = function (v) {
+        // workaround when hook the video
+        
+        // for youku fullscreen issue
+        if (location.host.indexOf('youku.com')) {
+            YKU.Player.prototype.switchFullScreen = function () {};
+            playerWidth = function (){
+                var a = $(window).width(), b = $(window).height();
+                $(".yk-player .yk-player-inner").css({
+                                                     width: a + "px",
+                                                     height: 9 * a / 16 + "px"
+                                                     });
+            };
+            autoFullscreen = function (){};
+            onSwitchFullScreen = function () {
+                clearInterval(window.timers), setTimeout("playerWidth()", 500), setTimeout("playerWidth()", 1E3), $("body").removeClass("fullscreen"), $("body").removeAttr("style"), $(".yk-m").removeAttr("style"), playerWidth(), tabFixed.unfixed();
+            };
+            onPlayerCompleteH5 = function (a) {};
+            onPlayerReadyH5 = function () {};
+            window.youkuCheckTimer = setInterval(
+                                                 function (){
+                                                 clearInterval(window.timers);
+                                                 }, 500);
+        }
+    };
+    
+    this.workaroundBefore = function (v) {
+        // workaround before player show
+    };
+    
+    this.workaroundAfter = function(v) {
+        // workaround after player finish
         v.readyState = 4;
         this.timeupdateRemainingCount = 10;
         

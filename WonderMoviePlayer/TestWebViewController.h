@@ -12,4 +12,5 @@
 @property (retain, nonatomic) IBOutlet UIWebView *webview;
 
 - (IBAction)onClickBtn:(id)sender;
+- (IBAction)onClickPlayOrg:(id)sender;
 @end
