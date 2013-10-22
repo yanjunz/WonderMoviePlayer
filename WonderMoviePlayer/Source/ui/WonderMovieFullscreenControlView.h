@@ -22,6 +22,7 @@
 - (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted nextEnabled:(BOOL)nextEnabled downloadEnabled:(BOOL)downloadEnabled crossScreenEnabled:(BOOL)crossScreenEnabled;
 
 - (void)installGestureHandlerForParentView;
+- (CGRect)suggestedInfoViewFrame;
 @end
 
 #endif // MTT_FEATURE_WONDER_MOVIE_PLAYER

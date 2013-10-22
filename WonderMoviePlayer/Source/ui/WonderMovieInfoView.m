@@ -18,7 +18,7 @@
     if (self) {
         // Initialization code
         UIFont *font = [UIFont boldSystemFontOfSize:23];
-        UILabel *progressTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 18+50, 100, 100)];
+        UILabel *progressTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 18+50-44, 100, 100)];
         self.progressTimeLabel = progressTimeLabel;
         self.progressTimeLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
         self.progressTimeLabel.textAlignment = UITextAlignmentLeft;

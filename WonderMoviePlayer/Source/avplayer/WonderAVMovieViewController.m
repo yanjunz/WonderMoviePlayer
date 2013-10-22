@@ -602,8 +602,6 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
         WonderMovieInfoView *infoView = [[WonderMovieInfoView alloc] initWithFrame:self.overlayView.bounds];
         infoView.backgroundColor = [UIColor clearColor];
         infoView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [self.overlayView addSubview:infoView];
-        [infoView release];
         
         BOOL downloadEnabled = !!self.downloadBlock;
         BOOL crossScreenEnabled = !!self.crossScreenBlock;
@@ -622,7 +620,11 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
         [fullscreenControlView installGestureHandlerForParentView];
         self.controlSource = fullscreenControlView;
         fullscreenControlView.infoView = infoView;
+        infoView.frame = [fullscreenControlView suggestedInfoViewFrame];
         [fullscreenControlView release];
+        
+        [self.overlayView addSubview:infoView];
+        [infoView release];
     }
 }
 

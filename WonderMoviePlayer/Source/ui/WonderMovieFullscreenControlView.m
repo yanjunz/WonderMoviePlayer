@@ -328,6 +328,11 @@
     }
 }
 
+- (CGRect)suggestedInfoViewFrame
+{
+    return CGRectMake(0, self.headerBar.bottom, self.width, self.height - self.headerBar.bottom - self.bottomBar.height);
+}
+
 - (void)dealloc
 {
     [self removeTimer];
