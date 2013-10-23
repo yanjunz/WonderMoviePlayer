@@ -782,6 +782,8 @@
         self.infoView.replayButton.hidden = NO;
         self.infoView.centerPlayButton.hidden = YES;
         _isLoading = NO; // clear loading flag
+        
+        self.alpha = 1; // show control if ended
     }
     
     if (_isLoading) { // continue to loading
