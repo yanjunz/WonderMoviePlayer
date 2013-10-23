@@ -44,6 +44,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     BOOL _isScrubbing;
     BOOL _observersHasBeenRemoved; // if the observers has been removed, need to remove observers correctly to avoid memeory leak
     BOOL _isExited;
+    BOOL _hasStarted;
     
     // for fake buffer progress
     BOOL _isBuffering;
@@ -505,11 +506,11 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
         }
     }
     else if (context == WonderAVMovieObserverContextName(Rate)) {
-        NSLog(@"rate = %f", self.player.rate);
+//        NSLog(@"rate = %f", self.player.rate);
         if (_isEnd) {
             [self.controlSource end];
         }
-        else {
+        else if (_hasStarted) {
             if (self.player.rate == 0) {
                 [self.controlSource pause];
             }
@@ -672,13 +673,13 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
                                                               queue:NULL usingBlock:^(CMTime time) {
                                                                   [self syncScrubber];
                                                               }] retain];
-    NSLog(@"initScrubberTimer");
+//    NSLog(@"initScrubberTimer");
 }
 
 - (void)removePlayerTimeObserver
 {
     if (timeObserver) {
-        NSLog(@"removePlayerTimeObserver");
+//        NSLog(@"removePlayerTimeObserver");
         [self.player removeTimeObserver:timeObserver];
         [timeObserver release];
         timeObserver = nil;

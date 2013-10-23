@@ -32,8 +32,9 @@
     
     // scrubbing related
     BOOL _isScrubbing; // flag to ignore msg to set progress when scrubbing
-    CGFloat _progressWhenStartScrubbing;
-    CGFloat _accumulatedProgressBySec;
+    CGFloat _progressWhenStartScrubbing; // record the progress when begin to scrub
+    CGFloat _accumulatedProgressBySec; // the total accumulated progress by second
+    CGFloat _lastProgressToScrub;   // record the last progress to be set when scrubbing is ended
     
     BOOL _isDownloading;
     BOOL _hasStarted;
@@ -897,7 +898,12 @@
             // progress
             if (sPanAction == WonderMoviePanAction_No) { // just start
                 [self beginScrubbing];
-                _progressWhenStartScrubbing = self.progressView.progress;
+                if (self.controlState == MovieControlStateBuffering && _lastProgressToScrub >= 0 && isfinite(_lastProgressToScrub)) {
+                    _progressWhenStartScrubbing = _lastProgressToScrub;
+                }
+                else {
+                    _progressWhenStartScrubbing = self.progressView.progress;
+                }
             }
             
             sPanAction = WonderMoviePanAction_Progress;
@@ -960,7 +966,7 @@
 
 - (void)beginScrubbing
 {
-    NSLog(@"control.beginScrubbing");
+//    NSLog(@"control.beginScrubbing");
     _isScrubbing = YES;
     [self.infoView showProgressTime:YES animated:YES];
     if ([self.delegate respondsToSelector:@selector(movieControlSourceBeginChangeProgress:)]) {
@@ -971,7 +977,7 @@
 
 - (void)scrub:(CGFloat)progress
 {
-    NSLog(@"control.scrub %f", progress);
+//    NSLog(@"control.scrub %f", progress);
     [self handleCommand:MovieControlCommandSetProgress param:@(progress) notify:YES];
     [self setProgress:progress];
     [self updateInfoViewProgress:progress];
@@ -980,8 +986,9 @@
 
 - (void)endScrubbing:(CGFloat)progress
 {
-    NSLog(@"control.endScrubbing %f", progress);
+//    NSLog(@"control.endScrubbing %f", progress);
     _isScrubbing = NO;
+    _lastProgressToScrub = progress;
     [self.infoView showProgressTime:NO animated:YES];
     if ([self.delegate respondsToSelector:@selector(movieControlSource:endChangeProgress:)]) {
         [self.delegate movieControlSource:self endChangeProgress:progress];
