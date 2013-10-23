@@ -951,7 +951,7 @@
     _accumulatedProgressBySec += progressBySec;
     CGFloat newProgress = _progressWhenStartScrubbing + _accumulatedProgressBySec / _duration;
     newProgress = MIN(MAX(0, newProgress), 1);
-    NSLog(@"accumulateProgress %f,%f,%f", _accumulatedProgressBySec, _progressWhenStartScrubbing, newProgress);
+//    NSLog(@"accumulateProgress %f,%f,%f", _accumulatedProgressBySec, _progressWhenStartScrubbing, newProgress);
     // update UI
     [self updateInfoViewProgress:newProgress];
     [self cancelPreviousAndPrepareToDimControl];

@@ -83,7 +83,7 @@
         [_loadingView addSubview:self.loadingIndicator];
         [loadingIndicator release];
         [self addSubview:_loadingView];
-        _loadingView.center = self.center;
+        _loadingView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
         _loadingView.hidden = YES;
         
         UILabel *loadingPercentLabel = [[UILabel alloc] initWithFrame:self.loadingIndicator.frame];
@@ -117,7 +117,6 @@
 {
     //NSLog(@"startLoading %d, %d", self.loadingView.hidden, [self.loadingIndicator.layer.animationKeys containsObject:@"rotationAnimation"]);
 	self.loadingView.hidden = NO;
-    
     // Bugfix for iOS7
     // Animation will be missed if it is created before presentation in iOS7, so create animation on demand.
     static NSString *animationKey = @"rotationAnimation";
