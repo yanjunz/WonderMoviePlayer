@@ -290,7 +290,7 @@
     [self setupTimer];
     [self timerHandler]; // call to set info immediately
     [self updateStates];
-    [self cancelPreviousAndPrepareToDimControl];
+//    [self cancelPreviousAndPrepareToDimControl];
 }
 
 - (void)installControlSource
@@ -539,6 +539,8 @@
             self.bottomBar.bottom = self.bottom;
         }];
 #endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
+        
+        [self cancelPreviousAndPrepareToDimControl];
     }
 
 }
