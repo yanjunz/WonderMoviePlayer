@@ -694,14 +694,14 @@
     else if (self.controlState == MovieControlStateEnded) {
         [self handleCommand:MovieControlCommandReplay param:nil notify:YES];
     }
-//    else if (self.controlState == MovieControlStateBuffering) {
-//        if (_bufferFromPaused) {
-//            [self handleCommand:MovieControlCommandPlay param:nil notify:YES];
-//        }
-//        else {
-//            [self handleCommand:MovieControlCommandPause param:nil notify:YES];
-//        }
-//    }
+    else if (self.controlState == MovieControlStateBuffering) {
+        if (_bufferFromPaused) {
+            [self handleCommand:MovieControlCommandPlay param:nil notify:YES];
+        }
+        else {
+            [self handleCommand:MovieControlCommandPause param:nil notify:YES];
+        }
+    }
 
     [self cancelPreviousAndPrepareToDimControl];
 }
@@ -772,7 +772,7 @@
              (self.controlState == MovieControlStateBuffering && _bufferFromPaused)) {
         [self.actionButton setImage:QQImage(@"videoplayer_play_normal") forState:UIControlStateNormal];
         [self.actionButton setImage:QQImage(@"videoplayer_play_press") forState:UIControlStateHighlighted];
-        self.infoView.centerPlayButton.hidden = NO;
+        self.infoView.centerPlayButton.hidden = _isLoading;
         self.infoView.replayButton.hidden = YES;
     }
     else if (self.controlState == MovieControlStateEnded) {
