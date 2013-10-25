@@ -1021,7 +1021,7 @@
 
 - (void)wonderMovieProgressViewBeginChangeProgress:(WonderMovieProgressView *)progressView
 {
-    NSLog(@"wonderMovieProgressViewBeginChangeProgress");
+//    NSLog(@"wonderMovieProgressViewBeginChangeProgress");
     if (_hasStarted) {
         [self beginScrubbing];
     }
@@ -1029,14 +1029,14 @@
 
 - (void)wonderMovieProgressView:(WonderMovieProgressView *)progressView didChangeProgress:(CGFloat)progress
 {
-    NSLog(@"didChangeProgress %f", progress);
+//    NSLog(@"didChangeProgress %f", progress);
 //    [self scrub:progress];
     [self updateInfoViewProgress:progress];
 }
 
 - (void)wonderMovieProgressViewEndChangeProgress:(WonderMovieProgressView *)progressView;
 {
-    NSLog(@"wonderMovieProgressViewEndChangeProgress");
+//    NSLog(@"wonderMovieProgressViewEndChangeProgress");
     [self endScrubbing:progressView.progress];
 }
 
