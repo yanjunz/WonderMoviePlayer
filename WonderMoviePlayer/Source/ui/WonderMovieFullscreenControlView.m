@@ -14,6 +14,7 @@
 #import "WonderMovieProgressView.h"
 #import "UIView+Sizes.h"
 #import "BatteryIconView.h"
+#import <MediaPlayer/MediaPlayer.h>
 
 // y / x
 #define kWonderMovieVerticalPanGestureCoordRatio    1.732050808f
@@ -290,7 +291,12 @@
     [self setupTimer];
     [self timerHandler]; // call to set info immediately
     [self updateStates];
-//    [self cancelPreviousAndPrepareToDimControl];
+    
+    
+    // Hide default volume view
+    // http://stackoverflow.com/questions/7868457/applicationmusicplayer-volume-notification
+    MPVolumeView *volumeView = [[[MPVolumeView alloc] initWithFrame:CGRectMake(-10000, -10000, 0, 0)] autorelease];
+    [self addSubview:volumeView];
 }
 
 - (void)installControlSource
@@ -677,6 +683,16 @@
 {
 //    return self.downloadingView.superview != nil;
     return _isDownloading;
+}
+
+- (void)setBrightness:(CGFloat)brightness
+{
+    [self.infoView showBrightness:brightness];
+}
+
+- (void)setVolume:(CGFloat)volume
+{
+    [self.infoView showVolume:volume];
 }
 
 #pragma mark UI Interaction

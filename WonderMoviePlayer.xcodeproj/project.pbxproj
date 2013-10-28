@@ -69,6 +69,9 @@
 		B517795817C61383006B948E /* videoplayer_cross_screen@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B517795717C61383006B948E /* videoplayer_cross_screen@2x.png */; };
 		B51F619617E9ADC200344122 /* Test2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B51F619417E9ADC200344122 /* Test2ViewController.m */; };
 		B51F619717E9ADC200344122 /* Test2ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B51F619517E9ADC200344122 /* Test2ViewController.xib */; };
+		B5757A63181A80B500D5DA2D /* videoplayer_mute@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5757A60181A80B500D5DA2D /* videoplayer_mute@2x.png */; };
+		B5757A64181A80B500D5DA2D /* videoplayer_volume@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5757A61181A80B500D5DA2D /* videoplayer_volume@2x.png */; };
+		B5757A65181A80B500D5DA2D /* videoplayer_brightness@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5757A62181A80B500D5DA2D /* videoplayer_brightness@2x.png */; };
 		B5AD785217CDA50E00C08E51 /* video.js in Sources */ = {isa = PBXBuildFile; fileRef = B5AD785117CDA50E00C08E51 /* video.js */; };
 		B5AD785317CDA5E800C08E51 /* video.js in Resources */ = {isa = PBXBuildFile; fileRef = B5AD785117CDA50E00C08E51 /* video.js */; };
 		B5AD78A817CDD30600C08E51 /* JSURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = B5AD78A717CDD30600C08E51 /* JSURLProtocol.m */; };
@@ -165,6 +168,9 @@
 		B51F619317E9ADC200344122 /* Test2ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Test2ViewController.h; sourceTree = "<group>"; };
 		B51F619417E9ADC200344122 /* Test2ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Test2ViewController.m; sourceTree = "<group>"; };
 		B51F619517E9ADC200344122 /* Test2ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Test2ViewController.xib; sourceTree = "<group>"; };
+		B5757A60181A80B500D5DA2D /* videoplayer_mute@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "videoplayer_mute@2x.png"; sourceTree = "<group>"; };
+		B5757A61181A80B500D5DA2D /* videoplayer_volume@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "videoplayer_volume@2x.png"; sourceTree = "<group>"; };
+		B5757A62181A80B500D5DA2D /* videoplayer_brightness@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "videoplayer_brightness@2x.png"; sourceTree = "<group>"; };
 		B5AD785117CDA50E00C08E51 /* video.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = video.js; sourceTree = "<group>"; };
 		B5AD78A617CDD30600C08E51 /* JSURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSURLProtocol.h; sourceTree = "<group>"; };
 		B5AD78A717CDD30600C08E51 /* JSURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSURLProtocol.m; sourceTree = "<group>"; };
@@ -338,6 +344,9 @@
 		B51778DF17BA3880006B948E /* images */ = {
 			isa = PBXGroup;
 			children = (
+				B5757A60181A80B500D5DA2D /* videoplayer_mute@2x.png */,
+				B5757A61181A80B500D5DA2D /* videoplayer_volume@2x.png */,
+				B5757A62181A80B500D5DA2D /* videoplayer_brightness@2x.png */,
 				B517795717C61383006B948E /* videoplayer_cross_screen@2x.png */,
 				B51778E017BA3880006B948E /* videoplayer_battery_bg@2x.png */,
 				B51778E117BA3880006B948E /* videoplayer_battery_electricity@2x.png */,
@@ -454,14 +463,17 @@
 				B51778FB17BA3880006B948E /* videoplayer_battery_electricity@2x.png in Resources */,
 				B51778FC17BA3880006B948E /* videoplayer_download@2x.png in Resources */,
 				B51778FD17BA3880006B948E /* videoplayer_download_bg@2x.png in Resources */,
+				B5757A65181A80B500D5DA2D /* videoplayer_brightness@2x.png in Resources */,
 				B51778FE17BA3880006B948E /* videoplayer_download_fg@2x.png in Resources */,
 				B51778FF17BA3880006B948E /* videoplayer_downloaded@2x.png in Resources */,
 				B517790017BA3880006B948E /* videoplayer_headerbar@2x.png in Resources */,
 				B517790117BA3880006B948E /* videoplayer_headerbar_separator@2x.png in Resources */,
+				B5757A64181A80B500D5DA2D /* videoplayer_volume@2x.png in Resources */,
 				B517790217BA3880006B948E /* videoplayer_loading@2x.png in Resources */,
 				B517790317BA3880006B948E /* videoplayer_loading_bg@2x.png in Resources */,
 				B517790417BA3880006B948E /* videoplayer_locked@2x.png in Resources */,
 				B517790517BA3880006B948E /* videoplayer_next_normal@2x.png in Resources */,
+				B5757A63181A80B500D5DA2D /* videoplayer_mute@2x.png in Resources */,
 				B517790617BA3880006B948E /* videoplayer_pause_normal@2x.png in Resources */,
 				B517790717BA3880006B948E /* videoplayer_pause_press@2x.png in Resources */,
 				B517790817BA3880006B948E /* videoplayer_play@2x.png in Resources */,

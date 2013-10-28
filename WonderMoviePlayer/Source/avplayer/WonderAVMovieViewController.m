@@ -878,7 +878,12 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 - (void)movieControlSource:(id<MovieControlSource>)source increaseBrightness:(CGFloat)brightness
 {
     CGFloat alpha = self.maskView.alpha - brightness;
-    self.maskView.alpha = MAX(0, MIN(1, alpha));
+    alpha = MAX(0, MIN(0.9, alpha));
+    self.maskView.alpha = alpha;
+    
+    if ([source respondsToSelector:@selector(setBrightness:)]) {
+        [source setBrightness:1 - alpha];
+    }
 }
 
 - (void)movieControlSource:(id<MovieControlSource>)source increaseVolume:(CGFloat)volume
@@ -887,6 +892,10 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     CGFloat newVolume = volume + controller.volume;
     newVolume = MIN(1, MAX(newVolume, 0));
     controller.volume = newVolume;
+    
+    if ([source respondsToSelector:@selector(setVolume:)]) {
+        [source setVolume:newVolume];
+    }
 }
 
 - (void)movieControlSourceOnDownload:(id<MovieControlSource>)source

@@ -10,6 +10,12 @@
 #import "WonderMovieInfoView.h"
 #import "UIView+Sizes.h"
 
+@interface WonderMovieInfoView ()
+@property (nonatomic, retain) UILabel *volumeLabel;
+@property (nonatomic, retain) UIImageView *volumeImageView;
+@property (nonatomic, retain) UILabel *brightnessLabel;
+@end
+
 @implementation WonderMovieInfoView
 
 - (id)initWithFrame:(CGRect)frame
@@ -64,6 +70,9 @@
     
     self.replayButton = nil;
     self.centerPlayButton = nil;
+    
+    [_volumeView release];
+    [_brightnessView release];
     [super dealloc];
 }
 
@@ -150,4 +159,91 @@
 //{
 //    NSLog(@"animationDidStop %@ %d", [(CABasicAnimation *)anim keyPath], flag);
 //}
+
+#pragma mark VolumeView & BrightnessView
+- (UIView *)volumeView
+{
+    if (_volumeView == nil) {
+        CGFloat width = 120;
+        CGFloat y = 20;
+        _volumeView = [[UIView alloc] initWithFrame:CGRectMake((self.width - width) / 2, y, width, 55)];
+        _volumeView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.2];
+        _volumeView.layer.cornerRadius = 3;
+        _volumeView.layer.borderColor = [[UIColor whiteColor] colorWithAlphaComponent:0.2].CGColor;
+        
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:QQImage(@"videoplayer_volume") highlightedImage:QQImage(@"videoplayer_mute")];
+        self.volumeImageView = imageView;
+        [_volumeView addSubview:imageView];
+        imageView.origin = CGPointMake(14, (_volumeView.height - imageView.height) / 2);
+        [imageView release];
+        
+        _volumeLabel = [[UILabel alloc] initWithFrame:CGRectMake(imageView.right + 7, 0, _volumeView.width - imageView.right - 7, _volumeView.height)];
+        _volumeLabel.backgroundColor = [UIColor clearColor];
+        _volumeLabel.textAlignment = UITextAlignmentCenter;
+        _volumeLabel.textColor = [UIColor whiteColor];
+        _volumeLabel.font = [UIFont systemFontOfSize:18];
+        [_volumeView addSubview:_volumeLabel];
+        _volumeView.alpha = 0;
+    }
+    return _volumeView;
+}
+
+- (UIView *)brightnessView
+{
+    if (_brightnessView == nil) {
+        CGFloat width = 120;
+        CGFloat y = 20;
+        _brightnessView = [[UIView alloc] initWithFrame:CGRectMake((self.width - width) / 2, y, width, 55)];
+        _brightnessView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.2];
+        _brightnessView.layer.cornerRadius = 3;
+        _brightnessView.layer.borderColor = [[UIColor whiteColor] colorWithAlphaComponent:0.2].CGColor;
+        
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:QQImage(@"videoplayer_brightness")];
+        [_brightnessView addSubview:imageView];
+        imageView.origin = CGPointMake(14, (_brightnessView.height - imageView.height) / 2);
+        [imageView release];
+        
+        _brightnessLabel = [[UILabel alloc] initWithFrame:CGRectMake(imageView.right + 7, 0, _brightnessView.width - imageView.right - 7, _brightnessView.height)];
+        _brightnessLabel.backgroundColor = [UIColor clearColor];
+        _brightnessLabel.textAlignment = UITextAlignmentCenter;
+        _brightnessLabel.textColor = [UIColor whiteColor];
+        _brightnessLabel.font = [UIFont systemFontOfSize:18];
+        [_brightnessView addSubview:_brightnessLabel];
+        _brightnessView.alpha = 0;
+    }
+    return _brightnessView;
+}
+
+
+- (void)showVolume:(CGFloat)volume
+{
+    [self.brightnessView removeFromSuperview];
+    [self addSubview:self.volumeView];
+    self.volumeView.alpha = 1;
+    self.brightnessView.alpha = 0;
+    if (volume <= 0) {
+        self.volumeImageView.highlighted = YES;
+    }
+    else {
+        self.volumeImageView.highlighted = NO;
+    }
+    self.volumeLabel.text = [NSString stringWithFormat:@"%d%%", (int)(volume * 100)];
+    [UIView animateWithDuration:1.0f animations:^{
+        self.volumeView.alpha = 0;
+    }];
+}
+
+- (void)showBrightness:(CGFloat)brightness
+{
+    [self.volumeView removeFromSuperview];
+    [self addSubview:self.brightnessView];
+    self.volumeView.alpha = 0;
+    self.brightnessView.alpha = 1;
+    self.brightnessLabel.text = [NSString stringWithFormat:@"%d%%", (int)(brightness * 100)];
+    [UIView animateWithDuration:1.0f animations:^{
+        self.brightnessView.alpha = 0;
+    }];
+
+}
+
 @end

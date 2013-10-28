@@ -22,7 +22,13 @@
 @property (nonatomic, retain) UIButton *replayButton;
 @property (nonatomic, retain) UIButton *centerPlayButton;
 
+@property (nonatomic, retain) UIView *volumeView;
+@property (nonatomic, retain) UIView *brightnessView;
+
 - (void)showProgressTime:(BOOL)show animated:(BOOL)animated;
 - (void)startLoading;
 - (void)stopLoading;
+
+- (void)showVolume:(CGFloat)volume;
+- (void)showBrightness:(CGFloat)brightness;
 @end
