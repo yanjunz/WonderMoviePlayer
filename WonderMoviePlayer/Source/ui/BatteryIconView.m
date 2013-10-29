@@ -27,14 +27,14 @@
         
         self.backgroundColor = [UIColor clearColor];
         UIImageView *bgImageView = [[UIImageView alloc] initWithFrame:self.bounds];
-        bgImageView.image = QQImage(@"videoplayer_battery_bg");
+        bgImageView.image = QQVideoPlayerImage(@"battery_bg");
         bgImageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [self addSubview:bgImageView];
         [bgImageView release];
         
         UIImageView *electricityView = [[UIImageView alloc] initWithFrame:self.bounds];
         self.electricityView = electricityView;
-        self.electricityView.image = QQImage(@"videoplayer_battery_electricity");
+        self.electricityView.image = QQVideoPlayerImage(@"battery_electricity");
         self.electricityView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self addSubview:self.electricityView];
         [electricityView release];

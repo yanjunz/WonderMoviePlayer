@@ -63,7 +63,7 @@
         self.backgroundView = [[[UIView alloc] initWithFrame:self.view.bounds] autorelease];
         self.backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         self.backgroundView.backgroundColor = [UIColor blackColor];
-        UIImageView *movieBgView = [[[UIImageView alloc] initWithImage:QQImage(@"videoplayer_loading_bg")] autorelease];
+        UIImageView *movieBgView = [[[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"loading_bg")] autorelease];
         movieBgView.frame = self.backgroundView.bounds;
         [self.backgroundView addSubview:movieBgView];
     }

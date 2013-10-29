@@ -14,6 +14,10 @@
 #define QQImage(src) [UIImageEx loadAndCacheImageFromApp:src]
 #endif
 
+#ifndef QQVideoPlayerImage
+#define QQVideoPlayerImage(src) [UIImageEx loadAndCacheImageFromApp:[NSString stringWithFormat:@"function_videoplayer_%@", src]]
+#endif
+
 #define kProgressViewPadding 16
 
 #endif

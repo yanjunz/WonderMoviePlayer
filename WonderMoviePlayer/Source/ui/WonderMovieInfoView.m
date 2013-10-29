@@ -42,7 +42,7 @@
         
         CGFloat centerButtonSize = 138 / 2;
         self.replayButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.replayButton setImage:QQImage(@"videoplayer_replay") forState:UIControlStateNormal];
+        [self.replayButton setImage:QQVideoPlayerImage(@"replay") forState:UIControlStateNormal];
         self.replayButton.size = CGSizeMake(centerButtonSize, centerButtonSize);
         self.replayButton.center = self.center;
         self.replayButton.hidden = YES;
@@ -50,7 +50,7 @@
         [self addSubview:self.replayButton];
         
         self.centerPlayButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.centerPlayButton setImage:QQImage(@"videoplayer_play") forState:UIControlStateNormal];
+        [self.centerPlayButton setImage:QQVideoPlayerImage(@"play") forState:UIControlStateNormal];
         self.centerPlayButton.frame = self.replayButton.frame;
         self.centerPlayButton.hidden = YES;
         self.centerPlayButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
@@ -84,7 +84,7 @@
         _loadingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 181, 101)];
         _loadingView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         
-        UIImageView *loadingIndicator = [[UIImageView alloc] initWithImage:QQImage(@"videoplayer_loading")];
+        UIImageView *loadingIndicator = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"loading")];
         self.loadingIndicator = loadingIndicator;
         self.loadingIndicator.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         self.loadingIndicator.contentMode = UIViewContentModeCenter;
@@ -171,7 +171,7 @@
         _volumeView.layer.cornerRadius = 3;
         _volumeView.layer.borderColor = [[UIColor whiteColor] colorWithAlphaComponent:0.2].CGColor;
         
-        UIImageView *imageView = [[UIImageView alloc] initWithImage:QQImage(@"videoplayer_volume") highlightedImage:QQImage(@"videoplayer_mute")];
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"volume") highlightedImage:QQVideoPlayerImage(@"mute")];
         self.volumeImageView = imageView;
         [_volumeView addSubview:imageView];
         imageView.origin = CGPointMake(14, (_volumeView.height - imageView.height) / 2);
@@ -198,7 +198,7 @@
         _brightnessView.layer.cornerRadius = 3;
         _brightnessView.layer.borderColor = [[UIColor whiteColor] colorWithAlphaComponent:0.2].CGColor;
         
-        UIImageView *imageView = [[UIImageView alloc] initWithImage:QQImage(@"videoplayer_brightness")];
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"brightness")];
         [_brightnessView addSubview:imageView];
         imageView.origin = CGPointMake(14, (_brightnessView.height - imageView.height) / 2);
         [imageView release];

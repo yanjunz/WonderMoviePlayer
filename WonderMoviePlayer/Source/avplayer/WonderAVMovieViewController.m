@@ -146,7 +146,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    UIImageView *backgroundView = [[UIImageView alloc] initWithImage:QQImage(@"videoplayer_loading_bg")];
+    UIImageView *backgroundView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"loading_bg")];
     backgroundView.contentMode = UIViewContentModeBottom;
     backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     backgroundView.frame = self.view.bounds;

@@ -20,6 +20,7 @@
 #define H(frame) ((frame).size.height)
 
 #define QQImage(src)         [UIImage imageNamed:src]
+#define QQVideoPlayerImage(src) [UIImage imageNamed:src]
 
 #if !defined(QQImage)
 #define QQImage(src)        [UIImageEx loadAndCacheImageFromApp:src]

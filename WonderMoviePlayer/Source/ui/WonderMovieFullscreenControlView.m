@@ -132,7 +132,7 @@
 #endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
     
 //    self.bottomBar.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
-    self.bottomBar.backgroundColor = [UIColor colorWithPatternImage:QQImage(@"videoplayer_toolbar")];
+    self.bottomBar.backgroundColor = [UIColor colorWithPatternImage:QQVideoPlayerImage(@"toolbar")];
     self.bottomBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
     [self addSubview:self.bottomBar];
     WonderMovieProgressView *progressView = [[WonderMovieProgressView alloc] initWithFrame:CGRectMake(progressBarLeftPadding, 0, self.bottomBar.width - progressBarLeftPadding - progressBarRightPadding, bottomBarHeight)];
@@ -147,8 +147,8 @@
     [self.bottomBar addSubview:self.progressView];
     
     self.actionButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.actionButton setImage:QQImage(@"videoplayer_play_normal") forState:UIControlStateNormal];
-    [self.actionButton setImage:QQImage(@"videoplayer_play_press") forState:UIControlStateHighlighted];
+    [self.actionButton setImage:QQVideoPlayerImage(@"play_normal") forState:UIControlStateNormal];
+    [self.actionButton setImage:QQVideoPlayerImage(@"play_press") forState:UIControlStateHighlighted];
     self.actionButton.titleLabel.font = [UIFont systemFontOfSize:10];
     self.actionButton.frame = CGRectMake(8, 0, 50, 50);
     [self.actionButton addTarget:self action:@selector(onClickAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -156,7 +156,7 @@
     
     if (self.nextEnabled) {
         self.nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.nextButton setImage:QQImage(@"videoplayer_next_normal") forState:UIControlStateNormal];
+        [self.nextButton setImage:QQVideoPlayerImage(@"next_normal") forState:UIControlStateNormal];
         self.nextButton.frame = CGRectMake(progressBarLeftPadding - 38 - 6, (self.bottomBar.height - 17 * 2) / 2, 15 * 2, 17 * 2);
         [self.bottomBar addSubview:self.nextButton];
     }
@@ -191,25 +191,25 @@
     UIView *headerBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.width, headerBarHeight)];
     self.headerBar = headerBar;
     [headerBar release];
-    self.headerBar.backgroundColor = [UIColor colorWithPatternImage:QQImage(@"videoplayer_headerbar")];
+    self.headerBar.backgroundColor = [UIColor colorWithPatternImage:QQVideoPlayerImage(@"headerbar")];
     self.headerBar.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
     [self addSubview:self.headerBar];
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [backButton setImage:QQImage(@"videoplayer_return") forState:UIControlStateNormal];
+    [backButton setImage:QQVideoPlayerImage(@"return") forState:UIControlStateNormal];
     backButton.frame = CGRectMake(0, 0, headerBarHeight, headerBarHeight);
     backButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
     [backButton addTarget:self action:@selector(onClickBack:) forControlEvents:UIControlEventTouchUpInside];
     [self.headerBar addSubview:backButton];
     
-    UIImageView *separatorView = [[UIImageView alloc] initWithImage:QQImage(@"videoplayer_headerbar_separator")];
+    UIImageView *separatorView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"headerbar_separator")];
     separatorView.center = CGPointMake(backButton.right, self.headerBar.height / 2);
     separatorView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
     [self.headerBar addSubview:separatorView];
     [lockedViews addObject:separatorView];
     [separatorView release];
     
-    separatorView = [[UIImageView alloc] initWithImage:QQImage(@"videoplayer_headerbar_separator")];
+    separatorView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"headerbar_separator")];
     separatorView.center = CGPointMake(self.width - backButton.right - 4, self.headerBar.height / 2);
     separatorView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [self.headerBar addSubview:separatorView];
@@ -233,8 +233,8 @@
     [self.headerBar addSubview:self.timeLabel];
 
     self.lockButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.lockButton setImage:QQImage(@"videoplayer_unlock") forState:UIControlStateNormal];
-    [self.lockButton setImage:QQImage(@"videoplayer_locked") forState:UIControlStateSelected];
+    [self.lockButton setImage:QQVideoPlayerImage(@"unlock") forState:UIControlStateNormal];
+    [self.lockButton setImage:QQVideoPlayerImage(@"locked") forState:UIControlStateSelected];
     self.lockButton.frame = CGRectMake(self.batteryView.left - 58, 0, headerBarHeight, headerBarHeight);
     self.lockButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [self.lockButton addTarget:self action:@selector(onClickLock:) forControlEvents:UIControlEventTouchUpInside];
@@ -244,7 +244,7 @@
 #ifdef MTT_TWEAK_WONDER_MOVIE_ENABLE_DOWNLOAD
     if (_downloadEnabled) {
         self.downloadButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.downloadButton setImage:QQImage(@"videoplayer_download") forState:UIControlStateNormal];
+        [self.downloadButton setImage:QQVideoPlayerImage(@"download") forState:UIControlStateNormal];
         self.downloadButton.frame = CGRectOffset(btnRect, -50, 0);
         self.downloadButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
         [self.downloadButton addTarget:self action:@selector(onClickDownload:) forControlEvents:UIControlEventTouchUpInside];
@@ -252,7 +252,7 @@
         [self.headerBar addSubview:self.downloadButton];
         btnRect = self.downloadButton.frame;
         
-        UIImageView *downloadingArrow = [[UIImageView alloc] initWithImage:QQImage(@"videoplayer_download_fg")];
+        UIImageView *downloadingArrow = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"download_fg")];
         downloadingArrow.contentMode = UIViewContentModeCenter;
         downloadingArrow.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
         self.downloadingView = downloadingArrow;
@@ -262,7 +262,7 @@
     
     if (_crossScreenEnabled) {
         self.crossScreenButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.crossScreenButton setImage:QQImage(@"videoplayer_cross_screen") forState:UIControlStateNormal];
+        [self.crossScreenButton setImage:QQVideoPlayerImage(@"cross_screen") forState:UIControlStateNormal];
         self.crossScreenButton.frame = CGRectOffset(btnRect, -50, 0);
         self.crossScreenButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
         [self.crossScreenButton addTarget:self action:@selector(onClickCrossScreen:) forControlEvents:UIControlEventTouchUpInside];
@@ -655,7 +655,7 @@
 
 - (void)startToDownload
 {
-//    [self.downloadButton setImage:QQImage(@"videoplayer_download_bg") forState:UIControlStateNormal];
+//    [self.downloadButton setImage:QQVideoPlayerImage(@"download_bg") forState:UIControlStateNormal];
 //    if (self.downloadingView.superview == nil) {
 //        self.downloadingView.frame = self.downloadButton.frame;
 //        [self.headerBar addSubview:self.downloadingView];
@@ -673,7 +673,7 @@
 
 - (void)finishDownload
 {
-//    [self.downloadButton setImage:QQImage(@"videoplayer_download") forState:UIControlStateNormal];
+//    [self.downloadButton setImage:QQVideoPlayerImage(@"download") forState:UIControlStateNormal];
 //    [self.downloadingView removeFromSuperview];
 //    [self.downloadingView.layer removeAnimationForKey:@"downloadingAnimation"];
     _isDownloading = NO;
@@ -779,22 +779,22 @@
     if (self.controlState == MovieControlStateDefault ||
         self.controlState == MovieControlStatePlaying ||
         (self.controlState == MovieControlStateBuffering && !_bufferFromPaused)) {
-        [self.actionButton setImage:QQImage(@"videoplayer_pause_normal") forState:UIControlStateNormal];
-        [self.actionButton setImage:QQImage(@"videoplayer_pause_press") forState:UIControlStateHighlighted];
+        [self.actionButton setImage:QQVideoPlayerImage(@"pause_normal") forState:UIControlStateNormal];
+        [self.actionButton setImage:QQVideoPlayerImage(@"pause_press") forState:UIControlStateHighlighted];
         self.infoView.centerPlayButton.hidden = YES;
         self.infoView.replayButton.hidden = YES;
     }
     else if (self.controlState == MovieControlStatePaused ||
              (self.controlState == MovieControlStateBuffering && _bufferFromPaused)) {
-        [self.actionButton setImage:QQImage(@"videoplayer_play_normal") forState:UIControlStateNormal];
-        [self.actionButton setImage:QQImage(@"videoplayer_play_press") forState:UIControlStateHighlighted];
+        [self.actionButton setImage:QQVideoPlayerImage(@"play_normal") forState:UIControlStateNormal];
+        [self.actionButton setImage:QQVideoPlayerImage(@"play_press") forState:UIControlStateHighlighted];
         self.infoView.centerPlayButton.hidden = _isLoading;
         self.infoView.replayButton.hidden = YES;
     }
     else if (self.controlState == MovieControlStateEnded) {
         // set replay
-        [self.actionButton setImage:QQImage(@"videoplayer_play_normal") forState:UIControlStateNormal];
-        [self.actionButton setImage:QQImage(@"videoplayer_play_press") forState:UIControlStateHighlighted];
+        [self.actionButton setImage:QQVideoPlayerImage(@"play_normal") forState:UIControlStateNormal];
+        [self.actionButton setImage:QQVideoPlayerImage(@"play_press") forState:UIControlStateHighlighted];
         self.infoView.replayButton.hidden = NO;
         self.infoView.centerPlayButton.hidden = YES;
         _isLoading = NO; // clear loading flag
