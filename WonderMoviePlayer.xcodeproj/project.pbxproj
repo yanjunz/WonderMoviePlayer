@@ -30,7 +30,6 @@
 		B517792217C1AFB6006B948E /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517792117C1AFB5006B948E /* CoreMedia.framework */; };
 		B517792517C1B896006B948E /* NSNotificationCenter+SwizzleMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = B517792417C1B894006B948E /* NSNotificationCenter+SwizzleMethod.m */; };
 		B517793017C20905006B948E /* videoplay.html in Resources */ = {isa = PBXBuildFile; fileRef = B517792F17C20904006B948E /* videoplay.html */; };
-		B517795217C21AD1006B948E /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = B517795117C21ACF006B948E /* RegexKitLite.m */; };
 		B517795417C21B59006B948E /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517795317C21B58006B948E /* CoreFoundation.framework */; };
 		B517795617C21BD7006B948E /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B517795517C21BD6006B948E /* libicucore.dylib */; };
 		B51F619617E9ADC200344122 /* Test2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B51F619417E9ADC200344122 /* Test2ViewController.m */; };
@@ -81,6 +80,9 @@
 		B5D4C3641820F51A00BB0A53 /* WonderMovieFullscreenControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D4C35A1820F51A00BB0A53 /* WonderMovieFullscreenControlView.m */; };
 		B5D4C3651820F51A00BB0A53 /* WonderMovieInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D4C35C1820F51A00BB0A53 /* WonderMovieInfoView.m */; };
 		B5D4C3661820F51A00BB0A53 /* WonderMovieProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D4C35E1820F51A00BB0A53 /* WonderMovieProgressView.m */; };
+		B5D4C37E1822636E00BB0A53 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D4C37A1822636E00BB0A53 /* RegexKitLite.m */; };
+		B5D4C383182263A700BB0A53 /* AirPlayDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D4C381182263A700BB0A53 /* AirPlayDetector.m */; };
+		B5D4C384182263A700BB0A53 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B5D4C382182263A700BB0A53 /* README.md */; };
 		B5F45FC617E986D600F0873B /* Reveal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5F45FC517E986D600F0873B /* Reveal.framework */; };
 /* End PBXBuildFile section */
 
@@ -116,8 +118,6 @@
 		B517792317C1B892006B948E /* NSNotificationCenter+SwizzleMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNotificationCenter+SwizzleMethod.h"; sourceTree = "<group>"; };
 		B517792417C1B894006B948E /* NSNotificationCenter+SwizzleMethod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNotificationCenter+SwizzleMethod.m"; sourceTree = "<group>"; };
 		B517792F17C20904006B948E /* videoplay.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = videoplay.html; sourceTree = "<group>"; };
-		B517795017C21ACC006B948E /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
-		B517795117C21ACF006B948E /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
 		B517795317C21B58006B948E /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		B517795517C21BD6006B948E /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		B51F619317E9ADC200344122 /* Test2ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Test2ViewController.h; sourceTree = "<group>"; };
@@ -186,6 +186,11 @@
 		B5D4C35C1820F51A00BB0A53 /* WonderMovieInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderMovieInfoView.m; sourceTree = "<group>"; };
 		B5D4C35D1820F51A00BB0A53 /* WonderMovieProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMovieProgressView.h; sourceTree = "<group>"; };
 		B5D4C35E1820F51A00BB0A53 /* WonderMovieProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderMovieProgressView.m; sourceTree = "<group>"; };
+		B5D4C3791822636E00BB0A53 /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
+		B5D4C37A1822636E00BB0A53 /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
+		B5D4C380182263A700BB0A53 /* AirPlayDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AirPlayDetector.h; sourceTree = "<group>"; };
+		B5D4C381182263A700BB0A53 /* AirPlayDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AirPlayDetector.m; sourceTree = "<group>"; };
+		B5D4C382182263A700BB0A53 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		B5F45FC517E986D600F0873B /* Reveal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Reveal.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -249,9 +254,8 @@
 		B517773D17B36D44006B948E /* WonderMoviePlayer */ = {
 			isa = PBXGroup;
 			children = (
+				B5D4C3731822636E00BB0A53 /* Libs */,
 				B5AD78A217CDCFBB00C08E51 /* JSPlugin */,
-				B517795017C21ACC006B948E /* RegexKitLite.h */,
-				B517795117C21ACF006B948E /* RegexKitLite.m */,
 				B517775A17B36E04006B948E /* Source */,
 				B517774617B36D44006B948E /* AppDelegate.h */,
 				B517774717B36D44006B948E /* AppDelegate.m */,
@@ -399,6 +403,26 @@
 			path = ui;
 			sourceTree = "<group>";
 		};
+		B5D4C3731822636E00BB0A53 /* Libs */ = {
+			isa = PBXGroup;
+			children = (
+				B5D4C37F182263A700BB0A53 /* AirPlayDetector */,
+				B5D4C3791822636E00BB0A53 /* RegexKitLite.h */,
+				B5D4C37A1822636E00BB0A53 /* RegexKitLite.m */,
+			);
+			path = Libs;
+			sourceTree = "<group>";
+		};
+		B5D4C37F182263A700BB0A53 /* AirPlayDetector */ = {
+			isa = PBXGroup;
+			children = (
+				B5D4C380182263A700BB0A53 /* AirPlayDetector.h */,
+				B5D4C381182263A700BB0A53 /* AirPlayDetector.m */,
+				B5D4C382182263A700BB0A53 /* README.md */,
+			);
+			path = AirPlayDetector;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -474,6 +498,7 @@
 				B517775417B36D44006B948E /* ViewController.xib in Resources */,
 				B5D4C335181F966C00BB0A53 /* next_normal@2x.png in Resources */,
 				B5D4C343181F966C00BB0A53 /* unlock@2x.png in Resources */,
+				B5D4C384182263A700BB0A53 /* README.md in Resources */,
 				B5D4C342181F966C00BB0A53 /* toolbar@2x.png in Resources */,
 				B5D4C341181F966C00BB0A53 /* return@2x.png in Resources */,
 				B517777117B3960E006B948E /* Movie.m4v in Resources */,
@@ -501,6 +526,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5D4C383182263A700BB0A53 /* AirPlayDetector.m in Sources */,
 				B517774417B36D44006B948E /* main.m in Sources */,
 				B517774817B36D44006B948E /* AppDelegate.m in Sources */,
 				B517775117B36D44006B948E /* ViewController.m in Sources */,
@@ -510,7 +536,6 @@
 				B51778AF17B9DE32006B948E /* TestWebViewController.m in Sources */,
 				B5D4C3651820F51A00BB0A53 /* WonderMovieInfoView.m in Sources */,
 				B517792517C1B896006B948E /* NSNotificationCenter+SwizzleMethod.m in Sources */,
-				B517795217C21AD1006B948E /* RegexKitLite.m in Sources */,
 				B5D4C3601820F51A00BB0A53 /* WonderAVMovieViewController.m in Sources */,
 				B5AD785217CDA50E00C08E51 /* video.js in Sources */,
 				B5AD78A817CDD30600C08E51 /* JSURLProtocol.m in Sources */,
@@ -520,6 +545,7 @@
 				B5AD78B517CDF01700C08E51 /* JSInvokedUrlCommand.m in Sources */,
 				B5AD78B817CDF06100C08E51 /* JSJSON.m in Sources */,
 				B5D4C3631820F51A00BB0A53 /* BatteryIconView.m in Sources */,
+				B5D4C37E1822636E00BB0A53 /* RegexKitLite.m in Sources */,
 				B5D4C3611820F51A00BB0A53 /* WonderAVPlayerView.m in Sources */,
 				B5AD78BE17CE043B00C08E51 /* JSCommandQueue.m in Sources */,
 				B51F619617E9ADC200344122 /* Test2ViewController.m in Sources */,

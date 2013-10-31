@@ -16,6 +16,10 @@
 #import "BatteryIconView.h"
 #import <MediaPlayer/MediaPlayer.h>
 
+#ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
+#import "AirPlayDetector.h"
+#endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
+
 // y / x
 #define kWonderMovieVerticalPanGestureCoordRatio    1.732050808f
 #define kWonderMovieHorizontalPanGestureCoordRatio  1.0f
@@ -39,6 +43,10 @@
     
     BOOL _isDownloading;
     BOOL _hasStarted;
+    
+#ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
+    MPVolumeView *_airPlayButton; // assign
+#endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
 }
 @property (nonatomic, retain) NSTimer *timer;
 @property (nonatomic, retain) WonderMovieProgressView *progressView;
@@ -96,6 +104,13 @@
 //    [super release];
 //}
 
++ (void)initialize
+{
+#ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
+    [[AirPlayDetector defaultDetector] startMonitoring:[UIApplication sharedApplication].keyWindow];
+#endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
+}
+
 
 - (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted nextEnabled:(BOOL)nextEnabled downloadEnabled:(BOOL)downloadEnabled crossScreenEnabled:(BOOL)crossScreenEnabled
 {
@@ -145,18 +160,6 @@
         self.progressView.userInteractionEnabled = NO;
     }
     [self.bottomBar addSubview:self.progressView];
-    
-#ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
-    MPVolumeView *volumeView = [ [MPVolumeView alloc] init] ;
-    volumeView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-    [volumeView setShowsVolumeSlider:NO];
-    [volumeView sizeToFit];
-    [self.bottomBar addSubview:volumeView];
-    self.progressView.width -= volumeView.width + 10;
-    volumeView.left = self.progressView.right + 5;
-    volumeView.center = CGPointMake(volumeView.center.x, self.bottomBar.height / 2);
-    [volumeView release];
-#endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
     
     self.actionButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.actionButton setImage:QQVideoPlayerImage(@"play_normal") forState:UIControlStateNormal];
@@ -307,19 +310,26 @@
 #ifdef MTT_TWEAK_WONDER_MOVIE_HIDE_SYSTEM_VOLUME_VIEW
     // Hide default volume view
     // http://stackoverflow.com/questions/7868457/applicationmusicplayer-volume-notification
-    MPVolumeView *volumeView = [[[MPVolumeView alloc] initWithFrame:CGRectMake(-10000, -10000, 0, 0)] autorelease];
-    [self addSubview:volumeView];
+    [self addSubview:[[[MPVolumeView alloc] initWithFrame:CGRectMake(-10000, -10000, 0, 0)] autorelease]];
 #endif // MTT_TWEAK_WONDER_MOVIE_HIDE_SYSTEM_VOLUME_VIEW
 }
 
 - (void)installControlSource
 {
     [self setupView];
+    
+#ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAirPlayAvailabilityChanged:) name:AirPlayAvailabilityChanged object:nil];
+#endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
 }
 
 - (void)uninstallControlSource
 {
     [self removeTimer];
+    
+#ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AirPlayAvailabilityChanged object:nil];
+#endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
 }
 
 - (void)installGestureHandlerForParentView
@@ -1042,6 +1052,35 @@
             self.alpha = 0;
         }];
     }
+}
+
+#pragma mark AirPlay
+- (void)onAirPlayAvailabilityChanged:(NSNotification *)notifaction
+{
+#ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
+    BOOL isAirPlayAvailable = [AirPlayDetector defaultDetector].isAirPlayAvailable;
+    
+    if (_airPlayButton && !isAirPlayAvailable) { // has added but no available
+        [_airPlayButton removeFromSuperview];
+        _airPlayButton = nil;
+        self.progressView.width = self.bottomBar.width - self.progressView.left;
+        self.durationLabel.right = self.progressView.right - kProgressViewPadding;
+    }
+    else {
+        MPVolumeView *volumeView = [[MPVolumeView alloc] init] ;
+        volumeView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+        [volumeView setShowsVolumeSlider:NO];
+        [volumeView sizeToFit];
+        [self.bottomBar addSubview:volumeView];
+        _airPlayButton = volumeView;
+        CGFloat delta = volumeView.width + 10;
+        self.progressView.width = self.bottomBar.width - self.progressView.left - delta;
+        self.durationLabel.right = self.progressView.right - kProgressViewPadding;
+        volumeView.left = self.progressView.right + 5;
+        volumeView.center = CGPointMake(volumeView.center.x, self.bottomBar.height / 2);
+        [volumeView release];
+    }
+#endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
 }
 
 @end
