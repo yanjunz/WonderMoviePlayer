@@ -1060,13 +1060,15 @@
 #ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
     BOOL isAirPlayAvailable = [AirPlayDetector defaultDetector].isAirPlayAvailable;
     
-    if (_airPlayButton && !isAirPlayAvailable) { // has added but no available
+    // has added but airplay is not available, airplay button should be removed
+    if (_airPlayButton && !isAirPlayAvailable) {
         [_airPlayButton removeFromSuperview];
         _airPlayButton = nil;
         self.progressView.width = self.bottomBar.width - self.progressView.left;
         self.durationLabel.right = self.progressView.right - kProgressViewPadding;
     }
-    else {
+    // airplay became available and no airplay button yet, just add one
+    else if (_airPlayButton == nil && isAirPlayAvailable) {
         MPVolumeView *volumeView = [[MPVolumeView alloc] init] ;
         volumeView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
         [volumeView setShowsVolumeSlider:NO];
