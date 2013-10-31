@@ -146,6 +146,18 @@
     }
     [self.bottomBar addSubview:self.progressView];
     
+#ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
+    MPVolumeView *volumeView = [ [MPVolumeView alloc] init] ;
+    volumeView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    [volumeView setShowsVolumeSlider:NO];
+    [volumeView sizeToFit];
+    [self.bottomBar addSubview:volumeView];
+    self.progressView.width -= volumeView.width + 10;
+    volumeView.left = self.progressView.right + 5;
+    volumeView.center = CGPointMake(volumeView.center.x, self.bottomBar.height / 2);
+    [volumeView release];
+#endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
+    
     self.actionButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.actionButton setImage:QQVideoPlayerImage(@"play_normal") forState:UIControlStateNormal];
     [self.actionButton setImage:QQVideoPlayerImage(@"play_press") forState:UIControlStateHighlighted];
@@ -177,7 +189,7 @@
 //    self.fullscreenButton.frame = CGRectMake(self.width - 45, 0, 40, bottomBarHeight);
 //    [self.bottomBar addSubview:self.fullscreenButton];
     
-    UILabel *durationLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.bottomBar.width - progressBarRightPadding - durationLabelWidth - kProgressViewPadding, self.startLabel.top, durationLabelWidth, bottomBarHeight / 2)];
+    UILabel *durationLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.progressView.right - progressBarRightPadding - durationLabelWidth - kProgressViewPadding, self.startLabel.top, durationLabelWidth, bottomBarHeight / 2)];
     self.durationLabel = durationLabel;
     [durationLabel release];
     self.durationLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
@@ -292,11 +304,12 @@
     [self timerHandler]; // call to set info immediately
     [self updateStates];
     
-    
+#ifdef MTT_TWEAK_WONDER_MOVIE_HIDE_SYSTEM_VOLUME_VIEW
     // Hide default volume view
     // http://stackoverflow.com/questions/7868457/applicationmusicplayer-volume-notification
     MPVolumeView *volumeView = [[[MPVolumeView alloc] initWithFrame:CGRectMake(-10000, -10000, 0, 0)] autorelease];
     [self addSubview:volumeView];
+#endif // MTT_TWEAK_WONDER_MOVIE_HIDE_SYSTEM_VOLUME_VIEW
 }
 
 - (void)installControlSource

@@ -163,6 +163,7 @@
 #pragma mark VolumeView & BrightnessView
 - (UIView *)volumeView
 {
+#ifdef MTT_TWEAK_WONDER_MOVIE_HIDE_SYSTEM_VOLUME_VIEW
     if (_volumeView == nil) {
         CGFloat width = 120;
         CGFloat y = 20;
@@ -186,6 +187,9 @@
         _volumeView.alpha = 0;
     }
     return _volumeView;
+#else
+    return nil;
+#endif
 }
 
 - (UIView *)brightnessView
