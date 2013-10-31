@@ -319,7 +319,8 @@
     [self setupView];
     
 #ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAirPlayAvailabilityChanged:) name:AirPlayAvailabilityChanged object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAirPlayAvailabilityChanged) name:AirPlayAvailabilityChanged object:nil];
+    [self onAirPlayAvailabilityChanged]; // Check it at once
 #endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
 }
 
@@ -1055,7 +1056,7 @@
 }
 
 #pragma mark AirPlay
-- (void)onAirPlayAvailabilityChanged:(NSNotification *)notifaction
+- (void)onAirPlayAvailabilityChanged
 {
 #ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
     BOOL isAirPlayAvailable = [AirPlayDetector defaultDetector].isAirPlayAvailable;
