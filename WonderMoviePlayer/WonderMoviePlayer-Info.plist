@@ -30,5 +30,7 @@
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array/>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<true/>
 </dict>
 </plist>

@@ -202,13 +202,21 @@
     self.durationLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
     [self.bottomBar addSubview:self.durationLabel];
     
+    CGFloat statusBarHeight = 20;
+    
     // Setup headerBar
-    UIView *headerBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.width, headerBarHeight)];
+    UIView *headerBar = [[UIView alloc] initWithFrame:CGRectMake(0, statusBarHeight, self.width, headerBarHeight)];
     self.headerBar = headerBar;
     [headerBar release];
     self.headerBar.backgroundColor = [UIColor colorWithPatternImage:QQVideoPlayerImage(@"headerbar")];
     self.headerBar.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
     [self addSubview:self.headerBar];
+    
+    UIView *statusBarView = [[UIView alloc] initWithFrame:CGRectMake(0, -statusBarHeight, self.width, statusBarHeight)];
+    statusBarView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    NSLog(@"%@", QQVideoPlayerImage(@"statusbar_bg"));
+    statusBarView.backgroundColor = [UIColor colorWithPatternImage:QQVideoPlayerImage(@"statusbar_bg")];
+    [self.headerBar addSubview:statusBarView];
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton setImage:QQVideoPlayerImage(@"return") forState:UIControlStateNormal];
@@ -876,7 +884,10 @@
 - (IBAction)onSingleTapOverlayView:(UITapGestureRecognizer *)gr
 {
     BOOL animationToHide = self.alpha > 0;
-    [UIView animateWithDuration:0.5f animations:^{
+    if ([self.delegate respondsToSelector:@selector(movieControlSource:showControlView:)]) {
+        [self.delegate movieControlSource:self showControlView:!animationToHide];
+    }
+    [UIView animateWithDuration:animationToHide ? kWonderMovieControlDimDuration : kWonderMovieControlShowDuration animations:^{
         if (animationToHide) {
             self.alpha = 0;
         }
@@ -1049,7 +1060,10 @@
 - (void)dimControl
 {
     if (self.alpha == 1 && self.controlState != MovieControlStatePaused && self.controlState != MovieControlStateEnded && !_isScrubbing) {
-        [UIView animateWithDuration:0.5f animations:^{
+        if ([self.delegate respondsToSelector:@selector(movieControlSource:showControlView:)]) {
+            [self.delegate movieControlSource:self showControlView:NO];
+        }
+        [UIView animateWithDuration:kWonderMovieControlDimDuration animations:^{
             self.alpha = 0;
         }];
     }

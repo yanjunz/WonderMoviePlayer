@@ -51,6 +51,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 #ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
     CGFloat _fakeBufferProgress;
 #endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
+    BOOL _prefersStatusBarHidden;
 }
 @property (nonatomic, retain) UIView *controlView;
 @property (nonatomic, assign) BOOL isEnd;
@@ -146,6 +147,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.wantsFullScreenLayout = YES;
     UIImageView *backgroundView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"loading_bg")];
     backgroundView.contentMode = UIViewContentModeBottom;
     backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -189,6 +191,20 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onEnterBackground:) name:UIApplicationWillResignActiveNotification object:nil];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleBlackTranslucent;
+    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     /* Return YES for supported orientations. */
@@ -198,7 +214,17 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 // iOS7
 - (BOOL)prefersStatusBarHidden
 {
-    return YES;
+    return _prefersStatusBarHidden;
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
+}
+
+- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation
+{
+    return UIStatusBarAnimationFade;
 }
 
 // for IOS 6
@@ -917,6 +943,19 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
         self.playerLayerView.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
     }
     self.playerLayerView.playerLayer.bounds = self.playerLayerView.playerLayer.bounds;
+}
+
+- (void)movieControlSource:(id<MovieControlSource>)source showControlView:(BOOL)show
+{
+    // for iOS7
+    _prefersStatusBarHidden = !show;
+    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
+        [UIView animateWithDuration:show ? kWonderMovieControlShowDuration : kWonderMovieControlDimDuration animations:^{
+            [self setNeedsStatusBarAppearanceUpdate];
+        }];
+    }
+    // for iOS6
+    [[UIApplication sharedApplication] setStatusBarHidden:!show withAnimation:UIStatusBarAnimationFade];
 }
 
 #pragma mark Notification

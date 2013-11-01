@@ -105,6 +105,7 @@ typedef enum {
 - (void)movieControlSourceOnDownload:(id<MovieControlSource>)source;
 
 - (void)movieControlSourceSwitchVideoGravity:(id<MovieControlSource>)source;
+- (void)movieControlSource:(id<MovieControlSource>)source showControlView:(BOOL)show;
 @end
 
 #endif // MTT_FEATURE_WONDER_MOVIE_PLAYER

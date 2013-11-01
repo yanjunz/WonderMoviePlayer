@@ -99,6 +99,7 @@
 		B5D4C3AF1823444300BB0A53 /* popup_menu_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5D4C39F1823444300BB0A53 /* popup_menu_bg@2x.png */; };
 		B5D4C3B01823444300BB0A53 /* resolution_button_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5D4C3A01823444300BB0A53 /* resolution_button_selected@2x.png */; };
 		B5D4C3B11823444300BB0A53 /* separator_line@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5D4C3A11823444300BB0A53 /* separator_line@2x.png */; };
+		B5D4C3B418238A0900BB0A53 /* statusbar_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5D4C3B318238A0900BB0A53 /* statusbar_bg@2x.png */; };
 		B5F45FC617E986D600F0873B /* Reveal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5F45FC517E986D600F0873B /* Reveal.framework */; };
 /* End PBXBuildFile section */
 
@@ -223,6 +224,7 @@
 		B5D4C39F1823444300BB0A53 /* popup_menu_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "popup_menu_bg@2x.png"; sourceTree = "<group>"; };
 		B5D4C3A01823444300BB0A53 /* resolution_button_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "resolution_button_selected@2x.png"; sourceTree = "<group>"; };
 		B5D4C3A11823444300BB0A53 /* separator_line@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "separator_line@2x.png"; sourceTree = "<group>"; };
+		B5D4C3B318238A0900BB0A53 /* statusbar_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "statusbar_bg@2x.png"; sourceTree = "<group>"; };
 		B5F45FC517E986D600F0873B /* Reveal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Reveal.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -341,6 +343,7 @@
 		B51778DF17BA3880006B948E /* images */ = {
 			isa = PBXGroup;
 			children = (
+				B5D4C3B318238A0900BB0A53 /* statusbar_bg@2x.png */,
 				B5D4C3921823444300BB0A53 /* progress_prompt_bg@2x.png */,
 				B5D4C3931823444300BB0A53 /* volume_prompt_bg@2x.png */,
 				B5D4C3941823444300BB0A53 /* progress_prompt_circle@2x.png */,
@@ -576,6 +579,7 @@
 				B51F619717E9ADC200344122 /* Test2ViewController.xib in Resources */,
 				B5D4C32A181F966C00BB0A53 /* cross_screen@2x.png in Resources */,
 				B5D4C3A71823444300BB0A53 /* tv_drama_button_normal@2x.png in Resources */,
+				B5D4C3B418238A0900BB0A53 /* statusbar_bg@2x.png in Resources */,
 				B517793017C20905006B948E /* videoplay.html in Resources */,
 				B5D4C33A181F966C00BB0A53 /* play@2x.png in Resources */,
 				B5D4C336181F966C00BB0A53 /* pause_normal@2x.png in Resources */,

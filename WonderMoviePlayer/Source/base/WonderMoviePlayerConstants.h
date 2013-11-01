@@ -19,5 +19,7 @@
 #endif
 
 #define kProgressViewPadding 16
+#define kWonderMovieControlDimDuration              0.8f
+#define kWonderMovieControlShowDuration             0.2f
 
 #endif
