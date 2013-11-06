@@ -93,6 +93,10 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 - (void)dealloc
 {
 //    NSLog(@"[WonderAVMovieViewController] dealloc 0x%0x <--", self.hash);
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
+    [audioSession setActive:NO error:nil];
+    
     [self removeObserver:self forKeyPath:@"parentViewController"];
     [self.controlSource uninstallControlSource];
     
@@ -298,6 +302,22 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 - (void)prepareToPlayAsset:(AVURLAsset *)asset withKeys:(NSArray *)requestedKeys
 {
 //    NSLog(@"[WonderAVMovieViewController] prepareToPlayAsset %0x", self.hash);
+    UInt32 sessionCategory = kAudioSessionCategory_MediaPlayback;
+    AudioSessionSetProperty(kAudioSessionProperty_AudioCategory,
+                            sizeof(sessionCategory),
+                            &sessionCategory);
+    
+    UInt32 audioRouteOverride = kAudioSessionOverrideAudioRoute_Speaker;
+    AudioSessionSetProperty (kAudioSessionProperty_OverrideAudioRoute,
+                             sizeof (audioRouteOverride),
+                             &audioRouteOverride);
+    
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    //默认情况下扬声器播放
+    [audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
+    [audioSession setActive:YES error:nil];
+    
+    
     /* Make sure that the value of each key has loaded successfully. */
 	for (NSString *thisKey in requestedKeys) {
         NSError *error = nil;
