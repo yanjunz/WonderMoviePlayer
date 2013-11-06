@@ -25,6 +25,22 @@
 #define kWonderMovieHorizontalPanGestureCoordRatio  1.0f
 #define kWonderMoviePanDistanceThrehold             5.0f
 
+#define kWonderMovieTagSeparatorAfterDownload       101
+#define kWonderMovieTagSeparatorAfterTVDrama        102
+
+@interface UIViewEx : UIView
+
+@end
+
+@implementation UIViewEx
+
+- (void)dealloc
+{
+    [super dealloc];
+}
+
+@end
+
 @interface WonderMovieFullscreenControlView () {
     NSTimeInterval _playbackTime;
     NSTimeInterval _playableDuration;
@@ -65,9 +81,21 @@
 
 // header bar
 @property (nonatomic, retain) UIView *headerBar;
-@property (nonatomic, retain) UIButton *lockButton;
+//@property (nonatomic, retain) UIButton *lockButton;
 @property (nonatomic, retain) UIButton *downloadButton;
-@property (nonatomic, retain) UIButton *crossScreenButton;
+//@property (nonatomic, retain) UIButton *crossScreenButton;
+
+@property (nonatomic, retain) UIButton *menuButton;
+@property (nonatomic, retain) UIButton *tvDramaButton;
+
+// title & subtitle
+@property (nonatomic, retain) UILabel *titleLabel;
+@property (nonatomic, retain) UILabel *subtitleLabel;
+@property (nonatomic, copy) NSString *title;
+@property (nonatomic, copy) NSString *subtitle;
+
+// popup menu
+@property (nonatomic, retain) UIView *popupMenu;
 
 // download animation view
 @property (nonatomic, retain) UIView *downloadingView;
@@ -84,6 +112,10 @@
 
 @interface WonderMovieFullscreenControlView (Gesture) <UIGestureRecognizerDelegate>
 
+@end
+
+@interface WonderMovieFullscreenControlView (Utils)
+- (UIImage *)imageWithColor:(UIColor *)color;
 @end
 
 @implementation WonderMovieFullscreenControlView
@@ -135,7 +167,7 @@
     CGFloat progressBarLeftPadding = (self.nextEnabled ? 60+30+10 : 60) + 8 - 10;
     CGFloat progressBarRightPadding = 0;
     CGFloat durationLabelWidth = 100;
-    CGFloat batteryHeight = 10;
+//    CGFloat batteryHeight = 10;
     
     // Setup bottomBar
     UIView *bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.height - bottomBarHeight, self.width, bottomBarHeight)];
@@ -219,8 +251,8 @@
     [self.headerBar addSubview:statusBarView];
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [backButton setImage:QQVideoPlayerImage(@"return") forState:UIControlStateNormal];
-    backButton.frame = CGRectMake(0, 0, headerBarHeight, headerBarHeight);
+    [backButton setImage:QQVideoPlayerImage(@"back") forState:UIControlStateNormal];
+    backButton.frame = CGRectMake(2, 0, 53, headerBarHeight);
     backButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
     [backButton addTarget:self action:@selector(onClickBack:) forControlEvents:UIControlEventTouchUpInside];
     [self.headerBar addSubview:backButton];
@@ -232,76 +264,143 @@
     [lockedViews addObject:separatorView];
     [separatorView release];
     
+    
+//    BatteryIconView *batteryView = [[BatteryIconView alloc] initWithBatteryMonitoringEnabled:YES];
+//    self.batteryView = batteryView;
+//    [batteryView release];
+//    self.batteryView.frame = CGRectMake(self.headerBar.width - 10 - 24, headerBarHeight / 2, 24, batteryHeight);
+//    self.batteryView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+//    [self.headerBar addSubview:self.batteryView];
+    
+//    UILabel *timeLabel = [[UILabel alloc] initWithFrame:CGRectOffset(self.batteryView.frame, -2, -batteryHeight - 2)];
+//    self.timeLabel = timeLabel;
+//    [timeLabel release];
+//    self.timeLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+//    self.timeLabel.textAlignment = UITextAlignmentCenter;
+//    self.timeLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
+//    self.timeLabel.backgroundColor = [UIColor clearColor];
+//    self.timeLabel.font = [UIFont systemFontOfSize:9];
+//    [self.headerBar addSubview:self.timeLabel];
+
+//    self.lockButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [self.lockButton setImage:QQVideoPlayerImage(@"unlock") forState:UIControlStateNormal];
+//    [self.lockButton setImage:QQVideoPlayerImage(@"locked") forState:UIControlStateSelected];
+//    self.lockButton.frame = CGRectMake(self.batteryView.left - 58, 0, headerBarHeight, headerBarHeight);
+//    self.lockButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+//    [self.lockButton addTarget:self action:@selector(onClickLock:) forControlEvents:UIControlEventTouchUpInside];
+//    [self.headerBar addSubview:self.lockButton];
+    
+    CGFloat buttonWidth = 60;
+    CGFloat headerBarRightPadding = 5;
+    CGFloat buttonFontSize = 13;
+    UIFont *buttonFont = [UIFont systemFontOfSize:buttonFontSize];
+    UIImage *highlightedImage = [self imageWithColor:[[UIColor whiteColor] colorWithAlphaComponent:0.15]];
+    
+    self.menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.menuButton.frame = CGRectMake(self.headerBar.width - headerBarRightPadding - buttonWidth, 0, buttonWidth, headerBarHeight);
+    self.menuButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    [self.menuButton setTitle:NSLocalizedString(@"菜单", nil) forState:UIControlStateNormal];
+    self.menuButton.titleLabel.font = buttonFont;
+    [self.menuButton addTarget:self action:@selector(onClickMenu:) forControlEvents:UIControlEventTouchUpInside];
+    [self.menuButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
+    [self.menuButton setBackgroundImage:highlightedImage forState:UIControlStateSelected];
+    [self.headerBar addSubview:self.menuButton];
+    CGRect btnRect = self.menuButton.frame;
+    
+    self.tvDramaButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.tvDramaButton.frame = CGRectOffset(btnRect, -buttonWidth, 0);
+    self.tvDramaButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    [self.tvDramaButton setTitle:NSLocalizedString(@"剧集", nil) forState:UIControlStateNormal];
+    self.tvDramaButton.titleLabel.font = buttonFont;
+    [self.tvDramaButton addTarget:self action:@selector(onClickTVDrama:) forControlEvents:UIControlEventTouchUpInside];
+    [self.tvDramaButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
+    [self.headerBar addSubview:self.tvDramaButton];
+    btnRect = self.tvDramaButton.frame;
+    
     separatorView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"headerbar_separator")];
-    separatorView.center = CGPointMake(self.width - backButton.right - 4, self.headerBar.height / 2);
+    separatorView.center = CGPointMake(self.tvDramaButton.right - 1, self.headerBar.height / 2);
     separatorView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    separatorView.tag = kWonderMovieTagSeparatorAfterTVDrama;
     [self.headerBar addSubview:separatorView];
     [separatorView release];
     
-    BatteryIconView *batteryView = [[BatteryIconView alloc] initWithBatteryMonitoringEnabled:YES];
-    self.batteryView = batteryView;
-    [batteryView release];
-    self.batteryView.frame = CGRectMake(self.headerBar.width - 10 - 24, headerBarHeight / 2, 24, batteryHeight);
-    self.batteryView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-    [self.headerBar addSubview:self.batteryView];
+    self.downloadButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.downloadButton.frame = CGRectOffset(btnRect, -buttonWidth, 0);
+    self.downloadButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    [self.downloadButton setTitle:NSLocalizedString(@"缓存", nil) forState:UIControlStateNormal];
+    self.downloadButton.titleLabel.font = buttonFont;
+    [self.downloadButton addTarget:self action:@selector(onClickDownload:) forControlEvents:UIControlEventTouchUpInside];
+    [self.downloadButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
+    [self.headerBar addSubview:self.downloadButton];
+    btnRect = self.downloadButton.frame;
     
-    UILabel *timeLabel = [[UILabel alloc] initWithFrame:CGRectOffset(self.batteryView.frame, -2, -batteryHeight - 2)];
-    self.timeLabel = timeLabel;
-    [timeLabel release];
-    self.timeLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-    self.timeLabel.textAlignment = UITextAlignmentCenter;
-    self.timeLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
-    self.timeLabel.backgroundColor = [UIColor clearColor];
-    self.timeLabel.font = [UIFont systemFontOfSize:9];
-    [self.headerBar addSubview:self.timeLabel];
+    separatorView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"headerbar_separator")];
+    separatorView.center = CGPointMake(self.downloadButton.right - 1, self.headerBar.height / 2);
+    separatorView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    separatorView.tag = kWonderMovieTagSeparatorAfterDownload;
+    [self.headerBar addSubview:separatorView];
+    [separatorView release];
+    
+    // title label
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(backButton.right + 1 + 9, 0, (self.downloadButton.left - (backButton.right + 1 + 9) - 20) * 3.f / 4, headerBarHeight)];
+    titleLabel.backgroundColor = [UIColor clearColor];
+    titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    titleLabel.textColor = QQColor(videoplayer_title_color);
+    titleLabel.font = [UIFont systemFontOfSize:13];
+    titleLabel.text = @"HelloWorld, HelloWorld ";
+    [self.headerBar addSubview:titleLabel];
+    self.titleLabel = titleLabel;
+    [titleLabel release];
+    
+    UILabel *subtitleLabel = [[UILabel alloc] initWithFrame:self.titleLabel.frame];
+    subtitleLabel.backgroundColor = [UIColor clearColor];
+    subtitleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    subtitleLabel.textColor = QQColor(videoplayer_subtitle_color);
+    subtitleLabel.font = [UIFont systemFontOfSize:11];
+    subtitleLabel.text = @"(from MTTMTMTMTMTMTMMTMT)";
+    [self.headerBar addSubview:subtitleLabel];
+    self.subtitleLabel = subtitleLabel;
+    [subtitleLabel release];
+    
 
-    self.lockButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.lockButton setImage:QQVideoPlayerImage(@"unlock") forState:UIControlStateNormal];
-    [self.lockButton setImage:QQVideoPlayerImage(@"locked") forState:UIControlStateSelected];
-    self.lockButton.frame = CGRectMake(self.batteryView.left - 58, 0, headerBarHeight, headerBarHeight);
-    self.lockButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-    [self.lockButton addTarget:self action:@selector(onClickLock:) forControlEvents:UIControlEventTouchUpInside];
-    [self.headerBar addSubview:self.lockButton];
+//#ifdef MTT_TWEAK_WONDER_MOVIE_ENABLE_DOWNLOAD
+//    if (_downloadEnabled) {
+//        self.downloadButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//        [self.downloadButton setImage:QQVideoPlayerImage(@"download") forState:UIControlStateNormal];
+//        self.downloadButton.frame = CGRectOffset(btnRect, -50, 0);
+//        self.downloadButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+//        [self.downloadButton addTarget:self action:@selector(onClickDownload:) forControlEvents:UIControlEventTouchUpInside];
+//        self.downloadButton.enabled = NO; // disable download until confirmed that if video is live cast or not
+//        [self.headerBar addSubview:self.downloadButton];
+//        btnRect = self.downloadButton.frame;
+//        
+//        UIImageView *downloadingArrow = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"download_fg")];
+//        downloadingArrow.contentMode = UIViewContentModeCenter;
+//        downloadingArrow.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+//        self.downloadingView = downloadingArrow;
+//        [downloadingArrow release];
+//    }
+//#endif // MTT_TWEAK_WONDER_MOVIE_ENABLE_DOWNLOAD
     
-    CGRect btnRect = self.lockButton.frame;
-#ifdef MTT_TWEAK_WONDER_MOVIE_ENABLE_DOWNLOAD
-    if (_downloadEnabled) {
-        self.downloadButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.downloadButton setImage:QQVideoPlayerImage(@"download") forState:UIControlStateNormal];
-        self.downloadButton.frame = CGRectOffset(btnRect, -50, 0);
-        self.downloadButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-        [self.downloadButton addTarget:self action:@selector(onClickDownload:) forControlEvents:UIControlEventTouchUpInside];
-        self.downloadButton.enabled = NO; // disable download until confirmed that if video is live cast or not
-        [self.headerBar addSubview:self.downloadButton];
-        btnRect = self.downloadButton.frame;
-        
-        UIImageView *downloadingArrow = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"download_fg")];
-        downloadingArrow.contentMode = UIViewContentModeCenter;
-        downloadingArrow.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-        self.downloadingView = downloadingArrow;
-        [downloadingArrow release];
-    }
-#endif // MTT_TWEAK_WONDER_MOVIE_ENABLE_DOWNLOAD
+//    if (_crossScreenEnabled) {
+//        self.crossScreenButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//        [self.crossScreenButton setImage:QQVideoPlayerImage(@"cross_screen") forState:UIControlStateNormal];
+//        self.crossScreenButton.frame = CGRectOffset(btnRect, -50, 0);
+//        self.crossScreenButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+//        [self.crossScreenButton addTarget:self action:@selector(onClickCrossScreen:) forControlEvents:UIControlEventTouchUpInside];
+//        [self.headerBar addSubview:self.crossScreenButton];
+//    }
     
-    if (_crossScreenEnabled) {
-        self.crossScreenButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.crossScreenButton setImage:QQVideoPlayerImage(@"cross_screen") forState:UIControlStateNormal];
-        self.crossScreenButton.frame = CGRectOffset(btnRect, -50, 0);
-        self.crossScreenButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-        [self.crossScreenButton addTarget:self action:@selector(onClickCrossScreen:) forControlEvents:UIControlEventTouchUpInside];
-        [self.headerBar addSubview:self.crossScreenButton];
-    }
-    
-    
+
     [lockedViews addObject:backButton];
     [lockedViews addObject:self.bottomBar];
-    if (self.downloadButton) {
-        [lockedViews addObject:self.downloadButton];
-        [lockedViews addObject:self.downloadingView];
-    }
-    if (self.crossScreenButton) {
-        [lockedViews addObject:self.crossScreenButton];
-    }
+//    if (self.downloadButton) {
+//        [lockedViews addObject:self.downloadButton];
+//        [lockedViews addObject:self.downloadingView];
+//    }
+//    if (self.crossScreenButton) {
+//        [lockedViews addObject:self.crossScreenButton];
+//    }
     self.viewsToBeLocked = lockedViews;
     
     // Update control state
@@ -320,6 +419,51 @@
     // http://stackoverflow.com/questions/7868457/applicationmusicplayer-volume-notification
     [self addSubview:[[[MPVolumeView alloc] initWithFrame:CGRectMake(-10000, -10000, 0, 0)] autorelease]];
 #endif // MTT_TWEAK_WONDER_MOVIE_HIDE_SYSTEM_VOLUME_VIEW
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    // relayout title & subtitle
+    CGFloat headerBarHeight = self.headerBar.height;
+    CGFloat maxTitleWidth = self.downloadButton.left - self.titleLabel.left;
+    CGFloat maxSubtitleWidth = maxTitleWidth * 1 / 4;
+    self.titleLabel.size = CGSizeMake(maxTitleWidth, headerBarHeight);
+    self.subtitleLabel.size = self.titleLabel.size;
+    [self.titleLabel sizeToFit];
+    [self.subtitleLabel sizeToFit];
+    BOOL truncateTitle = NO, truncateSubtitle = NO;
+    if (self.titleLabel.width + self.subtitleLabel.width > maxTitleWidth) {
+        if (self.subtitleLabel.width > maxSubtitleWidth) {
+            truncateSubtitle = YES;
+            if (self.titleLabel.width > maxTitleWidth - maxSubtitleWidth) {
+                truncateTitle = YES;
+            }
+        }
+        else {
+            truncateTitle = YES;
+        }
+    }
+    
+    // 1. truncate subtitle for maxSubtitleWidth
+    if (truncateSubtitle) {
+        if (truncateTitle) {
+            self.subtitleLabel.width = maxSubtitleWidth;
+        }
+        else {
+            self.subtitleLabel.width = maxTitleWidth - self.titleLabel.width;
+        }
+    }
+    
+    // 2. truncate title for the remaining space
+    if (truncateTitle) {
+        self.titleLabel.size = CGSizeMake(maxTitleWidth - self.subtitleLabel.width, headerBarHeight);
+    }
+    else {
+        self.titleLabel.height = headerBarHeight;
+    }
+    self.subtitleLabel.frame = CGRectMake(self.titleLabel.right, 0, self.subtitleLabel.width, headerBarHeight);
 }
 
 - (void)installControlSource
@@ -397,9 +541,17 @@
     self.durationLabel = nil;
     
     self.headerBar = nil;
-    self.lockButton = nil;
+//    self.lockButton = nil;
     self.downloadButton = nil;
-    self.crossScreenButton = nil;
+//    self.crossScreenButton = nil;
+    self.menuButton = nil;
+    
+    self.titleLabel = nil;
+    self.subtitleLabel = nil;
+    self.title = nil;
+    self.subtitle = nil;
+    
+    self.popupMenu = nil;
 
     self.downloadingView = nil;
     
@@ -415,6 +567,59 @@
     _isLiveCast = isLiveCast;
     self.progressView.userInteractionEnabled = !isLiveCast;
     self.downloadButton.enabled = ![self isDownloading] && !isLiveCast;
+}
+
+- (UIView *)popupMenu
+{
+    if (_popupMenu == nil) {
+        // popup menu
+        CGFloat menuButtonHeight = 42;
+        CGFloat menuSeparatorHeight = 1;
+        CGFloat menuWidth = 97;
+        CGFloat topOffset = -1;
+        CGFloat buttonFontSize = 13;
+        UIFont *buttonFont = [UIFont systemFontOfSize:buttonFontSize];
+        UIImage *highlightedImage = [self imageWithColor:[[UIColor whiteColor] colorWithAlphaComponent:0.15]];
+        
+        UIView *popupMenu = [[UIViewEx alloc] initWithFrame:CGRectMake(self.width, topOffset, menuWidth, menuButtonHeight * 2 + menuSeparatorHeight + topOffset)];
+        popupMenu.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
+        popupMenu.backgroundColor = [UIColor clearColor];
+        [self.infoView addSubview:popupMenu];
+        _popupMenu = popupMenu;
+        
+        UIImageView *popupMenuBgImageView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"popup_menu_bg")];
+        popupMenuBgImageView.contentStretch = CGRectMake(0.5, 0.5, 0, 0);
+        popupMenuBgImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        popupMenuBgImageView.frame = popupMenu.bounds;
+        [popupMenu addSubview:popupMenuBgImageView];
+        [popupMenuBgImageView release];
+        
+        UIButton *lockButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        lockButton.frame = CGRectMake(0, topOffset, menuWidth, menuButtonHeight);
+        lockButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        lockButton.titleLabel.font = buttonFont;
+        [lockButton setTitle:NSLocalizedString(@"锁屏", nil) forState:UIControlStateNormal];
+        [lockButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
+        [lockButton addTarget:self action:@selector(onClickLock:) forControlEvents:UIControlEventTouchUpInside];
+        [popupMenu addSubview:lockButton];
+        [lockButton release];
+        
+        UIImageView *menuSeparatorView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"separator_line")];
+        menuSeparatorView.frame = CGRectMake(0, lockButton.bottom, menuWidth, menuSeparatorHeight);
+        [popupMenu addSubview:menuSeparatorView];
+        [menuSeparatorView release];
+        
+        UIButton *crossButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        crossButton.frame = CGRectOffset(lockButton.frame, 0, menuButtonHeight + menuSeparatorHeight);
+        crossButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        crossButton.titleLabel.font = buttonFont;
+        [crossButton setTitle:NSLocalizedString(@"跨屏分享", nil) forState:UIControlStateNormal];
+        [crossButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
+        [crossButton addTarget:self action:@selector(onClickCrossScreen:) forControlEvents:UIControlEventTouchUpInside];
+        [popupMenu addSubview:crossButton];
+        [crossButton release];
+    }
+    return _popupMenu;
 }
 
 #pragma mark Loading
@@ -777,21 +982,21 @@
 
 - (IBAction)onClickLock:(id)sender
 {
-    self.lockButton.selected = !self.lockButton.selected;
-    self.panGestureRecognizer.enabled = !self.lockButton.selected;
-    [UIView animateWithDuration:0.5f animations:^{
-        for (UIView *view in self.viewsToBeLocked) {
-            view.alpha = self.lockButton.selected ? 0 : 1;
-        }
-    } completion:^(BOOL finished) {
+//    self.lockButton.selected = !self.lockButton.selected;
+//    self.panGestureRecognizer.enabled = !self.lockButton.selected;
+//    [UIView animateWithDuration:0.5f animations:^{
 //        for (UIView *view in self.viewsToBeLocked) {
-//            view.hidden = self.lockButton.selected;
+//            view.alpha = self.lockButton.selected ? 0 : 1;
 //        }
-    }];
-    if ([self.delegate respondsToSelector:@selector(movieControlSource:lock:)]) {
-        [self.delegate movieControlSource:self lock:self.lockButton.selected];
-    }
-    [self cancelPreviousAndPrepareToDimControl];
+//    } completion:^(BOOL finished) {
+////        for (UIView *view in self.viewsToBeLocked) {
+////            view.hidden = self.lockButton.selected;
+////        }
+//    }];
+//    if ([self.delegate respondsToSelector:@selector(movieControlSource:lock:)]) {
+//        [self.delegate movieControlSource:self lock:self.lockButton.selected];
+//    }
+//    [self cancelPreviousAndPrepareToDimControl];
 }
 
 - (IBAction)onClickReplay:(id)sender
@@ -804,6 +1009,34 @@
 {
     [self handleCommand:MovieControlCommandPlay param:nil notify:YES];
     [self cancelPreviousAndPrepareToDimControl];    
+}
+
+- (IBAction)onClickMenu:(UIButton *)sender
+{
+    [self showPopupMenu:!self.menuButton.selected];
+}
+
+- (void)showPopupMenu:(BOOL)show
+{
+    self.menuButton.selected = show;
+    BOOL isShowed = self.popupMenu.right == self.width;
+    if (isShowed == show) {
+        return;
+    }
+
+    [UIView animateWithDuration:0.5f animations:^{
+        if (show) {
+            self.popupMenu.right = self.width;
+        }
+        else {
+            self.popupMenu.left = self.width;
+        }
+    }];
+}
+
+- (IBAction)onClickTVDrama:(id)sender
+{
+    
 }
 
 - (void)updateStates
@@ -895,6 +1128,9 @@
             self.alpha = 1;
         }
     }];
+    if (animationToHide) {
+        [self showPopupMenu:NO];
+    }
     [self cancelPreviousAndPrepareToDimControl];
 }
 
@@ -1066,6 +1302,7 @@
         [UIView animateWithDuration:kWonderMovieControlDimDuration animations:^{
             self.alpha = 0;
         }];
+        [self showPopupMenu:NO];
     }
 }
 
@@ -1135,6 +1372,24 @@
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
     return !([touch.view isKindOfClass:[UIControl class]]);
+}
+
+@end
+
+@implementation WonderMovieFullscreenControlView (Utils)
+
+- (UIImage *)imageWithColor:(UIColor *)color
+{
+    CGRect rect = CGRectMake(0, 0, 1, 1);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
 }
 
 @end

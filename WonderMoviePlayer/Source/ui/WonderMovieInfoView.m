@@ -23,6 +23,8 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        self.clipsToBounds = YES;
+        
         UIFont *font = [UIFont boldSystemFontOfSize:23];
         UILabel *progressTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 18+50-44, 100, 100)];
         self.progressTimeLabel = progressTimeLabel;
