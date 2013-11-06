@@ -28,19 +28,6 @@
 #define kWonderMovieTagSeparatorAfterDownload       101
 #define kWonderMovieTagSeparatorAfterTVDrama        102
 
-@interface UIViewEx : UIView
-
-@end
-
-@implementation UIViewEx
-
-- (void)dealloc
-{
-    [super dealloc];
-}
-
-@end
-
 @interface WonderMovieFullscreenControlView () {
     NSTimeInterval _playbackTime;
     NSTimeInterval _playableDuration;
@@ -59,6 +46,8 @@
     
     BOOL _isDownloading;
     BOOL _hasStarted;
+    
+    BOOL _isLocked;
     
 #ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
     MPVolumeView *_airPlayButton; // assign
@@ -81,7 +70,7 @@
 
 // header bar
 @property (nonatomic, retain) UIView *headerBar;
-//@property (nonatomic, retain) UIButton *lockButton;
+@property (nonatomic, retain) UIButton *lockButton;
 @property (nonatomic, retain) UIButton *downloadButton;
 //@property (nonatomic, retain) UIButton *crossScreenButton;
 
@@ -281,14 +270,6 @@
 //    self.timeLabel.backgroundColor = [UIColor clearColor];
 //    self.timeLabel.font = [UIFont systemFontOfSize:9];
 //    [self.headerBar addSubview:self.timeLabel];
-
-//    self.lockButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [self.lockButton setImage:QQVideoPlayerImage(@"unlock") forState:UIControlStateNormal];
-//    [self.lockButton setImage:QQVideoPlayerImage(@"locked") forState:UIControlStateSelected];
-//    self.lockButton.frame = CGRectMake(self.batteryView.left - 58, 0, headerBarHeight, headerBarHeight);
-//    self.lockButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-//    [self.lockButton addTarget:self action:@selector(onClickLock:) forControlEvents:UIControlEventTouchUpInside];
-//    [self.headerBar addSubview:self.lockButton];
     
     CGFloat buttonWidth = 60;
     CGFloat headerBarRightPadding = 5;
@@ -392,7 +373,7 @@
 //    }
     
 
-    [lockedViews addObject:backButton];
+    [lockedViews addObject:self.headerBar];
     [lockedViews addObject:self.bottomBar];
 //    if (self.downloadButton) {
 //        [lockedViews addObject:self.downloadButton];
@@ -550,7 +531,7 @@
     self.subtitleLabel = nil;
     self.title = nil;
     self.subtitle = nil;
-    
+
     self.popupMenu = nil;
 
     self.downloadingView = nil;
@@ -581,7 +562,7 @@
         UIFont *buttonFont = [UIFont systemFontOfSize:buttonFontSize];
         UIImage *highlightedImage = [self imageWithColor:[[UIColor whiteColor] colorWithAlphaComponent:0.15]];
         
-        UIView *popupMenu = [[UIViewEx alloc] initWithFrame:CGRectMake(self.width, topOffset, menuWidth, menuButtonHeight * 2 + menuSeparatorHeight + topOffset)];
+        UIView *popupMenu = [[UIView alloc] initWithFrame:CGRectMake(self.width, topOffset, menuWidth, menuButtonHeight * 2 + menuSeparatorHeight + topOffset)];
         popupMenu.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
         popupMenu.backgroundColor = [UIColor clearColor];
         [self.infoView addSubview:popupMenu];
@@ -602,7 +583,6 @@
         [lockButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
         [lockButton addTarget:self action:@selector(onClickLock:) forControlEvents:UIControlEventTouchUpInside];
         [popupMenu addSubview:lockButton];
-        [lockButton release];
         
         UIImageView *menuSeparatorView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"separator_line")];
         menuSeparatorView.frame = CGRectMake(0, lockButton.bottom, menuWidth, menuSeparatorHeight);
@@ -617,9 +597,25 @@
         [crossButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
         [crossButton addTarget:self action:@selector(onClickCrossScreen:) forControlEvents:UIControlEventTouchUpInside];
         [popupMenu addSubview:crossButton];
-        [crossButton release];
     }
     return _popupMenu;
+}
+
+- (UIButton *)lockButton
+{
+    if (_lockButton == nil) {
+        CGFloat headerBarHeight = self.headerBar.height;
+        UIButton *lockButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [lockButton setImage:QQVideoPlayerImage(@"locked") forState:UIControlStateNormal];
+        [lockButton setImage:QQVideoPlayerImage(@"unlock") forState:UIControlStateSelected];
+        lockButton.frame = CGRectMake(self.width - headerBarHeight - 10, 20, headerBarHeight, headerBarHeight);
+        lockButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+        [lockButton addTarget:self action:@selector(onClickLock:) forControlEvents:UIControlEventTouchUpInside];
+        lockButton.alpha = 0;
+        [self addSubview:lockButton];
+        _lockButton = [lockButton retain];
+    }
+    return _lockButton;
 }
 
 #pragma mark Loading
@@ -982,21 +978,27 @@
 
 - (IBAction)onClickLock:(id)sender
 {
-//    self.lockButton.selected = !self.lockButton.selected;
-//    self.panGestureRecognizer.enabled = !self.lockButton.selected;
-//    [UIView animateWithDuration:0.5f animations:^{
-//        for (UIView *view in self.viewsToBeLocked) {
-//            view.alpha = self.lockButton.selected ? 0 : 1;
-//        }
-//    } completion:^(BOOL finished) {
-////        for (UIView *view in self.viewsToBeLocked) {
-////            view.hidden = self.lockButton.selected;
-////        }
-//    }];
-//    if ([self.delegate respondsToSelector:@selector(movieControlSource:lock:)]) {
-//        [self.delegate movieControlSource:self lock:self.lockButton.selected];
-//    }
-//    [self cancelPreviousAndPrepareToDimControl];
+    _isLocked = !_isLocked;
+    BOOL isLocked = _isLocked;
+    self.panGestureRecognizer.enabled = !isLocked;
+    [self showPopupMenu:NO];
+    [UIView animateWithDuration:0.2f animations:^{
+        for (UIView *view in self.viewsToBeLocked) {
+            view.alpha = isLocked ? 0 : 1;
+        }
+        if (!isLocked) {
+            self.lockButton.alpha = 0;
+        }
+    } completion:^(BOOL finished) {
+        if (isLocked) {
+            self.lockButton.alpha = 1;
+            [self bringSubviewToFront:self.lockButton];
+        }
+    }];
+    if ([self.delegate respondsToSelector:@selector(movieControlSource:lock:)]) {
+        [self.delegate movieControlSource:self lock:self.lockButton.selected];
+    }
+    [self cancelPreviousAndPrepareToDimControl];
 }
 
 - (IBAction)onClickReplay:(id)sender

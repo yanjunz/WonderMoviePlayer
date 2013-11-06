@@ -46,7 +46,7 @@
         self.replayButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.replayButton setImage:QQVideoPlayerImage(@"replay") forState:UIControlStateNormal];
         self.replayButton.size = CGSizeMake(centerButtonSize, centerButtonSize);
-        self.replayButton.center = self.center;
+        self.replayButton.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
         self.replayButton.hidden = YES;
         self.replayButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         [self addSubview:self.replayButton];
