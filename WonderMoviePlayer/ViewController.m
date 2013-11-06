@@ -112,6 +112,9 @@
                 [controller dismissModalViewControllerAnimated:YES];
             }
         }];
+        [controller setCrossScreenBlock:^{
+            [controller setTitle:@"我叫MT" subtitle:@"(来源: 爱奇艺)"];
+        }];
         NSLog(@"start to play av");
         [controller playMovieStream:[[NSBundle mainBundle] URLForResource:@"Movie" withExtension:@"m4v"]];
         [controller release];

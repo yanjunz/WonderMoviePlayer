@@ -76,6 +76,7 @@ typedef enum {
 - (CGFloat)getTimeControlWidth;
 
 @property (nonatomic, assign) BOOL isLiveCast;
+- (void)setTitle:(NSString *)title subtitle:(NSString *)subtitle;
 
 @required
 @property (nonatomic, assign) MovieControlState controlState;

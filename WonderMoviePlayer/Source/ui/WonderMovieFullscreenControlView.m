@@ -80,8 +80,6 @@
 // title & subtitle
 @property (nonatomic, retain) UILabel *titleLabel;
 @property (nonatomic, retain) UILabel *subtitleLabel;
-@property (nonatomic, copy) NSString *title;
-@property (nonatomic, copy) NSString *subtitle;
 
 // popup menu
 @property (nonatomic, retain) UIView *popupMenu;
@@ -466,6 +464,13 @@
 #endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
 }
 
+- (void)setTitle:(NSString *)title subtitle:(NSString *)subtitle
+{
+    self.titleLabel.text = title;
+    self.subtitleLabel.text = subtitle;
+    [self setNeedsLayout];
+}
+
 - (void)installGestureHandlerForParentView
 {
     // Setup tap GR
@@ -529,8 +534,6 @@
     
     self.titleLabel = nil;
     self.subtitleLabel = nil;
-    self.title = nil;
-    self.subtitle = nil;
 
     self.popupMenu = nil;
 
@@ -617,6 +620,7 @@
     }
     return _lockButton;
 }
+
 
 #pragma mark Loading
 - (void)startLoading
