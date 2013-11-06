@@ -509,6 +509,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
                 [self.playerLayerView.playerLayer setPlayer:self.player];
                 
                 [self initScrubberTimer];
+                _hasStarted = YES;
             }
                 break;
             case AVPlayerStatusFailed:
