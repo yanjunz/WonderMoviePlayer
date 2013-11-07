@@ -1542,7 +1542,7 @@
 {
     CGRect rect = CGRectZero;
     rect.size = size;
-    UIGraphicsBeginImageContext(size);
+    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     CGContextSetFillColorWithColor(context, [UIColor clearColor].CGColor);
@@ -1550,6 +1550,7 @@
     
     CGRect imageRect = CGRectMake((size.width - content.size.width) / 2, (size.height - content.size.height) / 2, content.size.width, content.size.height);
     CGContextSetShouldAntialias(context, YES);
+    
     [content drawInRect:imageRect];
     
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
