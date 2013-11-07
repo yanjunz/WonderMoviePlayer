@@ -14,5 +14,4 @@
 @protocol BaseMoviePlayer <MovieControlSourceDelegate, MoviePlayerHandler>
 @property (nonatomic, retain) id<MovieControlSource> controlSource;
 @property (nonatomic, assign) BOOL isLiveCast;
-- (void)setTitle:(NSString *)title subtitle:(NSString *)subtitle;
 @end

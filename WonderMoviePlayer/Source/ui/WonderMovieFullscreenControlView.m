@@ -364,6 +364,7 @@
     self.downloadButton.frame = CGRectOffset(btnRect, -buttonWidth, 0);
     self.downloadButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [self.downloadButton setTitle:NSLocalizedString(@"缓存", nil) forState:UIControlStateNormal];
+    [self.downloadButton setTitleColor:QQColor(videoplayer_downloaded_color) forState:UIControlStateDisabled];
     self.downloadButton.titleLabel.font = buttonFont;
     [self.downloadButton addTarget:self action:@selector(onClickDownload:) forControlEvents:UIControlEventTouchUpInside];
     [self.downloadButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
@@ -1012,6 +1013,14 @@
 //    [self.downloadingView removeFromSuperview];
 //    [self.downloadingView.layer removeAnimationForKey:@"downloadingAnimation"];
     _isDownloading = NO;
+    [self.downloadButton setTitle:NSLocalizedString(@"已缓存", nil) forState:UIControlStateNormal];
+    self.downloadButton.enabled = NO;
+}
+
+- (void)setDownloadProgress:(CGFloat)progress
+{
+    NSString *title = [NSString stringWithFormat:NSLocalizedString(@"缓存 %d%%", nil), (int)(progress * 100)];
+    [self.downloadButton setTitle:title forState:UIControlStateNormal];
 }
 
 - (BOOL)isDownloading

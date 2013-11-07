@@ -19,15 +19,16 @@
 #endif
 
 // define colors
-#define RGBAColor(r, g, b, a) [UIColor colorWithRed:r / 255.f green:g / 255.f blue:b / 255.f alpha:a / 255.f];
+#define RGBAColor(r, g, b, a) [UIColor colorWithRed:r / 255.f green:g / 255.f blue:b / 255.f alpha:a / 255.f]
 #define QQColor(colorName) colorName
 
 #ifndef QQColor
 #define QQColor(colorName) Color(#colorName)
 #endif
 
-#define videoplayer_title_color     RGBAColor(0xb2, 0xb2, 0xb2, 0xff)
-#define videoplayer_subtitle_color  RGBAColor(0x8d, 0x8d, 0x8d, 0xff)
+#define videoplayer_title_color         RGBAColor(0xb2, 0xb2, 0xb2, 0xff)
+#define videoplayer_subtitle_color      RGBAColor(0x8d, 0x8d, 0x8d, 0xff)
+#define videoplayer_downloaded_color    RGBAColor(0x8d, 0x8d, 0x8d, 0xff)
 
 #define kProgressViewPadding 16
 #define kWonderMovieControlDimDuration              0.8f

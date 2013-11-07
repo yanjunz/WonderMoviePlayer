@@ -57,6 +57,8 @@ typedef enum {
 - (void)startToDownload;
 - (void)finishDownload;
 - (void)pauseDownload;
+- (void)setDownloadProgress:(CGFloat)progress;
+
 - (void)lockScreen;
 - (void)setBufferProgress:(CGFloat)progress;
 

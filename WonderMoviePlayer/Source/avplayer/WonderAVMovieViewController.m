@@ -293,12 +293,6 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     }
 }
 
-#pragma mark Public 
-- (void)setTitle:(NSString *)title subtitle:(NSString *)subtitle
-{
-    [self.controlSource setTitle:title subtitle:subtitle];
-}
-
 #pragma mark Prepare to play asset
 
 /*
