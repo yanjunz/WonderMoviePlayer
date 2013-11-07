@@ -74,9 +74,11 @@ typedef enum {
 
 // Return the length of time control such as a progressbar, used for calcuate the interval for progress timer
 - (CGFloat)getTimeControlWidth;
+- (void)setTitle:(NSString *)title subtitle:(NSString *)subtitle;
 
 @property (nonatomic, assign) BOOL isLiveCast;
-- (void)setTitle:(NSString *)title subtitle:(NSString *)subtitle;
+@property (nonatomic, copy) NSArray *resolutions;
+@property (nonatomic) int selectedResolutionIndex;
 
 @required
 @property (nonatomic, assign) MovieControlState controlState;
@@ -107,6 +109,7 @@ typedef enum {
 
 - (void)movieControlSourceSwitchVideoGravity:(id<MovieControlSource>)source;
 - (void)movieControlSource:(id<MovieControlSource>)source showControlView:(BOOL)show;
+- (void)movieControlSource:(id<MovieControlSource>)source didChangeResolution:(NSString *)resolution;
 @end
 
 #endif // MTT_FEATURE_WONDER_MOVIE_PLAYER

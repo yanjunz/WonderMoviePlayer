@@ -28,6 +28,8 @@
 #define kWonderMovieTagSeparatorAfterDownload       101
 #define kWonderMovieTagSeparatorAfterTVDrama        102
 
+#define kWonderMovieResolutionButtonTagBase         100
+
 @interface WonderMovieFullscreenControlView () {
     NSTimeInterval _playbackTime;
     NSTimeInterval _playableDuration;
@@ -62,6 +64,7 @@
 
 // bottom bar
 @property (nonatomic, retain) UIView *bottomBar;
+@property (nonatomic, retain) UIView *progressBar;
 @property (nonatomic, retain) UIButton *actionButton;
 @property (nonatomic, retain) UIButton *nextButton;
 @property (nonatomic, retain) UILabel *startLabel;
@@ -83,6 +86,8 @@
 
 // popup menu
 @property (nonatomic, retain) UIView *popupMenu;
+@property (nonatomic, retain) UIView *resolutionsView;
+@property (nonatomic, retain) UIButton *resolutionButton;
 
 // download animation view
 @property (nonatomic, retain) UIView *downloadingView;
@@ -103,12 +108,15 @@
 
 @interface WonderMovieFullscreenControlView (Utils)
 - (UIImage *)imageWithColor:(UIColor *)color;
+- (UIImage *)backgroundImageWithSize:(CGSize)size content:(UIImage *)content;
 @end
 
 @implementation WonderMovieFullscreenControlView
 @synthesize delegate;
 @synthesize controlState;
 @synthesize isLiveCast = _isLiveCast;
+@synthesize resolutions;
+@synthesize selectedResolutionIndex;
 
 //- (id)retain
 //{
@@ -143,6 +151,43 @@
     return self;
 }
 
+- (void)dealloc
+{
+    [self removeTimer];
+    self.infoView = nil;
+    
+    self.progressView = nil;
+    self.batteryView = nil;
+    self.timeLabel = nil;
+    
+    self.bottomBar = nil;
+    self.progressBar = nil;
+    self.actionButton = nil;
+    self.nextButton = nil;
+    self.startLabel = nil;
+    self.durationLabel = nil;
+    
+    self.headerBar = nil;
+    self.lockButton = nil;
+    self.downloadButton = nil;
+    //    self.crossScreenButton = nil;
+    self.menuButton = nil;
+    
+    self.titleLabel = nil;
+    self.subtitleLabel = nil;
+    
+    self.popupMenu = nil;
+    self.resolutionsView = nil;
+    
+    self.downloadingView = nil;
+    
+    self.viewsToBeLocked = nil;
+    
+    self.delegate = nil;
+    self.panGestureRecognizer = nil;
+    [super dealloc];
+}
+
 - (void)setupView
 {
     NSMutableArray *lockedViews = [NSMutableArray array];
@@ -169,7 +214,25 @@
     self.bottomBar.backgroundColor = [UIColor colorWithPatternImage:QQVideoPlayerImage(@"toolbar")];
     self.bottomBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
     [self addSubview:self.bottomBar];
-    WonderMovieProgressView *progressView = [[WonderMovieProgressView alloc] initWithFrame:CGRectMake(progressBarLeftPadding, 0, self.bottomBar.width - progressBarLeftPadding - progressBarRightPadding, bottomBarHeight)];
+    
+    UIView *progressBar = [[UIView alloc] initWithFrame:CGRectMake(progressBarLeftPadding, 0, self.bottomBar.width - progressBarLeftPadding - progressBarRightPadding, bottomBarHeight)];
+    self.progressBar = progressBar;
+    self.progressBar.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    [self.bottomBar addSubview:progressBar];
+    [progressBar release];
+    
+    CGFloat resolutionButtonWidth = 32 + 20 * 2, resolutionButtonHeight = 18 + 20, resolutionButtonPadding = 25 - 20;
+    UIButton *resolutionButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    resolutionButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    resolutionButton.titleLabel.font = [UIFont systemFontOfSize:11];
+    UIImage *bgImage = [self backgroundImageWithSize:CGSizeMake(resolutionButtonWidth, resolutionButtonHeight) content:QQVideoPlayerImage(@"resolution_button_selected")];
+    [resolutionButton setBackgroundImage:bgImage forState:UIControlStateNormal];
+    [resolutionButton addTarget:self action:@selector(onClickResolution:) forControlEvents:UIControlEventTouchUpInside];
+    self.resolutionButton = resolutionButton;
+    resolutionButton.frame = CGRectMake(progressBar.width - resolutionButtonPadding - resolutionButtonWidth, (progressBar.height - resolutionButtonHeight) / 2, resolutionButtonWidth, resolutionButtonHeight);
+    [progressBar addSubview:resolutionButton];
+    
+    WonderMovieProgressView *progressView = [[WonderMovieProgressView alloc] initWithFrame:CGRectMake(0, 0, progressBar.width - resolutionButtonPadding * 2 - resolutionButtonWidth + kProgressViewPadding, progressBar.height)];
     self.progressView = progressView;
     [progressView release];
     
@@ -178,7 +241,7 @@
     if (self.isLiveCast) {
         self.progressView.userInteractionEnabled = NO;
     }
-    [self.bottomBar addSubview:self.progressView];
+    [progressBar addSubview:self.progressView];
     
     self.actionButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.actionButton setImage:QQVideoPlayerImage(@"play_normal") forState:UIControlStateNormal];
@@ -203,13 +266,7 @@
     self.startLabel.font = [UIFont systemFontOfSize:10];
     self.startLabel.backgroundColor = [UIColor clearColor];
     self.startLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
-    [self.bottomBar addSubview:self.startLabel];
-    
-//    self.fullscreenButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-//    self.fullscreenButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
-//    [self.fullscreenButton setTitle:@"F" forState:UIControlStateNormal];
-//    self.fullscreenButton.frame = CGRectMake(self.width - 45, 0, 40, bottomBarHeight);
-//    [self.bottomBar addSubview:self.fullscreenButton];
+    [progressBar addSubview:self.startLabel];
     
     UILabel *durationLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.progressView.right - progressBarRightPadding - durationLabelWidth - kProgressViewPadding, self.startLabel.top, durationLabelWidth, bottomBarHeight / 2)];
     self.durationLabel = durationLabel;
@@ -219,7 +276,7 @@
     self.durationLabel.font = [UIFont systemFontOfSize:10];
     self.durationLabel.backgroundColor = [UIColor clearColor];
     self.durationLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
-    [self.bottomBar addSubview:self.durationLabel];
+    [progressBar addSubview:self.durationLabel];
     
     CGFloat statusBarHeight = 20;
     
@@ -340,6 +397,10 @@
     [self.headerBar addSubview:subtitleLabel];
     self.subtitleLabel = subtitleLabel;
     [subtitleLabel release];
+    
+    self.resolutions = @[@"高清", @"流畅", @"标清"];
+    [self rebuildResolutionsView];
+    [self updateResolutions];
     
 
 //#ifdef MTT_TWEAK_WONDER_MOVIE_ENABLE_DOWNLOAD
@@ -511,40 +572,6 @@
     return CGRectMake(0, self.headerBar.bottom, self.width, self.height - self.headerBar.bottom - self.bottomBar.height);
 }
 
-- (void)dealloc
-{
-    [self removeTimer];
-    self.infoView = nil;
-    
-    self.progressView = nil;
-    self.batteryView = nil;
-    self.timeLabel = nil;
-    
-    self.bottomBar = nil;
-    self.actionButton = nil;
-    self.nextButton = nil;
-    self.startLabel = nil;
-    self.durationLabel = nil;
-    
-    self.headerBar = nil;
-//    self.lockButton = nil;
-    self.downloadButton = nil;
-//    self.crossScreenButton = nil;
-    self.menuButton = nil;
-    
-    self.titleLabel = nil;
-    self.subtitleLabel = nil;
-
-    self.popupMenu = nil;
-
-    self.downloadingView = nil;
-    
-    self.viewsToBeLocked = nil;
-    
-    self.delegate = nil;
-    self.panGestureRecognizer = nil;
-    [super dealloc];
-}
 
 - (void)setIsLiveCast:(BOOL)isLiveCast
 {
@@ -553,6 +580,7 @@
     self.downloadButton.enabled = ![self isDownloading] && !isLiveCast;
 }
 
+#pragma mark PopupMenu
 - (UIView *)popupMenu
 {
     if (_popupMenu == nil) {
@@ -603,6 +631,76 @@
     }
     return _popupMenu;
 }
+
+#pragma mark Resolutions
+// resolutions popup view shoule be rebuilded if count of resolutons changed
+- (void)rebuildResolutionsView
+{
+    CGFloat menuButtonHeight = 42;
+    CGFloat menuSeparatorHeight = 1;
+    CGFloat menuWidth = 67;
+    CGFloat topOffset = 1;
+    CGFloat buttonWidth = 32, buttonHeight = 18;
+    int count = self.resolutions.count - 1;
+    count = MAX(count, 0);
+    
+    if (_resolutionsView) {
+        [_resolutionsView removeFromSuperview];
+        [_resolutionsView release];
+    }
+    
+    UIView *popupMenu = [[UIView alloc] initWithFrame:CGRectMake(self.width, topOffset, menuWidth, menuButtonHeight * count + menuSeparatorHeight + topOffset)];
+    popupMenu.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
+    popupMenu.backgroundColor = [UIColor clearColor];
+    [self.infoView addSubview:popupMenu];
+    _resolutionsView = popupMenu;
+    
+    UIImageView *popupMenuBgImageView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"popup_menu_bg")];
+    popupMenuBgImageView.contentStretch = CGRectMake(0.5, 0.5, 0, 0);
+    popupMenuBgImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    popupMenuBgImageView.frame = popupMenu.bounds;
+    [popupMenu addSubview:popupMenuBgImageView];
+    [popupMenuBgImageView release];
+    
+    CGFloat x = 17;
+    for (int i = 0; i < count; ++i) {
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        CGFloat y = i * (menuButtonHeight + menuSeparatorHeight);
+        
+        button.frame = CGRectMake(x, y + 12 , buttonWidth, buttonHeight);
+        button.tag = kWonderMovieResolutionButtonTagBase + i;
+        button.titleLabel.font = [UIFont systemFontOfSize:11];
+        [button setBackgroundImage:QQVideoPlayerImage(@"resolution_button_normal") forState:UIControlStateNormal];
+        [button addTarget:self action:@selector(onClickResolution:) forControlEvents:UIControlEventTouchUpInside];
+        [popupMenu addSubview:button];
+        
+        UIImageView *menuSeparatorView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"separator_line")];
+        menuSeparatorView.frame = CGRectMake(0, y + menuButtonHeight, menuWidth, menuSeparatorHeight);
+        [popupMenu addSubview:menuSeparatorView];
+        [menuSeparatorView release];
+    }
+    
+    popupMenu.hidden = YES;
+}
+
+- (void)updateResolutions
+{
+    int tagIndex = 0;
+    for (int i = 0; i < self.resolutions.count; ++i) {
+        if (i == self.selectedResolutionIndex) {
+            continue;
+        }
+        
+        int tag = kWonderMovieResolutionButtonTagBase + tagIndex;
+        UIButton *button = (UIButton *)[_resolutionsView viewWithTag:tag];
+        [button setTitle:self.resolutions[i] forState:UIControlStateNormal];
+        tagIndex ++;
+    }
+    if (self.resolutions.count > 0 && self.selectedResolutionIndex >= 0 && self.selectedResolutionIndex < self.resolutions.count) {
+        [self.resolutionButton setTitle:self.resolutions[self.selectedResolutionIndex] forState:UIControlStateNormal];
+    }
+}
+
 
 - (UIButton *)lockButton
 {
@@ -986,6 +1084,7 @@
     BOOL isLocked = _isLocked;
     self.panGestureRecognizer.enabled = !isLocked;
     [self showPopupMenu:NO];
+    [self showResolutionView:NO];
     [UIView animateWithDuration:0.2f animations:^{
         for (UIView *view in self.viewsToBeLocked) {
             view.alpha = isLocked ? 0 : 1;
@@ -1020,6 +1119,7 @@
 - (IBAction)onClickMenu:(UIButton *)sender
 {
     [self showPopupMenu:!self.menuButton.selected];
+    [self cancelPreviousAndPrepareToDimControl];
 }
 
 - (void)showPopupMenu:(BOOL)show
@@ -1033,17 +1133,56 @@
     [UIView animateWithDuration:0.5f animations:^{
         if (show) {
             self.popupMenu.right = self.width;
+            self.popupMenu.alpha = 1;
         }
         else {
             self.popupMenu.left = self.width;
+            self.popupMenu.alpha = 0;
         }
     }];
 }
 
 - (IBAction)onClickTVDrama:(id)sender
 {
-    
+ 
+    [self cancelPreviousAndPrepareToDimControl];
 }
+
+- (IBAction)onClickResolution:(id)sender
+{
+    BOOL animateToShow = self.resolutionsView.hidden;
+    [self showResolutionView:animateToShow];
+    [self cancelPreviousAndPrepareToDimControl];
+}
+
+- (void)showResolutionView:(BOOL)show
+{
+    if (self.resolutionsView.superview != self.infoView) {
+        [self.resolutionsView removeFromSuperview];
+        [self.infoView addSubview:self.resolutionsView];
+    }
+    CGPoint pt = [self.infoView convertPoint:self.resolutionButton.center fromView:self.resolutionButton.superview];
+    self.resolutionsView.left = pt.x - self.resolutionsView.width / 2;
+    if (show) {
+        self.resolutionsView.top = self.infoView.height;
+        self.resolutionsView.hidden = NO;
+    }
+    [UIView animateWithDuration:0.5 animations:^{
+        if (show) {
+            self.resolutionsView.bottom = self.infoView.height;
+            self.resolutionsView.alpha = 1;
+        }
+        else {
+            self.resolutionsView.top = self.infoView.height;
+            self.resolutionsView.alpha = 0;
+        }
+    } completion:^(BOOL finished) {
+        if (!show) {
+            self.resolutionsView.hidden = YES;
+        }
+    }];
+}
+
 
 - (void)updateStates
 {
@@ -1136,6 +1275,7 @@
     }];
     if (animationToHide) {
         [self showPopupMenu:NO];
+        [self showResolutionView:NO];
     }
     [self cancelPreviousAndPrepareToDimControl];
 }
@@ -1309,39 +1449,39 @@
             self.alpha = 0;
         }];
         [self showPopupMenu:NO];
+        [self showResolutionView:NO];
     }
 }
 
 #pragma mark AirPlay
+#ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
 - (void)onAirPlayAvailabilityChanged
 {
-#ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
     BOOL isAirPlayAvailable = [AirPlayDetector defaultDetector].isAirPlayAvailable;
     
     // has added but airplay is not available, airplay button should be removed
     if (_airPlayButton && !isAirPlayAvailable) {
         [_airPlayButton removeFromSuperview];
         _airPlayButton = nil;
-        self.progressView.width = self.bottomBar.width - self.progressView.left;
-        self.durationLabel.right = self.progressView.right - kProgressViewPadding;
+        self.progressBar.width = self.bottomBar.width - self.progressBar.left;
     }
     // airplay became available and no airplay button yet, just add one
     else if (_airPlayButton == nil && isAirPlayAvailable) {
         MPVolumeView *volumeView = [[MPVolumeView alloc] init] ;
         volumeView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+//        volumeView.backgroundColor = [UIColor redColor];
         [volumeView setShowsVolumeSlider:NO];
         [volumeView sizeToFit];
         [self.bottomBar addSubview:volumeView];
         _airPlayButton = volumeView;
-        CGFloat delta = volumeView.width + 10;
-        self.progressView.width = self.bottomBar.width - self.progressView.left - delta;
-        self.durationLabel.right = self.progressView.right - kProgressViewPadding;
-        volumeView.left = self.progressView.right + 5;
+        CGFloat delta = volumeView.width + 5;
+        self.progressBar.width = self.bottomBar.width - self.progressBar.left - delta;
+        volumeView.left = self.progressBar.right - 5;
         volumeView.center = CGPointMake(volumeView.center.x, self.bottomBar.height / 2);
         [volumeView release];
     }
-#endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
 }
+#endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
 
 @end
 
@@ -1392,6 +1532,25 @@
     
     CGContextSetFillColorWithColor(context, [color CGColor]);
     CGContextFillRect(context, rect);
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
+- (UIImage *)backgroundImageWithSize:(CGSize)size content:(UIImage *)content
+{
+    CGRect rect = CGRectZero;
+    rect.size = size;
+    UIGraphicsBeginImageContext(size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGContextSetFillColorWithColor(context, [UIColor clearColor].CGColor);
+    CGContextFillRect(context, rect);
+    
+    CGRect imageRect = CGRectMake((size.width - content.size.width) / 2, (size.height - content.size.height) / 2, content.size.width, content.size.height);
+    CGContextSetShouldAntialias(context, YES);
+    [content drawInRect:imageRect];
     
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
