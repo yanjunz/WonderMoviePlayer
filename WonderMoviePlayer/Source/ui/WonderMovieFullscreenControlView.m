@@ -383,7 +383,7 @@
     titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     titleLabel.textColor = QQColor(videoplayer_title_color);
     titleLabel.font = [UIFont systemFontOfSize:13];
-    titleLabel.text = @"HelloWorld, HelloWorld ";
+    titleLabel.text = @"";
     [self.headerBar addSubview:titleLabel];
     self.titleLabel = titleLabel;
     [titleLabel release];
@@ -393,7 +393,7 @@
     subtitleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     subtitleLabel.textColor = QQColor(videoplayer_subtitle_color);
     subtitleLabel.font = [UIFont systemFontOfSize:11];
-    subtitleLabel.text = @"(from MTTMTMTMTMTMTMMTMT)";
+    subtitleLabel.text = @"";
     [self.headerBar addSubview:subtitleLabel];
     self.subtitleLabel = subtitleLabel;
     [subtitleLabel release];
@@ -1064,6 +1064,7 @@
 
 - (IBAction)onClickDownload:(id)sender
 {
+    [self dismissAllPopupViews];
     if ([self.delegate respondsToSelector:@selector(movieControlSourceOnDownload:)]) {
         [self.delegate movieControlSourceOnDownload:self];
     }
@@ -1072,6 +1073,7 @@
 
 - (IBAction)onClickCrossScreen:(id)sender
 {
+    [self dismissAllPopupViews];
     if ([self.delegate respondsToSelector:@selector(movieControlSourceOnCrossScreen:)]) {
         [self.delegate movieControlSourceOnCrossScreen:self];
     }
@@ -1083,8 +1085,7 @@
     _isLocked = !_isLocked;
     BOOL isLocked = _isLocked;
     self.panGestureRecognizer.enabled = !isLocked;
-    [self showPopupMenu:NO];
-    [self showResolutionView:NO];
+    [self dismissAllPopupViews];
     [UIView animateWithDuration:0.2f animations:^{
         for (UIView *view in self.viewsToBeLocked) {
             view.alpha = isLocked ? 0 : 1;
@@ -1144,7 +1145,7 @@
 
 - (IBAction)onClickTVDrama:(id)sender
 {
- 
+    [self dismissAllPopupViews]; 
     [self cancelPreviousAndPrepareToDimControl];
 }
 
@@ -1183,6 +1184,11 @@
     }];
 }
 
+- (void)dismissAllPopupViews
+{
+    [self showPopupMenu:NO];
+    [self showResolutionView:NO];
+}
 
 - (void)updateStates
 {
@@ -1274,8 +1280,7 @@
         }
     }];
     if (animationToHide) {
-        [self showPopupMenu:NO];
-        [self showResolutionView:NO];
+        [self dismissAllPopupViews];
     }
     [self cancelPreviousAndPrepareToDimControl];
 }
@@ -1448,8 +1453,7 @@
         [UIView animateWithDuration:kWonderMovieControlDimDuration animations:^{
             self.alpha = 0;
         }];
-        [self showPopupMenu:NO];
-        [self showResolutionView:NO];
+        [self dismissAllPopupViews];
     }
 }
 
