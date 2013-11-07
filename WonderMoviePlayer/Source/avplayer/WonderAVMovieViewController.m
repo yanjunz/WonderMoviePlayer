@@ -151,6 +151,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [UIApplication sharedApplication].statusBarHidden = YES;
     self.wantsFullScreenLayout = YES;
     UIImageView *backgroundView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"loading_bg")];
     backgroundView.contentMode = UIViewContentModeBottom;

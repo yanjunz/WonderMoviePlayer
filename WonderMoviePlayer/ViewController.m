@@ -91,7 +91,7 @@
         DefineBlockVar(WonderAVMovieViewController *, controller, [[WonderAVMovieViewController alloc] init]);
         self.player = controller;
         [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeRight animated:YES];
-        [UIApplication sharedApplication].statusBarHidden = YES;
+//        [UIApplication sharedApplication].statusBarHidden = YES;
         
         if ([self respondsToSelector:@selector(presentViewController:animated:completion:)]) {
             [self presentViewController:controller animated:YES completion:nil];
@@ -104,7 +104,7 @@
             _testString = @"Hello";
             self.testString = @"YEs";
             self.player = nil;
-            [UIApplication sharedApplication].statusBarHidden = NO;
+//            [UIApplication sharedApplication].statusBarHidden = NO;
             if ([controller respondsToSelector:@selector(dismissViewControllerAnimated:completion:)]) {
                 [controller dismissViewControllerAnimated:YES completion:nil];
             }
