@@ -13,7 +13,6 @@
 #import "WonderMovieFullscreenControlView.h"
 #import "WonderMovieProgressView.h"
 #import "UIView+Sizes.h"
-#import "BatteryIconView.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import <AudioToolbox/AudioToolbox.h>
 
@@ -65,10 +64,6 @@
 @property (nonatomic, retain) NSTimer *timer;
 @property (nonatomic, retain) WonderMovieProgressView *progressView;
 
-// battery
-@property (nonatomic, retain) BatteryIconView *batteryView;
-@property (nonatomic, retain) UILabel *timeLabel;
-
 // bottom bar
 @property (nonatomic, retain) UIView *bottomBar;
 @property (nonatomic, retain) UIView *progressBar;
@@ -95,9 +90,6 @@
 @property (nonatomic, retain) UIView *popupMenu;
 @property (nonatomic, retain) UIView *resolutionsView;
 @property (nonatomic, retain) UIButton *resolutionButton;
-
-// download animation view
-@property (nonatomic, retain) UIView *downloadingView;
 
 // utils
 @property (nonatomic, retain) NSArray *viewsToBeLocked;
@@ -184,7 +176,7 @@ void volumeListenerCallback (
 #endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
 }
 
-
+#pragma mark UIView LifeCycle
 - (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted nextEnabled:(BOOL)nextEnabled downloadEnabled:(BOOL)downloadEnabled crossScreenEnabled:(BOOL)crossScreenEnabled
 {
     if (self = [super initWithFrame:frame]) {
@@ -205,8 +197,6 @@ void volumeListenerCallback (
     self.infoView = nil;
     
     self.progressView = nil;
-    self.batteryView = nil;
-    self.timeLabel = nil;
     
     self.bottomBar = nil;
     self.progressBar = nil;
@@ -226,16 +216,19 @@ void volumeListenerCallback (
     
     self.popupMenu = nil;
     self.resolutionsView = nil;
-    
-    self.downloadingView = nil;
+    self.resolutionButton = nil;
     
     self.viewsToBeLocked = nil;
     
     self.delegate = nil;
     self.panGestureRecognizer = nil;
+    
+    self.horizontalPanningTipView = nil;
+    self.verticalPanningTipView = nil;
     [super dealloc];
 }
 
+#pragma mark UIView Layout
 - (void)setupView
 {
     NSMutableArray *lockedViews = [NSMutableArray array];
@@ -247,7 +240,6 @@ void volumeListenerCallback (
     CGFloat progressBarLeftPadding = (self.nextEnabled ? 60+30+10 : 60) + 8 - 10;
     CGFloat progressBarRightPadding = 0;
     CGFloat durationLabelWidth = 100;
-//    CGFloat batteryHeight = 10;
     
     // Setup bottomBar
     UIView *bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.height - bottomBarHeight, self.width, bottomBarHeight)];
@@ -338,7 +330,6 @@ void volumeListenerCallback (
     
     UIView *statusBarView = [[UIView alloc] initWithFrame:CGRectMake(0, -statusBarHeight, self.width, statusBarHeight)];
     statusBarView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    NSLog(@"%@", QQVideoPlayerImage(@"statusbar_bg"));
     statusBarView.backgroundColor = [UIColor colorWithPatternImage:QQVideoPlayerImage(@"statusbar_bg")];
     [self.headerBar addSubview:statusBarView];
     [statusBarView release];
@@ -356,24 +347,6 @@ void volumeListenerCallback (
     [self.headerBar addSubview:separatorView];
     [lockedViews addObject:separatorView];
     [separatorView release];
-    
-    
-//    BatteryIconView *batteryView = [[BatteryIconView alloc] initWithBatteryMonitoringEnabled:YES];
-//    self.batteryView = batteryView;
-//    [batteryView release];
-//    self.batteryView.frame = CGRectMake(self.headerBar.width - 10 - 24, headerBarHeight / 2, 24, batteryHeight);
-//    self.batteryView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-//    [self.headerBar addSubview:self.batteryView];
-    
-//    UILabel *timeLabel = [[UILabel alloc] initWithFrame:CGRectOffset(self.batteryView.frame, -2, -batteryHeight - 2)];
-//    self.timeLabel = timeLabel;
-//    [timeLabel release];
-//    self.timeLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-//    self.timeLabel.textAlignment = UITextAlignmentCenter;
-//    self.timeLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
-//    self.timeLabel.backgroundColor = [UIColor clearColor];
-//    self.timeLabel.font = [UIFont systemFontOfSize:9];
-//    [self.headerBar addSubview:self.timeLabel];
     
     CGFloat buttonWidth = 60;
     CGFloat headerBarRightPadding = 5;
@@ -453,45 +426,10 @@ void volumeListenerCallback (
 //    [self rebuildResolutionsView];
 //    [self updateResolutions];
     
-
-//#ifdef MTT_TWEAK_WONDER_MOVIE_ENABLE_DOWNLOAD
-//    if (_downloadEnabled) {
-//        self.downloadButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//        [self.downloadButton setImage:QQVideoPlayerImage(@"download") forState:UIControlStateNormal];
-//        self.downloadButton.frame = CGRectOffset(btnRect, -50, 0);
-//        self.downloadButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-//        [self.downloadButton addTarget:self action:@selector(onClickDownload:) forControlEvents:UIControlEventTouchUpInside];
-//        self.downloadButton.enabled = NO; // disable download until confirmed that if video is live cast or not
-//        [self.headerBar addSubview:self.downloadButton];
-//        btnRect = self.downloadButton.frame;
-//        
-//        UIImageView *downloadingArrow = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"download_fg")];
-//        downloadingArrow.contentMode = UIViewContentModeCenter;
-//        downloadingArrow.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-//        self.downloadingView = downloadingArrow;
-//        [downloadingArrow release];
-//    }
-//#endif // MTT_TWEAK_WONDER_MOVIE_ENABLE_DOWNLOAD
-    
-//    if (_crossScreenEnabled) {
-//        self.crossScreenButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//        [self.crossScreenButton setImage:QQVideoPlayerImage(@"cross_screen") forState:UIControlStateNormal];
-//        self.crossScreenButton.frame = CGRectOffset(btnRect, -50, 0);
-//        self.crossScreenButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-//        [self.crossScreenButton addTarget:self action:@selector(onClickCrossScreen:) forControlEvents:UIControlEventTouchUpInside];
-//        [self.headerBar addSubview:self.crossScreenButton];
-//    }
     
 
     [lockedViews addObject:self.headerBar];
     [lockedViews addObject:self.bottomBar];
-//    if (self.downloadButton) {
-//        [lockedViews addObject:self.downloadButton];
-//        [lockedViews addObject:self.downloadingView];
-//    }
-//    if (self.crossScreenButton) {
-//        [lockedViews addObject:self.crossScreenButton];
-//    }
     self.viewsToBeLocked = lockedViews;
     
     // Update control state
@@ -502,7 +440,7 @@ void volumeListenerCallback (
         self.controlState = MovieControlStateDefault;
     }
     [self setupTimer];
-    [self timerHandler]; // call to set info immediately
+//    [self timerHandler]; // call to set info immediately
     [self updateStates];
     
 #ifdef MTT_TWEAK_WONDER_MOVIE_HIDE_SYSTEM_VOLUME_VIEW
@@ -564,34 +502,10 @@ void volumeListenerCallback (
     }
 }
 
-- (void)installControlSource
-{
-    [self setupView];
-    
-#ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAirPlayAvailabilityChanged) name:AirPlayAvailabilityChanged object:nil];
-    [self onAirPlayAvailabilityChanged]; // Check it at once
-#endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
-}
 
-- (void)uninstallControlSource
-{
-    [self removeTimer];
-    
-#ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:AirPlayAvailabilityChanged object:nil];
-#endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
-    
-    AudioSessionRemovePropertyListenerWithUserData(kAudioSessionProperty_CurrentHardwareOutputVolume, volumeListenerCallback, self);
-}
 
-- (void)setTitle:(NSString *)title subtitle:(NSString *)subtitle
-{
-    self.titleLabel.text = title;
-    self.subtitleLabel.text = subtitle;
-    [self setNeedsLayout];
-}
 
+#pragma mark Public Functions
 - (void)installGestureHandlerForParentView
 {
     // Setup tap GR
@@ -794,7 +708,7 @@ void volumeListenerCallback (
     }
 }
 
-
+#pragma mark Lock
 - (UIButton *)lockButton
 {
     if (_lockButton == nil) {
@@ -834,7 +748,6 @@ void volumeListenerCallback (
     _totalBufferingSize = 0;
     [self.infoView stopLoading];
 }
-
 
 #pragma mark State Manchine
 - (void)handleCommand:(MovieControlCommand)cmd param:(id)param notify:(BOOL)notify
@@ -989,6 +902,34 @@ void volumeListenerCallback (
 }
 
 #pragma mark MovieControlSource
+- (void)installControlSource
+{
+    [self setupView];
+    
+#ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAirPlayAvailabilityChanged) name:AirPlayAvailabilityChanged object:nil];
+    [self onAirPlayAvailabilityChanged]; // Check it at once
+#endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
+}
+
+- (void)uninstallControlSource
+{
+    [self removeTimer];
+    
+#ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AirPlayAvailabilityChanged object:nil];
+#endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
+    
+    AudioSessionRemovePropertyListenerWithUserData(kAudioSessionProperty_CurrentHardwareOutputVolume, volumeListenerCallback, self);
+}
+
+- (void)setTitle:(NSString *)title subtitle:(NSString *)subtitle
+{
+    self.titleLabel.text = title;
+    self.subtitleLabel.text = subtitle;
+    [self setNeedsLayout];
+}
+
 - (void)play
 {
     [self handleCommand:MovieControlCommandPlay param:nil notify:NO];
@@ -1092,27 +1033,12 @@ void volumeListenerCallback (
 
 - (void)startToDownload
 {
-//    [self.downloadButton setImage:QQVideoPlayerImage(@"download_bg") forState:UIControlStateNormal];
-//    if (self.downloadingView.superview == nil) {
-//        self.downloadingView.frame = self.downloadButton.frame;
-//        [self.headerBar addSubview:self.downloadingView];
-//        
-//        CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"position.y"];
-//        animation.fromValue = @(self.downloadingView.center.y * 2 /3);
-//        animation.toValue = @(self.downloadingView.center.y);
-//        animation.repeatCount = HUGE_VALF;
-//        animation.duration = 0.8f;
-//        [self.downloadingView.layer addAnimation:animation forKey:@"downloadingAnimation"];
-//    }
     self.downloadButton.enabled = NO;
     _isDownloading = YES;
 }
 
 - (void)finishDownload
 {
-//    [self.downloadButton setImage:QQVideoPlayerImage(@"download") forState:UIControlStateNormal];
-//    [self.downloadingView removeFromSuperview];
-//    [self.downloadingView.layer removeAnimationForKey:@"downloadingAnimation"];
     _isDownloading = NO;
     [self.downloadButton setTitle:NSLocalizedString(@"已缓存", nil) forState:UIControlStateNormal];
     self.downloadButton.enabled = NO;
@@ -1126,7 +1052,6 @@ void volumeListenerCallback (
 
 - (BOOL)isDownloading
 {
-//    return self.downloadingView.superview != nil;
     return _isDownloading;
 }
 
@@ -1300,6 +1225,7 @@ void volumeListenerCallback (
     [self showResolutionView:NO];
 }
 
+#pragma mark InfoView update
 - (void)updateStates
 {
     if (self.controlState == MovieControlStateDefault ||
@@ -1354,25 +1280,25 @@ void volumeListenerCallback (
 - (void)setupTimer
 {
     // for update the date time above battery
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(timerHandler) userInfo:nil repeats:YES];
+//    self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(timerHandler) userInfo:nil repeats:YES];
 }
 
 - (void)removeTimer
 {
-    if (self.timer) {
-        [self.timer invalidate];
-        self.timer = nil;
-    }
+//    if (self.timer) {
+//        [self.timer invalidate];
+//        self.timer = nil;
+//    }
 }
 
-- (void)timerHandler
-{
-    NSDate *date = [NSDate date];
-    NSDateFormatter *df = [[NSDateFormatter alloc] init];
-    df.dateFormat = @"hh:mm";
-    self.timeLabel.text = [df stringFromDate:date];
-    [df release];
-}
+//- (void)timerHandler
+//{
+//    NSDate *date = [NSDate date];
+//    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+//    df.dateFormat = @"hh:mm";
+//    self.timeLabel.text = [df stringFromDate:date];
+//    [df release];
+//}
 
 #pragma mark Gesture handler
 - (IBAction)onSingleTapOverlayView:(UITapGestureRecognizer *)gr
@@ -1600,8 +1526,6 @@ void volumeListenerCallback (
     }
 }
 #endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
-
-#pragma mark Tip
 
 @end
 
