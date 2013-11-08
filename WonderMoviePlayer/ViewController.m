@@ -124,6 +124,12 @@
         }];
         [controller setCrossScreenBlock:^{
             [controller.controlSource setTitle:@"我叫MT" subtitle:@"(来源: 爱奇艺)"];
+            if ([controller.controlSource resolutions].count > 0) {
+                [controller.controlSource setResolutions:nil];
+            }
+            else {
+                [controller.controlSource setResolutions:@[@"高清", @"流畅", @"标清"]];
+            }
         }];
         NSLog(@"start to play av");
         [controller playMovieStream:[[NSBundle mainBundle] URLForResource:@"Movie" withExtension:@"m4v"]];

@@ -56,6 +56,8 @@
     MPVolumeView *_airPlayButton; // assign
 #endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
     
+    BOOL _resolutionsChanged;
+    
     // tip
     BOOL _wasHorizontalPanningTipShown;
     BOOL _wasVerticalPanningTipShown;
@@ -159,8 +161,8 @@ void volumeListenerCallback (
 @synthesize delegate;
 @synthesize controlState;
 @synthesize isLiveCast = _isLiveCast;
-@synthesize resolutions;
-@synthesize selectedResolutionIndex;
+@synthesize resolutions = _resolutions;
+@synthesize selectedResolutionIndex = _selectedResolutionIndex;
 
 //- (id)retain
 //{
@@ -446,9 +448,10 @@ void volumeListenerCallback (
     self.subtitleLabel = subtitleLabel;
     [subtitleLabel release];
     
-    self.resolutions = @[@"高清", @"流畅", @"标清"];
-    [self rebuildResolutionsView];
-    [self updateResolutions];
+    [self showResolutionButton:NO];
+//    self.resolutions = @[@"高清", @"流畅", @"标清"];
+//    [self rebuildResolutionsView];
+//    [self updateResolutions];
     
 
 //#ifdef MTT_TWEAK_WONDER_MOVIE_ENABLE_DOWNLOAD
@@ -552,6 +555,13 @@ void volumeListenerCallback (
         self.titleLabel.height = headerBarHeight;
     }
     self.subtitleLabel.frame = CGRectMake(self.titleLabel.right, 0, self.subtitleLabel.width, headerBarHeight);
+    
+    // layout resolutions
+    if (_resolutionsChanged) {
+        [self showResolutionButton:self.resolutions.count > 0];
+        [self rebuildResolutionsView];
+        [self updateResolutions];
+    }
 }
 
 - (void)installControlSource
@@ -748,6 +758,39 @@ void volumeListenerCallback (
     }
     if (self.resolutions.count > 0 && self.selectedResolutionIndex >= 0 && self.selectedResolutionIndex < self.resolutions.count) {
         [self.resolutionButton setTitle:self.resolutions[self.selectedResolutionIndex] forState:UIControlStateNormal];
+    }
+}
+
+- (void)setResolutions:(NSArray *)resolutions
+{
+    if (_resolutions != resolutions) {
+        [_resolutions release];
+        
+        _resolutions = [resolutions copy];
+        _resolutionsChanged = YES;
+        [self setNeedsLayout];
+    }
+}
+
+- (void)showResolutionButton:(BOOL)show
+{
+    CGFloat resolutionButtonWidth = 32 + 20 * 2, resolutionButtonPadding = 25 - 20;
+    CGFloat duration = 0.2f;
+    if (show && self.resolutionButton.hidden) {
+        // show
+        self.resolutionButton.hidden = NO;
+        [UIView animateWithDuration:duration animations:^{
+            self.progressView.frame = CGRectMake(0, 0, self.progressBar.width - resolutionButtonPadding * 2 - resolutionButtonWidth + kProgressViewPadding, self.progressBar.height);
+            self.durationLabel.right = self.progressView.right - kProgressViewPadding;
+        }];
+    }
+    else if (!show && !self.resolutionButton.hidden) {
+        // hide
+        self.resolutionButton.hidden = YES;
+        [UIView animateWithDuration:duration animations:^{
+            self.progressView.frame = CGRectMake(0, 0, self.progressBar.width, self.progressBar.height);
+            self.durationLabel.right = self.progressView.right - kProgressViewPadding;
+        }];
     }
 }
 
