@@ -129,7 +129,7 @@
 @end
 
 
-void volumeListenerCallback (
+void wonderMovieVolumeListenerCallback (
                              void                      *inClientData,
                              AudioSessionPropertyID    inID,
                              UInt32                    inDataSize,
@@ -897,7 +897,7 @@ void volumeListenerCallback (
     [self cancelPreviousAndPrepareToDimControl];
     
     AudioSessionAddPropertyListener(kAudioSessionProperty_CurrentHardwareOutputVolume ,
-                                    volumeListenerCallback,
+                                    wonderMovieVolumeListenerCallback,
                                     self
                                     );
 }
@@ -921,7 +921,7 @@ void volumeListenerCallback (
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AirPlayAvailabilityChanged object:nil];
 #endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
     
-    AudioSessionRemovePropertyListenerWithUserData(kAudioSessionProperty_CurrentHardwareOutputVolume, volumeListenerCallback, self);
+    AudioSessionRemovePropertyListenerWithUserData(kAudioSessionProperty_CurrentHardwareOutputVolume, wonderMovieVolumeListenerCallback, self);
 }
 
 - (void)setTitle:(NSString *)title subtitle:(NSString *)subtitle
