@@ -566,8 +566,9 @@ void volumeListenerCallback (
         CGFloat buttonFontSize = 13;
         UIFont *buttonFont = [UIFont systemFontOfSize:buttonFontSize];
         UIImage *highlightedImage = [self imageWithColor:[[UIColor whiteColor] colorWithAlphaComponent:0.15]];
+        CGFloat menuHeight = menuButtonHeight * 2 + menuSeparatorHeight;
+        UIView *popupMenu = [[UIView alloc] initWithFrame:CGRectMake(self.width - menuWidth, -menuHeight, menuWidth, menuHeight)];
         
-        UIView *popupMenu = [[UIView alloc] initWithFrame:CGRectMake(self.width, topOffset, menuWidth, menuButtonHeight * 2 + menuSeparatorHeight + topOffset)];
         popupMenu.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
         popupMenu.backgroundColor = [UIColor clearColor];
         [self.infoView addSubview:popupMenu];
@@ -1161,18 +1162,18 @@ void volumeListenerCallback (
 - (void)showPopupMenu:(BOOL)show
 {
     self.menuButton.selected = show;
-    BOOL isShowed = self.popupMenu.right == self.width;
+    BOOL isShowed = self.popupMenu.bottom > 0;
     if (isShowed == show) {
         return;
     }
 
     [UIView animateWithDuration:0.5f animations:^{
         if (show) {
-            self.popupMenu.right = self.width;
+            self.popupMenu.top = -1;
             self.popupMenu.alpha = 1;
         }
         else {
-            self.popupMenu.left = self.width;
+            self.popupMenu.bottom = 0;
             self.popupMenu.alpha = 0;
         }
     }];
