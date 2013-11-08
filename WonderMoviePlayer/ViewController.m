@@ -61,9 +61,19 @@
     [self.loadingIndicator.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
     
     
-    
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(volumeChanged:)
+//                                                 name:@"AVSystemController_SystemVolumeDidChangeNotification"
+//                                               object:nil];
     
 }
+
+- (void)volumeChanged:(id)n
+{
+    NSLog(@"volumeChanged %@", n);
+}
+
+
 
 - (void)didReceiveMemoryWarning
 {

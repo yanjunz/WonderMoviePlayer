@@ -294,7 +294,6 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 }
 
 #pragma mark Prepare to play asset
-
 /*
  Invoked at the completion of the loading of the values for all keys on the asset that we require.
  Checks whether loading was successfull and whether the asset is playable.

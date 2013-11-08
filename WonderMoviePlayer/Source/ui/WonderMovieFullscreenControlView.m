@@ -15,6 +15,7 @@
 #import "UIView+Sizes.h"
 #import "BatteryIconView.h"
 #import <MediaPlayer/MediaPlayer.h>
+#import <AudioToolbox/AudioToolbox.h>
 
 #ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
 #import "AirPlayDetector.h"
@@ -54,6 +55,10 @@
 #ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
     MPVolumeView *_airPlayButton; // assign
 #endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
+    
+    // tip
+    BOOL _wasHorizontalPanningTipShown;
+    BOOL _wasVerticalPanningTipShown;
 }
 @property (nonatomic, retain) NSTimer *timer;
 @property (nonatomic, retain) WonderMovieProgressView *progressView;
@@ -96,6 +101,10 @@
 @property (nonatomic, retain) NSArray *viewsToBeLocked;
 
 @property (nonatomic, retain) UIPanGestureRecognizer *panGestureRecognizer;
+
+// Tip
+@property (nonatomic, retain) UIView *horizontalPanningTipView;
+@property (nonatomic, retain) UIView *verticalPanningTipView;
 @end
 
 @interface WonderMovieFullscreenControlView (ProgressView) <WonderMovieProgressViewDelegate>
@@ -110,6 +119,41 @@
 - (UIImage *)imageWithColor:(UIColor *)color;
 - (UIImage *)backgroundImageWithSize:(CGSize)size content:(UIImage *)content;
 @end
+
+#pragma mark Tip
+
+@interface WonderMovieFullscreenControlView (Tip)
+- (void)loadTipStatus;
+- (void)showHorizontalPanningTip:(BOOL)show;
+- (void)showVerticalPanningTip:(BOOL)show;
+- (BOOL)canShowHorizontalPanningTip;
+- (BOOL)canShowVerticalPanningTip;
+
+- (void)tryToShowVerticalPanningTip;
+- (void)dismissProgressTipIfShown;
+- (void)dismissVolumeTipIfShown;
+@end
+
+
+void volumeListenerCallback (
+                             void                      *inClientData,
+                             AudioSessionPropertyID    inID,
+                             UInt32                    inDataSize,
+                             const void                *inData
+                             ){
+    
+    if (inID != kAudioSessionProperty_CurrentHardwareOutputVolume) {
+        return;
+    }
+    
+    WonderMovieFullscreenControlView *bself = (WonderMovieFullscreenControlView *)inClientData;
+    [bself performSelectorOnMainThread:@selector(tryToShowVerticalPanningTip) withObject:nil waitUntilDone:NO];
+    
+    const float *volumePointer = inData;
+    float volume = *volumePointer;
+    NSLog(@"volumeListenerCallback %d, %f", (unsigned int)inID, volume);
+    
+}
 
 @implementation WonderMovieFullscreenControlView
 @synthesize delegate;
@@ -147,6 +191,8 @@
         _downloadEnabled = downloadEnabled;
         _crossScreenEnabled = crossScreenEnabled;
         self.autoresizesSubviews = YES;
+        
+        [self loadTipStatus];
     }
     return self;
 }
@@ -293,6 +339,7 @@
     NSLog(@"%@", QQVideoPlayerImage(@"statusbar_bg"));
     statusBarView.backgroundColor = [UIColor colorWithPatternImage:QQVideoPlayerImage(@"statusbar_bg")];
     [self.headerBar addSubview:statusBarView];
+    [statusBarView release];
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton setImage:QQVideoPlayerImage(@"back") forState:UIControlStateNormal];
@@ -369,7 +416,7 @@
     [self.downloadButton addTarget:self action:@selector(onClickDownload:) forControlEvents:UIControlEventTouchUpInside];
     [self.downloadButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
     [self.headerBar addSubview:self.downloadButton];
-    btnRect = self.downloadButton.frame;
+//    btnRect = self.downloadButton.frame;
     
     separatorView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"headerbar_separator")];
     separatorView.center = CGPointMake(self.downloadButton.right - 1, self.headerBar.height / 2);
@@ -524,6 +571,8 @@
 #ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AirPlayAvailabilityChanged object:nil];
 #endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
+    
+    AudioSessionRemovePropertyListenerWithUserData(kAudioSessionProperty_CurrentHardwareOutputVolume, volumeListenerCallback, self);
 }
 
 - (void)setTitle:(NSString *)title subtitle:(NSString *)subtitle
@@ -874,17 +923,26 @@
     
 
     if (!_hasStarted && self.controlState == MovieControlStatePlaying) {
-        _hasStarted = YES; // start to play now, should show bottom bar
-        
-#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
-        [UIView animateWithDuration:0.5f animations:^{
-            self.bottomBar.bottom = self.bottom;
-        }];
-#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
-        
-        [self cancelPreviousAndPrepareToDimControl];
+        [self onPlayingStarted];
     }
+}
 
+- (void)onPlayingStarted
+{
+    _hasStarted = YES; // start to play now, should show bottom bar
+    
+#ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
+    [UIView animateWithDuration:0.5f animations:^{
+        self.bottomBar.bottom = self.bottom;
+    }];
+#endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
+    
+    [self cancelPreviousAndPrepareToDimControl];
+    
+    AudioSessionAddPropertyListener(kAudioSessionProperty_CurrentHardwareOutputVolume ,
+                                    volumeListenerCallback,
+                                    self
+                                    );
 }
 
 #pragma mark MovieControlSource
@@ -1337,6 +1395,8 @@
             CGFloat inc = -offset.y / gr.view.height;
 //            NSLog(@"pan Volume %f, %f, %f", offset.y, gr.view.height, inc);
             [self increaseVolume:inc];
+            
+            [self dismissVolumeTipIfShown];
         }
         [gr setTranslation:CGPointZero inView:gr.view];
     }
@@ -1376,6 +1436,8 @@
             _progressWhenStartScrubbing = 0;
             _accumulatedProgressBySec = 0;
             [self endScrubbing:newProgress];
+            
+            [self dismissProgressTipIfShown];
         }
         sPanAction = WonderMoviePanAction_No;
     }
@@ -1496,7 +1558,10 @@
 }
 #endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
 
+#pragma mark Tip
+
 @end
+
 
 @implementation WonderMovieFullscreenControlView (ProgressView)
 
@@ -1519,6 +1584,10 @@
 {
 //    NSLog(@"wonderMovieProgressViewEndChangeProgress");
     [self endScrubbing:progressView.progress];
+    
+    if ([self canShowHorizontalPanningTip]) {
+        [self showHorizontalPanningTip:YES];
+    }
 }
 
 @end
@@ -1569,6 +1638,164 @@
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
+}
+
+@end
+
+static NSString *kWonderMovieHorizontalPanningTipKey = @"kWonderMovieHorizontalPanningTipKey";
+static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanningTipKey";
+@implementation WonderMovieFullscreenControlView (Tip)
+
+- (void)loadTipStatus
+{
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    _wasHorizontalPanningTipShown = [ud boolForKey:kWonderMovieHorizontalPanningTipKey];
+    _wasVerticalPanningTipShown = [ud boolForKey:kWonderMovieVerticalPanningTipKey];
+}
+
+- (void)showHorizontalPanningTip:(BOOL)show
+{
+    if (!show && !_wasHorizontalPanningTipShown && _horizontalPanningTipView.superview == self.infoView) {
+        _wasHorizontalPanningTipShown = YES;
+        NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+        [ud setObject:@(_wasHorizontalPanningTipShown) forKey:kWonderMovieHorizontalPanningTipKey];
+        [ud synchronize];
+        
+        // Hide tip view
+        [UIView animateWithDuration:0.2f animations:^{
+            self.horizontalPanningTipView.alpha = 0;
+        } completion:^(BOOL finished) {
+            [self.horizontalPanningTipView removeFromSuperview];
+        }];
+    }
+    else if (show && _horizontalPanningTipView.superview != self.infoView) {
+        // Show tip view
+        self.horizontalPanningTipView.center = CGPointMake(self.infoView.width / 2, 18 + self.horizontalPanningTipView.height / 2);
+        [self.infoView addSubview:self.horizontalPanningTipView];
+    }
+}
+
+- (void)showVerticalPanningTip:(BOOL)show
+{
+    if (!show && !_wasVerticalPanningTipShown && _verticalPanningTipView.superview == self.infoView) {
+        _wasVerticalPanningTipShown = YES;
+        NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+        [ud setObject:@(_wasVerticalPanningTipShown) forKey:kWonderMovieVerticalPanningTipKey];
+        [ud synchronize];
+        
+        // Hide tip view
+        [UIView animateWithDuration:0.2f animations:^{
+            self.verticalPanningTipView.alpha = 0;
+        } completion:^(BOOL finished) {
+            [self.verticalPanningTipView removeFromSuperview];
+        }];
+    }
+    else if (show && _verticalPanningTipView.superview != self.infoView) {
+        // Show tip view
+        self.verticalPanningTipView.center = CGPointMake(self.infoView.width - 20 - self.verticalPanningTipView.width / 2, self.infoView.height / 2);
+        [self.infoView addSubview:self.verticalPanningTipView];
+    }
+}
+
+- (BOOL)canShowHorizontalPanningTip
+{
+    return !_wasHorizontalPanningTipShown;
+}
+
+- (BOOL)canShowVerticalPanningTip
+{
+    return !_wasVerticalPanningTipShown;
+}
+
+- (UIView *)horizontalPanningTipView
+{
+    if (_horizontalPanningTipView == nil) {
+        UIView *tipView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 181, 38)];
+        tipView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
+        tipView.backgroundColor = [UIColor clearColor];
+        
+        UIImageView *bgImageView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"progress_prompt_bg")];
+        [tipView addSubview:bgImageView];
+        [bgImageView release];
+        
+        UIImageView *circleView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"progress_prompt_circle")];
+        [tipView addSubview:circleView];
+        [circleView release];
+        
+        UIImageView *fingerView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"progress_prompt_gesture")];
+        [tipView addSubview:fingerView];
+        [fingerView release];
+        
+        // add animation
+        CGFloat delta = 16;
+        circleView.origin = CGPointMake(27 - delta, 0);
+        fingerView.origin = CGPointMake(circleView.left - 2.5, 0);
+        
+        [UIView animateWithDuration:1.6f delay:0 options:UIViewAnimationOptionRepeat animations:^{
+            circleView.left += delta * 2;
+            fingerView.left += delta * 2;
+        } completion:nil];
+        [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse animations:^{
+            circleView.alpha = 0.1;
+        } completion:nil];
+        
+        _horizontalPanningTipView = tipView;
+    }
+    return _horizontalPanningTipView;
+}
+
+- (UIView *)verticalPanningTipView
+{
+    if (_verticalPanningTipView == nil) {
+        UIView *tipView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 38, 181)];
+        tipView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
+        tipView.backgroundColor = [UIColor clearColor];
+        
+        UIImageView *bgImageView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"volume_prompt_bg")];
+        [tipView addSubview:bgImageView];
+        [bgImageView release];
+        
+        UIImageView *circleView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"volume_prompt_circle")];
+        [tipView addSubview:circleView];
+        [circleView release];
+        
+        UIImageView *fingerView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"volume_prompt_gesture")];
+        [tipView addSubview:fingerView];
+        [fingerView release];
+        
+        // add animation
+        CGFloat delta = 16;
+        circleView.origin = CGPointMake(0, 27 - delta);
+        fingerView.origin = CGPointMake(0, circleView.top - 2.5);
+        
+        [UIView animateWithDuration:1.6f delay:0 options:UIViewAnimationOptionRepeat animations:^{
+            circleView.top += delta * 2;
+            fingerView.top += delta * 2;
+        } completion:nil];
+        [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse animations:^{
+            circleView.alpha = 0.1;
+        } completion:nil];
+        
+        _verticalPanningTipView = tipView;
+    }
+    return _verticalPanningTipView;
+}
+
+- (void)dismissProgressTipIfShown
+{
+    [self showHorizontalPanningTip:NO];
+}
+
+- (void)dismissVolumeTipIfShown
+{
+    [self showVerticalPanningTip:NO];
+}
+
+- (void)tryToShowVerticalPanningTip
+{
+    if ([self canShowVerticalPanningTip]) {
+        [self showVerticalPanningTip:YES];
+    }
 }
 
 @end
