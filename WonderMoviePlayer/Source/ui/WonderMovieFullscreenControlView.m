@@ -1528,6 +1528,81 @@ void wonderMovieVolumeListenerCallback (
 }
 #endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
 
+
+- (UIView *)horizontalPanningTipView
+{
+    if (_horizontalPanningTipView == nil) {
+        UIView *tipView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 181, 38)];
+        tipView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
+        tipView.backgroundColor = [UIColor clearColor];
+        
+        UIImageView *bgImageView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"progress_prompt_bg")];
+        [tipView addSubview:bgImageView];
+        [bgImageView release];
+        
+        UIImageView *circleView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"progress_prompt_circle")];
+        [tipView addSubview:circleView];
+        [circleView release];
+        
+        UIImageView *fingerView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"progress_prompt_gesture")];
+        [tipView addSubview:fingerView];
+        [fingerView release];
+        
+        // add animation
+        CGFloat delta = 16;
+        circleView.origin = CGPointMake(27 - delta, 0);
+        fingerView.origin = CGPointMake(circleView.left - 2.5, 0);
+        
+        [UIView animateWithDuration:1.6f delay:0 options:UIViewAnimationOptionRepeat animations:^{
+            circleView.left += delta * 2;
+            fingerView.left += delta * 2;
+        } completion:nil];
+        [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse animations:^{
+            circleView.alpha = 0.1;
+        } completion:nil];
+        
+        _horizontalPanningTipView = tipView;
+    }
+    return _horizontalPanningTipView;
+}
+
+- (UIView *)verticalPanningTipView
+{
+    if (_verticalPanningTipView == nil) {
+        UIView *tipView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 38, 181)];
+        tipView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
+        tipView.backgroundColor = [UIColor clearColor];
+        
+        UIImageView *bgImageView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"volume_prompt_bg")];
+        [tipView addSubview:bgImageView];
+        [bgImageView release];
+        
+        UIImageView *circleView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"volume_prompt_circle")];
+        [tipView addSubview:circleView];
+        [circleView release];
+        
+        UIImageView *fingerView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"volume_prompt_gesture")];
+        [tipView addSubview:fingerView];
+        [fingerView release];
+        
+        // add animation
+        CGFloat delta = 16;
+        circleView.origin = CGPointMake(0, 27 - delta);
+        fingerView.origin = CGPointMake(0, circleView.top - 2.5);
+        
+        [UIView animateWithDuration:1.6f delay:0 options:UIViewAnimationOptionRepeat animations:^{
+            circleView.top += delta * 2;
+            fingerView.top += delta * 2;
+        } completion:nil];
+        [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse animations:^{
+            circleView.alpha = 0.1;
+        } completion:nil];
+        
+        _verticalPanningTipView = tipView;
+    }
+    return _verticalPanningTipView;
+}
+
 @end
 
 
@@ -1673,80 +1748,6 @@ static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanni
 - (BOOL)canShowVerticalPanningTip
 {
     return !_wasVerticalPanningTipShown;
-}
-
-- (UIView *)horizontalPanningTipView
-{
-    if (_horizontalPanningTipView == nil) {
-        UIView *tipView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 181, 38)];
-        tipView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
-        tipView.backgroundColor = [UIColor clearColor];
-        
-        UIImageView *bgImageView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"progress_prompt_bg")];
-        [tipView addSubview:bgImageView];
-        [bgImageView release];
-        
-        UIImageView *circleView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"progress_prompt_circle")];
-        [tipView addSubview:circleView];
-        [circleView release];
-        
-        UIImageView *fingerView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"progress_prompt_gesture")];
-        [tipView addSubview:fingerView];
-        [fingerView release];
-        
-        // add animation
-        CGFloat delta = 16;
-        circleView.origin = CGPointMake(27 - delta, 0);
-        fingerView.origin = CGPointMake(circleView.left - 2.5, 0);
-        
-        [UIView animateWithDuration:1.6f delay:0 options:UIViewAnimationOptionRepeat animations:^{
-            circleView.left += delta * 2;
-            fingerView.left += delta * 2;
-        } completion:nil];
-        [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse animations:^{
-            circleView.alpha = 0.1;
-        } completion:nil];
-        
-        _horizontalPanningTipView = tipView;
-    }
-    return _horizontalPanningTipView;
-}
-
-- (UIView *)verticalPanningTipView
-{
-    if (_verticalPanningTipView == nil) {
-        UIView *tipView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 38, 181)];
-        tipView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
-        tipView.backgroundColor = [UIColor clearColor];
-        
-        UIImageView *bgImageView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"volume_prompt_bg")];
-        [tipView addSubview:bgImageView];
-        [bgImageView release];
-        
-        UIImageView *circleView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"volume_prompt_circle")];
-        [tipView addSubview:circleView];
-        [circleView release];
-        
-        UIImageView *fingerView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"volume_prompt_gesture")];
-        [tipView addSubview:fingerView];
-        [fingerView release];
-        
-        // add animation
-        CGFloat delta = 16;
-        circleView.origin = CGPointMake(0, 27 - delta);
-        fingerView.origin = CGPointMake(0, circleView.top - 2.5);
-        
-        [UIView animateWithDuration:1.6f delay:0 options:UIViewAnimationOptionRepeat animations:^{
-            circleView.top += delta * 2;
-            fingerView.top += delta * 2;
-        } completion:nil];
-        [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse animations:^{
-            circleView.alpha = 0.1;
-        } completion:nil];
-        
-        _verticalPanningTipView = tipView;
-    }
-    return _verticalPanningTipView;
 }
 
 - (void)dismissProgressTipIfShown
