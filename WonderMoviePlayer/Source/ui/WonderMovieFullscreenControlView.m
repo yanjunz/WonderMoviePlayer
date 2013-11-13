@@ -15,6 +15,7 @@
 #import "UIView+Sizes.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import <AudioToolbox/AudioToolbox.h>
+#import "TVDramaManager.h"
 
 #ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
 #import "AirPlayDetector.h"
@@ -98,6 +99,8 @@
 
 @property (nonatomic, retain) UIPanGestureRecognizer *panGestureRecognizer;
 
+@property (nonatomic, retain) UIView *dramaView;
+
 // Tip
 @property (nonatomic, retain) UIView *horizontalPanningTipView;
 @property (nonatomic, retain) UIView *verticalPanningTipView;
@@ -157,6 +160,7 @@ void wonderMovieVolumeListenerCallback (
 @synthesize isLiveCast = _isLiveCast;
 @synthesize resolutions = _resolutions;
 @synthesize selectedResolutionIndex = _selectedResolutionIndex;
+@synthesize tvDramaManager = _tvDramaManager;
 
 //- (id)retain
 //{
@@ -230,6 +234,8 @@ void wonderMovieVolumeListenerCallback (
     
     self.horizontalPanningTipView = nil;
     self.verticalPanningTipView = nil;
+    
+    self.tvDramaManager = nil;
     [super dealloc];
 }
 
@@ -1201,6 +1207,7 @@ void wonderMovieVolumeListenerCallback (
 
 - (IBAction)onClickTVDrama:(id)sender
 {
+    [self showDramaView:YES];
     [self dismissAllPopupViews]; 
     [self cancelPreviousAndPrepareToDimControl];
 }
@@ -1621,6 +1628,61 @@ void wonderMovieVolumeListenerCallback (
         _verticalPanningTipView = tipView;
     }
     return _verticalPanningTipView;
+}
+
+#pragma mark Drama View
+- (void)showDramaView:(BOOL)show
+{
+    if (self.dramaView == nil) {
+        UIView *view = [[UIView alloc] initWithFrame:self.bounds];
+        self.dramaView = view;
+        [view release];
+        
+        view.backgroundColor = [UIColor clearColor];
+        [view addGestureRecognizer:[[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapDramaView:)] autorelease]];
+        
+        CGFloat width = 200;
+        UIView *loadingView = [[UIView alloc] initWithFrame:CGRectMake(self.width - width, 0, width, self.height)];
+        loadingView.backgroundColor = [UIColor blackColor];
+        [view addSubview:loadingView];
+        UIActivityIndicatorView *loadingIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+        loadingIndicator.center = CGPointMake(CGRectGetMidX(loadingView.bounds), CGRectGetMidY(loadingView.bounds));
+        [loadingIndicator startAnimating];
+        [loadingView addSubview:loadingIndicator];
+        [loadingIndicator release];
+        [loadingView release];
+        
+        view.left = self.width;
+    }
+    
+    if (self.dramaView.superview != self) {
+        [self addSubview:self.dramaView];
+    }
+
+    [UIView animateWithDuration:0.5 animations:^{
+        if (show) {
+            self.dramaView.left = 0;
+            self.contentView.alpha = 0;
+        }
+        else {
+            self.dramaView.left = self.width;
+            self.contentView.alpha = 1;
+        }
+    } completion:^(BOOL finished) {
+        if (!show) {
+            [self.dramaView removeFromSuperview];
+        }
+    }];
+}
+
+- (IBAction)onTapDramaView:(id)sender
+{
+    [self showDramaView:NO];
+}
+
+- (void)loadDramaInfo
+{
+    
 }
 
 @end

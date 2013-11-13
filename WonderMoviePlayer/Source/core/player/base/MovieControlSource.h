@@ -34,6 +34,7 @@ typedef enum {
  */
 
 @protocol MovieControlSourceDelegate;
+@class TVDramaManager;
 
 @protocol MovieControlSource <NSObject>
 @required
@@ -81,6 +82,8 @@ typedef enum {
 @property (nonatomic, assign) BOOL isLiveCast;
 @property (nonatomic, copy) NSArray *resolutions;
 @property (nonatomic) int selectedResolutionIndex;
+
+@property (nonatomic, retain) TVDramaManager *tvDramaManager;
 
 @required
 @property (nonatomic, assign) MovieControlState controlState;
