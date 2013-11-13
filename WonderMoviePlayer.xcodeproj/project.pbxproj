@@ -36,6 +36,11 @@
 		B51F619717E9ADC200344122 /* Test2ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B51F619517E9ADC200344122 /* Test2ViewController.xib */; };
 		B56EE42E182A1E9F00241DDA /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B56EE42D182A1E9F00241DDA /* CoreAudio.framework */; };
 		B56EE430182A1F0000241DDA /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B56EE42F182A1F0000241DDA /* AudioToolbox.framework */; };
+		B58B56E018338E910096801E /* TVDramaManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B56D818338E910096801E /* TVDramaManager.m */; };
+		B58B56E118338E910096801E /* VideoGroup+VideoDetailSet.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B56DA18338E910096801E /* VideoGroup+VideoDetailSet.m */; };
+		B58B56E218338E910096801E /* Video.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B56DD18338E910096801E /* Video.m */; };
+		B58B56E318338E910096801E /* VideoGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B56DF18338E910096801E /* VideoGroup.m */; };
+		B58B56E518338EAC0096801E /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B58B56E418338EAC0096801E /* CoreData.framework */; };
 		B5AD785217CDA50E00C08E51 /* video.js in Sources */ = {isa = PBXBuildFile; fileRef = B5AD785117CDA50E00C08E51 /* video.js */; };
 		B5AD785317CDA5E800C08E51 /* video.js in Resources */ = {isa = PBXBuildFile; fileRef = B5AD785117CDA50E00C08E51 /* video.js */; };
 		B5AD78A817CDD30600C08E51 /* JSURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = B5AD78A717CDD30600C08E51 /* JSURLProtocol.m */; };
@@ -148,6 +153,15 @@
 		B51F619517E9ADC200344122 /* Test2ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Test2ViewController.xib; sourceTree = "<group>"; };
 		B56EE42D182A1E9F00241DDA /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		B56EE42F182A1F0000241DDA /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		B58B56D818338E910096801E /* TVDramaManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TVDramaManager.m; sourceTree = "<group>"; };
+		B58B56D918338E910096801E /* TVDramaManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TVDramaManager.h; sourceTree = "<group>"; };
+		B58B56DA18338E910096801E /* VideoGroup+VideoDetailSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "VideoGroup+VideoDetailSet.m"; sourceTree = "<group>"; };
+		B58B56DB18338E910096801E /* VideoGroup+VideoDetailSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "VideoGroup+VideoDetailSet.h"; sourceTree = "<group>"; };
+		B58B56DC18338E910096801E /* Video.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Video.h; sourceTree = "<group>"; };
+		B58B56DD18338E910096801E /* Video.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Video.m; sourceTree = "<group>"; };
+		B58B56DE18338E910096801E /* VideoGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoGroup.h; sourceTree = "<group>"; };
+		B58B56DF18338E910096801E /* VideoGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoGroup.m; sourceTree = "<group>"; };
+		B58B56E418338EAC0096801E /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		B5AD785117CDA50E00C08E51 /* video.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = video.js; sourceTree = "<group>"; };
 		B5AD78A617CDD30600C08E51 /* JSURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSURLProtocol.h; sourceTree = "<group>"; };
 		B5AD78A717CDD30600C08E51 /* JSURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSURLProtocol.m; sourceTree = "<group>"; };
@@ -248,6 +262,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B58B56E518338EAC0096801E /* CoreData.framework in Frameworks */,
 				B56EE430182A1F0000241DDA /* AudioToolbox.framework in Frameworks */,
 				B56EE42E182A1E9F00241DDA /* CoreAudio.framework in Frameworks */,
 				B517792217C1AFB6006B948E /* CoreMedia.framework in Frameworks */,
@@ -288,6 +303,7 @@
 		B517773617B36D44006B948E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B58B56E418338EAC0096801E /* CoreData.framework */,
 				B56EE42F182A1F0000241DDA /* AudioToolbox.framework */,
 				B56EE42D182A1E9F00241DDA /* CoreAudio.framework */,
 				B5D4C3BC182917E000BB0A53 /* CoreText.framework */,
@@ -529,6 +545,14 @@
 		B5DC0780182CD4690046A7A5 /* drama */ = {
 			isa = PBXGroup;
 			children = (
+				B58B56D818338E910096801E /* TVDramaManager.m */,
+				B58B56D918338E910096801E /* TVDramaManager.h */,
+				B58B56DA18338E910096801E /* VideoGroup+VideoDetailSet.m */,
+				B58B56DB18338E910096801E /* VideoGroup+VideoDetailSet.h */,
+				B58B56DC18338E910096801E /* Video.h */,
+				B58B56DD18338E910096801E /* Video.m */,
+				B58B56DE18338E910096801E /* VideoGroup.h */,
+				B58B56DF18338E910096801E /* VideoGroup.m */,
 			);
 			path = drama;
 			sourceTree = "<group>";
@@ -656,12 +680,14 @@
 				B5D4C383182263A700BB0A53 /* AirPlayDetector.m in Sources */,
 				B517774417B36D44006B948E /* main.m in Sources */,
 				B517774817B36D44006B948E /* AppDelegate.m in Sources */,
+				B58B56E218338E910096801E /* Video.m in Sources */,
 				B5DC0784182CD4690046A7A5 /* WonderMPMovieViewController.m in Sources */,
 				B517775117B36D44006B948E /* ViewController.m in Sources */,
 				B5D4C3661820F51A00BB0A53 /* WonderMovieProgressView.m in Sources */,
 				B5DC0782182CD4690046A7A5 /* WonderAVMovieViewController.m in Sources */,
 				B5D4C3641820F51A00BB0A53 /* WonderMovieFullscreenControlView.m in Sources */,
 				B517776A17B37FEB006B948E /* UIView+Sizes.m in Sources */,
+				B58B56E018338E910096801E /* TVDramaManager.m in Sources */,
 				B5DC075D182CD2CA0046A7A5 /* WonderMovieDramaListView.m in Sources */,
 				B51778AF17B9DE32006B948E /* TestWebViewController.m in Sources */,
 				B5DC075B182CD2CA0046A7A5 /* WonderMovieDramaGridCell.m in Sources */,
@@ -671,6 +697,8 @@
 				B5DC0783182CD4690046A7A5 /* WonderAVPlayerView.m in Sources */,
 				B5AD785217CDA50E00C08E51 /* video.js in Sources */,
 				B5AD78A817CDD30600C08E51 /* JSURLProtocol.m in Sources */,
+				B58B56E318338E910096801E /* VideoGroup.m in Sources */,
+				B58B56E118338E910096801E /* VideoGroup+VideoDetailSet.m in Sources */,
 				B5AD78AB17CDD35700C08E51 /* JSPlugin.m in Sources */,
 				B5AD78AE17CDD4C400C08E51 /* JSPluginEngine.m in Sources */,
 				B5AD78B117CDEB4600C08E51 /* JSVideoPlugin.m in Sources */,
