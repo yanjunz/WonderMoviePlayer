@@ -275,17 +275,7 @@
         [self.overlayView addSubview:fullscreenControlView];
         [fullscreenControlView installGestureHandlerForParentView];
         self.controlSource = fullscreenControlView;
-        
-        
-        WonderMovieInfoView *infoView = [[WonderMovieInfoView alloc] initWithFrame:[fullscreenControlView suggestedInfoViewFrame]];
-        infoView.backgroundColor = [UIColor clearColor];
-        infoView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        
-        fullscreenControlView.infoView = infoView;
         [fullscreenControlView release];
-        
-        [self.overlayView addSubview:infoView];
-        [infoView release];
     }
 }
 

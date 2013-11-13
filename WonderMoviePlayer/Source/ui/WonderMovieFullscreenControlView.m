@@ -64,6 +64,8 @@
 @property (nonatomic, retain) NSTimer *timer;
 @property (nonatomic, retain) WonderMovieProgressView *progressView;
 
+@property (nonatomic, retain) UIView *contentView;
+
 // bottom bar
 @property (nonatomic, retain) UIView *bottomBar;
 @property (nonatomic, retain) UIView *progressBar;
@@ -194,6 +196,9 @@ void wonderMovieVolumeListenerCallback (
 - (void)dealloc
 {
     [self removeTimer];
+    
+    self.contentView = nil;
+    
     self.infoView = nil;
     
     self.progressView = nil;
@@ -235,6 +240,14 @@ void wonderMovieVolumeListenerCallback (
     
     self.backgroundColor = [UIColor clearColor];
     
+    // all controls add to contentView
+    UIView *contentView = [[UIView alloc] initWithFrame:self.bounds];
+    contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    contentView.backgroundColor = [UIColor clearColor];
+    self.contentView = contentView;
+    [self addSubview:self.contentView];
+    [contentView release];
+    
     CGFloat bottomBarHeight = 50;
     CGFloat headerBarHeight = 44;
     CGFloat progressBarLeftPadding = (self.nextEnabled ? 60+30+10 : 60) + 8 - 10;
@@ -253,7 +266,7 @@ void wonderMovieVolumeListenerCallback (
 //    self.bottomBar.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
     self.bottomBar.backgroundColor = [UIColor colorWithPatternImage:QQVideoPlayerImage(@"toolbar")];
     self.bottomBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
-    [self addSubview:self.bottomBar];
+    [contentView addSubview:self.bottomBar];
     
     UIView *progressBar = [[UIView alloc] initWithFrame:CGRectMake(progressBarLeftPadding, 0, self.bottomBar.width - progressBarLeftPadding - progressBarRightPadding, bottomBarHeight)];
     self.progressBar = progressBar;
@@ -326,7 +339,7 @@ void wonderMovieVolumeListenerCallback (
     [headerBar release];
     self.headerBar.backgroundColor = [UIColor colorWithPatternImage:QQVideoPlayerImage(@"headerbar")];
     self.headerBar.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
-    [self addSubview:self.headerBar];
+    [contentView addSubview:self.headerBar];
     
     UIView *statusBarView = [[UIView alloc] initWithFrame:CGRectMake(0, -statusBarHeight, self.width, statusBarHeight)];
     statusBarView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -448,6 +461,13 @@ void wonderMovieVolumeListenerCallback (
     // http://stackoverflow.com/questions/7868457/applicationmusicplayer-volume-notification
     [self addSubview:[[[MPVolumeView alloc] initWithFrame:CGRectMake(-10000, -10000, 0, 0)] autorelease]];
 #endif // MTT_TWEAK_WONDER_MOVIE_HIDE_SYSTEM_VOLUME_VIEW
+    
+    WonderMovieInfoView *infoView = [[WonderMovieInfoView alloc] initWithFrame:[self suggestedInfoViewFrame]];
+    infoView.backgroundColor = [UIColor clearColor];
+    infoView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
+    self.infoView = infoView;
+    [self addSubview:infoView];
 }
 
 - (void)layoutSubviews
@@ -721,7 +741,7 @@ void wonderMovieVolumeListenerCallback (
         lockButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
         [lockButton addTarget:self action:@selector(onClickLock:) forControlEvents:UIControlEventTouchUpInside];
         lockButton.alpha = 0;
-        [self addSubview:lockButton];
+        [self.contentView addSubview:lockButton];
         _lockButton = [lockButton retain];
     }
     return _lockButton;
@@ -1252,7 +1272,7 @@ void wonderMovieVolumeListenerCallback (
         self.infoView.centerPlayButton.hidden = YES;
         _isLoading = NO; // clear loading flag
         
-        self.alpha = 1; // show control if ended
+        self.contentView.alpha = 1; // show control if ended
     }
     
     if (_isLoading) { // continue to loading
@@ -1304,16 +1324,16 @@ void wonderMovieVolumeListenerCallback (
 #pragma mark Gesture handler
 - (IBAction)onSingleTapOverlayView:(UITapGestureRecognizer *)gr
 {
-    BOOL animationToHide = self.alpha > 0;
+    BOOL animationToHide = self.contentView.alpha > 0;
     if ([self.delegate respondsToSelector:@selector(movieControlSource:showControlView:)]) {
         [self.delegate movieControlSource:self showControlView:!animationToHide];
     }
     [UIView animateWithDuration:animationToHide ? kWonderMovieControlDimDuration : kWonderMovieControlShowDuration animations:^{
         if (animationToHide) {
-            self.alpha = 0;
+            self.contentView.alpha = 0;
         }
         else {
-            self.alpha = 1;
+            self.contentView.alpha = 1;
         }
     }];
     if (animationToHide) {
@@ -1487,12 +1507,12 @@ void wonderMovieVolumeListenerCallback (
 
 - (void)dimControl
 {
-    if (self.alpha == 1 && self.controlState != MovieControlStatePaused && self.controlState != MovieControlStateEnded && !_isScrubbing) {
+    if (self.contentView.alpha == 1 && self.controlState != MovieControlStatePaused && self.controlState != MovieControlStateEnded && !_isScrubbing) {
         if ([self.delegate respondsToSelector:@selector(movieControlSource:showControlView:)]) {
             [self.delegate movieControlSource:self showControlView:NO];
         }
         [UIView animateWithDuration:kWonderMovieControlDimDuration animations:^{
-            self.alpha = 0;
+            self.contentView.alpha = 0;
         }];
         [self dismissAllPopupViews];
     }
