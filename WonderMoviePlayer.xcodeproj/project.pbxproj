@@ -41,6 +41,7 @@
 		B58B56E218338E910096801E /* Video.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B56DD18338E910096801E /* Video.m */; };
 		B58B56E318338E910096801E /* VideoGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B56DF18338E910096801E /* VideoGroup.m */; };
 		B58B56E518338EAC0096801E /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B58B56E418338EAC0096801E /* CoreData.framework */; };
+		B58B56E918346F8D0096801E /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B56E818346F8D0096801E /* EGORefreshTableHeaderView.m */; };
 		B5AD785217CDA50E00C08E51 /* video.js in Sources */ = {isa = PBXBuildFile; fileRef = B5AD785117CDA50E00C08E51 /* video.js */; };
 		B5AD785317CDA5E800C08E51 /* video.js in Resources */ = {isa = PBXBuildFile; fileRef = B5AD785117CDA50E00C08E51 /* video.js */; };
 		B5AD78A817CDD30600C08E51 /* JSURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = B5AD78A717CDD30600C08E51 /* JSURLProtocol.m */; };
@@ -162,6 +163,8 @@
 		B58B56DE18338E910096801E /* VideoGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoGroup.h; sourceTree = "<group>"; };
 		B58B56DF18338E910096801E /* VideoGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoGroup.m; sourceTree = "<group>"; };
 		B58B56E418338EAC0096801E /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		B58B56E718346F8D0096801E /* EGORefreshTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EGORefreshTableHeaderView.h; sourceTree = "<group>"; };
+		B58B56E818346F8D0096801E /* EGORefreshTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EGORefreshTableHeaderView.m; sourceTree = "<group>"; };
 		B5AD785117CDA50E00C08E51 /* video.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = video.js; sourceTree = "<group>"; };
 		B5AD78A617CDD30600C08E51 /* JSURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSURLProtocol.h; sourceTree = "<group>"; };
 		B5AD78A717CDD30600C08E51 /* JSURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSURLProtocol.m; sourceTree = "<group>"; };
@@ -430,6 +433,15 @@
 			path = images;
 			sourceTree = "<group>";
 		};
+		B58B56E618346F8D0096801E /* RefreshTableHeaderView */ = {
+			isa = PBXGroup;
+			children = (
+				B58B56E718346F8D0096801E /* EGORefreshTableHeaderView.h */,
+				B58B56E818346F8D0096801E /* EGORefreshTableHeaderView.m */,
+			);
+			path = RefreshTableHeaderView;
+			sourceTree = "<group>";
+		};
 		B5AD78A217CDCFBB00C08E51 /* JSPlugin */ = {
 			isa = PBXGroup;
 			children = (
@@ -470,6 +482,7 @@
 		B5D4C3731822636E00BB0A53 /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				B58B56E618346F8D0096801E /* RefreshTableHeaderView */,
 				B5D4C37F182263A700BB0A53 /* AirPlayDetector */,
 				B5D4C3791822636E00BB0A53 /* RegexKitLite.h */,
 				B5D4C37A1822636E00BB0A53 /* RegexKitLite.m */,
@@ -689,6 +702,7 @@
 				B517776A17B37FEB006B948E /* UIView+Sizes.m in Sources */,
 				B58B56E018338E910096801E /* TVDramaManager.m in Sources */,
 				B5DC075D182CD2CA0046A7A5 /* WonderMovieDramaListView.m in Sources */,
+				B58B56E918346F8D0096801E /* EGORefreshTableHeaderView.m in Sources */,
 				B51778AF17B9DE32006B948E /* TestWebViewController.m in Sources */,
 				B5DC075B182CD2CA0046A7A5 /* WonderMovieDramaGridCell.m in Sources */,
 				B5D4C3651820F51A00BB0A53 /* WonderMovieInfoView.m in Sources */,
