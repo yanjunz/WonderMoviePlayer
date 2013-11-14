@@ -35,6 +35,15 @@
     return self;
 }
 
+- (void)dealloc
+{
+    self.tvDramaManager = nil;
+    self.tableView = nil;
+    self.errorView = nil;
+    self.loadingView = nil;
+    [super dealloc];
+}
+
 - (void)reloadData
 {
     if (self.tvDramaManager.videoGroup == nil) {
@@ -55,7 +64,7 @@
         loadingView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         loadingView.backgroundColor = [UIColor clearColor];
         UIActivityIndicatorView *loadingIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-        loadingIndicator.center = CGPointMake(CGRectGetMinX(self.bounds), CGRectGetMinY(self.bounds));
+        loadingIndicator.center = CGPointMake(CGRectGetMidX(loadingView.bounds), CGRectGetMidY(loadingView.bounds));
         [loadingView addSubview:loadingIndicator];
         [loadingIndicator startAnimating];
         [loadingIndicator release];
@@ -72,8 +81,9 @@
         errorView.backgroundColor = [UIColor clearColor];
         UIButton *retryButton = [UIButton buttonWithType:UIButtonTypeCustom];
         retryButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [retryButton setTitle:NSLocalizedString(@"重试", nil) forState:UIControlStateNormal];
+        [retryButton setTitle:NSLocalizedString(@"无法获取，请重试", nil) forState:UIControlStateNormal];
         [retryButton addTarget:self action:@selector(onClickRetry:) forControlEvents:UIControlEventTouchUpInside];
+        retryButton.frame = errorView.bounds;
         [errorView addSubview:retryButton];
         _errorView = errorView;
     }
@@ -83,7 +93,7 @@
 - (void)loadCurrentSection
 {
     [self performBlockInBackground:^{
-        BOOL ret = [self.tvDramaManager getCurrentSectionDramaInfo];
+        BOOL ret = [self.tvDramaManager getDramaInfo:TVDramaRequestTypeCurrent];
         [self performBlock:^{
             if (ret) {
                 [self finishCurrentSectionLoad];

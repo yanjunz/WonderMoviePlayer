@@ -12,6 +12,7 @@
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
 #import "RegexKitLite.h"
+#import "CoreData+MagicalRecord.h"
 #endif
 
 #define X(frame) ((frame).origin.x)

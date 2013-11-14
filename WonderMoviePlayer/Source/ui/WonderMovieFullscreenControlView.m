@@ -1284,6 +1284,7 @@ void wonderMovieVolumeListenerCallback (
         _isLoading = NO; // clear loading flag
         
         self.contentView.alpha = 1; // show control if ended
+        [self showDramaView:NO];
     }
     
     if (_isLoading) { // continue to loading
@@ -1647,7 +1648,7 @@ void wonderMovieVolumeListenerCallback (
         
         CGFloat width = 200;
         WonderMovieDramaView *dramaView = [[WonderMovieDramaView alloc] initWithFrame:CGRectMake(self.width - width, 0, width, self.height)];
-        dramaView.backgroundColor = [UIColor blackColor];
+        dramaView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
         dramaView.tvDramaManager = self.tvDramaManager;
         [view addSubview:dramaView];
         self.dramaView = dramaView;

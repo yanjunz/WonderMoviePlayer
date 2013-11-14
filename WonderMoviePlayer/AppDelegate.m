@@ -34,6 +34,8 @@ void uncaughtExceptionHandler(NSException *exception)
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
     NSLog(@"%@", NSHomeDirectory());
     
+    [MagicalRecord setupCoreDataStack];
+    
 //    [NSURLProtocol registerClass:[JSURLProtocol class]];
 //    [[JSPluginEngine sharedInstance] registerPlugin:[[JSVideoPlugin alloc] init] withPluginName:@"qqvideo"];
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];

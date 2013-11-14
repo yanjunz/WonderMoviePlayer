@@ -12,6 +12,12 @@
 typedef void (^GetDramaInfoBlock)(VideoGroup *videoGroup, int setNum);
 typedef void (^FailedBlock)();
 
+typedef enum {
+    TVDramaRequestTypeCurrent,
+    TVDramaRequestTypePrevious,
+    TVDramaRequestTypeNext,
+} TVDramaRequestType;
+
 @protocol TVDramaManagerDelegate;
 
 @interface TVDramaManager : NSObject
@@ -19,17 +25,14 @@ typedef void (^FailedBlock)();
 @property (nonatomic, copy) NSString *webURL;
 @property (nonatomic, retain) VideoGroup *videoGroup;
 @property (nonatomic) int curSetNum;
-- (BOOL)getCurrentSectionDramaInfo;
-- (BOOL)getPreviousSectionDramaInfo;
-- (BOOL)getNextSectionDramaInfo;
+
+- (BOOL)getDramaInfo:(TVDramaRequestType)requestType;
 - (BOOL)sniffVideoSource;
 @end
 
 @protocol TVDramaManagerDelegate <NSObject>
 
-- (VideoGroup *)tvDramaManager:(TVDramaManager *)manager requestCurrentSectionDramaInfoWithURL:(NSString *)URL curSetNum:(int *)curSetNumPtr;
-- (VideoGroup *)tvDramaManager:(TVDramaManager *)manager requestPreviousSectionDramaInfoWithURL:(NSString *)URL curSetNum:(int *)curSetNumPtr;
-- (VideoGroup *)tvDramaManager:(TVDramaManager *)manager requestNextSectionDramaInfoWithURL:(NSString *)URL curSetNum:(int *)curSetNumPtr;
+- (VideoGroup *)tvDramaManager:(TVDramaManager *)manager requestDramaInfoWithURL:(NSString *)URL curSetNum:(int *)curSetNumPtr requestType:(TVDramaRequestType)requestType;
 - (NSDictionary *)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURLs:(NSArray *)URLs;
 
 @end

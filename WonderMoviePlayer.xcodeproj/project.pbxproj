@@ -71,6 +71,7 @@
 		B58B574618347F250096801E /* MagicalRecord+Setup.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B572818347F240096801E /* MagicalRecord+Setup.m */; };
 		B58B574718347F250096801E /* MagicalRecord+ShorthandSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B572A18347F240096801E /* MagicalRecord+ShorthandSupport.m */; };
 		B58B574818347F250096801E /* MagicalRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B572C18347F240096801E /* MagicalRecord.m */; };
+		B58B574B1834B0F40096801E /* FakeTVDramaWebSource.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B574A1834B0F40096801E /* FakeTVDramaWebSource.m */; };
 		B5AD785217CDA50E00C08E51 /* video.js in Sources */ = {isa = PBXBuildFile; fileRef = B5AD785117CDA50E00C08E51 /* video.js */; };
 		B5AD785317CDA5E800C08E51 /* video.js in Resources */ = {isa = PBXBuildFile; fileRef = B5AD785117CDA50E00C08E51 /* video.js */; };
 		B5AD78A817CDD30600C08E51 /* JSURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = B5AD78A717CDD30600C08E51 /* JSURLProtocol.m */; };
@@ -253,6 +254,8 @@
 		B58B572C18347F240096801E /* MagicalRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MagicalRecord.m; sourceTree = "<group>"; };
 		B58B572D18347F240096801E /* MagicalRecordShorthand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalRecordShorthand.h; sourceTree = "<group>"; };
 		B58B572E18347F240096801E /* CoreData+MagicalRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CoreData+MagicalRecord.h"; sourceTree = "<group>"; };
+		B58B57491834B0F40096801E /* FakeTVDramaWebSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FakeTVDramaWebSource.h; sourceTree = "<group>"; };
+		B58B574A1834B0F40096801E /* FakeTVDramaWebSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeTVDramaWebSource.m; sourceTree = "<group>"; };
 		B5AD785117CDA50E00C08E51 /* video.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = video.js; sourceTree = "<group>"; };
 		B5AD78A617CDD30600C08E51 /* JSURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSURLProtocol.h; sourceTree = "<group>"; };
 		B5AD78A717CDD30600C08E51 /* JSURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSURLProtocol.m; sourceTree = "<group>"; };
@@ -428,6 +431,8 @@
 				B517776917B37FEB006B948E /* UIView+Sizes.m */,
 				B58B56ED18347A990096801E /* NSObject+Block.h */,
 				B58B56EE18347A990096801E /* NSObject+Block.m */,
+				B58B57491834B0F40096801E /* FakeTVDramaWebSource.h */,
+				B58B574A1834B0F40096801E /* FakeTVDramaWebSource.m */,
 				B51778AC17B9DE2E006B948E /* TestWebViewController.h */,
 				B51778AD17B9DE2F006B948E /* TestWebViewController.m */,
 				B51778AE17B9DE30006B948E /* TestWebViewController.xib */,
@@ -911,6 +916,7 @@
 				B5DC075D182CD2CA0046A7A5 /* WonderMovieDramaListView.m in Sources */,
 				B58B56E918346F8D0096801E /* EGORefreshTableHeaderView.m in Sources */,
 				B51778AF17B9DE32006B948E /* TestWebViewController.m in Sources */,
+				B58B574B1834B0F40096801E /* FakeTVDramaWebSource.m in Sources */,
 				B58B56EF18347A990096801E /* NSObject+Block.m in Sources */,
 				B58B572F18347F240096801E /* MagicalImportFunctions.m in Sources */,
 				B5DC075B182CD2CA0046A7A5 /* WonderMovieDramaGridCell.m in Sources */,
@@ -1036,7 +1042,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WonderMoviePlayer/WonderMoviePlayer-Prefix.pch";
 				INFOPLIST_FILE = "WonderMoviePlayer/WonderMoviePlayer-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -1054,7 +1060,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WonderMoviePlayer/WonderMoviePlayer-Prefix.pch";
 				INFOPLIST_FILE = "WonderMoviePlayer/WonderMoviePlayer-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
