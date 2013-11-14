@@ -16,6 +16,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import <AudioToolbox/AudioToolbox.h>
 #import "TVDramaManager.h"
+#import "WonderMovieDramaView.h"
 
 #ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
 #import "AirPlayDetector.h"
@@ -99,7 +100,8 @@
 
 @property (nonatomic, retain) UIPanGestureRecognizer *panGestureRecognizer;
 
-@property (nonatomic, retain) UIView *dramaView;
+@property (nonatomic, retain) UIView *dramaContainerView;
+@property (nonatomic, retain) WonderMovieDramaView *dramaView;
 
 // Tip
 @property (nonatomic, retain) UIView *horizontalPanningTipView;
@@ -236,6 +238,8 @@ void wonderMovieVolumeListenerCallback (
     self.verticalPanningTipView = nil;
     
     self.tvDramaManager = nil;
+    self.dramaContainerView = nil;
+    self.dramaView = nil;
     [super dealloc];
 }
 
@@ -1633,44 +1637,44 @@ void wonderMovieVolumeListenerCallback (
 #pragma mark Drama View
 - (void)showDramaView:(BOOL)show
 {
-    if (self.dramaView == nil) {
+    if (self.dramaContainerView == nil) {
         UIView *view = [[UIView alloc] initWithFrame:self.bounds];
-        self.dramaView = view;
+        self.dramaContainerView = view;
         [view release];
         
         view.backgroundColor = [UIColor clearColor];
         [view addGestureRecognizer:[[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapDramaView:)] autorelease]];
         
         CGFloat width = 200;
-        UIView *loadingView = [[UIView alloc] initWithFrame:CGRectMake(self.width - width, 0, width, self.height)];
-        loadingView.backgroundColor = [UIColor blackColor];
-        [view addSubview:loadingView];
-        UIActivityIndicatorView *loadingIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-        loadingIndicator.center = CGPointMake(CGRectGetMidX(loadingView.bounds), CGRectGetMidY(loadingView.bounds));
-        [loadingIndicator startAnimating];
-        [loadingView addSubview:loadingIndicator];
-        [loadingIndicator release];
-        [loadingView release];
+        WonderMovieDramaView *dramaView = [[WonderMovieDramaView alloc] initWithFrame:CGRectMake(self.width - width, 0, width, self.height)];
+        dramaView.backgroundColor = [UIColor blackColor];
+        dramaView.tvDramaManager = self.tvDramaManager;
+        [view addSubview:dramaView];
+        self.dramaView = dramaView;
+        [dramaView release];
         
         view.left = self.width;
     }
     
-    if (self.dramaView.superview != self) {
-        [self addSubview:self.dramaView];
+    if (self.dramaContainerView.superview != self) {
+        [self addSubview:self.dramaContainerView];
+    }
+    if (show) {
+        [self.dramaView reloadData];
     }
 
     [UIView animateWithDuration:0.5 animations:^{
         if (show) {
-            self.dramaView.left = 0;
+            self.dramaContainerView.left = 0;
             self.contentView.alpha = 0;
         }
         else {
-            self.dramaView.left = self.width;
+            self.dramaContainerView.left = self.width;
             self.contentView.alpha = 1;
         }
     } completion:^(BOOL finished) {
         if (!show) {
-            [self.dramaView removeFromSuperview];
+            [self.dramaContainerView removeFromSuperview];
         }
     }];
 }
@@ -1681,6 +1685,16 @@ void wonderMovieVolumeListenerCallback (
 }
 
 - (void)loadDramaInfo
+{
+    
+}
+
+- (void)startLoadingDramaInfo
+{
+    
+}
+
+- (void)stopLoadingDramaInfo
 {
     
 }
