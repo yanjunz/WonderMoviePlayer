@@ -38,8 +38,6 @@
 		B56EE430182A1F0000241DDA /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B56EE42F182A1F0000241DDA /* AudioToolbox.framework */; };
 		B58B56E018338E910096801E /* TVDramaManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B56D818338E910096801E /* TVDramaManager.m */; };
 		B58B56E118338E910096801E /* VideoGroup+VideoDetailSet.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B56DA18338E910096801E /* VideoGroup+VideoDetailSet.m */; };
-		B58B56E218338E910096801E /* Video.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B56DD18338E910096801E /* Video.m */; };
-		B58B56E318338E910096801E /* VideoGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B56DF18338E910096801E /* VideoGroup.m */; };
 		B58B56E518338EAC0096801E /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B58B56E418338EAC0096801E /* CoreData.framework */; };
 		B58B56E918346F8D0096801E /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B56E818346F8D0096801E /* EGORefreshTableHeaderView.m */; };
 		B58B56EC183470F50096801E /* WonderMovieDramaView.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B56EB183470F50096801E /* WonderMovieDramaView.m */; };
@@ -72,6 +70,8 @@
 		B58B574718347F250096801E /* MagicalRecord+ShorthandSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B572A18347F240096801E /* MagicalRecord+ShorthandSupport.m */; };
 		B58B574818347F250096801E /* MagicalRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B572C18347F240096801E /* MagicalRecord.m */; };
 		B58B574B1834B0F40096801E /* FakeTVDramaWebSource.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B574A1834B0F40096801E /* FakeTVDramaWebSource.m */; };
+		B58B57601834D2AD0096801E /* Video.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B575F1834D2AD0096801E /* Video.m */; };
+		B58B57631834D2AD0096801E /* VideoGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B57621834D2AD0096801E /* VideoGroup.m */; };
 		B5AD785217CDA50E00C08E51 /* video.js in Sources */ = {isa = PBXBuildFile; fileRef = B5AD785117CDA50E00C08E51 /* video.js */; };
 		B5AD785317CDA5E800C08E51 /* video.js in Resources */ = {isa = PBXBuildFile; fileRef = B5AD785117CDA50E00C08E51 /* video.js */; };
 		B5AD78A817CDD30600C08E51 /* JSURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = B5AD78A717CDD30600C08E51 /* JSURLProtocol.m */; };
@@ -188,10 +188,6 @@
 		B58B56D918338E910096801E /* TVDramaManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TVDramaManager.h; sourceTree = "<group>"; };
 		B58B56DA18338E910096801E /* VideoGroup+VideoDetailSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "VideoGroup+VideoDetailSet.m"; sourceTree = "<group>"; };
 		B58B56DB18338E910096801E /* VideoGroup+VideoDetailSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "VideoGroup+VideoDetailSet.h"; sourceTree = "<group>"; };
-		B58B56DC18338E910096801E /* Video.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Video.h; sourceTree = "<group>"; };
-		B58B56DD18338E910096801E /* Video.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Video.m; sourceTree = "<group>"; };
-		B58B56DE18338E910096801E /* VideoGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoGroup.h; sourceTree = "<group>"; };
-		B58B56DF18338E910096801E /* VideoGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoGroup.m; sourceTree = "<group>"; };
 		B58B56E418338EAC0096801E /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		B58B56E718346F8D0096801E /* EGORefreshTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EGORefreshTableHeaderView.h; sourceTree = "<group>"; };
 		B58B56E818346F8D0096801E /* EGORefreshTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EGORefreshTableHeaderView.m; sourceTree = "<group>"; };
@@ -256,6 +252,10 @@
 		B58B572E18347F240096801E /* CoreData+MagicalRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CoreData+MagicalRecord.h"; sourceTree = "<group>"; };
 		B58B57491834B0F40096801E /* FakeTVDramaWebSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FakeTVDramaWebSource.h; sourceTree = "<group>"; };
 		B58B574A1834B0F40096801E /* FakeTVDramaWebSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeTVDramaWebSource.m; sourceTree = "<group>"; };
+		B58B575E1834D2AD0096801E /* Video.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Video.h; sourceTree = "<group>"; };
+		B58B575F1834D2AD0096801E /* Video.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Video.m; sourceTree = "<group>"; };
+		B58B57611834D2AD0096801E /* VideoGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoGroup.h; sourceTree = "<group>"; };
+		B58B57621834D2AD0096801E /* VideoGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoGroup.m; sourceTree = "<group>"; };
 		B5AD785117CDA50E00C08E51 /* video.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = video.js; sourceTree = "<group>"; };
 		B5AD78A617CDD30600C08E51 /* JSURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSURLProtocol.h; sourceTree = "<group>"; };
 		B5AD78A717CDD30600C08E51 /* JSURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSURLProtocol.m; sourceTree = "<group>"; };
@@ -762,10 +762,10 @@
 				B58B56D918338E910096801E /* TVDramaManager.h */,
 				B58B56DA18338E910096801E /* VideoGroup+VideoDetailSet.m */,
 				B58B56DB18338E910096801E /* VideoGroup+VideoDetailSet.h */,
-				B58B56DC18338E910096801E /* Video.h */,
-				B58B56DD18338E910096801E /* Video.m */,
-				B58B56DE18338E910096801E /* VideoGroup.h */,
-				B58B56DF18338E910096801E /* VideoGroup.m */,
+				B58B575E1834D2AD0096801E /* Video.h */,
+				B58B575F1834D2AD0096801E /* Video.m */,
+				B58B57611834D2AD0096801E /* VideoGroup.h */,
+				B58B57621834D2AD0096801E /* VideoGroup.m */,
 			);
 			path = drama;
 			sourceTree = "<group>";
@@ -901,7 +901,6 @@
 				B58B573518347F250096801E /* NSString+MagicalDataImport.m in Sources */,
 				B58B574618347F250096801E /* MagicalRecord+Setup.m in Sources */,
 				B58B56F218347E8E0096801E /* WonderMoviePlayer.xcdatamodeld in Sources */,
-				B58B56E218338E910096801E /* Video.m in Sources */,
 				B5DC0784182CD4690046A7A5 /* WonderMPMovieViewController.m in Sources */,
 				B517775117B36D44006B948E /* ViewController.m in Sources */,
 				B58B574718347F250096801E /* MagicalRecord+ShorthandSupport.m in Sources */,
@@ -926,8 +925,8 @@
 				B517792517C1B896006B948E /* NSNotificationCenter+SwizzleMethod.m in Sources */,
 				B5DC0783182CD4690046A7A5 /* WonderAVPlayerView.m in Sources */,
 				B5AD785217CDA50E00C08E51 /* video.js in Sources */,
+				B58B57601834D2AD0096801E /* Video.m in Sources */,
 				B5AD78A817CDD30600C08E51 /* JSURLProtocol.m in Sources */,
-				B58B56E318338E910096801E /* VideoGroup.m in Sources */,
 				B58B573418347F250096801E /* NSRelationshipDescription+MagicalDataImport.m in Sources */,
 				B58B56E118338E910096801E /* VideoGroup+VideoDetailSet.m in Sources */,
 				B58B573C18347F250096801E /* NSManagedObjectContext+MagicalRecord.m in Sources */,
@@ -942,6 +941,7 @@
 				B5AD78B517CDF01700C08E51 /* JSInvokedUrlCommand.m in Sources */,
 				B58B573018347F240096801E /* NSAttributeDescription+MagicalDataImport.m in Sources */,
 				B58B574518347F250096801E /* MagicalRecord+Options.m in Sources */,
+				B58B57631834D2AD0096801E /* VideoGroup.m in Sources */,
 				B58B573D18347F250096801E /* NSManagedObjectContext+MagicalSaves.m in Sources */,
 				B5AD78B817CDF06100C08E51 /* JSJSON.m in Sources */,
 				B58B574018347F250096801E /* NSPersistentStore+MagicalRecord.m in Sources */,

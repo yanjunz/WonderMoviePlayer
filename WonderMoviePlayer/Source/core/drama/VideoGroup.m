@@ -1,8 +1,8 @@
 //
 //  VideoGroup.m
-//  mtt
+//  WonderMoviePlayer
 //
-//  Created by Zhuang Yanjun on 11/13/13.
+//  Created by Zhuang Yanjun on 11/14/13.
 //  Copyright (c) 2013 Tencent. All rights reserved.
 //
 
@@ -12,13 +12,13 @@
 
 @implementation VideoGroup
 
-@dynamic videoId;
-@dynamic url;
-@dynamic totalCount;
-@dynamic src;
-@dynamic videoName;
-@dynamic showType;
 @dynamic maxId;
+@dynamic showType;
+@dynamic src;
+@dynamic totalCount;
+@dynamic url;
+@dynamic videoId;
+@dynamic videoName;
 @dynamic videos;
 
 @end

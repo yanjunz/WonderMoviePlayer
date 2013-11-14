@@ -1,8 +1,8 @@
 //
 //  Video.m
-//  mtt
+//  WonderMoviePlayer
 //
-//  Created by Zhuang Yanjun on 11/13/13.
+//  Created by Zhuang Yanjun on 11/14/13.
 //  Copyright (c) 2013 Tencent. All rights reserved.
 //
 
@@ -12,10 +12,10 @@
 
 @implementation Video
 
-@dynamic url;
 @dynamic brief;
-@dynamic videoSrc;
 @dynamic setNum;
+@dynamic url;
+@dynamic videoSrc;
 @dynamic videoGroup;
 
 @end

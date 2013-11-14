@@ -70,4 +70,13 @@
     }
 }
 
+- (void)addVideosObject:(Video *)value
+{
+    [self willChangeValueForKey:@"videos"];
+    NSMutableOrderedSet *tempSet = [NSMutableOrderedSet orderedSetWithOrderedSet:self.videos];
+    [tempSet addObject: value];
+    self.videos = tempSet;
+    [self didChangeValueForKey:@"videos"];
+}
+
 @end

@@ -1,8 +1,8 @@
 //
 //  VideoGroup.h
-//  mtt
+//  WonderMoviePlayer
 //
-//  Created by Zhuang Yanjun on 11/13/13.
+//  Created by Zhuang Yanjun on 11/14/13.
 //  Copyright (c) 2013 Tencent. All rights reserved.
 //
 
@@ -13,13 +13,13 @@
 
 @interface VideoGroup : NSManagedObject
 
-@property (nonatomic, retain) NSNumber * videoId;
-@property (nonatomic, retain) NSString * url;
-@property (nonatomic, retain) NSNumber * totalCount;
-@property (nonatomic, retain) NSString * src;
-@property (nonatomic, retain) NSString * videoName;
-@property (nonatomic, retain) NSNumber * showType;
 @property (nonatomic, retain) NSNumber * maxId;
+@property (nonatomic, retain) NSNumber * showType;
+@property (nonatomic, retain) NSString * src;
+@property (nonatomic, retain) NSNumber * totalCount;
+@property (nonatomic, retain) NSString * url;
+@property (nonatomic, retain) NSNumber * videoId;
+@property (nonatomic, retain) NSString * videoName;
 @property (nonatomic, retain) NSOrderedSet *videos;
 @end
 
