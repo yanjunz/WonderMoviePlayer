@@ -12,6 +12,7 @@
 #import "Video.h"
 #import "VideoGroup+VideoDetailSet.h"
 #import "WonderMovieDramaGridCell.h"
+#import "WonderMovieDramaListCell.h"
 
 #define kDramaHeaderViewHeight  44
 #define kVideoCountPerSection   9
@@ -178,6 +179,7 @@
     int showType = self.tvDramaManager.videoGroup.showType.intValue;
     int videoCount = self.videos.count;
     static NSString *kGridCellID = @"WonderMovieDramaGridCell";
+    static NSString *kListCellID = @"WonderMovieDramaListCell";
     
     if (showType == VideoGroupShowTypeGrid) {
         WonderMovieDramaGridCell *cell = [tableView dequeueReusableCellWithIdentifier:kGridCellID];
@@ -197,7 +199,17 @@
         return cell;
     }
     else {
-         return nil;
+        WonderMovieDramaListCell *cell = [tableView dequeueReusableCellWithIdentifier:kListCellID];
+        if (cell == nil) {
+            cell = [[[WonderMovieDramaListCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kListCellID] autorelease];
+            cell.imageView.image = QQVideoPlayerImage(@"list_play");
+            cell.textLabel.font = [UIFont systemFontOfSize:13];
+        }
+        Video *video = self.videos[indexPath.row];
+        cell.selected = video.setNum.intValue == self.playingSetNum;
+        cell.textLabel.text = video.brief;
+        
+        return cell;
     }
 }
 
@@ -217,16 +229,33 @@
         return [WonderMovieDramaGridCell cellHeightWithMinVideoSetNum:minVideoSetNum maxVideoSetNum:maxVideoSetNum];
     }
     else {
-        return 0;
+        return 42;
+    }
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    int showType = self.tvDramaManager.videoGroup.showType.intValue;
+    if (showType != VideoGroupShowTypeGrid) {
+        Video *video = self.videos[indexPath.row];
+        [self playWithSetNum:video.setNum.intValue];
     }
 }
 
 #pragma mark WonderMovieDramaGridCellDelegate
 - (void)wonderMovieDramaGridCell:(WonderMovieDramaGridCell *)cell didClickAtSetNum:(int)setNum
 {
-    NSLog(@"click At setNum %d", setNum);
-    _playingSetNum = setNum;
+    [self playWithSetNum:setNum];
     [self.tableView reloadData];
 }
+
+#pragma mark Priavte
+- (void)playWithSetNum:(int)setNum
+{
+    _playingSetNum = setNum;
+    // TODO
+    
+}
+
 
 @end
