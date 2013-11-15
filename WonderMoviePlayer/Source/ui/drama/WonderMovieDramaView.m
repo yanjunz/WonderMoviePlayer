@@ -16,7 +16,7 @@
 #define kDramaHeaderViewHeight  44
 #define kVideoCountPerSection   9
 
-@interface WonderMovieDramaView ()
+@interface WonderMovieDramaView () <WonderMovieDramaGridCellDelegate>
 @property (nonatomic, copy) NSArray *videos;
 @end
 
@@ -183,6 +183,7 @@
         WonderMovieDramaGridCell *cell = [tableView dequeueReusableCellWithIdentifier:kGridCellID];
         if (cell == nil) {
             cell = [[[WonderMovieDramaGridCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kGridCellID] autorelease];
+            cell.delegate = self;
         }
         Video *minVideo = self.videos[indexPath.row * kVideoCountPerSection];
         int minVideoSetNum = minVideo.setNum.intValue;
@@ -215,6 +216,12 @@
     else {
         return 0;
     }
+}
+
+#pragma mark WonderMovieDramaGridCellDelegate
+- (void)wonderMovieDramaGridCell:(WonderMovieDramaGridCell *)cell didClickAtSetNum:(int)setNum
+{
+    NSLog(@"click At setNum %d", setNum);
 }
 
 @end

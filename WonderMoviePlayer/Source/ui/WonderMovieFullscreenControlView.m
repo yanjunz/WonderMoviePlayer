@@ -542,20 +542,20 @@ void wonderMovieVolumeListenerCallback (
     UITapGestureRecognizer *singleTapGR = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onSingleTapOverlayView:)];
     singleTapGR.delegate = self;
     singleTapGR.numberOfTapsRequired = 1;
-    [self.superview addGestureRecognizer:singleTapGR];
+    [self addGestureRecognizer:singleTapGR];
     [singleTapGR release];
     
     UITapGestureRecognizer *doubleTapGR = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onDoubleTapOverlayView:)];
     doubleTapGR.delegate = self;
     doubleTapGR.numberOfTapsRequired = 2;
-    [self.superview addGestureRecognizer:doubleTapGR];
+    [self addGestureRecognizer:doubleTapGR];
     [doubleTapGR release];
     
     [singleTapGR requireGestureRecognizerToFail:doubleTapGR];
     
     UIPanGestureRecognizer *panGR = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPanOverlayView:)];
     self.panGestureRecognizer = panGR;
-    [self.superview addGestureRecognizer:self.panGestureRecognizer];
+    [self addGestureRecognizer:self.panGestureRecognizer];
     [panGR release];
 }
 
@@ -1646,11 +1646,15 @@ void wonderMovieVolumeListenerCallback (
 {
     if (self.dramaContainerView == nil) {
         UIView *view = [[UIView alloc] initWithFrame:self.bounds];
+        view.userInteractionEnabled = YES;
         self.dramaContainerView = view;
         [view release];
         
         view.backgroundColor = [UIColor clearColor];
-        [view addGestureRecognizer:[[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapDramaView:)] autorelease]];
+        UITapGestureRecognizer *tapGR = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapDramaView:)];
+        tapGR.delegate = self;
+        [view addGestureRecognizer:tapGR];
+        [tapGR release];
         
         CGFloat width = 326;
         WonderMovieDramaView *dramaView = [[WonderMovieDramaView alloc] initWithFrame:CGRectMake(self.width - width, 0, width, self.height)];

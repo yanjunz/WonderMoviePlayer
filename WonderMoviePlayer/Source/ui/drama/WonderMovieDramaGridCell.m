@@ -39,6 +39,7 @@
             button.frame = CGRectMake(leftPadding + (i % kDramaGridCellButtonCountPerRow) * (kDramaGridCellButtonWidth + 8),
                                       topPadding + (i / kDramaGridCellButtonCountPerRow) * (kDramaGridCellButtonHeight + 19),
                                       kDramaGridCellButtonWidth, kDramaGridCellButtonHeight);
+            [button addTarget:self action:@selector(onClickVideo:) forControlEvents:UIControlEventTouchUpInside];
             [self.contentView addSubview:button];
             [self.buttons addObject:button];
         }
@@ -63,6 +64,7 @@
 
 - (void)dealloc
 {
+    self.delegate = nil;
     self.buttons = nil;
     self.headerLabel = nil;
     [super dealloc];
@@ -99,10 +101,12 @@
 
 - (void)layoutSubviews
 {
+    [super layoutSubviews];
     if (_minVideoSetNum != NSNotFound && _maxVideoSetNum != NSNotFound) {
         for (int i = 0; i < kDramaGridCellButtonCountPerRow * kDramaGridCellButtonMaxRow; ++i) {
             UIButton *button = self.buttons[i];
             int setNum = _minVideoSetNum + i;
+            button.tag = setNum;
             if (setNum <= _maxVideoSetNum) {
                 [button setTitle:[NSString stringWithFormat:@"%d", setNum] forState:UIControlStateNormal];
                 button.hidden = NO;
@@ -111,6 +115,14 @@
                 button.hidden = YES;
             }
         }
+    }
+}
+
+#pragma mark - UIAction
+- (IBAction)onClickVideo:(UIButton *)sender
+{
+    if ([self.delegate respondsToSelector:@selector(wonderMovieDramaGridCell:didClickAtSetNum:)]) {
+        [self.delegate wonderMovieDramaGridCell:self didClickAtSetNum:sender.tag];
     }
 }
 
