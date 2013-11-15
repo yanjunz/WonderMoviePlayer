@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "TVDramaManager.h"
 
-@interface WonderMovieDramaView : UIView
+@interface WonderMovieDramaView : UIView<UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic, retain) TVDramaManager *tvDramaManager;
 @property (nonatomic, retain) UITableView *tableView;
 @property (nonatomic, retain) UIView *errorView;

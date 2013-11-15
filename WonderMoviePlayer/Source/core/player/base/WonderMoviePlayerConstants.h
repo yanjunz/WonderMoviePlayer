@@ -29,6 +29,7 @@
 #define videoplayer_title_color         RGBAColor(0xb2, 0xb2, 0xb2, 0xff)
 #define videoplayer_subtitle_color      RGBAColor(0x8d, 0x8d, 0x8d, 0xff)
 #define videoplayer_downloaded_color    RGBAColor(0x8d, 0x8d, 0x8d, 0xff)
+#define videoplayer_drama_header_color  RGBAColor(0x8d, 0x8d, 0x8d, 0xff)
 
 #define kProgressViewPadding 16
 #define kWonderMovieControlDimDuration              0.8f

@@ -1337,6 +1337,13 @@ void wonderMovieVolumeListenerCallback (
 - (IBAction)onSingleTapOverlayView:(UITapGestureRecognizer *)gr
 {
     BOOL animationToHide = self.contentView.alpha > 0;
+    [self showOverlay:!animationToHide];
+    [self cancelPreviousAndPrepareToDimControl];
+}
+
+- (void)showOverlay:(BOOL)show
+{
+    BOOL animationToHide = !show;
     if ([self.delegate respondsToSelector:@selector(movieControlSource:showControlView:)]) {
         [self.delegate movieControlSource:self showControlView:!animationToHide];
     }
@@ -1351,7 +1358,6 @@ void wonderMovieVolumeListenerCallback (
     if (animationToHide) {
         [self dismissAllPopupViews];
     }
-    [self cancelPreviousAndPrepareToDimControl];
 }
 
 - (IBAction)onDoubleTapOverlayView:(UITapGestureRecognizer *)gr
@@ -1646,7 +1652,7 @@ void wonderMovieVolumeListenerCallback (
         view.backgroundColor = [UIColor clearColor];
         [view addGestureRecognizer:[[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapDramaView:)] autorelease]];
         
-        CGFloat width = 200;
+        CGFloat width = 326;
         WonderMovieDramaView *dramaView = [[WonderMovieDramaView alloc] initWithFrame:CGRectMake(self.width - width, 0, width, self.height)];
         dramaView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
         dramaView.tvDramaManager = self.tvDramaManager;
@@ -1664,14 +1670,13 @@ void wonderMovieVolumeListenerCallback (
         [self.dramaView reloadData];
     }
 
+    [self showOverlay:!show];
     [UIView animateWithDuration:0.5 animations:^{
         if (show) {
             self.dramaContainerView.left = 0;
-            self.contentView.alpha = 0;
         }
         else {
             self.dramaContainerView.left = self.width;
-            self.contentView.alpha = 1;
         }
     } completion:^(BOOL finished) {
         if (!show) {

@@ -9,8 +9,16 @@
 #import "WonderMovieDramaView.h"
 #import "UIView+Sizes.h"
 #import "NSObject+Block.h"
+#import "Video.h"
+#import "VideoGroup+VideoDetailSet.h"
+#import "WonderMovieDramaGridCell.h"
 
-#define kDramaHeaderViewHeight 44
+#define kDramaHeaderViewHeight  44
+#define kVideoCountPerSection   9
+
+@interface WonderMovieDramaView ()
+@property (nonatomic, copy) NSArray *videos;
+@end
 
 @implementation WonderMovieDramaView
 
@@ -31,6 +39,16 @@
         [self addSubview:label];
         [label release];
         [headerView release];
+        
+        UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, kDramaHeaderViewHeight, self.width, self.height - kDramaHeaderViewHeight) style:UITableViewStylePlain];
+        tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        tableView.delegate = self;
+        tableView.dataSource = self;
+        tableView.backgroundColor = [UIColor clearColor];
+        tableView.separatorStyle = UITableViewCellSelectionStyleNone;
+        [self addSubview:self.tableView];
+        self.tableView = tableView;
+        [tableView release];
     }
     return self;
 }
@@ -41,6 +59,7 @@
     self.tableView = nil;
     self.errorView = nil;
     self.loadingView = nil;
+    self.videos = nil;
     [super dealloc];
 }
 
@@ -94,7 +113,9 @@
 {
     [self performBlockInBackground:^{
         BOOL ret = [self.tvDramaManager getDramaInfo:TVDramaRequestTypeCurrent];
+        NSLog(@"loaded %@", self.tvDramaManager.videoGroup.videos);
         [self performBlock:^{
+            self.videos = [self.tvDramaManager.videoGroup.videos array];
             if (ret) {
                 [self finishCurrentSectionLoad];
             }
@@ -109,7 +130,8 @@
 {
     [self.loadingView removeFromSuperview];
     [self addSubview:self.tableView];
-    self.tableView.frame = CGRectMake(0, kDramaHeaderViewHeight, self.width, self.height - kDramaHeaderViewHeight);
+//    self.tableView.frame = CGRectMake(0, kDramaHeaderViewHeight, self.width, self.height - kDramaHeaderViewHeight);
+    [self.tableView reloadData];
 }
 
 - (void)showErrorView
@@ -127,6 +149,63 @@
     [self addSubview:self.loadingView];
     [self bringSubviewToFront:self.loadingView];
     [self loadCurrentSection];
+}
+
+#pragma mark UITableViewDataSource
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    int showType = self.tvDramaManager.videoGroup.showType.intValue;
+    int videoCount = self.videos.count;
+    if (showType == VideoGroupShowTypeGrid) {
+        return (videoCount + kVideoCountPerSection - 1) / kVideoCountPerSection;
+    }
+    else {
+        return videoCount;
+    }
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    int showType = self.tvDramaManager.videoGroup.showType.intValue;
+    int videoCount = self.videos.count;
+    static NSString *kGridCellID = @"WonderMovieDramaGridCell";
+    
+    if (showType == VideoGroupShowTypeGrid) {
+        WonderMovieDramaGridCell *cell = [tableView dequeueReusableCellWithIdentifier:kGridCellID];
+        if (cell == nil) {
+            cell = [[[WonderMovieDramaGridCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kGridCellID] autorelease];
+        }
+        Video *minVideo = self.videos[indexPath.row * kVideoCountPerSection];
+        int minVideoSetNum = minVideo.setNum.intValue;
+        int maxVideoSetNum = (indexPath.row + 1) * kVideoCountPerSection >= videoCount ?
+        (minVideoSetNum + videoCount - indexPath.row * kVideoCountPerSection - 1) :
+        (minVideoSetNum + kVideoCountPerSection - 1);
+        [cell configureCellWithMinVideoSetNum:minVideoSetNum maxVideoSetNum:maxVideoSetNum];
+        return cell;
+    }
+    else {
+         return nil;
+    }
+}
+
+#pragma mark UITableViewDelegate
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    int showType = self.tvDramaManager.videoGroup.showType.intValue;
+    int videoCount = self.videos.count;
+    
+    if (showType == VideoGroupShowTypeGrid) {
+        Video *minVideo = self.videos[indexPath.row * kVideoCountPerSection];
+        int minVideoSetNum = minVideo.setNum.intValue;
+        int maxVideoSetNum = (indexPath.row + 1) * kVideoCountPerSection >= videoCount ?
+        (minVideoSetNum + videoCount - indexPath.row * kVideoCountPerSection - 1) :
+        (minVideoSetNum + kVideoCountPerSection - 1);
+        
+        return [WonderMovieDramaGridCell cellHeightWithMinVideoSetNum:minVideoSetNum maxVideoSetNum:maxVideoSetNum];
+    }
+    else {
+        return 0;
+    }
 }
 
 @end

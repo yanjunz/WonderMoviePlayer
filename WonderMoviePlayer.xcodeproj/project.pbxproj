@@ -71,7 +71,7 @@
 		B58B574818347F250096801E /* MagicalRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B572C18347F240096801E /* MagicalRecord.m */; };
 		B58B574B1834B0F40096801E /* FakeTVDramaWebSource.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B574A1834B0F40096801E /* FakeTVDramaWebSource.m */; };
 		B58B57601834D2AD0096801E /* Video.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B575F1834D2AD0096801E /* Video.m */; };
-		B58B57631834D2AD0096801E /* VideoGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B57621834D2AD0096801E /* VideoGroup.m */; };
+		B58B57661835F6190096801E /* VideoGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B57651835F6190096801E /* VideoGroup.m */; };
 		B5AD785217CDA50E00C08E51 /* video.js in Sources */ = {isa = PBXBuildFile; fileRef = B5AD785117CDA50E00C08E51 /* video.js */; };
 		B5AD785317CDA5E800C08E51 /* video.js in Resources */ = {isa = PBXBuildFile; fileRef = B5AD785117CDA50E00C08E51 /* video.js */; };
 		B5AD78A817CDD30600C08E51 /* JSURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = B5AD78A717CDD30600C08E51 /* JSURLProtocol.m */; };
@@ -137,8 +137,6 @@
 		B5D4C3B418238A0900BB0A53 /* statusbar_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5D4C3B318238A0900BB0A53 /* statusbar_bg@2x.png */; };
 		B5D4C3BD182917E000BB0A53 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5D4C3BC182917E000BB0A53 /* CoreText.framework */; };
 		B5DC075B182CD2CA0046A7A5 /* WonderMovieDramaGridCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DC0756182CD2CA0046A7A5 /* WonderMovieDramaGridCell.m */; };
-		B5DC075C182CD2CA0046A7A5 /* WonderMovieDramaGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DC0758182CD2CA0046A7A5 /* WonderMovieDramaGridView.m */; };
-		B5DC075D182CD2CA0046A7A5 /* WonderMovieDramaListView.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DC075A182CD2CA0046A7A5 /* WonderMovieDramaListView.m */; };
 		B5DC0782182CD4690046A7A5 /* WonderAVMovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DC0776182CD4690046A7A5 /* WonderAVMovieViewController.m */; };
 		B5DC0783182CD4690046A7A5 /* WonderAVPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DC0778182CD4690046A7A5 /* WonderAVPlayerView.m */; };
 		B5DC0784182CD4690046A7A5 /* WonderMPMovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DC077A182CD4690046A7A5 /* WonderMPMovieViewController.m */; };
@@ -254,8 +252,8 @@
 		B58B574A1834B0F40096801E /* FakeTVDramaWebSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeTVDramaWebSource.m; sourceTree = "<group>"; };
 		B58B575E1834D2AD0096801E /* Video.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Video.h; sourceTree = "<group>"; };
 		B58B575F1834D2AD0096801E /* Video.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Video.m; sourceTree = "<group>"; };
-		B58B57611834D2AD0096801E /* VideoGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoGroup.h; sourceTree = "<group>"; };
-		B58B57621834D2AD0096801E /* VideoGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoGroup.m; sourceTree = "<group>"; };
+		B58B57641835F6190096801E /* VideoGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoGroup.h; sourceTree = "<group>"; };
+		B58B57651835F6190096801E /* VideoGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoGroup.m; sourceTree = "<group>"; };
 		B5AD785117CDA50E00C08E51 /* video.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = video.js; sourceTree = "<group>"; };
 		B5AD78A617CDD30600C08E51 /* JSURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSURLProtocol.h; sourceTree = "<group>"; };
 		B5AD78A717CDD30600C08E51 /* JSURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSURLProtocol.m; sourceTree = "<group>"; };
@@ -334,10 +332,6 @@
 		B5D4C3BC182917E000BB0A53 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		B5DC0755182CD2CA0046A7A5 /* WonderMovieDramaGridCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMovieDramaGridCell.h; sourceTree = "<group>"; };
 		B5DC0756182CD2CA0046A7A5 /* WonderMovieDramaGridCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderMovieDramaGridCell.m; sourceTree = "<group>"; };
-		B5DC0757182CD2CA0046A7A5 /* WonderMovieDramaGridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMovieDramaGridView.h; sourceTree = "<group>"; };
-		B5DC0758182CD2CA0046A7A5 /* WonderMovieDramaGridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderMovieDramaGridView.m; sourceTree = "<group>"; };
-		B5DC0759182CD2CA0046A7A5 /* WonderMovieDramaListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMovieDramaListView.h; sourceTree = "<group>"; };
-		B5DC075A182CD2CA0046A7A5 /* WonderMovieDramaListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderMovieDramaListView.m; sourceTree = "<group>"; };
 		B5DC0775182CD4690046A7A5 /* WonderAVMovieViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderAVMovieViewController.h; sourceTree = "<group>"; };
 		B5DC0776182CD4690046A7A5 /* WonderAVMovieViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderAVMovieViewController.m; sourceTree = "<group>"; };
 		B5DC0777182CD4690046A7A5 /* WonderAVPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderAVPlayerView.h; sourceTree = "<group>"; };
@@ -703,10 +697,6 @@
 			children = (
 				B5DC0755182CD2CA0046A7A5 /* WonderMovieDramaGridCell.h */,
 				B5DC0756182CD2CA0046A7A5 /* WonderMovieDramaGridCell.m */,
-				B5DC0757182CD2CA0046A7A5 /* WonderMovieDramaGridView.h */,
-				B5DC0758182CD2CA0046A7A5 /* WonderMovieDramaGridView.m */,
-				B5DC0759182CD2CA0046A7A5 /* WonderMovieDramaListView.h */,
-				B5DC075A182CD2CA0046A7A5 /* WonderMovieDramaListView.m */,
 				B58B56EA183470F50096801E /* WonderMovieDramaView.h */,
 				B58B56EB183470F50096801E /* WonderMovieDramaView.m */,
 			);
@@ -764,8 +754,8 @@
 				B58B56DB18338E910096801E /* VideoGroup+VideoDetailSet.h */,
 				B58B575E1834D2AD0096801E /* Video.h */,
 				B58B575F1834D2AD0096801E /* Video.m */,
-				B58B57611834D2AD0096801E /* VideoGroup.h */,
-				B58B57621834D2AD0096801E /* VideoGroup.m */,
+				B58B57641835F6190096801E /* VideoGroup.h */,
+				B58B57651835F6190096801E /* VideoGroup.m */,
 			);
 			path = drama;
 			sourceTree = "<group>";
@@ -912,7 +902,6 @@
 				B517776A17B37FEB006B948E /* UIView+Sizes.m in Sources */,
 				B58B56EC183470F50096801E /* WonderMovieDramaView.m in Sources */,
 				B58B56E018338E910096801E /* TVDramaManager.m in Sources */,
-				B5DC075D182CD2CA0046A7A5 /* WonderMovieDramaListView.m in Sources */,
 				B58B56E918346F8D0096801E /* EGORefreshTableHeaderView.m in Sources */,
 				B51778AF17B9DE32006B948E /* TestWebViewController.m in Sources */,
 				B58B574B1834B0F40096801E /* FakeTVDramaWebSource.m in Sources */,
@@ -920,7 +909,6 @@
 				B58B572F18347F240096801E /* MagicalImportFunctions.m in Sources */,
 				B5DC075B182CD2CA0046A7A5 /* WonderMovieDramaGridCell.m in Sources */,
 				B5D4C3651820F51A00BB0A53 /* WonderMovieInfoView.m in Sources */,
-				B5DC075C182CD2CA0046A7A5 /* WonderMovieDramaGridView.m in Sources */,
 				B58B573E18347F250096801E /* NSManagedObjectContext+MagicalThreading.m in Sources */,
 				B517792517C1B896006B948E /* NSNotificationCenter+SwizzleMethod.m in Sources */,
 				B5DC0783182CD4690046A7A5 /* WonderAVPlayerView.m in Sources */,
@@ -941,7 +929,7 @@
 				B5AD78B517CDF01700C08E51 /* JSInvokedUrlCommand.m in Sources */,
 				B58B573018347F240096801E /* NSAttributeDescription+MagicalDataImport.m in Sources */,
 				B58B574518347F250096801E /* MagicalRecord+Options.m in Sources */,
-				B58B57631834D2AD0096801E /* VideoGroup.m in Sources */,
+				B58B57661835F6190096801E /* VideoGroup.m in Sources */,
 				B58B573D18347F250096801E /* NSManagedObjectContext+MagicalSaves.m in Sources */,
 				B5AD78B817CDF06100C08E51 /* JSJSON.m in Sources */,
 				B58B574018347F250096801E /* NSPersistentStore+MagicalRecord.m in Sources */,

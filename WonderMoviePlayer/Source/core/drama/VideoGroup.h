@@ -2,7 +2,7 @@
 //  VideoGroup.h
 //  WonderMoviePlayer
 //
-//  Created by Zhuang Yanjun on 11/14/13.
+//  Created by Zhuang Yanjun on 11/15/13.
 //  Copyright (c) 2013 Tencent. All rights reserved.
 //
 
@@ -17,7 +17,6 @@
 @property (nonatomic, retain) NSNumber * showType;
 @property (nonatomic, retain) NSString * src;
 @property (nonatomic, retain) NSNumber * totalCount;
-@property (nonatomic, retain) NSString * url;
 @property (nonatomic, retain) NSNumber * videoId;
 @property (nonatomic, retain) NSString * videoName;
 @property (nonatomic, retain) NSOrderedSet *videos;

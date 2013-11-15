@@ -8,6 +8,12 @@
 
 #import "VideoGroup.h"
 
+typedef enum {
+    VideoGroupShowTypeNone,
+    VideoGroupShowTypeGrid,
+    VideoGroupShowTypeList,
+} VideoGroupShowType;
+
 @interface VideoGroup (VideoDetailSet)
 - (int)indexOfVideoWithURL:(NSString *)url;
 - (Video *)videoAtSetNum:(NSNumber *)setNum;

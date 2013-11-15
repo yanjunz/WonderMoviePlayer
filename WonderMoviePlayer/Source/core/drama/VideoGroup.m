@@ -2,7 +2,7 @@
 //  VideoGroup.m
 //  WonderMoviePlayer
 //
-//  Created by Zhuang Yanjun on 11/14/13.
+//  Created by Zhuang Yanjun on 11/15/13.
 //  Copyright (c) 2013 Tencent. All rights reserved.
 //
 
@@ -16,7 +16,6 @@
 @dynamic showType;
 @dynamic src;
 @dynamic totalCount;
-@dynamic url;
 @dynamic videoId;
 @dynamic videoName;
 @dynamic videos;

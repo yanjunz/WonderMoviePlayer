@@ -22,7 +22,7 @@
 
 - (void)setupDatabase
 {
-    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+    [MagicalRecord saveWithBlockAndWait:^(NSManagedObjectContext *localContext) {
         NSArray *videoGroups = [VideoGroup MR_findAll];
         if (videoGroups.count == 0) {
             VideoGroup *videoGroup = [VideoGroup MR_createEntity];
@@ -53,7 +53,6 @@
 //                video.videoGroup = videoGroup;
                 [videoGroup addVideosObject:video];
             }
-            
         }
 
     }];
@@ -71,6 +70,8 @@
             }
         }
     }
+    // simulate loading interval
+    [NSThread sleepForTimeInterval:2];
     
     return videoGroup;
 }

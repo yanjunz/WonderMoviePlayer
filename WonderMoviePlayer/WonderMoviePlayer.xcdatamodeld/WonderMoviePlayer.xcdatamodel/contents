@@ -12,7 +12,6 @@
         <attribute name="showType" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="src" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="totalCount" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="videoId" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="videoName" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="videos" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Video" inverseName="videoGroup" inverseEntity="Video" syncable="YES"/>
