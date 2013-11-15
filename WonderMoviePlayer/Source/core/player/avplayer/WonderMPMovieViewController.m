@@ -273,7 +273,6 @@
         
         self.controlView = fullscreenControlView;
         [self.overlayView addSubview:fullscreenControlView];
-        [fullscreenControlView installGestureHandlerForParentView];
         self.controlSource = fullscreenControlView;
         [fullscreenControlView release];
     }

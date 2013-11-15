@@ -478,6 +478,8 @@ void wonderMovieVolumeListenerCallback (
     
     self.infoView = infoView;
     [self addSubview:infoView];
+    
+    [self installGestureHandlers];
 }
 
 - (void)layoutSubviews
@@ -536,7 +538,7 @@ void wonderMovieVolumeListenerCallback (
 
 
 #pragma mark Public Functions
-- (void)installGestureHandlerForParentView
+- (void)installGestureHandlers
 {
     // Setup tap GR
     UITapGestureRecognizer *singleTapGR = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onSingleTapOverlayView:)];
