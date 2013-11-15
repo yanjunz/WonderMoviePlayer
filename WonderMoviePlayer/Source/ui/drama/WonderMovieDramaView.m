@@ -29,14 +29,23 @@
         // Initialization code
         UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.width, kDramaHeaderViewHeight)];
         headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
-        headerView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5]; // FIXME
+        headerView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.1]; // FIXME
+        
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, headerView.width - 20, headerView.height)];
         label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         label.backgroundColor = [UIColor clearColor];
         label.textColor = [UIColor whiteColor];
+        label.font = [UIFont systemFontOfSize:13];
         label.text = NSLocalizedString(@"剧集列表", nil);
         [headerView addSubview:label];
-        [self addSubview:label];
+        
+        UIView *separatorView = [[UIView alloc] initWithFrame:CGRectMake(0, label.bottom, headerView.width, 1)];
+        separatorView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        separatorView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.1];
+        [headerView addSubview:separatorView];
+        [separatorView release];
+        
+        [self addSubview:headerView];
         [label release];
         [headerView release];
         

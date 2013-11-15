@@ -33,6 +33,37 @@
                               @"http://www.iqiyi.com/dongman/20130421/21eda9cfbff15519.html",
                               @"http://www.iqiyi.com/dongman/20130428/f54cac51ba17a84f.html",
                               @"http://www.iqiyi.com/dongman/20130505/90745cf1df1d637b.html",
+                              
+                              @"http://www.iqiyi.com/dongman/20130407/1.html",
+                              @"http://www.iqiyi.com/dongman/20130414/2.html",
+                              @"http://www.iqiyi.com/dongman/20130421/3.html",
+                              @"http://www.iqiyi.com/dongman/20130428/4.html",
+                              @"http://www.iqiyi.com/dongman/20130505/5.html",
+                              
+                              @"http://www.iqiyi.com/dongman/20130407/6.html",
+                              @"http://www.iqiyi.com/dongman/20130414/7.html",
+                              @"http://www.iqiyi.com/dongman/20130421/8.html",
+                              @"http://www.iqiyi.com/dongman/20130428/9.html",
+                              @"http://www.iqiyi.com/dongman/20130505/10.html",
+                              
+                              @"http://www.iqiyi.com/dongman/20130407/11.html",
+                              @"http://www.iqiyi.com/dongman/20130414/12.html",
+                              @"http://www.iqiyi.com/dongman/20130421/13.html",
+                              @"http://www.iqiyi.com/dongman/20130428/14.html",
+                              @"http://www.iqiyi.com/dongman/20130505/15.html",
+                              
+                              @"http://www.iqiyi.com/dongman/20130407/16.html",
+                              @"http://www.iqiyi.com/dongman/20130414/17.html",
+                              @"http://www.iqiyi.com/dongman/20130421/18.html",
+                              @"http://www.iqiyi.com/dongman/20130428/19.html",
+                              @"http://www.iqiyi.com/dongman/20130505/20.html",
+                              
+                              @"http://www.iqiyi.com/dongman/20130407/21.html",
+                              @"http://www.iqiyi.com/dongman/20130414/22.html",
+                              @"http://www.iqiyi.com/dongman/20130421/23.html",
+                              @"http://www.iqiyi.com/dongman/20130428/24.html",
+                              @"http://www.iqiyi.com/dongman/20130505/25.html",
+                              
                               ];
             
             // save video group info
