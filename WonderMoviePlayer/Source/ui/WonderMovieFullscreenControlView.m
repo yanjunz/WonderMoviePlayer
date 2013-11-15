@@ -1213,6 +1213,7 @@ void wonderMovieVolumeListenerCallback (
 
 - (IBAction)onClickTVDrama:(id)sender
 {
+    [self showOverlay:NO];
     [self showDramaView:YES];
     [self dismissAllPopupViews]; 
     [self cancelPreviousAndPrepareToDimControl];
@@ -1285,7 +1286,7 @@ void wonderMovieVolumeListenerCallback (
         self.infoView.centerPlayButton.hidden = YES;
         _isLoading = NO; // clear loading flag
         
-        self.contentView.alpha = 1; // show control if ended
+        [self showOverlay:YES];
         [self showDramaView:NO];
     }
     
@@ -1676,7 +1677,6 @@ void wonderMovieVolumeListenerCallback (
         [self.dramaView reloadData];
     }
 
-    [self showOverlay:!show];
     [UIView animateWithDuration:0.5 animations:^{
         if (show) {
             self.dramaContainerView.left = 0;
@@ -1693,6 +1693,7 @@ void wonderMovieVolumeListenerCallback (
 
 - (IBAction)onTapDramaView:(id)sender
 {
+    [self showOverlay:YES];
     [self showDramaView:NO];
 }
 

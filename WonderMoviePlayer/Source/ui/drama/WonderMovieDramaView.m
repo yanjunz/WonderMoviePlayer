@@ -190,7 +190,10 @@
         int maxVideoSetNum = (indexPath.row + 1) * kVideoCountPerSection >= videoCount ?
         (minVideoSetNum + videoCount - indexPath.row * kVideoCountPerSection - 1) :
         (minVideoSetNum + kVideoCountPerSection - 1);
+        
+        [cell playWithSetNum:self.playingSetNum];
         [cell configureCellWithMinVideoSetNum:minVideoSetNum maxVideoSetNum:maxVideoSetNum];
+        
         return cell;
     }
     else {
@@ -222,6 +225,8 @@
 - (void)wonderMovieDramaGridCell:(WonderMovieDramaGridCell *)cell didClickAtSetNum:(int)setNum
 {
     NSLog(@"click At setNum %d", setNum);
+    _playingSetNum = setNum;
+    [self.tableView reloadData];
 }
 
 @end

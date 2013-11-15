@@ -34,6 +34,7 @@
             UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
             [button setBackgroundImage:QQVideoPlayerImage(@"tv_drama_button_normal") forState:UIControlStateNormal];
             [button setBackgroundImage:QQVideoPlayerImage(@"tv_drama_button_press") forState:UIControlStateHighlighted];
+            [button setBackgroundImage:QQVideoPlayerImage(@"tv_drama_button_press") forState:UIControlStateReserved];
             [button setBackgroundImage:QQVideoPlayerImage(@"tv_drama_button_selected") forState:UIControlStateSelected];
             button.hidden = YES;
             button.frame = CGRectMake(leftPadding + (i % kDramaGridCellButtonCountPerRow) * (kDramaGridCellButtonWidth + 8),
@@ -46,6 +47,7 @@
         
         _minVideoSetNum = NSNotFound;
         _maxVideoSetNum = NSNotFound;
+        _selectedButtonIndex = NSNotFound;
         
         UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 15, 200, 12)];
         headerLabel.backgroundColor = [UIColor clearColor];
@@ -107,6 +109,9 @@
             UIButton *button = self.buttons[i];
             int setNum = _minVideoSetNum + i;
             button.tag = setNum;
+            
+            button.selected = (i == _selectedButtonIndex);
+
             if (setNum <= _maxVideoSetNum) {
                 [button setTitle:[NSString stringWithFormat:@"%d", setNum] forState:UIControlStateNormal];
                 button.hidden = NO;
@@ -115,6 +120,16 @@
                 button.hidden = YES;
             }
         }
+    }
+}
+
+- (void)playWithSetNum:(int)setNum
+{
+    if (_minVideoSetNum != NSNotFound && _maxVideoSetNum != NSNotFound && setNum <= _maxVideoSetNum) {
+        _selectedButtonIndex = setNum - _minVideoSetNum;
+    }
+    else {
+        _selectedButtonIndex = NSNotFound;
     }
 }
 
