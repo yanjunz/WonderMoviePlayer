@@ -253,8 +253,9 @@
 - (void)playWithSetNum:(int)setNum
 {
     _playingSetNum = setNum;
-    // TODO
-    
+    if ([self.delegate respondsToSelector:@selector(wonderMovieDramaView:didSelectSetNum:)]) {
+        [self.delegate wonderMovieDramaView:self didSelectSetNum:setNum];
+    }
 }
 
 

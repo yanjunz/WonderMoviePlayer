@@ -20,6 +20,8 @@
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         self.imageView.hidden = YES;
         self.textLabel.textColor = [UIColor whiteColor];
+        
+        self.backgroundColor = [UIColor clearColor];
     }
     return self;
 }

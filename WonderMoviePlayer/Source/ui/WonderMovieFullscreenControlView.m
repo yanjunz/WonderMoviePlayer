@@ -17,6 +17,10 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import "TVDramaManager.h"
 #import "WonderMovieDramaView.h"
+#import "NSObject+Block.h"
+#import "VideoGroup.h"
+#import "VideoGroup+VideoDetailSet.h"
+#import "Video.h"
 
 #ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
 #import "AirPlayDetector.h"
@@ -32,7 +36,7 @@
 
 #define kWonderMovieResolutionButtonTagBase         100
 
-@interface WonderMovieFullscreenControlView () {
+@interface WonderMovieFullscreenControlView () <UIGestureRecognizerDelegate>{
     NSTimeInterval _playbackTime;
     NSTimeInterval _playableDuration;
     NSTimeInterval _duration;
@@ -112,7 +116,7 @@
 
 @end
 
-@interface WonderMovieFullscreenControlView (Gesture) <UIGestureRecognizerDelegate>
+@interface WonderMovieFullscreenControlView (DramaView) <WonderMovieDramaViewDelegate>
 
 @end
 
@@ -1663,6 +1667,7 @@ void wonderMovieVolumeListenerCallback (
         WonderMovieDramaView *dramaView = [[WonderMovieDramaView alloc] initWithFrame:CGRectMake(self.width - width, 0, width, self.height)];
         dramaView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
         dramaView.tvDramaManager = self.tvDramaManager;
+        dramaView.delegate = self;
         [view addSubview:dramaView];
         self.dramaView = dramaView;
         [dramaView release];
@@ -1712,6 +1717,14 @@ void wonderMovieVolumeListenerCallback (
     
 }
 
+#pragma mark UIGestureRecognizerDelegate
+// Bugfix: button doesn't repsond to any click if there is UITapGestureRecognizer in superview
+// http://stackoverflow.com/questions/13515539/uibutton-not-works-in-ios-5-x-everything-is-fine-in-ios-6-x
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    return !([touch.view isKindOfClass:[UIControl class]]) && !(self.dramaView && [touch.view isDescendantOfView:self.dramaView]);
+}
+
 @end
 
 
@@ -1740,18 +1753,6 @@ void wonderMovieVolumeListenerCallback (
     if ([self canShowHorizontalPanningTip]) {
         [self showHorizontalPanningTip:YES];
     }
-}
-
-@end
-
-@implementation WonderMovieFullscreenControlView (Gesture)
-
-
-// Bugfix: button doesn't repsond to any click if there is UITapGestureRecognizer in superview
-// http://stackoverflow.com/questions/13515539/uibutton-not-works-in-ios-5-x-everything-is-fine-in-ios-6-x
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
-{
-    return !([touch.view isKindOfClass:[UIControl class]]) && !(self.dramaView && [touch.view isDescendantOfView:self.dramaView]);
 }
 
 @end
@@ -1873,6 +1874,54 @@ static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanni
 {
     if ([self canShowVerticalPanningTip]) {
         [self showVerticalPanningTip:YES];
+    }
+}
+
+@end
+
+@implementation WonderMovieFullscreenControlView (DramaView)
+
+- (void)wonderMovieDramaView:(WonderMovieDramaView *)dramaView didSelectSetNum:(int)setNum
+{
+    [self showOverlay:YES];
+    [self showDramaView:NO];
+    
+    [self dramaDidSelectSetNum:setNum];
+}
+
+- (void)dramaDidSelectSetNum:(int)setNum
+{
+    if ([self.delegate respondsToSelector:@selector(movieControlSource:willPlayVideoGroup:setNum:)]) {
+        [self.delegate movieControlSource:self willPlayVideoGroup:self.tvDramaManager.videoGroup setNum:setNum];
+    }
+    
+    self.tvDramaManager.curSetNum = setNum;
+    self.tvDramaManager.webURL = [self.tvDramaManager.videoGroup videoAtSetNum:@(setNum)].url;
+    
+    [self performBlockInBackground:^{
+        BOOL ret = [self.tvDramaManager sniffVideoSource];
+        [self performBlock:^{
+            if (ret) {
+                [self dramaDidFinishSniff:setNum];
+            }
+            else {
+                [self dramaDidFailToSniff];
+            }
+        } afterDelay:0];
+    }];
+}
+
+- (void)dramaDidFinishSniff:(int)setNum
+{
+    if ([self.delegate respondsToSelector:@selector(movieControlSource:didPlayVideoGroup:setNum:)]) {
+        [self.delegate movieControlSource:self didPlayVideoGroup:self.tvDramaManager.videoGroup setNum:setNum];
+    }
+}
+
+- (void)dramaDidFailToSniff
+{
+    if ([self.delegate respondsToSelector:@selector(movieControlSourceFailToPlayVideoGroup:)]) {
+        [self.delegate movieControlSourceFailToPlayVideoGroup:self];
     }
 }
 

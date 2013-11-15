@@ -109,7 +109,15 @@
 
 - (NSDictionary *)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURLs:(NSArray *)URLs
 {
-    return nil;
+    // simulate loading interval
+    [NSThread sleepForTimeInterval:2];
+
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    NSString *url = @"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8";
+    for (NSString *key in URLs) {
+        dict[key] = url;
+    }
+    return dict;
 }
 
 @end

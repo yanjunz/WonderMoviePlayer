@@ -39,7 +39,14 @@
     if (self.webURL.length > 0) {
         if ([self.delegate respondsToSelector:@selector(tvDramaManager:sniffVideoSrcWithURLs:)]) {
             NSDictionary *dict = [self.delegate tvDramaManager:self sniffVideoSrcWithURLs:@[self.webURL]];
-            return dict != nil;
+            if (dict) {
+                int index = [self.videoGroup indexOfVideoWithURL:self.webURL];
+                if (index != NSNotFound) {
+                    Video *video = self.videoGroup.videos[index];
+                    video.videoSrc = dict[self.webURL];
+                    return YES;
+                }
+            }
         }
     }
     return NO;

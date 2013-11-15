@@ -35,6 +35,8 @@ typedef enum {
 
 @protocol MovieControlSourceDelegate;
 @class TVDramaManager;
+@class Video;
+@class VideoGroup;
 
 @protocol MovieControlSource <NSObject>
 @required
@@ -115,6 +117,11 @@ typedef enum {
 - (void)movieControlSourceSwitchVideoGravity:(id<MovieControlSource>)source;
 - (void)movieControlSource:(id<MovieControlSource>)source showControlView:(BOOL)show;
 - (void)movieControlSource:(id<MovieControlSource>)source didChangeResolution:(NSString *)resolution;
+
+// Drama
+- (void)movieControlSource:(id<MovieControlSource>)source willPlayVideoGroup:(VideoGroup *)videoGroup setNum:(int)setNum;
+- (void)movieControlSource:(id<MovieControlSource>)source didPlayVideoGroup:(VideoGroup *)videoGroup setNum:(int)setNum;
+- (void)movieControlSourceFailToPlayVideoGroup:(id<MovieControlSource>)source;
 @end
 
 #endif // MTT_FEATURE_WONDER_MOVIE_PLAYER

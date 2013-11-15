@@ -13,7 +13,8 @@
 #import "WonderMovieInfoView.h"
 #import "WonderMovieFullscreenControlView.h"
 #import "UIView+Sizes.h"
-
+#import "VideoGroup+VideoDetailSet.h"
+#import "Video.h"
 
 #define OBSERVER_CONTEXT_NAME(prefix, property) prefix##property##_ObserverContext
 
@@ -960,6 +961,24 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     }
     // for iOS6
     [[UIApplication sharedApplication] setStatusBarHidden:!show withAnimation:UIStatusBarAnimationFade];
+}
+
+// Drama
+- (void)movieControlSource:(id<MovieControlSource>)source willPlayVideoGroup:(VideoGroup *)videoGroup setNum:(int)setNum
+{
+    [self.player pause];
+    [self buffer];
+}
+
+- (void)movieControlSource:(id<MovieControlSource>)source didPlayVideoGroup:(VideoGroup *)videoGroup setNum:(int)setNum
+{
+    NSString *url = [videoGroup videoAtSetNum:@(setNum)].videoSrc;
+    [self playMovieStream:[NSURL URLWithString:url]];
+}
+
+- (void)movieControlSourceFailToPlayVideoGroup:(id<MovieControlSource>)source
+{
+    [self.controlSource end];
 }
 
 #pragma mark Notification
