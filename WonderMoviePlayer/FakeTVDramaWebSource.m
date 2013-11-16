@@ -75,12 +75,19 @@
             // save video group info
             videoGroup.videoId = @(1234567890);
             videoGroup.videoName = @"进击的巨人";
-            videoGroup.showType = @(2); // @(1);
+            videoGroup.showType = @(1);
             videoGroup.src = @"爱奇艺";
             videoGroup.totalCount = @(0);
             videoGroup.maxId = @(urls.count);
             
-            
+
+//            videoGroup.videoId = @(1234567890);
+//            videoGroup.videoName = @"进击的巨人";
+//            videoGroup.showType = @(2);
+//            videoGroup.src = @"爱奇艺";
+//            videoGroup.totalCount = @(0);
+//            videoGroup.maxId = @(urls.count);
+
             
             for (int i = 1; i <= urls.count; ++i) {
                 Video *video = [Video MR_createEntity];

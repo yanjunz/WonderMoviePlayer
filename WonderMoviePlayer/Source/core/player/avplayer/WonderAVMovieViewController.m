@@ -978,10 +978,14 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     [self prepareToPlayAnotherVideo];
     if (videoGroup.showType.intValue == VideoGroupShowTypeGrid) {
         [self.controlSource setBufferTitle:[NSString stringWithFormat:@"%@ 第%d集", videoGroup.videoName, setNum]];
+        [self.controlSource setTitle:[NSString stringWithFormat:@"%@ 第%d集", videoGroup.videoName, setNum]
+                            subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"(来自%@)", videoGroup.src] : @"")];
     }
     else {
         Video *video = [videoGroup videoAtSetNum:@(setNum)];
         [self.controlSource setBufferTitle:video.brief];
+        [self.controlSource setTitle:video.brief
+                            subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"(来自%@)", videoGroup.src] : @"")];
     }
 }
 
