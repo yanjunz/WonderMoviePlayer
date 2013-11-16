@@ -989,6 +989,8 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 {
     [self.controlSource resetBufferTitle];
     NSString *url = [videoGroup videoAtSetNum:@(setNum)].videoSrc;
+    // make sure both of previous and next video are same type
+    // http://stackoverflow.com/questions/4101380/avurlasset-refuses-to-load-video
     [self playMovieStream:[NSURL URLWithString:url]];
 }
 

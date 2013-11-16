@@ -180,12 +180,27 @@
     DefineBlockVar(WonderAVMovieViewController *, controller, [[[WonderAVMovieViewController alloc] init] autorelease]);
     [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeRight animated:YES];
     [UIApplication sharedApplication].statusBarHidden = YES;
+    
+    if ([self respondsToSelector:@selector(presentViewController:animated:completion:)]) {
+        [self presentViewController:controller animated:YES completion:nil];
+    }
+    else {
+        [self presentModalViewController:controller animated:YES];
+    }
+    
     [controller setCrossScreenBlock:^{
         NSLog(@"cross screen");
     }];
     [controller setDownloadBlock:^(NSURL *url) {
 //        [controller performSelector:@selector(finishDownload) withObject:nil afterDelay:3];
     }];
+    
+    TVDramaManager *tvDramaManager = [[[TVDramaManager alloc] init] autorelease];
+    tvDramaManager.webURL = @"http://www.iqiyi.com/dongman/20130414/8d6929ed7ac9a7b8.html";
+    FakeTVDramaWebSource *fakeDramaWebSource = [[FakeTVDramaWebSource alloc] init];
+    tvDramaManager.delegate = fakeDramaWebSource;
+    [controller.controlSource setTvDramaManager:tvDramaManager];
+    
     [controller setExitBlock:^{
         [UIApplication sharedApplication].statusBarHidden = NO;
         if ([controller respondsToSelector:@selector(dismissViewControllerAnimated:completion:)]) {
@@ -195,12 +210,7 @@
             [controller dismissModalViewControllerAnimated:YES];
         }
     }];
-    if ([self respondsToSelector:@selector(presentViewController:animated:completion:)]) {
-        [self presentViewController:controller animated:YES completion:nil];
-    }
-    else {
-        [self presentModalViewController:controller animated:YES];
-    }
+    
     
         NSLog(@"start to play av");
         [controller playMovieStream:[NSURL URLWithString:
