@@ -576,7 +576,9 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     else if (context == WonderAVMovieObserverContextName(PlaybackLikelyToKeepUp)) {
         if (self.player.currentItem.playbackLikelyToKeepUp) {
 //            NSLog(@"unbuffer");
-            [self unbuffer];
+            if (_hasStarted) {
+                [self unbuffer];
+            }
         }
     }
 #ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS

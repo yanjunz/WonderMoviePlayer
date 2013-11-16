@@ -789,9 +789,11 @@ void wonderMovieVolumeListenerCallback (
 #pragma mark State Manchine
 - (void)handleCommand:(MovieControlCommand)cmd param:(id)param notify:(BOOL)notify
 {
-//    if (cmd != MovieControlCommandSetProgress) {
-//        NSLog(@"handleCommand cmd=%d, state=%d, %@, %d", cmd, self.controlState, param, notify);
-//    }
+    NSArray *cmds = @[@"play", @"pause", @"end", @"replay", @"setProgress", @"buffer", @"unbuffer"];
+    NSArray *states = @[@"default", @"playing", @"paused", @"buffering", @"ended"];
+    if (cmd != MovieControlCommandSetProgress) {
+        NSLog(@"handleCommand cmd=%@, state=%@, %@, %d", cmds[cmd], states[self.controlState], param, notify);
+    }
     
     if (cmd == MovieControlCommandEnd) {
         self.controlState = MovieControlStateEnded;
