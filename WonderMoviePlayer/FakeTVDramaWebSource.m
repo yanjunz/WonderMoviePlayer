@@ -9,6 +9,12 @@
 #import "FakeTVDramaWebSource.h"
 #import "Video.h"
 #import "VideoGroup+VideoDetailSet.h"
+#import "NSObject+Block.h"
+
+@interface FakeTVDramaWebSource () <UIWebViewDelegate>
+@property (nonatomic, retain) UIWebView *webview;
+@property (nonatomic, copy) NSString *videoSrc;
+@end
 
 @implementation FakeTVDramaWebSource
 
@@ -110,14 +116,75 @@
 - (NSDictionary *)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURLs:(NSArray *)URLs
 {
     // simulate loading interval
-    [NSThread sleepForTimeInterval:2];
+    NSURL *webURL = [NSURL URLWithString:URLs[0]];
+    self.videoSrc = nil;
+    
+    [self performBlock:^{
+        if (self.webview == nil) {
+            self.webview = [[[UIWebView alloc] initWithFrame:CGRectMake(-1000, -1000, 200, 200)] autorelease];
+            self.webview.delegate = self;
+            [[UIApplication sharedApplication].keyWindow addSubview:self.webview];
+        }
+        [self.webview loadRequest:[NSURLRequest requestWithURL:webURL]];
+    } afterDelay:0];
 
+    while (self.videoSrc.length == 0) {
+        [NSThread sleepForTimeInterval:0.2];
+    }
+    
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    NSString *url = @"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8";
     for (NSString *key in URLs) {
-        dict[key] = url;
+        dict[key] = self.videoSrc;
     }
     return dict;
+    
+//    [NSThread sleepForTimeInterval:2];
+//
+//    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+//    NSString *url = @"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8";
+//    for (NSString *key in URLs) {
+//        dict[key] = url;
+//    }
+//    return dict;
+}
+
+#pragma mark UIWebViewDelegate
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+    [self performBlock:^{
+        NSString *videoSrc = [self getCurrentVideoSrc];
+        NSLog(@"videoSrc = %@", videoSrc);
+        self.videoSrc = videoSrc;
+    } afterDelay:2];
+    
+}
+
+- (NSString *)getCurrentVideoSrc
+{
+    NSString *videoId = nil;
+    NSString *currentVideoSrc = nil;
+    
+    //获取网页video标签id
+    videoId = [self.webview stringByEvaluatingJavaScriptFromString:@"document.getElementsByTagName('video')[0].getAttribute('id')"];
+    
+    //获取网页视频src
+    currentVideoSrc = [self.webview stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"document.getElementById('%@').currentSrc", videoId]];
+    //MTTLOG(@"current video src:%@", currentVideoSrc);
+    //对乐视等类型html标签的适配
+    if (currentVideoSrc == nil || currentVideoSrc.length < 1)
+    {
+        currentVideoSrc = [self.webview stringByEvaluatingJavaScriptFromString:@"document.getElementsByTagName('video')[0].getAttribute('src')"];
+    }
+    //对豆瓣影评视频等类型html标签的适配
+    if (currentVideoSrc == nil || currentVideoSrc.length < 1)
+    {
+        NSString *regexString = @"\\bhttps?://[a-zA-Z0-9\\-.]+(?::(\\d+))?(?:(?:/[a-zA-Z0-9\\-._?,'+\\&%$=~*!():@\\\\]*)+)?";
+        currentVideoSrc = [self.webview stringByEvaluatingJavaScriptFromString:@"document.getElementsByTagName('video')[0].innerHTML"];
+        currentVideoSrc = [currentVideoSrc stringByMatching:regexString];
+    }
+    
+    return currentVideoSrc;
 }
 
 @end
+
