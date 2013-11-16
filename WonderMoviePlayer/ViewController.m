@@ -13,6 +13,7 @@
 #import "Test2ViewController.h"
 #import "TVDramaManager.h"
 #import "FakeTVDramaWebSource.h"
+#import "TestTableViewController.h"
 
 #ifdef MTT_FEATURE_WONDER_MPMOVIE_PLAYER
 #define WonderMovieViewController WonderMPMovieViewController
@@ -249,6 +250,9 @@
 
 - (IBAction)onClickWebView:(id)sender {
     [self.navigationController pushViewController:[[[TestWebViewController alloc] init] autorelease] animated:YES];
+}
+- (IBAction)onClickTable:(id)sender {
+    [self.navigationController pushViewController:[[[TestTableViewController alloc] init] autorelease] animated:YES];
 }
 
 - (void)dealloc {
