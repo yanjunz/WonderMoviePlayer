@@ -83,19 +83,17 @@
 - (UIView *)loadingView
 {
     if (!_loadingView) {
-        _loadingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 181, 101)];
+        _loadingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 181, 101 + 20)];
         _loadingView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         
         UIImageView *loadingIndicator = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"loading")];
         self.loadingIndicator = loadingIndicator;
         self.loadingIndicator.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         self.loadingIndicator.contentMode = UIViewContentModeCenter;
-        self.loadingIndicator.frame = _loadingView.bounds;
+        self.loadingIndicator.frame = CGRectMake(0, 0, _loadingView.width, _loadingView.height - 20);
         [_loadingView addSubview:self.loadingIndicator];
         [loadingIndicator release];
-        [self addSubview:_loadingView];
-        _loadingView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
-        _loadingView.hidden = YES;
+
         
         UILabel *loadingPercentLabel = [[UILabel alloc] initWithFrame:self.loadingIndicator.frame];
         self.loadingPercentLabel = loadingPercentLabel;
@@ -112,13 +110,17 @@
         [loadingPercentLabel release];
         
         UILabel *loadingMessageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, self.loadingIndicator.bottom, _loadingView.width, 20)];
-        self.loadingMessageLabel = loadingPercentLabel;
+        self.loadingMessageLabel = loadingMessageLabel;
         self.loadingMessageLabel.text = NSLocalizedString(@" 正在缓冲...", @"");
         self.loadingMessageLabel.textAlignment = UITextAlignmentCenter;
         self.loadingMessageLabel.backgroundColor = [UIColor clearColor];
         self.loadingMessageLabel.textColor = [UIColor whiteColor];
         [_loadingView addSubview:self.loadingMessageLabel];
         [loadingMessageLabel release];
+        
+        _loadingView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+        _loadingView.hidden = YES;
+        [self addSubview:_loadingView];
     }
     return _loadingView;
 }

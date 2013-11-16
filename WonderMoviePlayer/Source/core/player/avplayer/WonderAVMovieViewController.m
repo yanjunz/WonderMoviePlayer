@@ -10,7 +10,6 @@
 #import "WonderMoviePlayerConstants.h"
 #import "WonderAVMovieViewController.h"
 #import "WonderAVPlayerView.h"
-#import "WonderMovieInfoView.h"
 #import "WonderMovieFullscreenControlView.h"
 #import "UIView+Sizes.h"
 #import "VideoGroup+VideoDetailSet.h"
