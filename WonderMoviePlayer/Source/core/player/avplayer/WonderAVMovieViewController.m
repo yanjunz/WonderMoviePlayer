@@ -269,6 +269,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
         startTime = time;
         self.movieURL = movieURL;
         _wasPlaying = YES; // start to play automatically
+        _hasStarted = NO; // clear started flag
 //        return;
         /*
          Create an asset for inspection of a resource referenced by a given URL.
@@ -799,6 +800,13 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     [self.controlSource unbuffer];
 }
 
+- (void)prepareToPlayAnotherVideo
+{
+    _hasStarted = NO;
+    [self.player pause];
+    [self buffer];
+}
+
 #pragma mark Fake Buffer Progress
 #ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
 - (void)onLoadedTimeRangesChanged
@@ -967,18 +975,26 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 // Drama
 - (void)movieControlSource:(id<MovieControlSource>)source willPlayVideoGroup:(VideoGroup *)videoGroup setNum:(int)setNum
 {
-    [self.player pause];
-    [self buffer];
+    [self prepareToPlayAnotherVideo];
+    if (videoGroup.showType.intValue == VideoGroupShowTypeGrid) {
+        [self.controlSource setBufferTitle:[NSString stringWithFormat:@"%@ 第%d集", videoGroup.videoName, setNum]];
+    }
+    else {
+        Video *video = [videoGroup videoAtSetNum:@(setNum)];
+        [self.controlSource setBufferTitle:video.brief];
+    }
 }
 
 - (void)movieControlSource:(id<MovieControlSource>)source didPlayVideoGroup:(VideoGroup *)videoGroup setNum:(int)setNum
 {
+    [self.controlSource resetBufferTitle];
     NSString *url = [videoGroup videoAtSetNum:@(setNum)].videoSrc;
     [self playMovieStream:[NSURL URLWithString:url]];
 }
 
 - (void)movieControlSourceFailToPlayVideoGroup:(id<MovieControlSource>)source
 {
+    [self.controlSource resetBufferTitle];    
     [self.controlSource end];
 }
 

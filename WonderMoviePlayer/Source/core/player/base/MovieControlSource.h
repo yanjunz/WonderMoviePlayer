@@ -64,6 +64,8 @@ typedef enum {
 
 - (void)lockScreen;
 - (void)setBufferProgress:(CGFloat)progress;
+- (void)setBufferTitle:(NSString *)title;
+- (void)resetBufferTitle;
 
 // Set movie screen state
 - (void)setFullscreen:(BOOL)fullscreen animated:(BOOL)animated;

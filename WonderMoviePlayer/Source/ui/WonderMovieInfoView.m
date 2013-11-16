@@ -109,16 +109,15 @@
         [_loadingView addSubview:self.loadingPercentLabel];
         [loadingPercentLabel release];
         
+        CGFloat maxMessageWidth = self.width / 2 > _loadingView.width ? self.width / 2 : _loadingView.width;
         UILabel *loadingMessageLabel = [[UILabel alloc] initWithFrame:
-                                        CGRectMake(- (self.width - _loadingView.width)/2, self.loadingIndicator.bottom, self.width, 20)];
+                                        CGRectMake(- (maxMessageWidth - _loadingView.width)/2, self.loadingIndicator.bottom, maxMessageWidth, 20)];
                                         //CGRectMake(0, self.loadingIndicator.bottom, _loadingView.width , 20)];
         self.loadingMessageLabel = loadingMessageLabel;
         self.loadingMessageLabel.text = NSLocalizedString(@" 正在缓冲...", @"");
         self.loadingMessageLabel.textAlignment = UITextAlignmentCenter;
         self.loadingMessageLabel.backgroundColor = [UIColor clearColor];
         self.loadingMessageLabel.textColor = [UIColor whiteColor];
-        self.loadingMessageLabel.minimumFontSize = 8;
-        self.loadingMessageLabel.adjustsFontSizeToFitWidth = YES;
         [_loadingView addSubview:self.loadingMessageLabel];
         [loadingMessageLabel release];
         

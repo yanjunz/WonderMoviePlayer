@@ -1070,6 +1070,16 @@ void wonderMovieVolumeListenerCallback (
     self.infoView.loadingPercentLabel.text = [NSString stringWithFormat:@"%d%%", (int)(progress * 100)];
 }
 
+- (void)setBufferTitle:(NSString *)title
+{
+    self.infoView.loadingMessageLabel.text = title;
+}
+
+- (void)resetBufferTitle
+{
+    self.infoView.loadingMessageLabel.text = NSLocalizedString(@" 正在缓冲...", @"");
+}
+
 - (void)startToDownload
 {
     self.downloadButton.enabled = NO;
