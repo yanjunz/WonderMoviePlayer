@@ -196,7 +196,7 @@
     }];
     
     TVDramaManager *tvDramaManager = [[[TVDramaManager alloc] init] autorelease];
-    tvDramaManager.webURL = @"http://www.iqiyi.com/dongman/20130414/8d6929ed7ac9a7b8.html";
+    tvDramaManager.webURL = @"http://www.iqiyi.com/dongman/20130414/8d6929ed7ac9a7b8.html"; // the second one
     FakeTVDramaWebSource *fakeDramaWebSource = [[FakeTVDramaWebSource alloc] init];
     tvDramaManager.delegate = fakeDramaWebSource;
     [controller.controlSource setTvDramaManager:tvDramaManager];
