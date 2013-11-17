@@ -482,7 +482,7 @@ void wonderMovieVolumeListenerCallback (
     
     self.infoView = infoView;
     [self addSubview:infoView];
-    
+    [infoView release];
     [self installGestureHandlers];
 }
 

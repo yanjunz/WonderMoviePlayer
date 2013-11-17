@@ -13,6 +13,7 @@
 #import "VideoGroup+VideoDetailSet.h"
 #import "WonderMovieDramaGridCell.h"
 #import "WonderMovieDramaListCell.h"
+#import "WonderMoviePlayerConstants.h"
 
 #define kDramaHeaderViewHeight  44
 #define kVideoCountPerSection   9
