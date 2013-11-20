@@ -71,7 +71,7 @@
         gradientLayer.frame = self.bounds;
         gradientLayer.colors = @[(id)[UIColor blackColor].CGColor, (id)[[UIColor blackColor] colorWithAlphaComponent:0].CGColor];
         gradientLayer.startPoint = CGPointMake(0.5, 0);
-        gradientLayer.endPoint = CGPointMake(0.5, 0.4);
+        gradientLayer.endPoint = CGPointMake(0.5, 0.4/3);
         [self.layer insertSublayer:gradientLayer atIndex:0];
     }
     return self;
@@ -86,6 +86,14 @@
     self.videoGroup = nil;
     self.sortedVideos = nil;
     [super dealloc];
+}
+
+- (void)drawRect:(CGRect)rect
+{
+    [super drawRect:rect];
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetShadowWithColor(context, CGSizeMake(-20, 0), 5, [UIColor blueColor].CGColor);
+    
 }
 
 - (void)reloadData

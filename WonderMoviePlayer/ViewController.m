@@ -28,6 +28,7 @@
 @property (nonatomic, retain) NSString *testString;
 @property (retain, nonatomic) IBOutlet UISlider *slider;
 @property (retain, nonatomic) IBOutlet UIProgressView *progressView;
+@property (retain, nonatomic) IBOutlet UIView *testView;
 
 @end
 
@@ -68,7 +69,11 @@
 //                                             selector:@selector(volumeChanged:)
 //                                                 name:@"AVSystemController_SystemVolumeDidChangeNotification"
 //                                               object:nil];
-    
+ 
+    self.testView.layer.shadowRadius = 4;
+    self.testView.layer.shadowOffset = CGSizeMake(-2, 0);
+    self.testView.layer.shadowColor = [UIColor blueColor].CGColor;
+    self.testView.layer.shadowOpacity = 0.5;
 }
 
 - (void)volumeChanged:(id)n
@@ -259,12 +264,14 @@
     [_slider release];
     [_progressView release];
     [_loadingIndicator release];
+    [_testView release];
     [super dealloc];
 }
 - (void)viewDidUnload {
     [self setSlider:nil];
     [self setProgressView:nil];
     [self setLoadingIndicator:nil];
+    [self setTestView:nil];
     [super viewDidUnload];
 }
 - (IBAction)onClickTest2:(id)sender {
