@@ -69,7 +69,7 @@
         
         CAGradientLayer *gradientLayer = [CAGradientLayer layer];
         gradientLayer.frame = self.bounds;
-        gradientLayer.colors = @[(id)[UIColor blackColor].CGColor, (id)[[UIColor blackColor] colorWithAlphaComponent:0].CGColor];
+        gradientLayer.colors = @[(id)[[UIColor blackColor] colorWithAlphaComponent:0.5].CGColor, (id)[[UIColor blackColor] colorWithAlphaComponent:0].CGColor];
         gradientLayer.startPoint = CGPointMake(0.5, 0);
         gradientLayer.endPoint = CGPointMake(0.5, 0.4/3);
         [self.layer insertSublayer:gradientLayer atIndex:0];

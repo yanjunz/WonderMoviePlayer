@@ -41,6 +41,7 @@
                                       topPadding + (i / kDramaGridCellButtonCountPerRow) * (kDramaGridCellButtonHeight + 19),
                                       kDramaGridCellButtonWidth, kDramaGridCellButtonHeight);
             [button addTarget:self action:@selector(onClickVideo:) forControlEvents:UIControlEventTouchUpInside];
+            button.titleLabel.font = [UIFont systemFontOfSize:15];
             [self.contentView addSubview:button];
             [self.buttons addObject:button];
         }
