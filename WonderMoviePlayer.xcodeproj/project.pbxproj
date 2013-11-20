@@ -142,6 +142,7 @@
 		B5DC0782182CD4690046A7A5 /* WonderAVMovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DC0776182CD4690046A7A5 /* WonderAVMovieViewController.m */; };
 		B5DC0783182CD4690046A7A5 /* WonderAVPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DC0778182CD4690046A7A5 /* WonderAVPlayerView.m */; };
 		B5DC0784182CD4690046A7A5 /* WonderMPMovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DC077A182CD4690046A7A5 /* WonderMPMovieViewController.m */; };
+		B5DE4961183CB04F00F9AB5E /* drama_left_shadow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5DE4960183CB04F00F9AB5E /* drama_left_shadow@2x.png */; };
 		B5F45FC617E986D600F0873B /* Reveal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5F45FC517E986D600F0873B /* Reveal.framework */; };
 /* End PBXBuildFile section */
 
@@ -348,6 +349,7 @@
 		B5DC077D182CD4690046A7A5 /* MovieControlSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovieControlSource.h; sourceTree = "<group>"; };
 		B5DC077E182CD4690046A7A5 /* MoviePlayerHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoviePlayerHandler.h; sourceTree = "<group>"; };
 		B5DC077F182CD4690046A7A5 /* WonderMoviePlayerConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMoviePlayerConstants.h; sourceTree = "<group>"; };
+		B5DE4960183CB04F00F9AB5E /* drama_left_shadow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "drama_left_shadow@2x.png"; sourceTree = "<group>"; };
 		B5F45FC517E986D600F0873B /* Reveal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Reveal.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -494,6 +496,7 @@
 				B5D4C39C1823444300BB0A53 /* back@2x.png */,
 				B5D4C39D1823444300BB0A53 /* download_prompt_bg@2x.png */,
 				B5D4C39E1823444300BB0A53 /* list_play@2x.png */,
+				B5DE4960183CB04F00F9AB5E /* drama_left_shadow@2x.png */,
 				B5D4C39F1823444300BB0A53 /* popup_menu_bg@2x.png */,
 				B5D4C3A01823444300BB0A53 /* resolution_button_selected@2x.png */,
 				B5D4C3A11823444300BB0A53 /* separator_line@2x.png */,
@@ -858,6 +861,7 @@
 				B5D4C335181F966C00BB0A53 /* next_normal@2x.png in Resources */,
 				B5D4C343181F966C00BB0A53 /* unlock@2x.png in Resources */,
 				B5D4C384182263A700BB0A53 /* README.md in Resources */,
+				B5DE4961183CB04F00F9AB5E /* drama_left_shadow@2x.png in Resources */,
 				B5D4C342181F966C00BB0A53 /* toolbar@2x.png in Resources */,
 				B5D4C341181F966C00BB0A53 /* return@2x.png in Resources */,
 				B5D4C3A21823444300BB0A53 /* progress_prompt_bg@2x.png in Resources */,

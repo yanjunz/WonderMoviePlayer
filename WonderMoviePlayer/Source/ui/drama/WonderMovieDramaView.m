@@ -73,6 +73,12 @@
         gradientLayer.startPoint = CGPointMake(0.5, 0);
         gradientLayer.endPoint = CGPointMake(0.5, 0.4/3);
         [self.layer insertSublayer:gradientLayer atIndex:0];
+        
+        UIImageView *leftShadow = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"drama_left_shadow")];
+        leftShadow.frame = CGRectMake(-leftShadow.size.width, 0, leftShadow.size.width, self.width);
+        leftShadow.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin;
+        [self addSubview:leftShadow];
+        [leftShadow release];
     }
     return self;
 }

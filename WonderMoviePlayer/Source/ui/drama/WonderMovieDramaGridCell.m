@@ -86,7 +86,7 @@
         return 0;
     }
     else {
-        return (15+11+8) + 15 + kDramaGridCellButtonHeight * lineCount + rowSeparatorHeight * (lineCount - 1);
+        return (15+11+8) + kDramaGridCellButtonHeight * lineCount + rowSeparatorHeight * (lineCount - 1);
     }
 }
 
