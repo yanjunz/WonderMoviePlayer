@@ -1904,16 +1904,29 @@ static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanni
 - (void)dramaDidSelectSetNum:(int)setNum
 {
     if ([self.delegate respondsToSelector:@selector(movieControlSource:willPlayVideoGroup:setNum:)]) {
-        [self.delegate movieControlSource:self willPlayVideoGroup:self.tvDramaManager.videoGroup setNum:setNum];
+        [self.delegate movieControlSource:self willPlayVideoGroup:[self.tvDramaManager videoGroupInCurrentThread] setNum:setNum];
     }
     
     self.tvDramaManager.curSetNum = setNum;
-    self.tvDramaManager.webURL = [self.tvDramaManager.videoGroup videoAtSetNum:@(setNum)].url;
+    self.tvDramaManager.webURL = [[self.tvDramaManager videoGroupInCurrentThread] videoAtSetNum:@(setNum)].url;
     
-    [self performBlockInBackground:^{
-        BOOL ret = [self.tvDramaManager sniffVideoSource];
+//    [self performBlockInBackground:^{
+//        BOOL ret = [self.tvDramaManager sniffVideoSource];
+//        [self performBlock:^{
+//            if (ret) {
+//                [self dramaDidFinishSniff:setNum];
+//            }
+//            else {
+//                [self dramaDidFailToSniff];
+//            }
+//        } afterDelay:0];
+//    }];
+    
+    [self.tvDramaManager sniffVideoSource:^(BOOL success) {
+        // make sure to invoke UI related code in main thread
         [self performBlock:^{
-            if (ret) {
+            NSLog(@"fullscreen sniffVideoSource %d", success);
+            if (success) {
                 [self dramaDidFinishSniff:setNum];
             }
             else {
@@ -1926,7 +1939,7 @@ static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanni
 - (void)dramaDidFinishSniff:(int)setNum
 {
     if ([self.delegate respondsToSelector:@selector(movieControlSource:didPlayVideoGroup:setNum:)]) {
-        [self.delegate movieControlSource:self didPlayVideoGroup:self.tvDramaManager.videoGroup setNum:setNum];
+        [self.delegate movieControlSource:self didPlayVideoGroup:[self.tvDramaManager videoGroupInCurrentThread] setNum:setNum];
     }
 }
 

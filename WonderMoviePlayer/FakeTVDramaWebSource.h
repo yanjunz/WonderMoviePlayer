@@ -9,6 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "TVDramaManager.h"
 
-@interface FakeTVDramaWebSource : NSObject<TVDramaManagerDelegate>
+@interface FakeTVDramaWebSource : NSObject<TVDramaRequestHandler>
 
 @end

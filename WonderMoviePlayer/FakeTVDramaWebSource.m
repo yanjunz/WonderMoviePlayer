@@ -161,12 +161,9 @@
 {
     VideoGroup *videoGroup = [self extendDramaURLs:requestType]; //[VideoGroup MR_findFirst];
     if (videoGroup) {
-        int index = [videoGroup indexOfVideoWithURL:URL];
-        if (index != NSNotFound) {
-            Video *video = videoGroup.videos[index];
-            if (curSetNumPtr) {
-                *curSetNumPtr = video.setNum.intValue;
-            }
+        Video *video = [videoGroup videoAtURL:URL];
+        if (curSetNumPtr) {
+            *curSetNumPtr = video.setNum.intValue;
         }
     }
     // simulate loading interval
@@ -175,10 +172,10 @@
     return videoGroup;
 }
 
-- (NSDictionary *)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURLs:(NSArray *)URLs
+- (NSString *)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURL:(NSString *)URL src:(NSString *)src
 {
     // simulate loading interval
-    NSURL *webURL = [NSURL URLWithString:URLs[0]];
+    NSURL *webURL = [NSURL URLWithString:URL];
     self.videoSrc = nil;
     
     [self performBlock:^{
@@ -194,11 +191,9 @@
         [NSThread sleepForTimeInterval:0.2];
     }
     
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    for (NSString *key in URLs) {
-        dict[key] = self.videoSrc;
-    }
-    return dict;
+    return self.videoSrc;
+
+    
     
 //    [NSThread sleepForTimeInterval:2];
 //
@@ -209,6 +204,27 @@
 //    }
 //    return dict;
 }
+
+- (void)tvDramaManager:(TVDramaManager *)manager requestDramaInfoWithURL:(NSString *)URL curSetNum:(int *)curSetNumPtr requestType:(TVDramaRequestType)requestType completionBlock:(void (^)(VideoGroup *videoGroup))completionBlock
+{
+    [self performBlockInBackground:^{
+        VideoGroup *videoGroup = [self tvDramaManager:manager requestDramaInfoWithURL:URL curSetNum:curSetNumPtr requestType:requestType];
+        if (completionBlock) {
+            completionBlock(videoGroup);
+        }
+    }];
+}
+
+- (void)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURL:(NSString *)URL src:(NSString *)src completionBlock:(void (^)(NSString *videoSrc))completionBlock
+{
+    [self performBlockInBackground:^{
+        NSString *videoSrc = [self tvDramaManager:manager sniffVideoSrcWithURL:URL src:src];
+        if (completionBlock) {
+            completionBlock(videoSrc);
+        }
+    }];
+}
+
 
 #pragma mark UIWebViewDelegate
 - (void)webViewDidFinishLoad:(UIWebView *)webView

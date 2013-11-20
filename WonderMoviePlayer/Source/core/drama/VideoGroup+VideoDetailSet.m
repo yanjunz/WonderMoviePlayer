@@ -9,74 +9,54 @@
 #import "VideoGroup+VideoDetailSet.h"
 #import "Video.h"
 
+static NSString *const kVideosKey = @"videos";
+
 @implementation VideoGroup (VideoDetailSet)
-- (int)indexOfVideoWithURL:(NSString *)url
+
+- (Video *)videoAtURL:(NSString *)URL
 {
-    int index = [self.videos indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
-        Video *v = obj;
-        if ([v.url isEqualToString:url]) {
+    __block Video *video = nil;
+    [self.videos enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
+        Video *t = obj;
+        if ([t.url isEqualToString:URL]) {
+            video = t;
             *stop = YES;
-            return YES;
         }
-        return NO;
     }];
-    return index;
+    return video;
 }
 
 - (Video *)videoAtSetNum:(NSNumber *)setNum
 {
-    int index = [self.videos indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
-        Video *v = obj;
-        if (v.setNum.intValue == setNum.intValue) {
+    __block Video *video = nil;
+    [self.videos enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
+        Video *t = obj;
+        if (t.setNum.intValue == setNum.intValue) {
+            video = t;
             *stop = YES;
-            return YES;
         }
-        return NO;
     }];
-    if (index != NSNotFound) {
-        return [self.videos objectAtIndex:index];
-    }
-    else {
-        return nil;
-    }
+    return video;
 }
 
-- (void)setVideo:(Video *)video atSetNum:(NSNumber *)setNum
+- (void)setVideo:(Video *)video atSetNum:(NSNumber *)setNum inContext:(NSManagedObjectContext *)context
 {
-    // should use binary search for better performance
-    int index = -1;
-    for (int i = 0; i < self.videos.count; ++i) {
-        Video *v = [self.videos objectAtIndex:i];
-        if (v.setNum.intValue == setNum.intValue) {
-            // the same one, just update it
-            if (v != video) {
-                NSLog(@"Warning: video detail data corrupted");
-                [self replaceObjectInVideosAtIndex:i withObject:video];
-                [v MR_deleteEntity];
-            }
-            return;
-        }
-        else if (v.setNum.intValue > setNum.intValue) {
-            // find the larger one, just insert before it
-            index = i;
-            break;
+    Video *existedVideo = [self videoAtSetNum:setNum];
+    if (existedVideo) {
+        if (existedVideo != video) {
+            NSLog(@"Warning: video detail data corrupted");
+            [self removeVideosObject:existedVideo];
+            [existedVideo MR_deleteInContext:context];
         }
     }
-    if (index < 0) { // add to the end
+    else {
         [self addVideosObject:video];
     }
-    else {
-        [self insertObject:video inVideosAtIndex:index];
-    }
 }
 
-- (void)addVideosObject:(Video *)value
+- (NSArray *)sortedVideos
 {
-    [self willChangeValueForKey:@"videos"];
-    NSMutableOrderedSet *tempSet = [NSMutableOrderedSet orderedSetWithOrderedSet:self.videos];
-    [tempSet addObject: value];
-    self.videos = tempSet;
-    [self didChangeValueForKey:@"videos"];
+    return [self.videos sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"setNum" ascending:YES]]];
 }
 
 @end

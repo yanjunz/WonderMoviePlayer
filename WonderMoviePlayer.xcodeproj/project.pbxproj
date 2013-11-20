@@ -74,7 +74,6 @@
 		B58B57661835F6190096801E /* VideoGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B57651835F6190096801E /* VideoGroup.m */; };
 		B58B576A1836300B0096801E /* WonderMovieDramaListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B57691836300B0096801E /* WonderMovieDramaListCell.m */; };
 		B58F110918376EDB00D6A9B2 /* TestTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B58F110818376EDB00D6A9B2 /* TestTableViewController.m */; };
-		B58F110F1837761B00D6A9B2 /* DramaTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = B58F110E1837761B00D6A9B2 /* DramaTableView.m */; };
 		B5AD785217CDA50E00C08E51 /* video.js in Sources */ = {isa = PBXBuildFile; fileRef = B5AD785117CDA50E00C08E51 /* video.js */; };
 		B5AD785317CDA5E800C08E51 /* video.js in Resources */ = {isa = PBXBuildFile; fileRef = B5AD785117CDA50E00C08E51 /* video.js */; };
 		B5AD78A817CDD30600C08E51 /* JSURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = B5AD78A717CDD30600C08E51 /* JSURLProtocol.m */; };
@@ -261,8 +260,6 @@
 		B58B57691836300B0096801E /* WonderMovieDramaListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderMovieDramaListCell.m; sourceTree = "<group>"; };
 		B58F110718376EDB00D6A9B2 /* TestTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestTableViewController.h; sourceTree = "<group>"; };
 		B58F110818376EDB00D6A9B2 /* TestTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestTableViewController.m; sourceTree = "<group>"; };
-		B58F110D1837761B00D6A9B2 /* DramaTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DramaTableView.h; sourceTree = "<group>"; };
-		B58F110E1837761B00D6A9B2 /* DramaTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DramaTableView.m; sourceTree = "<group>"; };
 		B5AD785117CDA50E00C08E51 /* video.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = video.js; sourceTree = "<group>"; };
 		B5AD78A617CDD30600C08E51 /* JSURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSURLProtocol.h; sourceTree = "<group>"; };
 		B5AD78A717CDD30600C08E51 /* JSURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSURLProtocol.m; sourceTree = "<group>"; };
@@ -712,8 +709,6 @@
 				B58B57691836300B0096801E /* WonderMovieDramaListCell.m */,
 				B58B56EA183470F50096801E /* WonderMovieDramaView.h */,
 				B58B56EB183470F50096801E /* WonderMovieDramaView.m */,
-				B58F110D1837761B00D6A9B2 /* DramaTableView.h */,
-				B58F110E1837761B00D6A9B2 /* DramaTableView.m */,
 			);
 			path = drama;
 			sourceTree = "<group>";
@@ -957,7 +952,6 @@
 				B58B573818347F250096801E /* NSManagedObject+MagicalFinders.m in Sources */,
 				B51F619617E9ADC200344122 /* Test2ViewController.m in Sources */,
 				B58B574818347F250096801E /* MagicalRecord.m in Sources */,
-				B58F110F1837761B00D6A9B2 /* DramaTableView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

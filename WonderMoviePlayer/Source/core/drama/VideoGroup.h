@@ -1,8 +1,8 @@
 //
 //  VideoGroup.h
-//  WonderMoviePlayer
+//  mtt
 //
-//  Created by Zhuang Yanjun on 11/15/13.
+//  Created by Zhuang Yanjun on 11/19/13.
 //  Copyright (c) 2013 Tencent. All rights reserved.
 //
 
@@ -19,19 +19,14 @@
 @property (nonatomic, retain) NSNumber * totalCount;
 @property (nonatomic, retain) NSNumber * videoId;
 @property (nonatomic, retain) NSString * videoName;
-@property (nonatomic, retain) NSOrderedSet *videos;
+@property (nonatomic, retain) NSSet *videos;
 @end
 
 @interface VideoGroup (CoreDataGeneratedAccessors)
 
-- (void)insertObject:(Video *)value inVideosAtIndex:(NSUInteger)idx;
-- (void)removeObjectFromVideosAtIndex:(NSUInteger)idx;
-- (void)insertVideos:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
-- (void)removeVideosAtIndexes:(NSIndexSet *)indexes;
-- (void)replaceObjectInVideosAtIndex:(NSUInteger)idx withObject:(Video *)value;
-- (void)replaceVideosAtIndexes:(NSIndexSet *)indexes withVideos:(NSArray *)values;
 - (void)addVideosObject:(Video *)value;
 - (void)removeVideosObject:(Video *)value;
-- (void)addVideos:(NSOrderedSet *)values;
-- (void)removeVideos:(NSOrderedSet *)values;
+- (void)addVideos:(NSSet *)values;
+- (void)removeVideos:(NSSet *)values;
+
 @end

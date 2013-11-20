@@ -19,7 +19,8 @@
 #define kVideoCountPerSection   9
 
 @interface WonderMovieDramaView () <WonderMovieDramaGridCellDelegate>
-@property (nonatomic, copy) NSArray *videos;
+@property (nonatomic, retain) VideoGroup *videoGroup;
+@property (nonatomic, retain) NSArray *sortedVideos;
 @end
 
 @implementation WonderMovieDramaView
@@ -57,7 +58,7 @@
         tableView.dataSource = self;
         tableView.backgroundColor = [UIColor clearColor];
         tableView.separatorStyle = UITableViewCellSelectionStyleNone;
-        [self addSubview:self.tableView];
+        [self addSubview:tableView];
         self.tableView = tableView;
         [tableView release];
     }
@@ -70,14 +71,14 @@
     self.tableView = nil;
     self.errorView = nil;
     self.loadingView = nil;
-    self.videos = nil;
+    self.videoGroup = nil;
+    self.sortedVideos = nil;
     [super dealloc];
 }
 
 - (void)reloadData
 {
-    if (self.tvDramaManager.videoGroup == nil) {
-        [self.tableView removeFromSuperview];
+    if (self.videoGroup == nil) {
         [self addSubview:self.loadingView];
         [self bringSubviewToFront:self.loadingView];
         [self loadCurrentSection];
@@ -94,6 +95,7 @@
         loadingView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         loadingView.backgroundColor = [UIColor clearColor];
         UIActivityIndicatorView *loadingIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+        loadingIndicator.hidesWhenStopped = YES;
         loadingIndicator.center = CGPointMake(CGRectGetMidX(loadingView.bounds), CGRectGetMidY(loadingView.bounds));
         [loadingView addSubview:loadingIndicator];
         [loadingIndicator startAnimating];
@@ -122,12 +124,27 @@
 
 - (void)loadCurrentSection
 {
-    [self performBlockInBackground:^{
-        BOOL ret = [self.tvDramaManager getDramaInfo:TVDramaRequestTypeCurrent];
-        NSLog(@"loaded %@", self.tvDramaManager.videoGroup.videos);
+//    [self performBlockInBackground:^{
+//        BOOL ret = [self.tvDramaManager getDramaInfo:TVDramaRequestTypeCurrent];
+//        [self performBlock:^{
+//            self.videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
+//            self.sortedVideos = [self.videoGroup sortedVideos];
+//            NSLog(@"videos : %@", self.sortedVideos);
+//            if (ret) {
+//                [self finishCurrentSectionLoad];
+//            }
+//            else {
+//                [self showErrorView];
+//            }
+//        } afterDelay:0];
+//    }];
+    
+    [self.tvDramaManager getDramaInfo:TVDramaRequestTypeCurrent completionBlock:^(BOOL success) {
+        // make sure to invoke UI related code in main thread
         [self performBlock:^{
-            self.videos = [self.tvDramaManager.videoGroup.videos array];
-            if (ret) {
+            self.videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
+            self.sortedVideos = [self.videoGroup sortedVideos];
+            if (success) {
                 [self finishCurrentSectionLoad];
             }
             else {
@@ -139,15 +156,14 @@
 
 - (void)finishCurrentSectionLoad
 {
-    [self.loadingView removeFromSuperview];
-    [self addSubview:self.tableView];
-//    self.tableView.frame = CGRectMake(0, kDramaHeaderViewHeight, self.width, self.height - kDramaHeaderViewHeight);
+    [_loadingView removeFromSuperview];
+    [self bringSubviewToFront:self.tableView];
     [self.tableView reloadData];
 }
 
 - (void)showErrorView
 {
-    [self.loadingView removeFromSuperview];
+    [_loadingView removeFromSuperview];
     [self addSubview:self.errorView];
     [self bringSubviewToFront:self.errorView];
 }
@@ -156,7 +172,7 @@
 #pragma mark - UIAction
 - (IBAction)onClickRetry:(id)sender
 {
-    [self.errorView removeFromSuperview];
+    [_errorView removeFromSuperview];
     [self addSubview:self.loadingView];
     [self bringSubviewToFront:self.loadingView];
     [self loadCurrentSection];
@@ -165,8 +181,8 @@
 #pragma mark UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    int showType = self.tvDramaManager.videoGroup.showType.intValue;
-    int videoCount = self.videos.count;
+    int showType = self.videoGroup.showType.intValue;
+    int videoCount = self.sortedVideos.count;
     if (showType == VideoGroupShowTypeGrid) {
         return (videoCount + kVideoCountPerSection - 1) / kVideoCountPerSection;
     }
@@ -177,8 +193,8 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    int showType = self.tvDramaManager.videoGroup.showType.intValue;
-    int videoCount = self.videos.count;
+    int showType = self.videoGroup.showType.intValue;
+    int videoCount = self.sortedVideos.count;
     static NSString *kGridCellID = @"WonderMovieDramaGridCell";
     static NSString *kListCellID = @"WonderMovieDramaListCell";
     
@@ -188,7 +204,7 @@
             cell = [[[WonderMovieDramaGridCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kGridCellID] autorelease];
             cell.delegate = self;
         }
-        Video *minVideo = self.videos[indexPath.row * kVideoCountPerSection];
+        Video *minVideo = self.sortedVideos[indexPath.row * kVideoCountPerSection];
         int minVideoSetNum = minVideo.setNum.intValue;
         int maxVideoSetNum = (indexPath.row + 1) * kVideoCountPerSection >= videoCount ?
         (minVideoSetNum + videoCount - indexPath.row * kVideoCountPerSection - 1) :
@@ -206,7 +222,7 @@
             cell.imageView.image = QQVideoPlayerImage(@"list_play");
             cell.textLabel.font = [UIFont systemFontOfSize:13];
         }
-        Video *video = self.videos[indexPath.row];
+        Video *video = self.sortedVideos[indexPath.row];
         cell.selected = video.setNum.intValue == self.playingSetNum;
         cell.textLabel.text = video.brief;
         
@@ -217,11 +233,11 @@
 #pragma mark UITableViewDelegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    int showType = self.tvDramaManager.videoGroup.showType.intValue;
-    int videoCount = self.videos.count;
+    int showType = self.videoGroup.showType.intValue;
+    int videoCount = self.sortedVideos.count;
     
     if (showType == VideoGroupShowTypeGrid) {
-        Video *minVideo = self.videos[indexPath.row * kVideoCountPerSection];
+        Video *minVideo = self.sortedVideos[indexPath.row * kVideoCountPerSection];
         int minVideoSetNum = minVideo.setNum.intValue;
         int maxVideoSetNum = (indexPath.row + 1) * kVideoCountPerSection >= videoCount ?
         (minVideoSetNum + videoCount - indexPath.row * kVideoCountPerSection - 1) :
@@ -236,9 +252,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    int showType = self.tvDramaManager.videoGroup.showType.intValue;
+    int showType = self.videoGroup.showType.intValue;
     if (showType != VideoGroupShowTypeGrid) {
-        Video *video = self.videos[indexPath.row];
+        Video *video = self.sortedVideos[indexPath.row];
         [self playWithSetNum:video.setNum.intValue];
     }
 }

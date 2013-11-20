@@ -7,7 +7,8 @@
 //
 
 #import "TestTableViewController.h"
-#import "DramaTableView.h"
+#import "NSObject+Block.h"
+#import "UIView+Sizes.h"
 
 @interface TestTableViewController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -29,10 +30,17 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
-    DramaTableView *tableView = [[[DramaTableView alloc] initWithFrame:self.view.bounds] autorelease];
+    UITableView *tableView = [[[UITableView alloc] initWithFrame:self.view.bounds] autorelease];
     tableView.delegate = self;
     tableView.dataSource = self;
+    tableView.backgroundColor = [UIColor blackColor];
     [self.view addSubview:tableView];
+    
+//    WonderMovieTableFooterView *footerView = [[[WonderMovieTableFooterView alloc] initWithFrame:CGRectMake(0, tableView.height, tableView.width, 65)] autorelease];
+//    [tableView addSubview:footerView];
+//    
+//    WonderMovieTableFooterView *headerView = [[[WonderMovieTableFooterView alloc] initWithFrame:CGRectMake(0, -65, tableView.width, 65)] autorelease];
+//    [tableView addSubview:headerView];
 }
 
 - (void)didReceiveMemoryWarning
@@ -43,7 +51,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 100;
+    return 20;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

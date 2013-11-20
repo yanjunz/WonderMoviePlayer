@@ -18,21 +18,30 @@ typedef enum {
     TVDramaRequestTypeNext,
 } TVDramaRequestType;
 
-@protocol TVDramaManagerDelegate;
+@protocol TVDramaRequestHandler;
 
 @interface TVDramaManager : NSObject
-@property (nonatomic, assign) id<TVDramaManagerDelegate> delegate;
 @property (nonatomic, copy) NSString *webURL;
 @property (nonatomic, retain) VideoGroup *videoGroup;
 @property (nonatomic) int curSetNum;
 
+- (void)addRequestHandler:(id<TVDramaRequestHandler>)handler;
+- (void)removeRequestHandler:(id<TVDramaRequestHandler>)handler;
+
+- (VideoGroup *)videoGroupInCurrentThread;
 - (BOOL)getDramaInfo:(TVDramaRequestType)requestType;
+- (void)getDramaInfo:(TVDramaRequestType)requestType completionBlock:(void (^)(BOOL success))completionBlock;
 - (BOOL)sniffVideoSource;
+- (void)sniffVideoSource:(void (^)(BOOL success))completionBlock;
 @end
 
-@protocol TVDramaManagerDelegate <NSObject>
 
+@protocol TVDramaRequestHandler <NSObject>
+@optional
 - (VideoGroup *)tvDramaManager:(TVDramaManager *)manager requestDramaInfoWithURL:(NSString *)URL curSetNum:(int *)curSetNumPtr requestType:(TVDramaRequestType)requestType;
-- (NSDictionary *)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURLs:(NSArray *)URLs;
+- (NSString *)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURL:(NSString *)URL src:(NSString *)src;
 
+- (void)tvDramaManager:(TVDramaManager *)manager requestDramaInfoWithURL:(NSString *)URL curSetNum:(int *)curSetNumPtr requestType:(TVDramaRequestType)requestType completionBlock:(void (^)(VideoGroup *videoGroup))completionBlock;
+
+- (void)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURL:(NSString *)URL src:(NSString *)src completionBlock:(void (^)(NSString *videoSrc))completionBlock;
 @end
