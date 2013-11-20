@@ -40,7 +40,7 @@
 //    }
 //}
 
-- (void)setIsPlaying:(int)isPlaying
+- (void)setIsPlaying:(BOOL)isPlaying
 {
     _isPlaying = isPlaying;
     if (isPlaying) {

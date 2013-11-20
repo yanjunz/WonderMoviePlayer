@@ -182,6 +182,11 @@
 
 - (void)finishCurrentSectionLoad
 {
+    Video *video = [self.videoGroup videoAtURL:self.tvDramaManager.webURL];
+    if (video) {
+        _playingSetNum = video.setNum.intValue;
+    }
+    
     [_loadingView removeFromSuperview];
     [self bringSubviewToFront:self.tableView];
     [self.tableView reloadData];
@@ -246,8 +251,8 @@
         (minVideoSetNum + videoCount - indexPath.row * kVideoCountPerSection - 1) :
         (minVideoSetNum + kVideoCountPerSection - 1);
         
-        [cell playWithSetNum:self.playingSetNum];
         [cell configureCellWithMinVideoSetNum:minVideoSetNum maxVideoSetNum:maxVideoSetNum];
+        [cell playWithSetNum:self.playingSetNum];
         
         return cell;
     }
