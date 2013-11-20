@@ -58,7 +58,7 @@
         tableView.delegate = self;
         tableView.dataSource = self;
         tableView.backgroundColor = [UIColor clearColor];
-        tableView.separatorStyle = UITableViewCellSelectionStyleNone;
+        tableView.separatorColor = [UIColor clearColor];
         [self addSubview:tableView];
         self.tableView = tableView;
         if ([tableView respondsToSelector:@selector(setSeparatorInset:)]) {
@@ -164,15 +164,15 @@
     [self bringSubviewToFront:self.tableView];
     [self.tableView reloadData];
     
-    int showType = self.videoGroup.showType.intValue;
-    if (showType == VideoGroupShowTypeList) {
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-        self.tableView.separatorColor = [UIColor colorWithPatternImage:QQVideoPlayerImage(@"separator_line")];
-    }
-    else {
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        self.tableView.separatorColor = [UIColor clearColor];
-    }
+//    int showType = self.videoGroup.showType.intValue;
+//    if (showType == VideoGroupShowTypeList) {
+//        self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+//        self.tableView.separatorColor = [UIColor colorWithPatternImage:QQVideoPlayerImage(@"separator_line")];
+//    }
+//    else {
+//        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+//        self.tableView.separatorColor = [UIColor clearColor];
+//    }
 }
 
 - (void)showErrorView
@@ -235,6 +235,12 @@
             cell = [[[WonderMovieDramaListCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kListCellID] autorelease];
             cell.imageView.image = QQVideoPlayerImage(@"list_play");
             cell.textLabel.font = [UIFont systemFontOfSize:13];
+
+            UIImageView *separatorView = [[UIImageView alloc] initWithFrame:CGRectMake(0, cell.bottom - 1, cell.width, 1)];
+            separatorView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+            separatorView.image = QQVideoPlayerImage(@"separator_line");
+            [cell addSubview:separatorView];
+            [separatorView release];
         }
         Video *video = self.sortedVideos[indexPath.row];
         cell.selected = video.setNum.intValue == self.playingSetNum;
