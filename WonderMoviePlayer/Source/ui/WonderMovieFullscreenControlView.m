@@ -1664,6 +1664,13 @@ void wonderMovieVolumeListenerCallback (
 #pragma mark Drama View
 - (void)showDramaView:(BOOL)show
 {
+    if (show || _isLocked) {
+        self.panGestureRecognizer.enabled = NO;
+    }
+    else {
+        self.panGestureRecognizer.enabled = YES;
+    }
+    
     if (self.dramaContainerView == nil) {
         UIView *view = [[UIView alloc] initWithFrame:self.bounds];
         view.userInteractionEnabled = YES;
