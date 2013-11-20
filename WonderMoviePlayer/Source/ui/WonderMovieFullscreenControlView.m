@@ -491,8 +491,9 @@ void wonderMovieVolumeListenerCallback (
     [super layoutSubviews];
     
     // relayout title & subtitle
+    CGFloat gapWidth = 7;
     CGFloat headerBarHeight = self.headerBar.height;
-    CGFloat maxTitleWidth = self.downloadButton.left - self.titleLabel.left;
+    CGFloat maxTitleWidth = self.downloadButton.left - self.titleLabel.left - gapWidth;
     CGFloat maxSubtitleWidth = maxTitleWidth * 1 / 4;
     self.titleLabel.size = CGSizeMake(maxTitleWidth, headerBarHeight);
     self.subtitleLabel.size = self.titleLabel.size;
@@ -528,7 +529,7 @@ void wonderMovieVolumeListenerCallback (
     else {
         self.titleLabel.height = headerBarHeight;
     }
-    self.subtitleLabel.frame = CGRectMake(self.titleLabel.right, 0, self.subtitleLabel.width, headerBarHeight);
+    self.subtitleLabel.frame = CGRectMake(self.titleLabel.right + gapWidth, 0, self.subtitleLabel.width, headerBarHeight);
     
     // layout resolutions
     if (_resolutionsChanged) {
