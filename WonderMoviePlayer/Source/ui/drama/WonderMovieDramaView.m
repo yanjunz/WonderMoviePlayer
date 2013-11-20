@@ -30,6 +30,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.8];
         UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.width, kDramaHeaderViewHeight)];
         headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
         headerView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.1]; // FIXME
@@ -42,9 +43,9 @@
         label.text = NSLocalizedString(@"剧集列表", nil);
         [headerView addSubview:label];
         
-        UIView *separatorView = [[UIView alloc] initWithFrame:CGRectMake(0, label.bottom, headerView.width, 1)];
+        UIImageView *separatorView = [[UIImageView alloc] initWithFrame:CGRectMake(0, label.bottom, headerView.width, 1)];
         separatorView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        separatorView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.1];
+        separatorView.image = QQVideoPlayerImage(@"separator_line");
         [headerView addSubview:separatorView];
         [separatorView release];
         
@@ -60,6 +61,9 @@
         tableView.separatorStyle = UITableViewCellSelectionStyleNone;
         [self addSubview:tableView];
         self.tableView = tableView;
+        if ([tableView respondsToSelector:@selector(setSeparatorInset:)]) {
+            [tableView setSeparatorInset:UIEdgeInsetsZero];
+        }
         [tableView release];
     }
     return self;
@@ -159,6 +163,16 @@
     [_loadingView removeFromSuperview];
     [self bringSubviewToFront:self.tableView];
     [self.tableView reloadData];
+    
+    int showType = self.videoGroup.showType.intValue;
+    if (showType == VideoGroupShowTypeList) {
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        self.tableView.separatorColor = [UIColor colorWithPatternImage:QQVideoPlayerImage(@"separator_line")];
+    }
+    else {
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        self.tableView.separatorColor = [UIColor clearColor];
+    }
 }
 
 - (void)showErrorView

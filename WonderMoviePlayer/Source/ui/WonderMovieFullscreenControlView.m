@@ -1678,7 +1678,6 @@ void wonderMovieVolumeListenerCallback (
         
         CGFloat width = 326;
         WonderMovieDramaView *dramaView = [[WonderMovieDramaView alloc] initWithFrame:CGRectMake(self.width - width, 0, width, self.height)];
-        dramaView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
         dramaView.tvDramaManager = self.tvDramaManager;
         dramaView.delegate = self;
         [view addSubview:dramaView];
