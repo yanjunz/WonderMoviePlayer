@@ -265,7 +265,7 @@
             [separatorView release];
         }
         Video *video = self.sortedVideos[indexPath.row];
-        cell.selected = video.setNum.intValue == self.playingSetNum;
+        cell.isPlaying = video.setNum.intValue == self.playingSetNum;
         cell.textLabel.text = video.brief;
         
         return cell;
@@ -298,6 +298,7 @@
     if (showType != VideoGroupShowTypeGrid) {
         Video *video = self.sortedVideos[indexPath.row];
         [self playWithSetNum:video.setNum.intValue];
+        [self.tableView reloadData];
     }
 }
 

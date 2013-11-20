@@ -9,4 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface WonderMovieDramaListCell : UITableViewCell
+@property (nonatomic) BOOL isPlaying;
 @end

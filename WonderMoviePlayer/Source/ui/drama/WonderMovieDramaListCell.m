@@ -26,10 +26,24 @@
     return self;
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+//- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+//{
+//    NSLog(@"setSelected %d, %d", selected, animated);
+//    [super setSelected:selected animated:animated];
+//    if (selected) {
+//        self.imageView.hidden = NO;
+//        self.textLabel.textColor = QQColor(videoplayer_drama_list_text_color);
+//    }
+//    else {
+//        self.imageView.hidden = YES;
+//        self.textLabel.textColor = [UIColor whiteColor];
+//    }
+//}
+
+- (void)setIsPlaying:(int)isPlaying
 {
-    [super setSelected:selected animated:animated];
-    if (selected) {
+    _isPlaying = isPlaying;
+    if (isPlaying) {
         self.imageView.hidden = NO;
         self.textLabel.textColor = QQColor(videoplayer_drama_list_text_color);
     }
