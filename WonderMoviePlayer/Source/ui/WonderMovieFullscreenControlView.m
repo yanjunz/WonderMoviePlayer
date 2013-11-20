@@ -1837,6 +1837,10 @@ static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanni
         // Show tip view
         self.horizontalPanningTipView.center = CGPointMake(self.infoView.width / 2, 18 + self.horizontalPanningTipView.height / 2);
         [self.infoView addSubview:self.horizontalPanningTipView];
+        
+        
+        // automatically dismiss progress tip after 5s if no any action
+        [self performSelector:@selector(dismissProgressTipIfShown) withObject:nil afterDelay:5];
     }
 }
 
@@ -1859,6 +1863,9 @@ static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanni
         // Show tip view
         self.verticalPanningTipView.center = CGPointMake(self.infoView.width - 20 - self.verticalPanningTipView.width / 2, self.infoView.height / 2);
         [self.infoView addSubview:self.verticalPanningTipView];
+        
+        // automatically dismiss volume tip after 5s if no any action
+        [self performSelector:@selector(dismissVolumeTipIfShown) withObject:nil afterDelay:5];
     }
 }
 
