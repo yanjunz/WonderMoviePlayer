@@ -164,6 +164,7 @@
         Video *video = [videoGroup videoAtURL:URL];
         if (curSetNumPtr) {
             *curSetNumPtr = video.setNum.intValue;
+            NSLog(@"requestDramaInfoWithURL curSetNum=%d (%p)", *curSetNumPtr, curSetNumPtr);
         }
     }
     // simulate loading interval
@@ -205,12 +206,13 @@
 //    return dict;
 }
 
-- (void)tvDramaManager:(TVDramaManager *)manager requestDramaInfoWithURL:(NSString *)URL curSetNum:(int *)curSetNumPtr requestType:(TVDramaRequestType)requestType completionBlock:(void (^)(VideoGroup *videoGroup))completionBlock
+- (void)tvDramaManager:(TVDramaManager *)manager requestDramaInfoWithURL:(NSString *)URL requestType:(TVDramaRequestType)requestType completionBlock:(void (^)(VideoGroup *videoGroup, int curSetNum))completionBlock
 {
     [self performBlockInBackground:^{
-        VideoGroup *videoGroup = [self tvDramaManager:manager requestDramaInfoWithURL:URL curSetNum:curSetNumPtr requestType:requestType];
+        int curSetNum = 0;
+        VideoGroup *videoGroup = [self tvDramaManager:manager requestDramaInfoWithURL:URL curSetNum:&curSetNum requestType:requestType];
         if (completionBlock) {
-            completionBlock(videoGroup);
+            completionBlock(videoGroup, curSetNum);
         }
     }];
 }

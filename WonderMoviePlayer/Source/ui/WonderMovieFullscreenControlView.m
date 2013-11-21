@@ -117,7 +117,7 @@
 @end
 
 @interface WonderMovieFullscreenControlView (DramaView) <WonderMovieDramaViewDelegate>
-
+- (void)dramaDidSelectSetNum:(int)setNum;
 @end
 
 @interface WonderMovieFullscreenControlView (Utils)
@@ -320,6 +320,7 @@ void wonderMovieVolumeListenerCallback (
     
     self.nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.nextButton setImage:QQVideoPlayerImage(@"next_normal") forState:UIControlStateNormal];
+    [self.nextButton addTarget:self action:@selector(onClickNext:) forControlEvents:UIControlEventTouchUpInside];
     self.nextButton.frame = CGRectMake(progressBarLeftPadding - 20 - 6, (self.bottomBar.height - 17 * 2) / 2, 15 * 2, 17 * 2);
     [self.bottomBar addSubview:self.nextButton];
     
@@ -786,11 +787,11 @@ void wonderMovieVolumeListenerCallback (
 #pragma mark State Manchine
 - (void)handleCommand:(MovieControlCommand)cmd param:(id)param notify:(BOOL)notify
 {
-    NSArray *cmds = @[@"play", @"pause", @"end", @"replay", @"setProgress", @"buffer", @"unbuffer"];
-    NSArray *states = @[@"default", @"playing", @"paused", @"buffering", @"ended"];
-    if (cmd != MovieControlCommandSetProgress) {
-        NSLog(@"handleCommand cmd=%@, state=%@, %@, %d", cmds[cmd], states[self.controlState], param, notify);
-    }
+//    NSArray *cmds = @[@"play", @"pause", @"end", @"replay", @"setProgress", @"buffer", @"unbuffer"];
+//    NSArray *states = @[@"default", @"playing", @"paused", @"buffering", @"ended"];
+//    if (cmd != MovieControlCommandSetProgress) {
+//        NSLog(@"handleCommand cmd=%@, state=%@, %@, %d", cmds[cmd], states[self.controlState], param, notify);
+//    }
     
     if (cmd == MovieControlCommandEnd) {
         self.controlState = MovieControlStateEnded;
@@ -1228,6 +1229,20 @@ void wonderMovieVolumeListenerCallback (
             self.popupMenu.alpha = 0;
         }
     }];
+}
+
+- (IBAction)onClickNext:(id)sender
+{
+    VideoGroup *videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
+    if (self.tvDramaManager.curSetNum > 0 && videoGroup) {
+        Video *nextVideo = [videoGroup videoAtSetNum:@(self.tvDramaManager.curSetNum + 1)];
+        if (nextVideo) {
+            [self dramaDidSelectSetNum:nextVideo.setNum.intValue];
+        }
+        else {
+            NSLog(@"Warnning: There no next video");
+        }
+    }
 }
 
 - (IBAction)onClickTVDrama:(id)sender

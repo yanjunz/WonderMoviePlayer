@@ -185,24 +185,11 @@
 
 - (void)finishCurrentSectionLoad
 {
-    Video *video = [self.videoGroup videoAtURL:self.tvDramaManager.webURL];
-    if (video) {
-        _playingSetNum = video.setNum.intValue;
-    }
+    _playingSetNum = self.tvDramaManager.curSetNum;
     
     [_loadingView removeFromSuperview];
     [self bringSubviewToFront:self.tableView];
     [self.tableView reloadData];
-    
-//    int showType = self.videoGroup.showType.intValue;
-//    if (showType == VideoGroupShowTypeList) {
-//        self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-//        self.tableView.separatorColor = [UIColor colorWithPatternImage:QQVideoPlayerImage(@"separator_line")];
-//    }
-//    else {
-//        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-//        self.tableView.separatorColor = [UIColor clearColor];
-//    }
 }
 
 - (void)showErrorView

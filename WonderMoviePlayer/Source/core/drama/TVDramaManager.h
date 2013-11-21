@@ -41,7 +41,7 @@ typedef enum {
 - (VideoGroup *)tvDramaManager:(TVDramaManager *)manager requestDramaInfoWithURL:(NSString *)URL curSetNum:(int *)curSetNumPtr requestType:(TVDramaRequestType)requestType;
 - (NSString *)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURL:(NSString *)URL src:(NSString *)src;
 
-- (void)tvDramaManager:(TVDramaManager *)manager requestDramaInfoWithURL:(NSString *)URL curSetNum:(int *)curSetNumPtr requestType:(TVDramaRequestType)requestType completionBlock:(void (^)(VideoGroup *videoGroup))completionBlock;
+- (void)tvDramaManager:(TVDramaManager *)manager requestDramaInfoWithURL:(NSString *)URL requestType:(TVDramaRequestType)requestType completionBlock:(void (^)(VideoGroup *videoGroup, int curSetNum))completionBlock;
 
 - (void)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURL:(NSString *)URL src:(NSString *)src completionBlock:(void (^)(NSString *videoSrc))completionBlock;
 @end
