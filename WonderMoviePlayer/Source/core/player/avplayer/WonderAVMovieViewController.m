@@ -441,6 +441,8 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
         
         // FIXME
     }
+    
+    [self.controlSource prepareToPlay];
 }
 
 #pragma mark -

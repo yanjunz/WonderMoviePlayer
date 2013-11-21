@@ -41,6 +41,7 @@ typedef enum {
 @protocol MovieControlSource <NSObject>
 @required
 // Video operations
+- (void)prepareToPlay;
 - (void)play;
 - (void)pause;
 - (void)resume;

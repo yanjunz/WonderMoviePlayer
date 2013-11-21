@@ -167,7 +167,7 @@
         }
     }
     // simulate loading interval
-    [NSThread sleepForTimeInterval:2];
+    [NSThread sleepForTimeInterval:3];
     
     return videoGroup;
 }

@@ -245,6 +245,8 @@
         [self.view addSubview:player.view];
         [self addOverlayView];
         [player release];
+        
+        [self.controlSource prepareToPlay];        
     }
 }
 

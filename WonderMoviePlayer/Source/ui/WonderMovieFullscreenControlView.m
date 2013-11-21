@@ -376,7 +376,7 @@ void wonderMovieVolumeListenerCallback (
     [separatorView release];
     
     CGFloat buttonWidth = 60;
-    CGFloat headerBarRightPadding = 5;
+    CGFloat headerBarRightPadding = 0;//5;
     CGFloat buttonFontSize = 13;
     UIFont *buttonFont = [UIFont systemFontOfSize:buttonFontSize];
     UIImage *highlightedImage = [self imageWithColor:[[UIColor whiteColor] colorWithAlphaComponent:0.15]];
@@ -393,7 +393,7 @@ void wonderMovieVolumeListenerCallback (
     CGRect btnRect = self.menuButton.frame;
     
     self.tvDramaButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.tvDramaButton.frame = CGRectOffset(btnRect, -buttonWidth, 0);
+    self.tvDramaButton.frame = CGRectOffset(btnRect, -buttonWidth+1, 0);
     self.tvDramaButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [self.tvDramaButton setTitle:NSLocalizedString(@"剧集", nil) forState:UIControlStateNormal];
     self.tvDramaButton.titleLabel.font = buttonFont;
@@ -403,14 +403,14 @@ void wonderMovieVolumeListenerCallback (
     btnRect = self.tvDramaButton.frame;
     
     separatorView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"headerbar_separator")];
-    separatorView.center = CGPointMake(self.tvDramaButton.right - 1, self.headerBar.height / 2);
+    separatorView.center = CGPointMake(self.tvDramaButton.right, self.headerBar.height / 2);
     separatorView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     separatorView.tag = kWonderMovieTagSeparatorAfterTVDrama;
     [self.headerBar addSubview:separatorView];
     [separatorView release];
     
     self.downloadButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.downloadButton.frame = CGRectOffset(btnRect, -buttonWidth, 0);
+    self.downloadButton.frame = CGRectOffset(btnRect, -buttonWidth+1, 0);
     self.downloadButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [self.downloadButton setTitle:NSLocalizedString(@"缓存", nil) forState:UIControlStateNormal];
     [self.downloadButton setTitleColor:QQColor(videoplayer_downloaded_color) forState:UIControlStateDisabled];
@@ -421,7 +421,7 @@ void wonderMovieVolumeListenerCallback (
 //    btnRect = self.downloadButton.frame;
     
     separatorView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"headerbar_separator")];
-    separatorView.center = CGPointMake(self.downloadButton.right - 1, self.headerBar.height / 2);
+    separatorView.center = CGPointMake(self.downloadButton.right, self.headerBar.height / 2);
     separatorView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     separatorView.tag = kWonderMovieTagSeparatorAfterDownload;
     [self.headerBar addSubview:separatorView];
@@ -484,6 +484,8 @@ void wonderMovieVolumeListenerCallback (
     [self addSubview:infoView];
     [infoView release];
     [self installGestureHandlers];
+    
+    [self showDramaButton:NO animated:NO];
 }
 
 - (void)layoutSubviews
@@ -539,10 +541,6 @@ void wonderMovieVolumeListenerCallback (
     }
 }
 
-
-
-
-#pragma mark Public Functions
 - (void)installGestureHandlers
 {
     // Setup tap GR
@@ -968,6 +966,11 @@ void wonderMovieVolumeListenerCallback (
     self.titleLabel.text = title;
     self.subtitleLabel.text = subtitle;
     [self setNeedsLayout];
+}
+
+- (void)prepareToPlay
+{
+    [self loadDramaInfo];
 }
 
 - (void)play
@@ -1723,17 +1726,50 @@ void wonderMovieVolumeListenerCallback (
 
 - (void)loadDramaInfo
 {
-    
+    [self.tvDramaManager getDramaInfo:TVDramaRequestTypeCurrent completionBlock:^(BOOL success) {
+        if (success) {
+            [self performSelectorOnMainThread:@selector(finishLoadDramaInfo) withObject:nil waitUntilDone:NO];
+        }
+        else {
+            [self performSelectorOnMainThread:@selector(failLoadDramaInfo) withObject:nil waitUntilDone:NO];
+        }
+    }];
 }
 
-- (void)startLoadingDramaInfo
+- (void)finishLoadDramaInfo
 {
-    
+    [self showDramaButton:YES animated:YES];
 }
 
-- (void)stopLoadingDramaInfo
+- (void)failLoadDramaInfo
 {
+    [self showDramaButton:NO animated:YES];
+}
+
+- (void)showDramaButton:(BOOL)show animated:(BOOL)animated
+{
+    BOOL needShow = show && self.tvDramaButton.hidden;
+    BOOL needHide = !show && !self.tvDramaButton.hidden;
     
+    [UIView animateWithDuration:animated ? 0.5f : 0 animations:^{
+        if (needShow) {
+            self.downloadButton.right = self.tvDramaButton.left + 1;
+        }
+        else if (needHide) {
+            self.downloadButton.right = self.menuButton.left + 1;
+        }
+    } completion:^(BOOL finished) {
+        if (needShow) {
+            self.tvDramaButton.hidden = NO;
+            UIView *separatorView = [self.headerBar viewWithTag:kWonderMovieTagSeparatorAfterDownload];
+            separatorView.hidden = NO;
+        }
+        else if (needHide) {
+            self.tvDramaButton.hidden = YES;
+            UIView *separatorView = [self.headerBar viewWithTag:kWonderMovieTagSeparatorAfterDownload];
+            separatorView.hidden = YES;
+        }
+    }];
 }
 
 #pragma mark UIGestureRecognizerDelegate

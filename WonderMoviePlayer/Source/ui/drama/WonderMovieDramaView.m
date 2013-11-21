@@ -94,14 +94,6 @@
     [super dealloc];
 }
 
-- (void)drawRect:(CGRect)rect
-{
-    [super drawRect:rect];
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetShadowWithColor(context, CGSizeMake(-20, 0), 5, [UIColor blueColor].CGColor);
-    
-}
-
 - (void)reloadData
 {
     if (self.videoGroup == nil) {
@@ -165,19 +157,30 @@
 //        } afterDelay:0];
 //    }];
     
-    [self.tvDramaManager getDramaInfo:TVDramaRequestTypeCurrent completionBlock:^(BOOL success) {
-        // make sure to invoke UI related code in main thread
-        [self performBlock:^{
-            self.videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
-            self.sortedVideos = [self.videoGroup sortedVideos];
-            if (success) {
-                [self finishCurrentSectionLoad];
-            }
-            else {
-                [self showErrorView];
-            }
-        } afterDelay:0];
-    }];
+    if (self.tvDramaManager.videoGroup != nil) {
+        [self updateVideoGroupData];
+        [self finishCurrentSectionLoad];
+    }
+    else {
+        [self.tvDramaManager getDramaInfo:TVDramaRequestTypeCurrent completionBlock:^(BOOL success) {
+            // make sure to invoke UI related code in main thread
+            [self performBlock:^{
+                [self updateVideoGroupData];
+                if (success) {
+                    [self finishCurrentSectionLoad];
+                }
+                else {
+                    [self showErrorView];
+                }
+            } afterDelay:0];
+        }];
+    }
+}
+
+- (void)updateVideoGroupData
+{
+    self.videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
+    self.sortedVideos = [self.videoGroup sortedVideos];
 }
 
 - (void)finishCurrentSectionLoad
