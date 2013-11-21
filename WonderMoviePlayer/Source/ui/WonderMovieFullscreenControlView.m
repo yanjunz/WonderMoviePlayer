@@ -275,6 +275,7 @@ void wonderMovieVolumeListenerCallback (
 #ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
     self.bottomBar.top = self.bottom; // hide bottom bar until movie started
 #endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
+    self.bottomBar.userInteractionEnabled = NO;
     
 //    self.bottomBar.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
     self.bottomBar.backgroundColor = [UIColor colorWithPatternImage:QQVideoPlayerImage(@"toolbar")];
@@ -927,6 +928,7 @@ void wonderMovieVolumeListenerCallback (
         self.bottomBar.bottom = self.bottom;
     }];
 #endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
+    self.bottomBar.userInteractionEnabled = YES;
     
     [self cancelPreviousAndPrepareToDimControl];
     
