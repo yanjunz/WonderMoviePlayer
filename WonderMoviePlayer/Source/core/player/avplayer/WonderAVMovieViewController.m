@@ -656,7 +656,6 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
         BOOL crossScreenEnabled = !!self.crossScreenBlock;
         WonderMovieFullscreenControlView *fullscreenControlView = [[WonderMovieFullscreenControlView alloc] initWithFrame:self.overlayView.bounds
                                                                                                        autoPlayWhenStarted:YES
-                                                                                                               nextEnabled:NO
                                                                                                            downloadEnabled:downloadEnabled
                                                                                                         crossScreenEnabled:crossScreenEnabled];
         fullscreenControlView.delegate = self;

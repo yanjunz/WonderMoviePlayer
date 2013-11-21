@@ -14,12 +14,11 @@
 
 @interface WonderMovieFullscreenControlView : UIView<MovieControlSource>
 @property (nonatomic, assign) BOOL autoPlayWhenStarted;
-@property (nonatomic, assign) BOOL nextEnabled;           // set to show next button
 @property (nonatomic, assign) BOOL downloadEnabled;
 @property (nonatomic, assign) BOOL crossScreenEnabled;
 @property (nonatomic, retain) WonderMovieInfoView *infoView;
 
-- (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted nextEnabled:(BOOL)nextEnabled downloadEnabled:(BOOL)downloadEnabled crossScreenEnabled:(BOOL)crossScreenEnabled;
+- (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted downloadEnabled:(BOOL)downloadEnabled crossScreenEnabled:(BOOL)crossScreenEnabled;
 @end
 
 #endif // MTT_FEATURE_WONDER_MOVIE_PLAYER

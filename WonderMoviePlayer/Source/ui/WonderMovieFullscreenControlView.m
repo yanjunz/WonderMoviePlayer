@@ -189,11 +189,10 @@ void wonderMovieVolumeListenerCallback (
 }
 
 #pragma mark UIView LifeCycle
-- (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted nextEnabled:(BOOL)nextEnabled downloadEnabled:(BOOL)downloadEnabled crossScreenEnabled:(BOOL)crossScreenEnabled
+- (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted downloadEnabled:(BOOL)downloadEnabled crossScreenEnabled:(BOOL)crossScreenEnabled
 {
     if (self = [super initWithFrame:frame]) {
         _autoPlayWhenStarted = autoPlayWhenStarted;
-        _nextEnabled = nextEnabled;
         _downloadEnabled = downloadEnabled;
         _crossScreenEnabled = crossScreenEnabled;
         self.autoresizesSubviews = YES;
@@ -264,7 +263,7 @@ void wonderMovieVolumeListenerCallback (
     
     CGFloat bottomBarHeight = 50;
     CGFloat headerBarHeight = 44;
-    CGFloat progressBarLeftPadding = (self.nextEnabled ? 60+30+10 : 60) + 8 - 10;
+    CGFloat progressBarLeftPadding = (YES ? 60+15+10 : 60) + 8 - 10;
     CGFloat progressBarRightPadding = 0;
     CGFloat durationLabelWidth = 100;
     
@@ -318,12 +317,10 @@ void wonderMovieVolumeListenerCallback (
     [self.actionButton addTarget:self action:@selector(onClickAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.bottomBar addSubview:self.actionButton];
     
-    if (self.nextEnabled) {
-        self.nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.nextButton setImage:QQVideoPlayerImage(@"next_normal") forState:UIControlStateNormal];
-        self.nextButton.frame = CGRectMake(progressBarLeftPadding - 38 - 6, (self.bottomBar.height - 17 * 2) / 2, 15 * 2, 17 * 2);
-        [self.bottomBar addSubview:self.nextButton];
-    }
+    self.nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.nextButton setImage:QQVideoPlayerImage(@"next_normal") forState:UIControlStateNormal];
+    self.nextButton.frame = CGRectMake(progressBarLeftPadding - 20 - 6, (self.bottomBar.height - 17 * 2) / 2, 15 * 2, 17 * 2);
+    [self.bottomBar addSubview:self.nextButton];
     
     UILabel *startLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.progressView.left + kProgressViewPadding, bottomBarHeight / 2 + 2, durationLabelWidth, bottomBarHeight / 2)];
     self.startLabel = startLabel;
@@ -1750,24 +1747,30 @@ void wonderMovieVolumeListenerCallback (
 {
     BOOL needShow = show && self.tvDramaButton.hidden;
     BOOL needHide = !show && !self.tvDramaButton.hidden;
+    CGFloat progressBarLeftPaddingForShowNext = (60+15+10) + 8 - 10;
+    CGFloat progressBarLeftPaddingForHideNext = (60) + 8 - 10;
     
     [UIView animateWithDuration:animated ? 0.5f : 0 animations:^{
         if (needShow) {
             self.downloadButton.right = self.tvDramaButton.left + 1;
+            self.progressBar.frame = CGRectMake(progressBarLeftPaddingForShowNext, self.progressBar.top, self.progressBar.width - (progressBarLeftPaddingForShowNext - progressBarLeftPaddingForHideNext), self.progressBar.height);
         }
         else if (needHide) {
             self.downloadButton.right = self.menuButton.left + 1;
+            self.progressBar.frame = CGRectMake(progressBarLeftPaddingForHideNext, self.progressBar.top, self.progressBar.width + (progressBarLeftPaddingForShowNext - progressBarLeftPaddingForHideNext), self.progressBar.height);
         }
     } completion:^(BOOL finished) {
         if (needShow) {
             self.tvDramaButton.hidden = NO;
             UIView *separatorView = [self.headerBar viewWithTag:kWonderMovieTagSeparatorAfterDownload];
             separatorView.hidden = NO;
+            self.nextButton.hidden = NO;
         }
         else if (needHide) {
             self.tvDramaButton.hidden = YES;
             UIView *separatorView = [self.headerBar viewWithTag:kWonderMovieTagSeparatorAfterDownload];
             separatorView.hidden = YES;
+            self.nextButton.hidden = YES;
         }
     }];
 }
