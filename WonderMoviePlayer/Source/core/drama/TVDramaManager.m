@@ -165,4 +165,10 @@
     }
 }
 
+- (BOOL)hasNext
+{
+    VideoGroup *videoGroup = [self videoGroupInCurrentThread];
+    return videoGroup && _curSetNum > 0 && _curSetNum < videoGroup.maxId.intValue;
+}
+
 @end

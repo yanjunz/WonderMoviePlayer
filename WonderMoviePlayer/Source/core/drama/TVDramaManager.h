@@ -33,6 +33,7 @@ typedef enum {
 - (void)getDramaInfo:(TVDramaRequestType)requestType completionBlock:(void (^)(BOOL success))completionBlock;
 - (BOOL)sniffVideoSource;
 - (void)sniffVideoSource:(void (^)(BOOL success))completionBlock;
+- (BOOL)hasNext;
 @end
 
 

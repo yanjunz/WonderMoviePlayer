@@ -102,7 +102,7 @@
             videoGroup.showType = @(1);
             videoGroup.src = @"爱奇艺";
             videoGroup.totalCount = @(0);
-            videoGroup.maxId = @(urls.count);
+            videoGroup.maxId = @(_maxVideoSetNum);
             
 
 //            videoGroup.videoId = @(1234567890);

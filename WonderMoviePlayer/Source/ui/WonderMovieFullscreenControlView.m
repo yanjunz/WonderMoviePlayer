@@ -1238,6 +1238,7 @@ void wonderMovieVolumeListenerCallback (
         Video *nextVideo = [videoGroup videoAtSetNum:@(self.tvDramaManager.curSetNum + 1)];
         if (nextVideo) {
             [self dramaDidSelectSetNum:nextVideo.setNum.intValue];
+            [self updateNextButtonState];
         }
         else {
             NSLog(@"Warnning: There no next video");
@@ -1782,6 +1783,7 @@ void wonderMovieVolumeListenerCallback (
             UIView *separatorView = [self.headerBar viewWithTag:kWonderMovieTagSeparatorAfterDownload];
             separatorView.hidden = NO;
             self.nextButton.hidden = NO;
+            [self updateNextButtonState];
         }
         else if (needHide) {
             self.tvDramaButton.hidden = YES;
@@ -1790,6 +1792,11 @@ void wonderMovieVolumeListenerCallback (
             self.nextButton.hidden = YES;
         }
     }];
+}
+
+- (void)updateNextButtonState
+{
+    self.nextButton.enabled = [self.tvDramaManager hasNext];
 }
 
 #pragma mark UIGestureRecognizerDelegate
