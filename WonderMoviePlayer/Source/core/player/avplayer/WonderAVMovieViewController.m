@@ -801,13 +801,6 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     [self.controlSource unbuffer];
 }
 
-- (void)prepareToPlayAnotherVideo
-{
-    _hasStarted = NO;
-    [self.player pause];
-    [self buffer];
-}
-
 #pragma mark Fake Buffer Progress
 #ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
 - (void)onLoadedTimeRangesChanged
@@ -974,35 +967,21 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 }
 
 // Drama
-- (void)movieControlSource:(id<MovieControlSource>)source willPlayVideoGroup:(VideoGroup *)videoGroup setNum:(int)setNum
+- (void)movieControlSourceWillPlayNext:(id<MovieControlSource>)source
 {
-    [self prepareToPlayAnotherVideo];
-    if (videoGroup.showType.intValue == VideoGroupShowTypeGrid) {
-        [self.controlSource setBufferTitle:[NSString stringWithFormat:@"%@ 第%d集", videoGroup.videoName, setNum]];
-        [self.controlSource setTitle:[NSString stringWithFormat:@"%@ 第%d集", videoGroup.videoName, setNum]
-                            subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"(来自%@)", videoGroup.src] : @"")];
-    }
-    else {
-        Video *video = [videoGroup videoAtSetNum:@(setNum)];
-        [self.controlSource setBufferTitle:video.brief];
-        [self.controlSource setTitle:video.brief
-                            subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"(来自%@)", videoGroup.src] : @"")];
-    }
+    _hasStarted = NO;
+    [self.player pause];
 }
 
-- (void)movieControlSource:(id<MovieControlSource>)source didPlayVideoGroup:(VideoGroup *)videoGroup setNum:(int)setNum
+- (void)movieControlSource:(id<MovieControlSource>)source didPlayNext:(NSString *)videoSource
 {
-    [self.controlSource resetBufferTitle];
-    NSString *url = [videoGroup videoAtSetNum:@(setNum)].videoSrc;
-    // make sure both of previous and next video are same type
-    // http://stackoverflow.com/questions/4101380/avurlasset-refuses-to-load-video
-    [self playMovieStream:[NSURL URLWithString:url]];
+    NSLog(@"play %@", videoSource);
+    [self playMovieStream:[NSURL URLWithString:videoSource]];
 }
 
-- (void)movieControlSourceFailToPlayVideoGroup:(id<MovieControlSource>)source
+- (void)movieControlSourceFailToPlayNext:(id<MovieControlSource>)source
 {
-    [self.controlSource resetBufferTitle];    
-    [self.controlSource end];
+    
 }
 
 #pragma mark Notification

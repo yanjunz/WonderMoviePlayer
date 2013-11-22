@@ -11,6 +11,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "WonderMoviePlayerConstants.h"
 #import "WonderMovieFullscreenControlView.h"
+#import "WonderMovieFullscreenControlView+StateMachine.h"
 #import "WonderMovieProgressView.h"
 #import "UIView+Sizes.h"
 #import <MediaPlayer/MediaPlayer.h>
@@ -37,38 +38,9 @@
 #define kWonderMovieResolutionButtonTagBase         100
 
 @interface WonderMovieFullscreenControlView () <UIGestureRecognizerDelegate>{
-    NSTimeInterval _playbackTime;
-    NSTimeInterval _playableDuration;
-    NSTimeInterval _duration;
-    
-    // for buffer loading
-    BOOL _bufferFromPaused;
-    BOOL _isLoading;
-    NSTimeInterval _totalBufferingSize;
-    
-    // scrubbing related
-    BOOL _isScrubbing; // flag to ignore msg to set progress when scrubbing
-    CGFloat _progressWhenStartScrubbing; // record the progress when begin to scrub
-    CGFloat _accumulatedProgressBySec; // the total accumulated progress by second
-    CGFloat _lastProgressToScrub;   // record the last progress to be set when scrubbing is ended
-    
-    BOOL _isDownloading;
-    BOOL _hasStarted;
-    
-    BOOL _isLocked;
-    
 #ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
     MPVolumeView *_airPlayButton; // assign
 #endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
-    
-    BOOL _resolutionsChanged;
-    
-    // tip
-    BOOL _wasHorizontalPanningTipShown;
-    BOOL _wasVerticalPanningTipShown;
-    
-    // auto next toast
-    BOOL _autoNextShown;
 }
 @property (nonatomic, retain) NSTimer *timer;
 @property (nonatomic, retain) WonderMovieProgressView *progressView;
@@ -122,7 +94,7 @@
 @interface WonderMovieFullscreenControlView (DramaView) <WonderMovieDramaViewDelegate>
 - (void)dramaDidSelectSetNum:(int)setNum;
 - (void)prepareToPlayNextDrama;
-- (void)playNext;
+- (void)playNextDrama;
 @end
 
 @interface WonderMovieFullscreenControlView (Utils)
@@ -789,137 +761,14 @@ void wonderMovieVolumeListenerCallback (
     [self.infoView stopLoading];
 }
 
-#pragma mark State Manchine
-- (void)handleCommand:(MovieControlCommand)cmd param:(id)param notify:(BOOL)notify
-{
-    NSArray *cmds = @[@"play", @"pause", @"end", @"replay", @"setProgress", @"buffer", @"unbuffer"];
-    NSArray *states = @[@"default", @"playing", @"paused", @"buffering", @"ended"];
-    if (cmd != MovieControlCommandSetProgress) {
-        NSLog(@"handleCommand cmd=%@, state=%@, %@, %d", cmds[cmd], states[self.controlState], param, notify);
-    }
-    
-    if (cmd == MovieControlCommandEnd) {
-        self.controlState = MovieControlStateEnded;
-        
-        if (notify && [self.delegate respondsToSelector:@selector(movieControlSourceExit:)]) {
-            [self.delegate movieControlSourceExit:self];
-        }
-    }
-    else {
-        switch (self.controlState) {
-            case MovieControlStateDefault:
-                if (cmd == MovieControlCommandPlay) {
-                    self.controlState = MovieControlStatePlaying;
-                    
-                    if (notify && [self.delegate respondsToSelector:@selector(movieControlSourcePlay:)]) {
-                        [self.delegate movieControlSourcePlay:self];
-                    }
-                }
-                break;
-            case MovieControlStatePlaying:
-                if (cmd == MovieControlCommandPause) {
-                    self.controlState = MovieControlStatePaused;
-                    
-                    if (notify && [self.delegate respondsToSelector:@selector(movieControlSourcePause:)]) {
-                        [self.delegate movieControlSourcePause:self];
-                    }
-                }
-                else if (cmd == MovieControlCommandSetProgress) {
-                    self.controlState = MovieControlStatePlaying;
-                    
-                    if (notify && [self.delegate respondsToSelector:@selector(movieControlSource:setProgress:)]) {
-                        [self.delegate movieControlSource:self setProgress:[(NSNumber *)param floatValue]];
-                    }
-                }
-                else if (cmd == MovieControlCommandBuffer) {
-                    self.controlState = MovieControlStateBuffering;
-                    _bufferFromPaused = NO;
-                    
-                    if (notify && [self.delegate respondsToSelector:@selector(movieControlSourceBuffer:)]) {
-                        [self.delegate movieControlSourceBuffer:self];
-                    }
-                }
-                break;
-            case MovieControlStateEnded:
-                if (cmd == MovieControlCommandReplay) {
-                    self.controlState = MovieControlStatePlaying;
-                    
-                    if (notify && [self.delegate respondsToSelector:@selector(movieControlSourceReplay:)]) {
-                        [self.delegate movieControlSourceReplay:self];
-                    }
-                }
-                else if (cmd == MovieControlCommandSetProgress &&
-                         [(NSNumber *)param floatValue] != 1) // iOS5 issue: setProgress cmd will be issued after the movie is end, just skip it
-                {
-                    self.controlState = MovieControlStatePlaying;
-                    
-                    if (notify && [self.delegate respondsToSelector:@selector(movieControlSource:setProgress:)]) {
-                        [self.delegate movieControlSource:self setProgress:[(NSNumber *)param floatValue]];
-                    }
-                }
-                break;
-            case MovieControlStatePaused:
-                if (cmd == MovieControlCommandPlay) {
-                    self.controlState = MovieControlStatePlaying;
-                    
-                    if (notify && [self.delegate respondsToSelector:@selector(movieControlSourceResume:)]) {
-                        [self.delegate movieControlSourceResume:self];
-                    }
-                }
-                else if (cmd == MovieControlCommandSetProgress) {
-                    self.controlState = MovieControlStatePaused;
-                    
-                    if (notify && [self.delegate respondsToSelector:@selector(movieControlSource:setProgress:)]) {
-                        [self.delegate movieControlSource:self setProgress:[(NSNumber *)param floatValue]];
-                    }
-                }
-                else if (cmd == MovieControlCommandBuffer) {
-                    self.controlState = MovieControlStateBuffering;
-                    _bufferFromPaused = YES;
-                    
-                    if (notify && [self.delegate respondsToSelector:@selector(movieControlSourceBuffer:)]) {
-                        [self.delegate movieControlSourceBuffer:self];
-                    }
-                }
-                break;
-            case MovieControlStateBuffering:
-                if (cmd == MovieControlCommandPlay) { // FIXME! Need it?
-                    self.controlState = MovieControlStatePlaying;
-                    
-                    // Actually there is no need to notify since no internal operation will trigger buffer
-                    if (notify && [self.delegate respondsToSelector:@selector(movieControlSourcePlay:)]) {
-                        [self.delegate movieControlSourcePlay:self];
-                    }
-                }
-                else if (cmd == MovieControlCommandPause) {
-                    self.controlState = MovieControlStatePaused;
-                    
-                    if (notify && [self.delegate respondsToSelector:@selector(movieControlSourcePause:)]) {
-                        [self.delegate movieControlSourcePause:self];
-                    }
-                }
-                else if (cmd == MovieControlCommandUnbuffer) {
-                    if (_bufferFromPaused) {
-                        self.controlState = MovieControlStatePaused;
-                    }
-                    else {
-                        self.controlState = MovieControlStatePlaying;
-                    }
 
-                    if (notify && [self.delegate respondsToSelector:@selector(movieControlSourceUnbuffer:)]) {
-                        [self.delegate movieControlSourceUnbuffer:self];
-                    }
-                }
-                break;
-        }
-    }
-//    if (cmd != MovieControlCommandSetProgress) {
-//        NSLog(@"state = %d", self.controlState);
-//    }
+#pragma mark Public
+- (void)afterStateMachine
+{
     // Update States
     [self updateStates];
     
-
+    
     if (!_hasStarted && self.controlState == MovieControlStatePlaying) {
         [self onPlayingStarted];
     }
@@ -1033,8 +882,18 @@ void wonderMovieVolumeListenerCallback (
     [self handleCommand:MovieControlCommandEnd param:nil notify:NO];
     
     if (self.nextButton.enabled) {
-        [self playNext];
+        [self playNextDrama];
     }
+}
+
+- (void)playNext
+{
+    [self handleCommand:MovieControlCommandPlayNext param:nil notify:NO];
+}
+
+- (void)error:(NSString *)msg
+{
+    [self handleCommand:MovieControlCommandError param:msg notify:NO];
 }
 
 - (void)setPlaybackTime:(NSTimeInterval)playbackTime
@@ -1320,6 +1179,7 @@ void wonderMovieVolumeListenerCallback (
         [self.actionButton setImage:QQVideoPlayerImage(@"pause_press") forState:UIControlStateHighlighted];
         self.infoView.centerPlayButton.hidden = YES;
         self.infoView.replayButton.hidden = YES;
+        [self resetBufferTitle];
     }
     else if (self.controlState == MovieControlStatePaused ||
              (self.controlState == MovieControlStateBuffering && _bufferFromPaused)) {
@@ -1327,6 +1187,7 @@ void wonderMovieVolumeListenerCallback (
         [self.actionButton setImage:QQVideoPlayerImage(@"play_press") forState:UIControlStateHighlighted];
         self.infoView.centerPlayButton.hidden = _isLoading;
         self.infoView.replayButton.hidden = YES;
+        [self resetBufferTitle];
     }
     else if (self.controlState == MovieControlStateEnded) {
         // set replay
@@ -1338,6 +1199,24 @@ void wonderMovieVolumeListenerCallback (
         
         [self showOverlay:YES];
         [self showDramaView:NO];
+    }
+    else if (self.controlState == MovieControlStatePreparing) {
+        VideoGroup *videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
+        int setNum = self.tvDramaManager.curSetNum;
+        if (videoGroup.showType.intValue == VideoGroupShowTypeGrid) {
+            [self setBufferTitle:[NSString stringWithFormat:@"%@ 第%d集", videoGroup.videoName, setNum]];
+            [self setTitle:[NSString stringWithFormat:@"%@ 第%d集", videoGroup.videoName, setNum]
+                  subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"(来自%@)", videoGroup.src] : @"")];
+        }
+        else {
+            Video *video = [videoGroup videoAtSetNum:@(setNum)];
+            [self setBufferTitle:video.brief];
+            [self setTitle:video.brief
+                  subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"(来自%@)", videoGroup.src] : @"")];
+        }
+        _isLoading = YES;
+        self.infoView.centerPlayButton.hidden = _isLoading;
+        self.infoView.replayButton.hidden = YES;
     }
     
     if (_isLoading) { // continue to loading
@@ -1997,9 +1876,7 @@ static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanni
 
 - (void)dramaDidSelectSetNum:(int)setNum
 {
-    if ([self.delegate respondsToSelector:@selector(movieControlSource:willPlayVideoGroup:setNum:)]) {
-        [self.delegate movieControlSource:self willPlayVideoGroup:[self.tvDramaManager videoGroupInCurrentThread] setNum:setNum];
-    }
+    [self handleCommand:MovieControlCommandPlayNext param:nil notify:YES];
     
     self.tvDramaManager.curSetNum = setNum;
     self.tvDramaManager.webURL = [[self.tvDramaManager videoGroupInCurrentThread] videoAtSetNum:@(setNum)].url;
@@ -2032,16 +1909,16 @@ static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanni
 
 - (void)dramaDidFinishSniff:(int)setNum
 {
-    if ([self.delegate respondsToSelector:@selector(movieControlSource:didPlayVideoGroup:setNum:)]) {
-        [self.delegate movieControlSource:self didPlayVideoGroup:[self.tvDramaManager videoGroupInCurrentThread] setNum:setNum];
+    if ([self.delegate respondsToSelector:@selector(movieControlSource:didPlayNext:)]) {
+        VideoGroup *videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
+        Video *video = [videoGroup videoAtSetNum:@(setNum)];
+        [self.delegate movieControlSource:self didPlayNext:video.videoSrc];
     }
 }
 
 - (void)dramaDidFailToSniff
 {
-    if ([self.delegate respondsToSelector:@selector(movieControlSourceFailToPlayVideoGroup:)]) {
-        [self.delegate movieControlSourceFailToPlayVideoGroup:self];
-    }
+    [self handleCommand:MovieControlCommandError param:nil notify:YES];
 }
 
 - (void)prepareToPlayNextDrama
@@ -2055,7 +1932,7 @@ static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanni
     [self.infoView showAutoNextToast:YES animated:YES];
 }
 
-- (void)playNext
+- (void)playNextDrama
 {
     int curSetNum = self.tvDramaManager.curSetNum;
     [self dramaDidSelectSetNum:curSetNum+1];

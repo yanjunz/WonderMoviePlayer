@@ -60,7 +60,9 @@
         self.centerPlayButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         [self addSubview:self.centerPlayButton];
         
-        UILabel *nextToast = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 180, 40)];
+        UILabel *nextToast = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, 180, 40)];
+        nextToast.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        nextToast.center = CGPointMake(CGRectGetMidX(self.bounds), nextToast.center.y);
         nextToast.layer.cornerRadius = 3;
         nextToast.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
         nextToast.text = NSLocalizedString(@"即将自动播放下一集", nil);

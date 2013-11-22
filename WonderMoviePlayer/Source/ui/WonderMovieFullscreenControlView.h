@@ -12,13 +12,46 @@
 #import "MovieControlSource.h"
 #import "WonderMovieInfoView.h"
 
-@interface WonderMovieFullscreenControlView : UIView<MovieControlSource>
+@interface WonderMovieFullscreenControlView : UIView<MovieControlSource> {
+    NSTimeInterval _playbackTime;
+    NSTimeInterval _playableDuration;
+    NSTimeInterval _duration;
+    
+    // for buffer loading
+    BOOL _bufferFromPaused;
+    BOOL _isLoading;
+    NSTimeInterval _totalBufferingSize;
+    
+    // scrubbing related
+    BOOL _isScrubbing; // flag to ignore msg to set progress when scrubbing
+    CGFloat _progressWhenStartScrubbing; // record the progress when begin to scrub
+    CGFloat _accumulatedProgressBySec; // the total accumulated progress by second
+    CGFloat _lastProgressToScrub;   // record the last progress to be set when scrubbing is ended
+    
+    BOOL _isDownloading;
+    BOOL _hasStarted;
+    
+    BOOL _isLocked;
+    
+
+    
+    BOOL _resolutionsChanged;
+    
+    // tip
+    BOOL _wasHorizontalPanningTipShown;
+    BOOL _wasVerticalPanningTipShown;
+    
+    // auto next toast
+    BOOL _autoNextShown;
+}
 @property (nonatomic, assign) BOOL autoPlayWhenStarted;
 @property (nonatomic, assign) BOOL downloadEnabled;
 @property (nonatomic, assign) BOOL crossScreenEnabled;
 @property (nonatomic, retain) WonderMovieInfoView *infoView;
 
 - (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted downloadEnabled:(BOOL)downloadEnabled crossScreenEnabled:(BOOL)crossScreenEnabled;
+
+- (void)afterStateMachine;
 @end
 
 #endif // MTT_FEATURE_WONDER_MOVIE_PLAYER

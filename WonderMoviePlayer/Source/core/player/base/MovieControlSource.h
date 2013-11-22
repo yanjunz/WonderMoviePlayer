@@ -16,6 +16,8 @@ typedef enum {
     MovieControlStatePaused,
     MovieControlStateBuffering,
     MovieControlStateEnded,
+    MovieControlStatePreparing, // prepare to play next
+    MovieControlStateErrored,
 } MovieControlState;
 
 typedef enum {
@@ -26,6 +28,8 @@ typedef enum {
     MovieControlCommandSetProgress,
     MovieControlCommandBuffer,
     MovieControlCommandUnbuffer,
+    MovieControlCommandPlayNext,
+    MovieControlCommandError,
 } MovieControlCommand;
 
 /**
@@ -50,6 +54,8 @@ typedef enum {
 - (void)buffer;
 - (void)unbuffer;
 - (void)end;
+- (void)playNext;
+- (void)error:(NSString *)msg;
 
 // Resource install & uninstall
 - (void)installControlSource;
@@ -122,9 +128,11 @@ typedef enum {
 - (void)movieControlSource:(id<MovieControlSource>)source didChangeResolution:(NSString *)resolution;
 
 // Drama
-- (void)movieControlSource:(id<MovieControlSource>)source willPlayVideoGroup:(VideoGroup *)videoGroup setNum:(int)setNum;
-- (void)movieControlSource:(id<MovieControlSource>)source didPlayVideoGroup:(VideoGroup *)videoGroup setNum:(int)setNum;
-- (void)movieControlSourceFailToPlayVideoGroup:(id<MovieControlSource>)source;
+- (void)movieControlSourceWillPlayNext:(id<MovieControlSource>)source;
+- (void)movieControlSource:(id<MovieControlSource>)source didPlayNext:(NSString *)videoSource;
+- (void)movieControlSourceFailToPlayNext:(id<MovieControlSource>)source;
+
+- (void)movieControlSourceDidError:(id<MovieControlSource>)source;
 @end
 
 #endif // MTT_FEATURE_WONDER_MOVIE_PLAYER
