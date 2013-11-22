@@ -623,6 +623,8 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 	[alertView show];
 	[alertView release];
     NSLog(@"[VideoPlayer] %@", errorMsg);
+    
+    [self.controlSource error:errorMsg];
 }
 
 #pragma mark Player Notifications
@@ -982,6 +984,11 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 - (void)movieControlSourceFailToPlayNext:(id<MovieControlSource>)source
 {
     
+}
+
+- (void)movieControlSourceOpenSouce:(id<MovieControlSource>)source
+{
+    [self movieControlSourceExit:source];
 }
 
 #pragma mark Notification

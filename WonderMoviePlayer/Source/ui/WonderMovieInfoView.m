@@ -16,6 +16,7 @@
 @property (nonatomic, retain) UILabel *brightnessLabel;
 
 @property (nonatomic, retain) UILabel *autoNextToastView;
+@property (nonatomic, retain) UIView *errorView;
 @end
 
 @implementation WonderMovieInfoView
@@ -72,6 +73,38 @@
         [self addSubview:nextToast];
         self.autoNextToastView = nextToast;
         [nextToast release];
+        
+        UIView *errorView = [[UIView alloc] initWithFrame:self.bounds];
+        errorView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        errorView.backgroundColor = [UIColor clearColor];
+        errorView.hidden = YES;
+        UILabel *label = [[UILabel alloc] initWithFrame:self.bounds];
+        label.textColor = [UIColor whiteColor];
+        label.backgroundColor = [UIColor clearColor];
+        label.text = NSLocalizedString(@"播放地址失效，", nil);
+        [label sizeToFit];
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        button.frame = self.bounds;
+        [button setTitle:NSLocalizedString(@"源网页播放", nil) forState:UIControlStateNormal];
+        [button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+        self.openSourceButton = button;
+        [button.titleLabel sizeToFit];
+        button.bounds = button.titleLabel.bounds;
+        CGFloat width = label.width + button.width;
+        UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, width, label.height)];
+        titleView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+        label.origin = CGPointZero;
+        [titleView addSubview:label];
+        button.origin = CGPointMake(label.right, 0);
+        [titleView addSubview:button];
+        [errorView addSubview:titleView];
+        [label release];
+        [titleView release];
+        titleView.center = CGPointMake(CGRectGetMidX(errorView.bounds), CGRectGetMidY(errorView.bounds));
+
+        self.errorView = errorView;
+        [self addSubview:errorView];
+        [errorView release];
     }
     return self;
 }
@@ -87,6 +120,11 @@
     
     self.replayButton = nil;
     self.centerPlayButton = nil;
+    
+    self.autoNextToastView = nil;
+    
+    self.errorView = nil;
+    self.openSourceButton = nil;
     
     [_volumeView release];
     [_brightnessView release];
@@ -109,7 +147,6 @@
         [_loadingView addSubview:self.loadingIndicator];
         [loadingIndicator release];
 
-        
         UILabel *loadingPercentLabel = [[UILabel alloc] initWithFrame:self.loadingIndicator.frame];
         self.loadingPercentLabel = loadingPercentLabel;
         self.loadingPercentLabel.text = @"0%";
@@ -288,6 +325,11 @@
     [UIView animateWithDuration:0.5f animations:^{
         self.autoNextToastView.alpha = 0;
     }];
+}
+
+- (void)showError:(BOOL)show
+{
+    self.errorView.hidden = !show;
 }
 
 @end

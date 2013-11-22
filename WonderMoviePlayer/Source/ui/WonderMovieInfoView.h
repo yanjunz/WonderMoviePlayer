@@ -25,6 +25,8 @@
 @property (nonatomic, retain) UIView *volumeView;
 @property (nonatomic, retain) UIView *brightnessView;
 
+@property (nonatomic, retain) UIButton *openSourceButton;
+
 - (void)showProgressTime:(BOOL)show animated:(BOOL)animated;
 - (void)startLoading;
 - (void)stopLoading;
@@ -33,4 +35,5 @@
 - (void)showBrightness:(CGFloat)brightness;
 
 - (void)showAutoNextToast:(BOOL)show animated:(BOOL)animated;
+- (void)showError:(BOOL)show;
 @end

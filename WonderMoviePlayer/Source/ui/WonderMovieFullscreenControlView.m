@@ -85,6 +85,9 @@
 // Tip
 @property (nonatomic, retain) UIView *horizontalPanningTipView;
 @property (nonatomic, retain) UIView *verticalPanningTipView;
+
+@property (nonatomic, retain) UIView *errorView;
+
 @end
 
 @interface WonderMovieFullscreenControlView (ProgressView) <WonderMovieProgressViewDelegate>
@@ -220,6 +223,8 @@ void wonderMovieVolumeListenerCallback (
     self.tvDramaManager = nil;
     self.dramaContainerView = nil;
     self.dramaView = nil;
+    
+    self.errorView = nil;
     [super dealloc];
 }
 
@@ -229,6 +234,14 @@ void wonderMovieVolumeListenerCallback (
     NSMutableArray *lockedViews = [NSMutableArray array];
     
     self.backgroundColor = [UIColor clearColor];
+    
+    UIView *errorView = [[UIView alloc] initWithFrame:self.bounds];
+    errorView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    errorView.backgroundColor = [UIColor blackColor];
+    self.errorView = errorView;
+    errorView.hidden = YES;
+    [self addSubview:errorView];
+    [errorView release];
     
     // all controls add to contentView
     UIView *contentView = [[UIView alloc] initWithFrame:self.bounds];
@@ -424,6 +437,7 @@ void wonderMovieVolumeListenerCallback (
     self.subtitleLabel = subtitleLabel;
     [subtitleLabel release];
     
+    
     [self showResolutionButton:NO];
 //    self.resolutions = @[@"高清", @"流畅", @"标清"];
 //    [self rebuildResolutionsView];
@@ -545,10 +559,12 @@ void wonderMovieVolumeListenerCallback (
     if (_infoView != infoView) {
         [_infoView.replayButton removeTarget:self action:@selector(onClickReplay:) forControlEvents:UIControlEventTouchUpInside];
         [_infoView.centerPlayButton removeTarget:self action:@selector(onClickPlay:) forControlEvents:UIControlEventTouchUpInside];
+        [_infoView.openSourceButton removeTarget:self action:@selector(onClickOpenSource:) forControlEvents:UIControlEventTouchUpInside];
         [_infoView release];
         _infoView = [infoView retain];
         [_infoView.replayButton addTarget:self action:@selector(onClickReplay:) forControlEvents:UIControlEventTouchUpInside];
         [_infoView.centerPlayButton addTarget:self action:@selector(onClickPlay:) forControlEvents:UIControlEventTouchUpInside];
+        [_infoView.openSourceButton addTarget:self action:@selector(onClickOpenSource:) forControlEvents:UIControlEventTouchUpInside];
     }
 }
 
@@ -762,6 +778,14 @@ void wonderMovieVolumeListenerCallback (
 }
 
 
+#pragma mark Error View
+- (void)showError:(BOOL)show
+{
+    self.errorView.hidden = !show;
+    [self.infoView showError:show];
+}
+
+
 #pragma mark Public
 - (void)afterStateMachine
 {
@@ -813,6 +837,8 @@ void wonderMovieVolumeListenerCallback (
 #endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
     
     AudioSessionRemovePropertyListenerWithUserData(kAudioSessionProperty_CurrentHardwareOutputVolume, wonderMovieVolumeListenerCallback, self);
+    
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dimControl) object:nil];
 }
 
 - (void)setTitle:(NSString *)title subtitle:(NSString *)subtitle
@@ -1079,6 +1105,13 @@ void wonderMovieVolumeListenerCallback (
     [self cancelPreviousAndPrepareToDimControl];    
 }
 
+- (IBAction)onClickOpenSource:(id)sender
+{
+    if ([self.delegate respondsToSelector:@selector(movieControlSourceOpenSouce:)]) {
+        [self.delegate movieControlSourceOpenSouce:self];
+    }
+}
+
 - (IBAction)onClickMenu:(UIButton *)sender
 {
     [self showPopupMenu:!self.menuButton.selected];
@@ -1172,51 +1205,59 @@ void wonderMovieVolumeListenerCallback (
 #pragma mark InfoView update
 - (void)updateStates
 {
-    if (self.controlState == MovieControlStateDefault ||
-        self.controlState == MovieControlStatePlaying ||
-        (self.controlState == MovieControlStateBuffering && !_bufferFromPaused)) {
-        [self.actionButton setImage:QQVideoPlayerImage(@"pause_normal") forState:UIControlStateNormal];
-        [self.actionButton setImage:QQVideoPlayerImage(@"pause_press") forState:UIControlStateHighlighted];
-        self.infoView.centerPlayButton.hidden = YES;
-        self.infoView.replayButton.hidden = YES;
-        [self resetBufferTitle];
+    if (self.controlState == MovieControlStateErrored) {
+        [self showError:YES];
+        _isLoading = NO;
     }
-    else if (self.controlState == MovieControlStatePaused ||
-             (self.controlState == MovieControlStateBuffering && _bufferFromPaused)) {
-        [self.actionButton setImage:QQVideoPlayerImage(@"play_normal") forState:UIControlStateNormal];
-        [self.actionButton setImage:QQVideoPlayerImage(@"play_press") forState:UIControlStateHighlighted];
-        self.infoView.centerPlayButton.hidden = _isLoading;
-        self.infoView.replayButton.hidden = YES;
-        [self resetBufferTitle];
-    }
-    else if (self.controlState == MovieControlStateEnded) {
-        // set replay
-        [self.actionButton setImage:QQVideoPlayerImage(@"play_normal") forState:UIControlStateNormal];
-        [self.actionButton setImage:QQVideoPlayerImage(@"play_press") forState:UIControlStateHighlighted];
-        self.infoView.replayButton.hidden = NO;
-        self.infoView.centerPlayButton.hidden = YES;
-        _isLoading = NO; // clear loading flag
+    else {
+        [self showError:NO];
         
-        [self showOverlay:YES];
-        [self showDramaView:NO];
-    }
-    else if (self.controlState == MovieControlStatePreparing) {
-        VideoGroup *videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
-        int setNum = self.tvDramaManager.curSetNum;
-        if (videoGroup.showType.intValue == VideoGroupShowTypeGrid) {
-            [self setBufferTitle:[NSString stringWithFormat:@"%@ 第%d集", videoGroup.videoName, setNum]];
-            [self setTitle:[NSString stringWithFormat:@"%@ 第%d集", videoGroup.videoName, setNum]
-                  subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"(来自%@)", videoGroup.src] : @"")];
+        if (self.controlState == MovieControlStateDefault ||
+            self.controlState == MovieControlStatePlaying ||
+            (self.controlState == MovieControlStateBuffering && !_bufferFromPaused)) {
+            [self.actionButton setImage:QQVideoPlayerImage(@"pause_normal") forState:UIControlStateNormal];
+            [self.actionButton setImage:QQVideoPlayerImage(@"pause_press") forState:UIControlStateHighlighted];
+            self.infoView.centerPlayButton.hidden = YES;
+            self.infoView.replayButton.hidden = YES;
+            [self resetBufferTitle];
         }
-        else {
-            Video *video = [videoGroup videoAtSetNum:@(setNum)];
-            [self setBufferTitle:video.brief];
-            [self setTitle:video.brief
-                  subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"(来自%@)", videoGroup.src] : @"")];
+        else if (self.controlState == MovieControlStatePaused ||
+                 (self.controlState == MovieControlStateBuffering && _bufferFromPaused)) {
+            [self.actionButton setImage:QQVideoPlayerImage(@"play_normal") forState:UIControlStateNormal];
+            [self.actionButton setImage:QQVideoPlayerImage(@"play_press") forState:UIControlStateHighlighted];
+            self.infoView.centerPlayButton.hidden = _isLoading;
+            self.infoView.replayButton.hidden = YES;
+            [self resetBufferTitle];
         }
-        _isLoading = YES;
-        self.infoView.centerPlayButton.hidden = _isLoading;
-        self.infoView.replayButton.hidden = YES;
+        else if (self.controlState == MovieControlStateEnded) {
+            // set replay
+            [self.actionButton setImage:QQVideoPlayerImage(@"play_normal") forState:UIControlStateNormal];
+            [self.actionButton setImage:QQVideoPlayerImage(@"play_press") forState:UIControlStateHighlighted];
+            self.infoView.replayButton.hidden = NO;
+            self.infoView.centerPlayButton.hidden = YES;
+            _isLoading = NO; // clear loading flag
+            
+            [self showOverlay:YES];
+            [self showDramaView:NO];
+        }
+        else if (self.controlState == MovieControlStatePreparing) {
+            VideoGroup *videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
+            int setNum = self.tvDramaManager.curSetNum;
+            if (videoGroup.showType.intValue == VideoGroupShowTypeGrid) {
+                [self setBufferTitle:[NSString stringWithFormat:@"%@ 第%d集", videoGroup.videoName, setNum]];
+                [self setTitle:[NSString stringWithFormat:@"%@ 第%d集", videoGroup.videoName, setNum]
+                      subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"(来自%@)", videoGroup.src] : @"")];
+            }
+            else {
+                Video *video = [videoGroup videoAtSetNum:@(setNum)];
+                [self setBufferTitle:video.brief];
+                [self setTitle:video.brief
+                      subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"(来自%@)", videoGroup.src] : @"")];
+            }
+            _isLoading = YES;
+            self.infoView.centerPlayButton.hidden = _isLoading;
+            self.infoView.replayButton.hidden = YES;
+        }
     }
     
     if (_isLoading) { // continue to loading
