@@ -66,6 +66,9 @@
     // tip
     BOOL _wasHorizontalPanningTipShown;
     BOOL _wasVerticalPanningTipShown;
+    
+    // auto next toast
+    BOOL _autoNextShown;
 }
 @property (nonatomic, retain) NSTimer *timer;
 @property (nonatomic, retain) WonderMovieProgressView *progressView;
@@ -118,6 +121,8 @@
 
 @interface WonderMovieFullscreenControlView (DramaView) <WonderMovieDramaViewDelegate>
 - (void)dramaDidSelectSetNum:(int)setNum;
+- (void)prepareToPlayNextDrama;
+- (void)playNext;
 @end
 
 @interface WonderMovieFullscreenControlView (Utils)
@@ -787,11 +792,11 @@ void wonderMovieVolumeListenerCallback (
 #pragma mark State Manchine
 - (void)handleCommand:(MovieControlCommand)cmd param:(id)param notify:(BOOL)notify
 {
-//    NSArray *cmds = @[@"play", @"pause", @"end", @"replay", @"setProgress", @"buffer", @"unbuffer"];
-//    NSArray *states = @[@"default", @"playing", @"paused", @"buffering", @"ended"];
-//    if (cmd != MovieControlCommandSetProgress) {
-//        NSLog(@"handleCommand cmd=%@, state=%@, %@, %d", cmds[cmd], states[self.controlState], param, notify);
-//    }
+    NSArray *cmds = @[@"play", @"pause", @"end", @"replay", @"setProgress", @"buffer", @"unbuffer"];
+    NSArray *states = @[@"default", @"playing", @"paused", @"buffering", @"ended"];
+    if (cmd != MovieControlCommandSetProgress) {
+        NSLog(@"handleCommand cmd=%@, state=%@, %@, %d", cmds[cmd], states[self.controlState], param, notify);
+    }
     
     if (cmd == MovieControlCommandEnd) {
         self.controlState = MovieControlStateEnded;
@@ -970,6 +975,7 @@ void wonderMovieVolumeListenerCallback (
 
 - (void)prepareToPlay
 {
+    _autoNextShown = NO;
     [self loadDramaInfo];
 }
 
@@ -1000,6 +1006,11 @@ void wonderMovieVolumeListenerCallback (
     // will not set progress when scrubbing
     if (!_isScrubbing) {
         [self.progressView setProgress:progress];
+        
+        if (_playbackTime + 5 >= _duration && !_autoNextShown &&
+            self.nextButton.enabled) {
+            [self prepareToPlayNextDrama];
+        }
     }
 }
 
@@ -1020,6 +1031,10 @@ void wonderMovieVolumeListenerCallback (
 - (void)end
 {
     [self handleCommand:MovieControlCommandEnd param:nil notify:NO];
+    
+    if (self.nextButton.enabled) {
+        [self playNext];
+    }
 }
 
 - (void)setPlaybackTime:(NSTimeInterval)playbackTime
@@ -2027,6 +2042,23 @@ static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanni
     if ([self.delegate respondsToSelector:@selector(movieControlSourceFailToPlayVideoGroup:)]) {
         [self.delegate movieControlSourceFailToPlayVideoGroup:self];
     }
+}
+
+- (void)prepareToPlayNextDrama
+{
+    // show overlay
+    [self showOverlay:YES];
+    [self showDramaView:NO];
+    [self dismissAllPopupViews];
+    
+    // show toast
+    [self.infoView showAutoNextToast:YES animated:YES];
+}
+
+- (void)playNext
+{
+    int curSetNum = self.tvDramaManager.curSetNum;
+    [self dramaDidSelectSetNum:curSetNum+1];
 }
 
 @end

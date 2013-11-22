@@ -84,8 +84,6 @@ typedef enum {
 - (CGFloat)getTimeControlWidth;
 - (void)setTitle:(NSString *)title subtitle:(NSString *)subtitle;
 
-- (void)prepareToPlayNext;
-
 @property (nonatomic, assign) BOOL isLiveCast;
 @property (nonatomic, copy) NSArray *resolutions;
 @property (nonatomic) int selectedResolutionIndex;

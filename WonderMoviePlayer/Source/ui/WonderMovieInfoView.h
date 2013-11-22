@@ -31,4 +31,6 @@
 
 - (void)showVolume:(CGFloat)volume;
 - (void)showBrightness:(CGFloat)brightness;
+
+- (void)showAutoNextToast:(BOOL)show animated:(BOOL)animated;
 @end

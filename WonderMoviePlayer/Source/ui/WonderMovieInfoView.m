@@ -14,6 +14,8 @@
 @property (nonatomic, retain) UILabel *volumeLabel;
 @property (nonatomic, retain) UIImageView *volumeImageView;
 @property (nonatomic, retain) UILabel *brightnessLabel;
+
+@property (nonatomic, retain) UILabel *autoNextToastView;
 @end
 
 @implementation WonderMovieInfoView
@@ -57,6 +59,17 @@
         self.centerPlayButton.hidden = YES;
         self.centerPlayButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         [self addSubview:self.centerPlayButton];
+        
+        UILabel *nextToast = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 180, 40)];
+        nextToast.layer.cornerRadius = 3;
+        nextToast.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+        nextToast.text = NSLocalizedString(@"即将自动播放下一集", nil);
+        nextToast.textColor = [UIColor whiteColor];
+        nextToast.textAlignment = UITextAlignmentCenter;
+        nextToast.alpha = 0;
+        [self addSubview:nextToast];
+        self.autoNextToastView = nextToast;
+        [nextToast release];
     }
     return self;
 }
@@ -254,7 +267,25 @@
     [UIView animateWithDuration:1.0f animations:^{
         self.brightnessView.alpha = 0;
     }];
+}
 
+- (void)showAutoNextToast:(BOOL)show animated:(BOOL)animated
+{
+    [UIView animateWithDuration:(animated ? 0.5f : 0) animations:^{
+        self.autoNextToastView.alpha = show ? 1 : 0;
+    } completion:^(BOOL finished) {
+        if (show) {
+            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dimNextToast) object:nil];
+            [self performSelector:@selector(dimNextToast) withObject:nil afterDelay:5];
+        }
+    }];
+}
+
+- (void)dimNextToast
+{
+    [UIView animateWithDuration:0.5f animations:^{
+        self.autoNextToastView.alpha = 0;
+    }];
 }
 
 @end
