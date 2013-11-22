@@ -557,15 +557,17 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     }
     else if (context == WonderAVMovieObserverContextName(Rate)) {
 //        NSLog(@"rate = %f", self.player.rate);
-        if (_isEnd) {
-            [self.controlSource end];
-        }
-        else if (_hasStarted) {
-            if (self.player.rate == 0) {
-                [self.controlSource pause];
+        if (!_isExited) {
+            if (_isEnd) {
+                [self.controlSource end];
             }
-            else {
-                [self.controlSource play];
+            else if (_hasStarted) {
+                if (self.player.rate == 0) {
+                    [self.controlSource pause];
+                }
+                else {
+                    [self.controlSource play];
+                }
             }
         }
     }
