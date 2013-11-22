@@ -1784,12 +1784,14 @@ void wonderMovieVolumeListenerCallback (
             separatorView.hidden = NO;
             self.nextButton.hidden = NO;
             [self updateNextButtonState];
+            [self setNeedsLayout];
         }
         else if (needHide) {
             self.tvDramaButton.hidden = YES;
             UIView *separatorView = [self.headerBar viewWithTag:kWonderMovieTagSeparatorAfterDownload];
             separatorView.hidden = YES;
             self.nextButton.hidden = YES;
+            [self setNeedsLayout];
         }
     }];
 }
