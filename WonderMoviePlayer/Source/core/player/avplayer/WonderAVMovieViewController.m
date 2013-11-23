@@ -988,7 +988,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     
 }
 
-- (void)movieControlSourceOpenSouce:(id<MovieControlSource>)source
+- (void)movieControlSourceHandleError:(id<MovieControlSource>)source
 {
     [self movieControlSourceExit:source];
 }

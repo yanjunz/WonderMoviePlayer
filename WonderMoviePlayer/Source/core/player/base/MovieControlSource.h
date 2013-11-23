@@ -134,7 +134,7 @@ typedef enum {
 
 - (void)movieControlSourceDidError:(id<MovieControlSource>)source;
 
-- (void)movieControlSourceOpenSouce:(id<MovieControlSource>)source;
+- (void)movieControlSourceHandleError:(id<MovieControlSource>)source;
 @end
 
 #endif // MTT_FEATURE_WONDER_MOVIE_PLAYER

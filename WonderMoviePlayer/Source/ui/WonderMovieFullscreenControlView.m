@@ -559,12 +559,12 @@ void wonderMovieVolumeListenerCallback (
     if (_infoView != infoView) {
         [_infoView.replayButton removeTarget:self action:@selector(onClickReplay:) forControlEvents:UIControlEventTouchUpInside];
         [_infoView.centerPlayButton removeTarget:self action:@selector(onClickPlay:) forControlEvents:UIControlEventTouchUpInside];
-        [_infoView.openSourceButton removeTarget:self action:@selector(onClickOpenSource:) forControlEvents:UIControlEventTouchUpInside];
+        [_infoView.openSourceButton removeTarget:self action:@selector(onClickHandleError:) forControlEvents:UIControlEventTouchUpInside];
         [_infoView release];
         _infoView = [infoView retain];
         [_infoView.replayButton addTarget:self action:@selector(onClickReplay:) forControlEvents:UIControlEventTouchUpInside];
         [_infoView.centerPlayButton addTarget:self action:@selector(onClickPlay:) forControlEvents:UIControlEventTouchUpInside];
-        [_infoView.openSourceButton addTarget:self action:@selector(onClickOpenSource:) forControlEvents:UIControlEventTouchUpInside];
+        [_infoView.openSourceButton addTarget:self action:@selector(onClickHandleError:) forControlEvents:UIControlEventTouchUpInside];
     }
 }
 
@@ -1105,10 +1105,10 @@ void wonderMovieVolumeListenerCallback (
     [self cancelPreviousAndPrepareToDimControl];    
 }
 
-- (IBAction)onClickOpenSource:(id)sender
+- (IBAction)onClickHandleError:(id)sender
 {
-    if ([self.delegate respondsToSelector:@selector(movieControlSourceOpenSouce:)]) {
-        [self.delegate movieControlSourceOpenSouce:self];
+    if ([self.delegate respondsToSelector:@selector(movieControlSourceHandleError:)]) {
+        [self.delegate movieControlSourceHandleError:self];
     }
 }
 
