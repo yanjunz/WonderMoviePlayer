@@ -11,5 +11,4 @@
 @protocol MoviePlayerHandler <NSObject>
 @property (nonatomic, copy) void(^crossScreenBlock)();
 @property (nonatomic, copy) void(^exitBlock)();
-@property (nonatomic, copy) void(^downloadBlock)(NSURL *movieURL);
 @end

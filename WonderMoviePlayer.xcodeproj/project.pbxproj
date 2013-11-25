@@ -145,6 +145,7 @@
 		B5DC0784182CD4690046A7A5 /* WonderMPMovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DC077A182CD4690046A7A5 /* WonderMPMovieViewController.m */; };
 		B5DE4961183CB04F00F9AB5E /* drama_left_shadow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5DE4960183CB04F00F9AB5E /* drama_left_shadow@2x.png */; };
 		B5F45FC617E986D600F0873B /* Reveal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5F45FC517E986D600F0873B /* Reveal.framework */; };
+		B5F96D5118437748006A73FB /* FakeMovieDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = B5F96D5018437748006A73FB /* FakeMovieDownloader.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -354,6 +355,9 @@
 		B5DC077F182CD4690046A7A5 /* WonderMoviePlayerConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMoviePlayerConstants.h; sourceTree = "<group>"; };
 		B5DE4960183CB04F00F9AB5E /* drama_left_shadow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "drama_left_shadow@2x.png"; sourceTree = "<group>"; };
 		B5F45FC517E986D600F0873B /* Reveal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Reveal.framework; sourceTree = "<group>"; };
+		B5F96D4B1843603A006A73FB /* MovieDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovieDownloader.h; sourceTree = "<group>"; };
+		B5F96D4F18437748006A73FB /* FakeMovieDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FakeMovieDownloader.h; sourceTree = "<group>"; };
+		B5F96D5018437748006A73FB /* FakeMovieDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeMovieDownloader.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -429,23 +433,9 @@
 				B517775A17B36E04006B948E /* Source */,
 				B517774617B36D44006B948E /* AppDelegate.h */,
 				B517774717B36D44006B948E /* AppDelegate.m */,
-				B517774F17B36D44006B948E /* ViewController.h */,
-				B517775017B36D44006B948E /* ViewController.m */,
-				B517775217B36D44006B948E /* ViewController.xib */,
-				B517776817B37FEB006B948E /* UIView+Sizes.h */,
-				B517776917B37FEB006B948E /* UIView+Sizes.m */,
-				B58B56ED18347A990096801E /* NSObject+Block.h */,
-				B58B56EE18347A990096801E /* NSObject+Block.m */,
-				B58B57491834B0F40096801E /* FakeTVDramaWebSource.h */,
-				B58B574A1834B0F40096801E /* FakeTVDramaWebSource.m */,
-				B51778AC17B9DE2E006B948E /* TestWebViewController.h */,
-				B51778AD17B9DE2F006B948E /* TestWebViewController.m */,
-				B51778AE17B9DE30006B948E /* TestWebViewController.xib */,
-				B51F619317E9ADC200344122 /* Test2ViewController.h */,
-				B51F619417E9ADC200344122 /* Test2ViewController.m */,
-				B51F619517E9ADC200344122 /* Test2ViewController.xib */,
-				B58F110718376EDB00D6A9B2 /* TestTableViewController.h */,
-				B58F110818376EDB00D6A9B2 /* TestTableViewController.m */,
+				B5F96D4D184376D6006A73FB /* ViewController */,
+				B5F96D4E184376E7006A73FB /* Additions */,
+				B5F96D4C184376BF006A73FB /* SimulatedClass */,
 				B517777017B3960E006B948E /* Movie.m4v */,
 				B517777217B3961C006B948E /* Settings.bundle */,
 				B517773E17B36D44006B948E /* Supporting Files */,
@@ -759,6 +749,7 @@
 				B5DC077D182CD4690046A7A5 /* MovieControlSource.h */,
 				B5DC077E182CD4690046A7A5 /* MoviePlayerHandler.h */,
 				B5DC077F182CD4690046A7A5 /* WonderMoviePlayerConstants.h */,
+				B5F96D4B1843603A006A73FB /* MovieDownloader.h */,
 			);
 			path = base;
 			sourceTree = "<group>";
@@ -776,6 +767,46 @@
 				B58B57651835F6190096801E /* VideoGroup.m */,
 			);
 			path = drama;
+			sourceTree = "<group>";
+		};
+		B5F96D4C184376BF006A73FB /* SimulatedClass */ = {
+			isa = PBXGroup;
+			children = (
+				B58B57491834B0F40096801E /* FakeTVDramaWebSource.h */,
+				B58B574A1834B0F40096801E /* FakeTVDramaWebSource.m */,
+				B5F96D4F18437748006A73FB /* FakeMovieDownloader.h */,
+				B5F96D5018437748006A73FB /* FakeMovieDownloader.m */,
+			);
+			name = SimulatedClass;
+			sourceTree = "<group>";
+		};
+		B5F96D4D184376D6006A73FB /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				B517774F17B36D44006B948E /* ViewController.h */,
+				B517775017B36D44006B948E /* ViewController.m */,
+				B517775217B36D44006B948E /* ViewController.xib */,
+				B51778AC17B9DE2E006B948E /* TestWebViewController.h */,
+				B51778AD17B9DE2F006B948E /* TestWebViewController.m */,
+				B51778AE17B9DE30006B948E /* TestWebViewController.xib */,
+				B51F619317E9ADC200344122 /* Test2ViewController.h */,
+				B51F619417E9ADC200344122 /* Test2ViewController.m */,
+				B51F619517E9ADC200344122 /* Test2ViewController.xib */,
+				B58F110718376EDB00D6A9B2 /* TestTableViewController.h */,
+				B58F110818376EDB00D6A9B2 /* TestTableViewController.m */,
+			);
+			name = ViewController;
+			sourceTree = "<group>";
+		};
+		B5F96D4E184376E7006A73FB /* Additions */ = {
+			isa = PBXGroup;
+			children = (
+				B517776817B37FEB006B948E /* UIView+Sizes.h */,
+				B517776917B37FEB006B948E /* UIView+Sizes.m */,
+				B58B56ED18347A990096801E /* NSObject+Block.h */,
+				B58B56EE18347A990096801E /* NSObject+Block.m */,
+			);
+			name = Additions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -953,6 +984,7 @@
 				B52DCDA9183F4E890020485B /* WonderMovieFullscreenControlView+StateMachine.m in Sources */,
 				B58B57661835F6190096801E /* VideoGroup.m in Sources */,
 				B58B573D18347F250096801E /* NSManagedObjectContext+MagicalSaves.m in Sources */,
+				B5F96D5118437748006A73FB /* FakeMovieDownloader.m in Sources */,
 				B5AD78B817CDF06100C08E51 /* JSJSON.m in Sources */,
 				B58B574018347F250096801E /* NSPersistentStore+MagicalRecord.m in Sources */,
 				B58B574218347F250096801E /* MagicalRecord+Actions.m in Sources */,

@@ -14,6 +14,7 @@
 #import "TVDramaManager.h"
 #import "FakeTVDramaWebSource.h"
 #import "TestTableViewController.h"
+#import "FakeMovieDownloader.h"
 
 #ifdef MTT_FEATURE_WONDER_MPMOVIE_PLAYER
 #define WonderMovieViewController WonderMPMovieViewController
@@ -187,6 +188,9 @@
     [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeRight animated:YES];
     [UIApplication sharedApplication].statusBarHidden = YES;
     
+    controller.movieDownloader = [[[FakeMovieDownloader alloc] init] autorelease];
+    [controller.movieDownloader setMovieDownloaderDelegate:controller];
+    
     if ([self respondsToSelector:@selector(presentViewController:animated:completion:)]) {
         [self presentViewController:controller animated:YES completion:nil];
     }
@@ -197,9 +201,11 @@
     [controller setCrossScreenBlock:^{
         NSLog(@"cross screen");
     }];
-    [controller setDownloadBlock:^(NSURL *url) {
-//        [controller performSelector:@selector(finishDownload) withObject:nil afterDelay:3];
-    }];
+//    [controller setDownloadBlock:^(NSURL *url) {
+////        [controller performSelector:@selector(finishDownload) withObject:nil afterDelay:3];
+//    }];
+
+    
     [controller.controlSource setTitle:@"我叫MTMTMTMMTMTMTMTMMTMTMTMMTMTMMTMTMMTMMTMTMTMMTTMMTMTMMT" subtitle:@"(来源: 爱奇艺)"];
     
     TVDramaManager *tvDramaManager = [[[TVDramaManager alloc] init] autorelease];

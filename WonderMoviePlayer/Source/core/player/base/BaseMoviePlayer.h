@@ -9,9 +9,10 @@
 #import <Foundation/Foundation.h>
 #import "MoviePlayerHandler.h"
 #import "MovieControlSource.h"
+#import "MovieDownloader.h"
 
-
-@protocol BaseMoviePlayer <MovieControlSourceDelegate, MoviePlayerHandler>
+@protocol BaseMoviePlayer <MovieControlSourceDelegate, MoviePlayerHandler, MovieDownloaderDelegate>
 @property (nonatomic, retain) id<MovieControlSource> controlSource;
+@property (nonatomic, retain) id<MovieDownloader> movieDownloader;
 @property (nonatomic, assign) BOOL isLiveCast;
 @end

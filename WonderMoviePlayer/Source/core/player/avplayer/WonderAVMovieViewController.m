@@ -58,7 +58,8 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 @end
 
 @implementation WonderAVMovieViewController
-@synthesize crossScreenBlock, downloadBlock, exitBlock;
+@synthesize crossScreenBlock, exitBlock;
+@synthesize movieDownloader;
 @synthesize controlSource, isLiveCast;
 @synthesize isEnd = _isEnd;
 
@@ -111,7 +112,6 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     
     self.crossScreenBlock = nil;
     self.exitBlock = nil;
-    self.downloadBlock = nil;
     [super dealloc];
 }
 
@@ -656,7 +656,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 - (void)setupControlSource:(BOOL)fullscreen
 {
     if (fullscreen) {
-        BOOL downloadEnabled = !!self.downloadBlock;
+        BOOL downloadEnabled = !!self.movieDownloader;
         BOOL crossScreenEnabled = !!self.crossScreenBlock;
         WonderMovieFullscreenControlView *fullscreenControlView = [[WonderMovieFullscreenControlView alloc] initWithFrame:self.overlayView.bounds
                                                                                                        autoPlayWhenStarted:YES
@@ -938,12 +938,24 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 
 - (void)movieControlSourceOnDownload:(id<MovieControlSource>)source
 {
-    if (self.downloadBlock) {
-        self.downloadBlock(self.movieURL);
+    if ([self.movieDownloader mdHasTask:self.movieURL]) {
+        if ([self.movieDownloader mdIsPaused:self.movieURL]) {
+            [self.movieDownloader mdContinue];
+        }
+        else if ([self.movieDownloader mdIsDownaloading:self.movieURL]) {
+            [self.movieDownloader mdPause];
+        }
     }
-    if ([source respondsToSelector:@selector(startToDownload)]) {
-        [source startToDownload];
+    else {
+        [self.movieDownloader mdStartDownload:self.movieURL];
     }
+    
+//    if (self.downloadBlock) {
+//        self.downloadBlock(self.movieURL);
+//    }
+//    if ([source respondsToSelector:@selector(startToDownload)]) {
+//        [source startToDownload];
+//    }
 }
 
 - (void)movieControlSourceSwitchVideoGravity:(id<MovieControlSource>)source
@@ -991,6 +1003,35 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 - (void)movieControlSourceHandleError:(id<MovieControlSource>)source
 {
     [self movieControlSourceExit:source];
+}
+
+#pragma mark MovieDownladerDelegate
+- (void)movieDownloaderStarted:(id<MovieDownloader>)downloader
+{
+    if ([self.controlSource respondsToSelector:@selector(startToDownload)]) {
+        [self.controlSource startToDownload];
+    }
+}
+
+- (void)movieDownloaderPaused:(id<MovieDownloader>)downloader
+{
+    if ([self.controlSource respondsToSelector:@selector(pauseDownload)]) {
+        [self.controlSource pauseDownload];
+    }
+}
+
+- (void)movieDownloader:(id<MovieDownloader>)downloader setProgress:(CGFloat)progress
+{
+    if ([self.controlSource respondsToSelector:@selector(setDownloadProgress:)]) {
+        [self.controlSource setDownloadProgress:progress];
+    }
+}
+
+- (void)movieDownloaderFinished:(id<MovieDownloader>)downloader
+{
+    if ([self.controlSource respondsToSelector:@selector(finishDownload)]) {
+        [self.controlSource finishDownload];
+    }
 }
 
 #pragma mark Notification
