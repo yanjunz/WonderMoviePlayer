@@ -313,6 +313,7 @@ void wonderMovieVolumeListenerCallback (
     [self.nextButton addTarget:self action:@selector(onClickNext:) forControlEvents:UIControlEventTouchUpInside];
     self.nextButton.frame = CGRectMake(progressBarLeftPadding - 20 - 6, (self.bottomBar.height - 17 * 2) / 2, 15 * 2, 17 * 2);
     [self.bottomBar addSubview:self.nextButton];
+    self.nextButton.enabled = NO;
     
     UILabel *startLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.progressView.left + kProgressViewPadding, bottomBarHeight / 2 + 2, durationLabelWidth, bottomBarHeight / 2)];
     self.startLabel = startLabel;
@@ -406,6 +407,7 @@ void wonderMovieVolumeListenerCallback (
     self.downloadButton.titleLabel.font = buttonFont;
     [self.downloadButton addTarget:self action:@selector(onClickDownload:) forControlEvents:UIControlEventTouchUpInside];
     [self.downloadButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
+    self.downloadButton.enabled = _downloadEnabled;
     [self.headerBar addSubview:self.downloadButton];
 //    btnRect = self.downloadButton.frame;
     
@@ -578,7 +580,7 @@ void wonderMovieVolumeListenerCallback (
 {
     _isLiveCast = isLiveCast;
     self.progressView.userInteractionEnabled = !isLiveCast;
-    self.downloadButton.enabled = ![self isDownloading] && !isLiveCast;
+    self.downloadButton.enabled = ![self isDownloading] && !isLiveCast && _downloadEnabled;
 }
 
 #pragma mark PopupMenu
@@ -616,20 +618,21 @@ void wonderMovieVolumeListenerCallback (
         [lockButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
         [lockButton addTarget:self action:@selector(onClickLock:) forControlEvents:UIControlEventTouchUpInside];
         [popupMenu addSubview:lockButton];
-        
-        UIImageView *menuSeparatorView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"separator_line")];
-        menuSeparatorView.frame = CGRectMake(0, lockButton.bottom, menuWidth, menuSeparatorHeight);
-        [popupMenu addSubview:menuSeparatorView];
-        [menuSeparatorView release];
-        
-        UIButton *crossButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        crossButton.frame = CGRectOffset(lockButton.frame, 0, menuButtonHeight + menuSeparatorHeight);
-        crossButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        crossButton.titleLabel.font = buttonFont;
-        [crossButton setTitle:NSLocalizedString(@"跨屏分享", nil) forState:UIControlStateNormal];
-        [crossButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
-        [crossButton addTarget:self action:@selector(onClickCrossScreen:) forControlEvents:UIControlEventTouchUpInside];
-        [popupMenu addSubview:crossButton];
+        if (self.crossScreenEnabled) {
+            UIImageView *menuSeparatorView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"separator_line")];
+            menuSeparatorView.frame = CGRectMake(0, lockButton.bottom, menuWidth, menuSeparatorHeight);
+            [popupMenu addSubview:menuSeparatorView];
+            [menuSeparatorView release];
+            
+            UIButton *crossButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            crossButton.frame = CGRectOffset(lockButton.frame, 0, menuButtonHeight + menuSeparatorHeight);
+            crossButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+            crossButton.titleLabel.font = buttonFont;
+            [crossButton setTitle:NSLocalizedString(@"跨屏穿越", nil) forState:UIControlStateNormal];
+            [crossButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
+            [crossButton addTarget:self action:@selector(onClickCrossScreen:) forControlEvents:UIControlEventTouchUpInside];
+            [popupMenu addSubview:crossButton];
+        }
     }
     return _popupMenu;
 }
@@ -1241,19 +1244,7 @@ void wonderMovieVolumeListenerCallback (
             [self showDramaView:NO];
         }
         else if (self.controlState == MovieControlStatePreparing) {
-            VideoGroup *videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
-            int setNum = self.tvDramaManager.curSetNum;
-            if (videoGroup.showType.intValue == VideoGroupShowTypeGrid) {
-                [self setBufferTitle:[NSString stringWithFormat:@"%@ 第%d集", videoGroup.videoName, setNum]];
-                [self setTitle:[NSString stringWithFormat:@"%@ 第%d集", videoGroup.videoName, setNum]
-                      subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"(来自%@)", videoGroup.src] : @"")];
-            }
-            else {
-                Video *video = [videoGroup videoAtSetNum:@(setNum)];
-                [self setBufferTitle:video.brief];
-                [self setTitle:video.brief
-                      subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"(来自%@)", videoGroup.src] : @"")];
-            }
+            [self updateTitleAndSubtitle];
             _isLoading = YES;
             self.infoView.centerPlayButton.hidden = _isLoading;
             self.infoView.replayButton.hidden = YES;
@@ -1265,6 +1256,25 @@ void wonderMovieVolumeListenerCallback (
     }
     else {
         [self stopLoading];
+    }
+}
+
+- (void)updateTitleAndSubtitle
+{
+    VideoGroup *videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
+    if (videoGroup) {
+        int setNum = self.tvDramaManager.curSetNum;
+        if (videoGroup.showType.intValue == VideoGroupShowTypeGrid) {
+            [self setBufferTitle:[NSString stringWithFormat:@"%@ 第%d集", videoGroup.videoName, setNum]];
+            [self setTitle:[NSString stringWithFormat:@"%@ 第%d集", videoGroup.videoName, setNum]
+                  subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"（来自：%@）", videoGroup.src] : @"")];
+        }
+        else {
+            Video *video = [videoGroup videoAtSetNum:@(setNum)];
+            [self setBufferTitle:video.brief];
+            [self setTitle:video.brief
+                  subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"（来自：%@）", videoGroup.src] : @"")];
+        }
     }
 }
 
@@ -1689,6 +1699,7 @@ void wonderMovieVolumeListenerCallback (
 - (void)finishLoadDramaInfo
 {
     [self showDramaButton:YES animated:YES];
+    [self updateTitleAndSubtitle];
 }
 
 - (void)failLoadDramaInfo
@@ -1970,6 +1981,7 @@ static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanni
     [self dismissAllPopupViews];
     
     // show toast
+    _autoNextShown = YES;
     [self.infoView showAutoNextToast:YES animated:YES];
 }
 

@@ -170,6 +170,7 @@
         self.loadingMessageLabel.textAlignment = UITextAlignmentCenter;
         self.loadingMessageLabel.backgroundColor = [UIColor clearColor];
         self.loadingMessageLabel.textColor = [UIColor whiteColor];
+        self.loadingMessageLabel.hidden = YES;
         [_loadingView addSubview:self.loadingMessageLabel];
         [loadingMessageLabel release];
         
