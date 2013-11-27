@@ -369,21 +369,32 @@ void wonderMovieVolumeListenerCallback (
     [separatorView release];
     
     CGFloat buttonWidth = 60;
-    CGFloat headerBarRightPadding = 0;//5;
+    CGFloat headerBarRightPadding = 5;
     CGFloat buttonFontSize = 13;
     UIFont *buttonFont = [UIFont systemFontOfSize:buttonFontSize];
     UIImage *highlightedImage = [self imageWithColor:[[UIColor whiteColor] colorWithAlphaComponent:0.15]];
+  
+    
+    UILabel *menuLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.headerBar.width - headerBarRightPadding - buttonWidth, 0, buttonWidth, headerBarHeight)];
+    menuLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    menuLabel.backgroundColor = [UIColor clearColor];
+    menuLabel.textColor = [UIColor whiteColor];
+    menuLabel.textAlignment = UITextAlignmentCenter;
+    menuLabel.font = buttonFont;
+    menuLabel.text = NSLocalizedString(@"菜单", nil);
+    [self.headerBar addSubview:menuLabel];
+    [menuLabel release];
+    CGRect btnRect = menuLabel.frame;
     
     self.menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.menuButton.frame = CGRectMake(self.headerBar.width - headerBarRightPadding - buttonWidth, 0, buttonWidth, headerBarHeight);
+    self.menuButton.frame = CGRectMake(self.headerBar.width - headerBarRightPadding - buttonWidth, 0, buttonWidth + headerBarRightPadding, headerBarHeight);
     self.menuButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-    [self.menuButton setTitle:NSLocalizedString(@"菜单", nil) forState:UIControlStateNormal];
+//    [self.menuButton setTitle:NSLocalizedString(@"菜单", nil) forState:UIControlStateNormal];
     self.menuButton.titleLabel.font = buttonFont;
     [self.menuButton addTarget:self action:@selector(onClickMenu:) forControlEvents:UIControlEventTouchUpInside];
     [self.menuButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
     [self.menuButton setBackgroundImage:highlightedImage forState:UIControlStateSelected];
     [self.headerBar addSubview:self.menuButton];
-    CGRect btnRect = self.menuButton.frame;
     
     self.tvDramaButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.tvDramaButton.frame = CGRectOffset(btnRect, -buttonWidth+1, 0);
@@ -621,6 +632,10 @@ void wonderMovieVolumeListenerCallback (
         [lockButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
         [lockButton addTarget:self action:@selector(onClickLock:) forControlEvents:UIControlEventTouchUpInside];
         [popupMenu addSubview:lockButton];
+        
+//        CGFloat delta = 10;
+//        UILabel *lable = [UILabel alloc] initWithFrame:CGRectMake(0, topOffset, , <#CGFloat height#>)
+        
         if (self.crossScreenEnabled) {
             UIImageView *menuSeparatorView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"separator_line")];
             menuSeparatorView.frame = CGRectMake(0, lockButton.bottom, menuWidth, menuSeparatorHeight);
