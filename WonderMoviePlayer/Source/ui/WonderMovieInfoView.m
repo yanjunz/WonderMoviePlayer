@@ -15,7 +15,7 @@
 @property (nonatomic, retain) UIImageView *volumeImageView;
 @property (nonatomic, retain) UILabel *brightnessLabel;
 
-@property (nonatomic, retain) UILabel *autoNextToastView;
+@property (nonatomic, retain) UILabel *toastView;
 @property (nonatomic, retain) UIView *errorView;
 @end
 
@@ -61,18 +61,17 @@
         self.centerPlayButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         [self addSubview:self.centerPlayButton];
         
-        UILabel *nextToast = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, 180, 40)];
-        nextToast.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-        nextToast.center = CGPointMake(CGRectGetMidX(self.bounds), nextToast.center.y);
-        nextToast.layer.cornerRadius = 3;
-        nextToast.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
-        nextToast.text = NSLocalizedString(@"即将自动播放下一集", nil);
-        nextToast.textColor = [UIColor whiteColor];
-        nextToast.textAlignment = UITextAlignmentCenter;
-        nextToast.alpha = 0;
-        [self addSubview:nextToast];
-        self.autoNextToastView = nextToast;
-        [nextToast release];
+        UILabel *toastView = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, 180, 40)];
+        toastView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        toastView.center = CGPointMake(CGRectGetMidX(self.bounds), toastView.center.y);
+        toastView.layer.cornerRadius = 3;
+        toastView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+        toastView.textColor = [UIColor whiteColor];
+        toastView.textAlignment = UITextAlignmentCenter;
+        toastView.alpha = 0;
+        [self addSubview:toastView];
+        self.toastView = toastView;
+        [toastView release];
         
         UIView *errorView = [[UIView alloc] initWithFrame:self.bounds];
         errorView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -121,7 +120,7 @@
     self.replayButton = nil;
     self.centerPlayButton = nil;
     
-    self.autoNextToastView = nil;
+    self.toastView = nil;
     
     self.errorView = nil;
     self.openSourceButton = nil;
@@ -311,20 +310,59 @@
 
 - (void)showAutoNextToast:(BOOL)show animated:(BOOL)animated
 {
+    [self.toastView removeFromSuperview];
+    [self addSubview:self.toastView];
+    self.toastView.center = CGPointMake(CGRectGetMidX(self.bounds), self.toastView.center.y);
+    self.toastView.text = NSLocalizedString(@"即将自动播放下一集", nil);
+    self.toastView.size = CGSizeMake(180, 40);
+    
+    [self showToast:show animated:animated];
+}
+
+- (void)showDownloadToast:(NSString *)toast show:(BOOL)show animated:(BOOL)animated
+{
+    [self.toastView removeFromSuperview];
+    [self addSubview:self.toastView];
+    self.toastView.text = toast;
+    [self fitToastFrame];
+    
+    [self showToast:show animated:animated];
+}
+
+- (void)updateToast:(NSString *)toast
+{
+    self.toastView.text = toast;
+    [self fitToastFrame];
+}
+
+- (void)fitToastFrame
+{
+    self.toastView.size = CGSizeMake(180, 40);
+    [self.toastView sizeToFit];
+    CGRect rect = self.toastView.frame;
+    rect.size.width += 20;
+    rect.size.height = 40;
+    rect.origin.y = 10;
+    rect.origin.x = self.width - 10 - rect.size.width;
+    self.toastView.frame = rect;
+}
+
+- (void)showToast:(BOOL)show animated:(BOOL)animated
+{
     [UIView animateWithDuration:(animated ? 0.5f : 0) animations:^{
-        self.autoNextToastView.alpha = show ? 1 : 0;
+        self.toastView.alpha = show ? 1 : 0;
     } completion:^(BOOL finished) {
         if (show) {
-            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dimNextToast) object:nil];
-            [self performSelector:@selector(dimNextToast) withObject:nil afterDelay:5];
+            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismissToastView) object:nil];
+            [self performSelector:@selector(dismissToastView) withObject:nil afterDelay:5];
         }
     }];
 }
 
-- (void)dimNextToast
+- (void)dismissToastView
 {
     [UIView animateWithDuration:0.5f animations:^{
-        self.autoNextToastView.alpha = 0;
+        self.toastView.alpha = 0;
     }];
 }
 

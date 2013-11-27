@@ -35,5 +35,7 @@
 - (void)showBrightness:(CGFloat)brightness;
 
 - (void)showAutoNextToast:(BOOL)show animated:(BOOL)animated;
+- (void)showDownloadToast:(NSString *)toast show:(BOOL)show animated:(BOOL)animated;
+- (void)updateToast:(NSString *)toast;
 - (void)showError:(BOOL)show;
 @end

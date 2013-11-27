@@ -94,6 +94,7 @@
     Task *t = self.task;
     if (t) {
         t.state = TaskStateDownloading;
+        [self.movieDownloaderDelegate movieDownloaderContinued:self];
         return YES;
     }
     else {

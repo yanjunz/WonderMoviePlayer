@@ -41,6 +41,8 @@
 #ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
     MPVolumeView *_airPlayButton; // assign
 #endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
+    
+    CGFloat _downloadProgress;
 }
 @property (nonatomic, retain) NSTimer *timer;
 @property (nonatomic, retain) WonderMovieProgressView *progressView;
@@ -1003,6 +1005,8 @@ void wonderMovieVolumeListenerCallback (
 //    self.downloadButton.enabled = NO;
     _isDownloading = YES;
     NSLog(@"startDownload");
+    NSString *fmt = NSLocalizedString(@"开始下载视频，%d%%已完成", nil);
+    [self.infoView showDownloadToast:[NSString stringWithFormat:fmt, (int)(_downloadProgress * 100)] show:YES animated:YES];
 }
 
 - (void)pauseDownload
@@ -1022,11 +1026,15 @@ void wonderMovieVolumeListenerCallback (
     _isDownloading = NO;
     [self.downloadButton setTitle:NSLocalizedString(@"已缓存", nil) forState:UIControlStateNormal];
     self.downloadButton.enabled = NO;
+    [self.infoView showDownloadToast:NSLocalizedString(@"视频下载完成，开始0流量本地播放", nil) show:YES animated:YES];
 }
 
 - (void)setDownloadProgress:(CGFloat)progress
 {
+    _downloadProgress = progress;
     if (_isDownloading) {
+        NSString *fmt = NSLocalizedString(@"开始下载视频，%d%%已完成", nil);
+        [self.infoView updateToast:[NSString stringWithFormat:fmt, (int)(_downloadProgress * 100)]];
         NSString *title = [NSString stringWithFormat:NSLocalizedString(@"缓存 %d%%", nil), (int)(progress * 100)];
         [self.downloadButton setTitle:title forState:UIControlStateNormal];
     }
