@@ -580,7 +580,7 @@ void wonderMovieVolumeListenerCallback (
 {
     _isLiveCast = isLiveCast;
     self.progressView.userInteractionEnabled = !isLiveCast;
-    self.downloadButton.enabled = ![self isDownloading] && !isLiveCast && _downloadEnabled;
+    self.downloadButton.enabled = !isLiveCast && _downloadEnabled;
 }
 
 #pragma mark PopupMenu
@@ -851,6 +851,16 @@ void wonderMovieVolumeListenerCallback (
     [self setNeedsLayout];
 }
 
+- (NSString *)title
+{
+    return self.titleLabel.text;
+}
+
+- (NSString *)subtitle
+{
+    return self.subtitleLabel.text;
+}
+
 - (void)prepareToPlay
 {
     _autoNextShown = NO;
@@ -991,12 +1001,19 @@ void wonderMovieVolumeListenerCallback (
 {
 //    self.downloadButton.enabled = NO;
     _isDownloading = YES;
+    NSLog(@"startDownload");
 }
 
 - (void)pauseDownload
 {
     _isDownloading = NO;
     [self.downloadButton setTitle:NSLocalizedString(@"缓存", nil) forState:UIControlStateNormal];
+}
+
+- (void)continueDownload
+{
+    _isDownloading = YES;
+    NSLog(@"continueDownload");
 }
 
 - (void)finishDownload
@@ -1008,8 +1025,10 @@ void wonderMovieVolumeListenerCallback (
 
 - (void)setDownloadProgress:(CGFloat)progress
 {
-    NSString *title = [NSString stringWithFormat:NSLocalizedString(@"缓存 %d%%", nil), (int)(progress * 100)];
-    [self.downloadButton setTitle:title forState:UIControlStateNormal];
+    if (_isDownloading) {
+        NSString *title = [NSString stringWithFormat:NSLocalizedString(@"缓存 %d%%", nil), (int)(progress * 100)];
+        [self.downloadButton setTitle:title forState:UIControlStateNormal];
+    }
 }
 
 - (BOOL)isDownloading

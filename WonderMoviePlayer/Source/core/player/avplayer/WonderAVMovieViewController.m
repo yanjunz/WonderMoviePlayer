@@ -446,7 +446,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     }
     
     [self.controlSource prepareToPlay];
-    [self.movieDownloader mdBindDownloadURL:self.movieURL delegate:self];
+    [self.movieDownloader mdBindDownloadURL:self.movieURL delegate:self dataSource:self];
 }
 
 #pragma mark -
@@ -1019,6 +1019,13 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     }
 }
 
+- (void)movieDownloaderContinued:(id<MovieDownloader>)downloader
+{
+    if ([self.controlSource respondsToSelector:@selector(continueDownload)]) {
+        [self.controlSource continueDownload];
+    }
+}
+
 - (void)movieDownloader:(id<MovieDownloader>)downloader setProgress:(CGFloat)progress
 {
     if ([self.controlSource respondsToSelector:@selector(setDownloadProgress:)]) {
@@ -1032,6 +1039,15 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     if ([self.controlSource respondsToSelector:@selector(finishDownload)]) {
         [self.controlSource finishDownload];
     }
+}
+
+#pragma mark MovieDownloaderDataSource
+- (NSString *)titleForMoiveDownloader:(id<MovieDownloader>)downloader
+{
+    if ([self.controlSource respondsToSelector:@selector(title)]) {
+        return [self.controlSource title];
+    }
+    return nil;
 }
 
 #pragma mark Notification

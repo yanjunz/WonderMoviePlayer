@@ -10,6 +10,7 @@
 
 @implementation FakeMovieDownloader
 @synthesize movieDownloaderDelegate = _movieDownloaderDelegate;
+@synthesize movieDownloaderDataSource = _movieDownloaderDataSource;
 @synthesize downloadURL = _downloadURL;
 @synthesize isBinded = _isBinded;
 
@@ -25,6 +26,7 @@
 - (void)dealloc
 {
     self.movieDownloaderDelegate = nil;
+    self.movieDownloaderDataSource = nil;
     self.downloadURL = nil;
 
     
@@ -52,10 +54,11 @@
     
 }
 
-- (void)mdBindDownloadURL:(NSURL *)downloadURL delegate:(id<MovieDownloaderDelegate>)delegate
+- (void)mdBindDownloadURL:(NSURL *)downloadURL delegate:(id<MovieDownloaderDelegate>)delegate dataSource:(id<MovieDownloaderDataSource>)dataSource
 {
     self.downloadURL = downloadURL;
     self.movieDownloaderDelegate = delegate;
+    self.movieDownloaderDataSource = dataSource;
     _isBinded = YES;
 }
 
@@ -66,26 +69,35 @@
     self.movieDownloaderDelegate = nil;
 }
 
-- (void)mdStart
+- (BOOL)mdStart
 {
     self.task = [Task taskWithURL:self.downloadURL];
     [self.movieDownloaderDelegate movieDownloaderStarted:self];
+    return YES;
 }
 
-- (void)mdPause
+- (BOOL)mdPause
 {
     Task *t = self.task;
     if (t) {
         t.state = TaskStatePaused;
         [self.movieDownloaderDelegate movieDownloaderPaused:self];
+        return YES;
+    }
+    else {
+        return NO;
     }
 }
 
-- (void)mdContinue
+- (BOOL)mdContinue
 {
     Task *t = self.task;
     if (t) {
         t.state = TaskStateDownloading;
+        return YES;
+    }
+    else {
+        return NO;
     }
 }
 

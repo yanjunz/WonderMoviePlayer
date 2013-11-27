@@ -14,8 +14,14 @@
 @optional
 - (void)movieDownloaderStarted:(id<MovieDownloader>)downloader;
 - (void)movieDownloaderPaused:(id<MovieDownloader>)downloader;
+- (void)movieDownloaderContinued:(id<MovieDownloader>)downloader;
 - (void)movieDownloader:(id<MovieDownloader>)downloader setProgress:(CGFloat)progress;
 - (void)movieDownloaderFinished:(id<MovieDownloader>)downloader;
+@end
+
+@protocol MovieDownloaderDataSource <NSObject>
+@optional
+- (NSString *)titleForMoiveDownloader:(id<MovieDownloader>)downloader;
 @end
 
 typedef enum {
@@ -29,15 +35,16 @@ typedef enum {
 @protocol MovieDownloader <NSObject>
 @required
 @property (nonatomic, assign) id<MovieDownloaderDelegate> movieDownloaderDelegate;
+@property (nonatomic, assign) id<MovieDownloaderDataSource> movieDownloaderDataSource;
 @property (nonatomic, retain) NSURL *downloadURL;
 @property (nonatomic, readonly) BOOL isBinded;
 
-- (void)mdBindDownloadURL:(NSURL *)downloadURL delegate:(id<MovieDownloaderDelegate>)delegate;
+- (void)mdBindDownloadURL:(NSURL *)downloadURL delegate:(id<MovieDownloaderDelegate>)delegate dataSource:(id<MovieDownloaderDataSource>)dataSource;
 - (void)mdUnBind;
 
-- (void)mdStart;
-- (void)mdPause;
-- (void)mdContinue;
+- (BOOL)mdStart;
+- (BOOL)mdPause;
+- (BOOL)mdContinue;
 
 - (MovieDownloadState)mdQueryDownloadState:(NSURL *)downloadURL;
 @end

@@ -67,6 +67,7 @@ typedef enum {
 - (void)startToDownload;
 - (void)finishDownload;
 - (void)pauseDownload;
+- (void)continueDownload;
 - (void)setDownloadProgress:(CGFloat)progress;
 
 - (void)lockScreen;
@@ -93,6 +94,8 @@ typedef enum {
 @property (nonatomic, assign) BOOL isLiveCast;
 @property (nonatomic, copy) NSArray *resolutions;
 @property (nonatomic) int selectedResolutionIndex;
+@property (nonatomic, readonly) NSString *title;
+@property (nonatomic, readonly) NSString *subtitle;
 
 @property (nonatomic, retain) TVDramaManager *tvDramaManager;
 
