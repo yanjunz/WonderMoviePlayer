@@ -9,7 +9,9 @@
 #import "FakeMovieDownloader.h"
 
 @implementation FakeMovieDownloader
-@synthesize movieDownloaderDelegate;
+@synthesize movieDownloaderDelegate = _movieDownloaderDelegate;
+@synthesize downloadURL = _downloadURL;
+@synthesize isBinded = _isBinded;
 
 - (id)init
 {
@@ -23,6 +25,10 @@
 - (void)dealloc
 {
     self.movieDownloaderDelegate = nil;
+    self.downloadURL = nil;
+
+    
+    // FIXME: should not be released here
     [self.timer invalidate];
     self.timer = nil;
     [super dealloc];
@@ -32,7 +38,7 @@
 {
     Task *t = self.task;
         if (t.state == TaskStateDownloading) {
-            CGFloat progress = t.progress + 0.15;
+            CGFloat progress = t.progress + 0.03;
             if (progress >= 1) {
                 t.state = TaskStateFinished;
                 t.progress = 1;
@@ -46,9 +52,23 @@
     
 }
 
-- (void)mdStartDownload:(NSURL *)downloadURL
+- (void)mdBindDownloadURL:(NSURL *)downloadURL delegate:(id<MovieDownloaderDelegate>)delegate
 {
-    self.task = [Task taskWithURL:downloadURL];
+    self.downloadURL = downloadURL;
+    self.movieDownloaderDelegate = delegate;
+    _isBinded = YES;
+}
+
+- (void)mdUnBind
+{
+    _isBinded = NO;
+    self.downloadURL = nil;
+    self.movieDownloaderDelegate = nil;
+}
+
+- (void)mdStart
+{
+    self.task = [Task taskWithURL:self.downloadURL];
     [self.movieDownloaderDelegate movieDownloaderStarted:self];
 }
 
@@ -69,27 +89,12 @@
     }
 }
 
-- (BOOL)mdHasTask:(NSURL *)downloadURL
+- (MovieDownloadState)mdQueryDownloadState:(NSURL *)downloadURL
 {
-    return [self.task.downloadURL isEqual:downloadURL];
-}
-
-- (BOOL)mdIsDownaloading:(NSURL *)downloadURL
-{
-    Task *t = self.task;
-    return t && t.state == TaskStateDownloading;
-}
-
-- (BOOL)mdIsFinished:(NSURL *)downloadURL
-{
-    Task *t = self.task;
-    return t && t.state == TaskStateFinished;
-}
-
-- (BOOL)mdIsPaused:(NSURL *)downloadURL
-{
-    Task *t = self.task;
-    return t && t.state == TaskStatePaused;
+    if ([downloadURL isEqual:self.downloadURL]) {
+        return (MovieDownloadState)self.task.state;
+    }
+    return MovieDownloadStateNotDownload;
 }
 
 @end

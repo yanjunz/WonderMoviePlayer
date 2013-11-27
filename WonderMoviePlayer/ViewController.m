@@ -189,7 +189,6 @@
     [UIApplication sharedApplication].statusBarHidden = YES;
     
     controller.movieDownloader = [[[FakeMovieDownloader alloc] init] autorelease];
-    [controller.movieDownloader setMovieDownloaderDelegate:controller];
     
     if ([self respondsToSelector:@selector(presentViewController:animated:completion:)]) {
         [self presentViewController:controller animated:YES completion:nil];

@@ -18,6 +18,7 @@
 @end
 
 typedef enum {
+    TaskStateNoDownload,
     TaskStatePaused,
     TaskStateDownloading,
     TaskStateFinished,

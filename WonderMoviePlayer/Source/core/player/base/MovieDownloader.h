@@ -18,16 +18,26 @@
 - (void)movieDownloaderFinished:(id<MovieDownloader>)downloader;
 @end
 
+typedef enum {
+    MovieDownloadStateNotDownload,
+    MovieDownloadStatePaused,
+    MovieDownloadStateDownloading,
+    MovieDownloadStateFinished,
+    MovieDownloadStateFailed,
+} MovieDownloadState;
+
 @protocol MovieDownloader <NSObject>
 @required
 @property (nonatomic, assign) id<MovieDownloaderDelegate> movieDownloaderDelegate;
+@property (nonatomic, retain) NSURL *downloadURL;
+@property (nonatomic, readonly) BOOL isBinded;
 
-- (void)mdStartDownload:(NSURL *)downloadURL;
+- (void)mdBindDownloadURL:(NSURL *)downloadURL delegate:(id<MovieDownloaderDelegate>)delegate;
+- (void)mdUnBind;
+
+- (void)mdStart;
 - (void)mdPause;
 - (void)mdContinue;
 
-- (BOOL)mdHasTask:(NSURL *)downloadURL;
-- (BOOL)mdIsDownaloading:(NSURL *)downloadURL;
-- (BOOL)mdIsFinished:(NSURL *)downloadURL;
-- (BOOL)mdIsPaused:(NSURL *)downloadURL;
+- (MovieDownloadState)mdQueryDownloadState:(NSURL *)downloadURL;
 @end

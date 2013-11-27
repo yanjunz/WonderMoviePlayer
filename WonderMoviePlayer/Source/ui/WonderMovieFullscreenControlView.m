@@ -989,8 +989,14 @@ void wonderMovieVolumeListenerCallback (
 
 - (void)startToDownload
 {
-    self.downloadButton.enabled = NO;
+//    self.downloadButton.enabled = NO;
     _isDownloading = YES;
+}
+
+- (void)pauseDownload
+{
+    _isDownloading = NO;
+    [self.downloadButton setTitle:NSLocalizedString(@"缓存", nil) forState:UIControlStateNormal];
 }
 
 - (void)finishDownload

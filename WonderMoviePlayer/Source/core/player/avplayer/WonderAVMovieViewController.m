@@ -94,6 +94,9 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 - (void)dealloc
 {
 //    NSLog(@"[WonderAVMovieViewController] dealloc 0x%0x <--", self.hash);
+    [self.movieDownloader mdUnBind];
+    self.movieDownloader = nil;
+    
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
     [audioSession setActive:NO error:nil];
@@ -443,6 +446,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     }
     
     [self.controlSource prepareToPlay];
+    [self.movieDownloader mdBindDownloadURL:self.movieURL delegate:self];
 }
 
 #pragma mark -
@@ -938,24 +942,19 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 
 - (void)movieControlSourceOnDownload:(id<MovieControlSource>)source
 {
-    if ([self.movieDownloader mdHasTask:self.movieURL]) {
-        if ([self.movieDownloader mdIsPaused:self.movieURL]) {
-            [self.movieDownloader mdContinue];
-        }
-        else if ([self.movieDownloader mdIsDownaloading:self.movieURL]) {
-            [self.movieDownloader mdPause];
-        }
+    MovieDownloadState state = [self.movieDownloader mdQueryDownloadState:self.movieURL];
+    if (state == MovieDownloadStateNotDownload || state == MovieDownloadStateFailed) {
+        [self.movieDownloader mdStart];
     }
-    else {
-        [self.movieDownloader mdStartDownload:self.movieURL];
+    else if (state == MovieDownloadStateDownloading) {
+        [self.movieDownloader mdPause];
     }
-    
-//    if (self.downloadBlock) {
-//        self.downloadBlock(self.movieURL);
-//    }
-//    if ([source respondsToSelector:@selector(startToDownload)]) {
-//        [source startToDownload];
-//    }
+    else if (state == MovieDownloadStatePaused) {
+        [self.movieDownloader mdContinue];
+    }
+    else if (state == MovieDownloadStateFinished) {
+        // Nothing
+    }
 }
 
 - (void)movieControlSourceSwitchVideoGravity:(id<MovieControlSource>)source
@@ -1029,6 +1028,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 
 - (void)movieDownloaderFinished:(id<MovieDownloader>)downloader
 {
+    [downloader mdUnBind];
     if ([self.controlSource respondsToSelector:@selector(finishDownload)]) {
         [self.controlSource finishDownload];
     }
