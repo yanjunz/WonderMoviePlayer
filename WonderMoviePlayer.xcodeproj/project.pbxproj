@@ -146,6 +146,7 @@
 		B5DE4961183CB04F00F9AB5E /* drama_left_shadow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5DE4960183CB04F00F9AB5E /* drama_left_shadow@2x.png */; };
 		B5F45FC617E986D600F0873B /* Reveal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5F45FC517E986D600F0873B /* Reveal.framework */; };
 		B5F96D5118437748006A73FB /* FakeMovieDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = B5F96D5018437748006A73FB /* FakeMovieDownloader.m */; };
+		B5F96D631845E296006A73FB /* brightness_prompt_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F96D621845E296006A73FB /* brightness_prompt_bg@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -358,6 +359,7 @@
 		B5F96D4B1843603A006A73FB /* MovieDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovieDownloader.h; sourceTree = "<group>"; };
 		B5F96D4F18437748006A73FB /* FakeMovieDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FakeMovieDownloader.h; sourceTree = "<group>"; };
 		B5F96D5018437748006A73FB /* FakeMovieDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeMovieDownloader.m; sourceTree = "<group>"; };
+		B5F96D621845E296006A73FB /* brightness_prompt_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "brightness_prompt_bg@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -475,6 +477,7 @@
 		B51778DF17BA3880006B948E /* images */ = {
 			isa = PBXGroup;
 			children = (
+				B5F96D621845E296006A73FB /* brightness_prompt_bg@2x.png */,
 				B5D4C3B318238A0900BB0A53 /* statusbar_bg@2x.png */,
 				B5D4C3921823444300BB0A53 /* progress_prompt_bg@2x.png */,
 				B5D4C3931823444300BB0A53 /* volume_prompt_bg@2x.png */,
@@ -872,6 +875,7 @@
 				B5D4C3A91823444300BB0A53 /* tv_drama_button_selected@2x.png in Resources */,
 				B5D4C3A81823444300BB0A53 /* tv_drama_button_press@2x.png in Resources */,
 				B517774217B36D44006B948E /* InfoPlist.strings in Resources */,
+				B5F96D631845E296006A73FB /* brightness_prompt_bg@2x.png in Resources */,
 				B517774A17B36D44006B948E /* Default.png in Resources */,
 				B5D4C33C181F966C00BB0A53 /* progressbar_cache@2x.png in Resources */,
 				B5D4C339181F966C00BB0A53 /* play_press@2x.png in Resources */,

@@ -117,6 +117,7 @@
 - (void)tryToShowVerticalPanningTip;
 - (void)dismissProgressTipIfShown;
 - (void)dismissVolumeTipIfShown;
+- (void)dismissBrightnessTipIfShown;
 @end
 
 
@@ -1402,6 +1403,8 @@ void wonderMovieVolumeListenerCallback (
             CGFloat inc = -offset.y / gr.view.height;
 //            NSLog(@"pan Brightness %f, (%f, %f), %f", offset.y, loc.x, loc.y, inc);
             [self increaseBrightness:inc];
+            
+            [self dismissBrightnessTipIfShown];
         }
         else if (loc.x > gr.view.width * 0.6 &&
                  (sPanAction == WonderMoviePanAction_No || sPanAction == WonderMoviePanAction_Volume))
@@ -1615,36 +1618,69 @@ void wonderMovieVolumeListenerCallback (
 - (UIView *)verticalPanningTipView
 {
     if (_verticalPanningTipView == nil) {
-        UIView *tipView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 38, 181)];
-        tipView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
-        tipView.backgroundColor = [UIColor clearColor];
+        CGFloat padding = 10;
+        UIView *mainTipView = [[UIView alloc] initWithFrame:self.infoView.bounds];
         
-        UIImageView *bgImageView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"volume_prompt_bg")];
-        [tipView addSubview:bgImageView];
-        [bgImageView release];
+        UIView *tipView1 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 38, 181)];
+        tipView1.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
+        tipView1.backgroundColor = [UIColor clearColor];
         
-        UIImageView *circleView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"volume_prompt_circle")];
-        [tipView addSubview:circleView];
-        [circleView release];
+        UIImageView *bgImageView1 = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"brightness_prompt_bg")];
+        [tipView1 addSubview:bgImageView1];
+        [bgImageView1 release];
         
-        UIImageView *fingerView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"volume_prompt_gesture")];
-        [tipView addSubview:fingerView];
-        [fingerView release];
+        UIImageView *circleView1 = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"volume_prompt_circle")];
+        [tipView1 addSubview:circleView1];
+        [circleView1 release];
+        
+        UIImageView *fingerView1 = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"volume_prompt_gesture")];
+        [tipView1 addSubview:fingerView1];
+        [fingerView1 release];
+        
+        [mainTipView addSubview:tipView1];
+        tipView1.center = CGPointMake(padding + tipView1.width / 2, self.infoView.height / 2);
+        [tipView1 release];
+        
+        UIView *tipView2 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 38, 181)];
+        tipView2.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
+        tipView2.backgroundColor = [UIColor clearColor];
+        
+        UIImageView *bgImageView2 = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"volume_prompt_bg")];
+        [tipView2 addSubview:bgImageView2];
+        [bgImageView2 release];
+        
+        UIImageView *circleView2 = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"volume_prompt_circle")];
+        [tipView2 addSubview:circleView2];
+        [circleView2 release];
+        
+        UIImageView *fingerView2 = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"volume_prompt_gesture")];
+        [tipView2 addSubview:fingerView2];
+        [fingerView2 release];
+        
+        [mainTipView addSubview:tipView2];
+        tipView2.center = CGPointMake(self.infoView.width - padding - tipView2.width / 2, self.infoView.height / 2);
+        [tipView2 release];
         
         // add animation
         CGFloat delta = 16;
-        circleView.origin = CGPointMake(0, 27 - delta);
-        fingerView.origin = CGPointMake(0, circleView.top - 2.5);
+        circleView1.origin = CGPointMake(0, 27 - delta);
+        fingerView1.origin = CGPointMake(0, circleView1.top - 2.5);
+        circleView2.origin = CGPointMake(0, 27 - delta);
+        fingerView2.origin = CGPointMake(0, circleView2.top - 2.5);
+
         
         [UIView animateWithDuration:1.6f delay:0 options:UIViewAnimationOptionRepeat animations:^{
-            circleView.top += delta * 2;
-            fingerView.top += delta * 2;
+            circleView1.top += delta * 2;
+            fingerView1.top += delta * 2;
+            circleView2.top += delta * 2;
+            fingerView2.top += delta * 2;
         } completion:nil];
         [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse animations:^{
-            circleView.alpha = 0.1;
+            circleView1.alpha = 0.1;
+            circleView2.alpha = 0.1;
         } completion:nil];
         
-        _verticalPanningTipView = tipView;
+        _verticalPanningTipView = mainTipView;
     }
     return _verticalPanningTipView;
 }
@@ -1904,7 +1940,7 @@ static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanni
     }
     else if (show && _verticalPanningTipView.superview != self.infoView) {
         // Show tip view
-        self.verticalPanningTipView.center = CGPointMake(self.infoView.width - 20 - self.verticalPanningTipView.width / 2, self.infoView.height / 2);
+//        self.verticalPanningTipView.center = CGPointMake(self.infoView.width - 20 - self.verticalPanningTipView.width / 2, self.infoView.height / 2);
         [self.infoView addSubview:self.verticalPanningTipView];
         
         // automatically dismiss volume tip after 5s if no any action
@@ -1928,6 +1964,11 @@ static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanni
 }
 
 - (void)dismissVolumeTipIfShown
+{
+    [self showVerticalPanningTip:NO];
+}
+
+- (void)dismissBrightnessTipIfShown
 {
     [self showVerticalPanningTip:NO];
 }
