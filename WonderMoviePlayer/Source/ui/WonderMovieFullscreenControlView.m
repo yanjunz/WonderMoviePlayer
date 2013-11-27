@@ -642,6 +642,7 @@ void wonderMovieVolumeListenerCallback (
         label.backgroundColor = [UIColor clearColor];
         label.textColor = [UIColor whiteColor];
         [popupMenu addSubview:label];
+        [label release];
         
         if (self.crossScreenEnabled) {
             UIImageView *menuSeparatorView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"separator_line")];
@@ -666,6 +667,7 @@ void wonderMovieVolumeListenerCallback (
             label.backgroundColor = [UIColor clearColor];
             label.textColor = [UIColor whiteColor];
             [popupMenu addSubview:label];
+            [label release];
         }
     }
     return _popupMenu;
