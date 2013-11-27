@@ -628,13 +628,20 @@ void wonderMovieVolumeListenerCallback (
         lockButton.frame = CGRectMake(0, topOffset, menuWidth, menuButtonHeight);
         lockButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         lockButton.titleLabel.font = buttonFont;
-        [lockButton setTitle:NSLocalizedString(@"锁屏", nil) forState:UIControlStateNormal];
+//        [lockButton setTitle:NSLocalizedString(@"锁屏", nil) forState:UIControlStateNormal];
         [lockButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
         [lockButton addTarget:self action:@selector(onClickLock:) forControlEvents:UIControlEventTouchUpInside];
         [popupMenu addSubview:lockButton];
         
-//        CGFloat delta = 10;
-//        UILabel *lable = [UILabel alloc] initWithFrame:CGRectMake(0, topOffset, , <#CGFloat height#>)
+        CGFloat delta = 20;
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, topOffset, menuWidth - delta, menuButtonHeight)];
+        label.text = NSLocalizedString(@"锁屏", nil);
+        label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        label.textAlignment = UITextAlignmentRight;
+        label.font = buttonFont;
+        label.backgroundColor = [UIColor clearColor];
+        label.textColor = [UIColor whiteColor];
+        [popupMenu addSubview:label];
         
         if (self.crossScreenEnabled) {
             UIImageView *menuSeparatorView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"separator_line")];
@@ -646,10 +653,19 @@ void wonderMovieVolumeListenerCallback (
             crossButton.frame = CGRectOffset(lockButton.frame, 0, menuButtonHeight + menuSeparatorHeight);
             crossButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
             crossButton.titleLabel.font = buttonFont;
-            [crossButton setTitle:NSLocalizedString(@"跨屏穿越", nil) forState:UIControlStateNormal];
+//            [crossButton setTitle:NSLocalizedString(@"跨屏穿越", nil) forState:UIControlStateNormal];
             [crossButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
             [crossButton addTarget:self action:@selector(onClickCrossScreen:) forControlEvents:UIControlEventTouchUpInside];
             [popupMenu addSubview:crossButton];
+            
+            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, crossButton.top, menuWidth - delta, menuButtonHeight)];
+            label.text = NSLocalizedString(@"跨屏穿越", nil);
+            label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+            label.textAlignment = UITextAlignmentRight;
+            label.font = buttonFont;
+            label.backgroundColor = [UIColor clearColor];
+            label.textColor = [UIColor whiteColor];
+            [popupMenu addSubview:label];
         }
     }
     return _popupMenu;

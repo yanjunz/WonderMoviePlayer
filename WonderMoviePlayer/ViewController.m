@@ -110,6 +110,15 @@
         DefineBlockVar(WonderAVMovieViewController *, controller, [[WonderAVMovieViewController alloc] init]);
         self.player = controller;
         [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeRight animated:YES];
+        [controller setCrossScreenBlock:^{
+            [controller.controlSource setTitle:@"我叫MT" subtitle:@"(来源: 爱奇艺)"];
+            if ([controller.controlSource resolutions].count > 0) {
+                [controller.controlSource setResolutions:nil];
+            }
+            else {
+                [controller.controlSource setResolutions:@[@"高清", @"流畅", @"标清"]];
+            }
+        }];
         
         if ([self respondsToSelector:@selector(presentViewController:animated:completion:)]) {
             [self presentViewController:controller animated:YES completion:nil];
@@ -136,15 +145,7 @@
                 [controller dismissModalViewControllerAnimated:YES];
             }
         }];
-        [controller setCrossScreenBlock:^{
-            [controller.controlSource setTitle:@"我叫MT" subtitle:@"(来源: 爱奇艺)"];
-            if ([controller.controlSource resolutions].count > 0) {
-                [controller.controlSource setResolutions:nil];
-            }
-            else {
-                [controller.controlSource setResolutions:@[@"高清", @"流畅", @"标清"]];
-            }
-        }];
+        
         NSLog(@"start to play av");
         [controller playMovieStream:[[NSBundle mainBundle] URLForResource:@"Movie" withExtension:@"m4v"]];
         [controller release];
@@ -189,6 +190,9 @@
     [UIApplication sharedApplication].statusBarHidden = YES;
     
     controller.movieDownloader = [[[FakeMovieDownloader alloc] init] autorelease];
+    [controller setCrossScreenBlock:^{
+        NSLog(@"cross screen");
+    }];
     
     if ([self respondsToSelector:@selector(presentViewController:animated:completion:)]) {
         [self presentViewController:controller animated:YES completion:nil];
@@ -197,9 +201,7 @@
         [self presentModalViewController:controller animated:YES];
     }
     
-    [controller setCrossScreenBlock:^{
-        NSLog(@"cross screen");
-    }];
+    
 //    [controller setDownloadBlock:^(NSURL *url) {
 ////        [controller performSelector:@selector(finishDownload) withObject:nil afterDelay:3];
 //    }];
