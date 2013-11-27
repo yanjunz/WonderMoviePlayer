@@ -598,7 +598,7 @@ void wonderMovieVolumeListenerCallback (
         CGFloat buttonFontSize = 13;
         UIFont *buttonFont = [UIFont systemFontOfSize:buttonFontSize];
         UIImage *highlightedImage = [self imageWithColor:[[UIColor whiteColor] colorWithAlphaComponent:0.15]];
-        CGFloat menuHeight = menuButtonHeight * 2 + menuSeparatorHeight;
+        CGFloat menuHeight = self.crossScreenEnabled ? menuButtonHeight * 2 + menuSeparatorHeight : menuButtonHeight;
         UIView *popupMenu = [[UIView alloc] initWithFrame:CGRectMake(self.width - menuWidth, -menuHeight, menuWidth, menuHeight)];
         
         popupMenu.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
@@ -1175,6 +1175,11 @@ void wonderMovieVolumeListenerCallback (
     }];
 }
 
+- (BOOL)isPopupMenuShown
+{
+    return self.popupMenu.bottom > 0;
+}
+
 - (IBAction)onClickNext:(id)sender
 {
     VideoGroup *videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
@@ -1354,7 +1359,12 @@ void wonderMovieVolumeListenerCallback (
 - (IBAction)onSingleTapOverlayView:(UITapGestureRecognizer *)gr
 {
     BOOL animationToHide = self.contentView.alpha > 0;
-    [self showOverlay:!animationToHide];
+    if ([self isPopupMenuShown]) {
+        [self showPopupMenu:NO];
+    }
+    else {
+        [self showOverlay:!animationToHide];
+    }
     [self cancelPreviousAndPrepareToDimControl];
 }
 
