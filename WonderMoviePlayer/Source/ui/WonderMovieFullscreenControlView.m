@@ -1033,6 +1033,11 @@ void wonderMovieVolumeListenerCallback (
     self.infoView.loadingMessageLabel.text = NSLocalizedString(@" 正在缓冲...", @"");
 }
 
+- (void)showToast:(NSString *)toast
+{
+    [self.infoView showCommonToast:toast show:YES animated:YES];
+}
+
 - (void)startToDownload
 {
 //    self.downloadButton.enabled = NO;
@@ -1067,7 +1072,7 @@ void wonderMovieVolumeListenerCallback (
     _downloadProgress = progress;
     if (_isDownloading) {
         NSString *fmt = NSLocalizedString(@"开始下载视频，%d%%已完成", nil);
-        [self.infoView updateToast:[NSString stringWithFormat:fmt, (int)(_downloadProgress * 100)]];
+        [self.infoView updateDownloadToast:[NSString stringWithFormat:fmt, (int)(_downloadProgress * 100)]];
         NSString *title = [NSString stringWithFormat:NSLocalizedString(@"缓存 %d%%", nil), (int)(progress * 100)];
         [self.downloadButton setTitle:title forState:UIControlStateNormal];
     }
@@ -1339,13 +1344,13 @@ void wonderMovieVolumeListenerCallback (
         if (videoGroup.showType.intValue == VideoGroupShowTypeGrid) {
             [self setBufferTitle:[NSString stringWithFormat:@"%@ 第%d集", videoGroup.videoName, setNum]];
             [self setTitle:[NSString stringWithFormat:@"%@ 第%d集", videoGroup.videoName, setNum]
-                  subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"（来自：%@）", videoGroup.src] : @"")];
+                  subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"（来源：%@）", videoGroup.src] : @"")];
         }
         else {
             Video *video = [videoGroup videoAtSetNum:@(setNum)];
             [self setBufferTitle:video.brief];
             [self setTitle:video.brief
-                  subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"（来自：%@）", videoGroup.src] : @"")];
+                  subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"（来源：%@）", videoGroup.src] : @"")];
         }
     }
 }

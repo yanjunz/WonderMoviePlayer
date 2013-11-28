@@ -14,6 +14,7 @@
 #import "UIView+Sizes.h"
 #import "VideoGroup+VideoDetailSet.h"
 #import "Video.h"
+#import "Reachability.h"
 
 #define OBSERVER_CONTEXT_NAME(prefix, property) prefix##property##_ObserverContext
 
@@ -39,7 +40,7 @@ NSString *kPlaybackBufferEmptyKey     = @"playbackBufferEmpty";
 NSString *kPlaybackLikelyToKeeyUpKey  = @"playbackLikelyToKeepUp";
 NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 
-@interface WonderAVMovieViewController () {
+@interface WonderAVMovieViewController ()<UIAlertViewDelegate> {
     BOOL _wasPlaying;
     BOOL _isScrubbing;
     BOOL _observersHasBeenRemoved; // if the observers has been removed, need to remove observers correctly to avoid memeory leak
@@ -197,6 +198,8 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     // Setup notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onEnterBackground:) name:UIApplicationWillResignActiveNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onReachabilityChanged:) name:kReachabilityChangedNotification object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -944,7 +947,8 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 {
     MovieDownloadState state = [self.movieDownloader mdQueryDownloadState:self.movieURL];
     if (state == MovieDownloadStateNotDownload || state == MovieDownloadStateFailed) {
-        [self.movieDownloader mdStart];
+//        [self.movieDownloader mdStart];
+        [self checkNetworkForDownload];
     }
     else if (state == MovieDownloadStateDownloading) {
         [self.movieDownloader mdPause];
@@ -1066,6 +1070,63 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 {
     if (_wasPlaying) {
         [self.player play];
+    }
+}
+
+#pragma mark Reachability Handler
+#define kAlertTagForPlayInWWAN      1
+#define kAlertTagForDownloadInWWAN  2
+
+- (void)onReachabilityChanged:(NSNotification *)n
+{
+    Reachability *reach = [n object];
+    if (![reach isReachableViaWiFi]) {
+        if ([reach isReachableViaWWAN]) {
+            [self.controlSource showToast:NSLocalizedString(@"切换到2G/3G网络", nil)];
+            [self.player pause];
+            
+            UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"正在使用2G/3G网络，继续播放会消耗流量。确认继续？", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"取消", nil) otherButtonTitles:@"继续播放", nil] autorelease];
+            alert.tag = kAlertTagForPlayInWWAN;
+            [alert show];
+        }
+        else {
+            // ...
+            
+        }
+    }
+    else {
+        [self.controlSource showToast:NSLocalizedString(@"切换到wifi网络", nil)];
+    }
+}
+
+#pragma mark 
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == kAlertTagForPlayInWWAN) {
+        if (buttonIndex != alertView.cancelButtonIndex) {
+            // play
+            [self.player play];
+        }
+    }
+    else if (alertView.tag == kAlertTagForDownloadInWWAN) {
+        if (buttonIndex != alertView.cancelButtonIndex) {
+            [self.movieDownloader mdStart];
+        }
+    }
+}
+
+- (void)checkNetworkForDownload
+{
+    Reachability *reach = [Reachability reachabilityForInternetConnection];
+    if (![reach isReachableViaWiFi]) {
+        if ([reach isReachableViaWWAN]) {
+            UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"正在使用2G/3G网络，缓存视频会消耗流量。确认继续？", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"取消", nil) otherButtonTitles:@"继续缓存", nil] autorelease];
+            alert.tag = kAlertTagForDownloadInWWAN;
+            [alert show];
+        }
+        else {
+            // ...
+        }
     }
 }
 

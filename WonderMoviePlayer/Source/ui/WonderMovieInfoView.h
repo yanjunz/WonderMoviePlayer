@@ -36,6 +36,7 @@
 
 - (void)showAutoNextToast:(BOOL)show animated:(BOOL)animated;
 - (void)showDownloadToast:(NSString *)toast show:(BOOL)show animated:(BOOL)animated;
-- (void)updateToast:(NSString *)toast;
+- (void)showCommonToast:(NSString *)toast show:(BOOL)show animated:(BOOL)animated;
+- (void)updateDownloadToast:(NSString *)toast;
 - (void)showError:(BOOL)show;
 @end

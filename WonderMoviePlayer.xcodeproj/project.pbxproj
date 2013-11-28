@@ -148,6 +148,7 @@
 		B5F96D5118437748006A73FB /* FakeMovieDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = B5F96D5018437748006A73FB /* FakeMovieDownloader.m */; };
 		B5F96D631845E296006A73FB /* brightness_prompt_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F96D621845E296006A73FB /* brightness_prompt_bg@2x.png */; };
 		B5F96D681846267C006A73FB /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = B5F96D671846267C006A73FB /* Reachability.m */; };
+		B5F96D6A18472E27006A73FB /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5F96D6918472E27006A73FB /* SystemConfiguration.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -363,6 +364,7 @@
 		B5F96D621845E296006A73FB /* brightness_prompt_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "brightness_prompt_bg@2x.png"; sourceTree = "<group>"; };
 		B5F96D661846267C006A73FB /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		B5F96D671846267C006A73FB /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		B5F96D6918472E27006A73FB /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -370,6 +372,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5F96D6A18472E27006A73FB /* SystemConfiguration.framework in Frameworks */,
 				B58B56E518338EAC0096801E /* CoreData.framework in Frameworks */,
 				B56EE430182A1F0000241DDA /* AudioToolbox.framework in Frameworks */,
 				B56EE42E182A1E9F00241DDA /* CoreAudio.framework in Frameworks */,
@@ -411,6 +414,7 @@
 		B517773617B36D44006B948E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B5F96D6918472E27006A73FB /* SystemConfiguration.framework */,
 				B58B56E418338EAC0096801E /* CoreData.framework */,
 				B56EE42F182A1F0000241DDA /* AudioToolbox.framework */,
 				B56EE42D182A1E9F00241DDA /* CoreAudio.framework */,

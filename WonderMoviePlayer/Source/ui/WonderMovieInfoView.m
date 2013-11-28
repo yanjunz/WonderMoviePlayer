@@ -324,18 +324,28 @@
     [self.toastView removeFromSuperview];
     [self addSubview:self.toastView];
     self.toastView.text = toast;
-    [self fitToastFrame];
+    [self fitDownloadToastFrame];
     
     [self showToast:show animated:animated];
 }
 
-- (void)updateToast:(NSString *)toast
+- (void)showCommonToast:(NSString *)toast show:(BOOL)show animated:(BOOL)animated
 {
+    [self.toastView removeFromSuperview];
+    [self addSubview:self.toastView];
     self.toastView.text = toast;
-    [self fitToastFrame];
+    [self fitCenterToastFrame];
+    
+    [self showToast:show animated:animated];
 }
 
-- (void)fitToastFrame
+- (void)updateDownloadToast:(NSString *)toast
+{
+    self.toastView.text = toast;
+    [self fitDownloadToastFrame];
+}
+
+- (void)fitDownloadToastFrame
 {
     self.toastView.size = CGSizeMake(180, 40);
     [self.toastView sizeToFit];
@@ -344,6 +354,18 @@
     rect.size.height = 40;
     rect.origin.y = 10;
     rect.origin.x = self.width - 10 - rect.size.width;
+    self.toastView.frame = rect;
+}
+
+- (void)fitCenterToastFrame
+{
+    self.toastView.size = CGSizeMake(180, 40);
+    [self.toastView sizeToFit];
+    CGRect rect = self.toastView.frame;
+    rect.size.width += 20;
+    rect.size.height = 40;
+    rect.origin.y = 10;
+    rect.origin.x = (self.width - rect.size.width) / 2;
     self.toastView.frame = rect;
 }
 

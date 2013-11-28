@@ -15,6 +15,7 @@
 #import "FakeTVDramaWebSource.h"
 #import "TestTableViewController.h"
 #import "FakeMovieDownloader.h"
+#import "Reachability.h"
 
 #ifdef MTT_FEATURE_WONDER_MPMOVIE_PLAYER
 #define WonderMovieViewController WonderMPMovieViewController
@@ -24,6 +25,7 @@
 
 @interface ViewController () {
     NSString *_testString;
+    Reachability *_reach;
 }
 @property (nonatomic, retain) WonderMovieViewController *player;
 @property (nonatomic, retain) NSString *testString;
@@ -75,6 +77,10 @@
     self.testView.layer.shadowOffset = CGSizeMake(-2, 0);
     self.testView.layer.shadowColor = [UIColor blueColor].CGColor;
     self.testView.layer.shadowOpacity = 0.5;
+    
+    Reachability *reach = [Reachability reachabilityForInternetConnection];
+    [reach startNotifier];
+    _reach = [reach retain];
 }
 
 - (void)volumeChanged:(id)n
