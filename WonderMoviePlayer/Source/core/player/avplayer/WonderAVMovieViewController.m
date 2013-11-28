@@ -1042,7 +1042,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 }
 
 #pragma mark MovieDownloaderDataSource
-- (NSString *)titleForMoiveDownloader:(id<MovieDownloader>)downloader
+- (NSString *)titleForMovieDownloader:(id<MovieDownloader>)downloader
 {
     if ([self.controlSource respondsToSelector:@selector(title)]) {
         return [self.controlSource title];

@@ -147,6 +147,7 @@
 		B5F45FC617E986D600F0873B /* Reveal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5F45FC517E986D600F0873B /* Reveal.framework */; };
 		B5F96D5118437748006A73FB /* FakeMovieDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = B5F96D5018437748006A73FB /* FakeMovieDownloader.m */; };
 		B5F96D631845E296006A73FB /* brightness_prompt_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F96D621845E296006A73FB /* brightness_prompt_bg@2x.png */; };
+		B5F96D681846267C006A73FB /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = B5F96D671846267C006A73FB /* Reachability.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -360,6 +361,8 @@
 		B5F96D4F18437748006A73FB /* FakeMovieDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FakeMovieDownloader.h; sourceTree = "<group>"; };
 		B5F96D5018437748006A73FB /* FakeMovieDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeMovieDownloader.m; sourceTree = "<group>"; };
 		B5F96D621845E296006A73FB /* brightness_prompt_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "brightness_prompt_bg@2x.png"; sourceTree = "<group>"; };
+		B5F96D661846267C006A73FB /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		B5F96D671846267C006A73FB /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -682,6 +685,7 @@
 		B5D4C3731822636E00BB0A53 /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				B5F96D651846267C006A73FB /* Reachability */,
 				B58B56F318347F240096801E /* MagicalRecord */,
 				B58B56E618346F8D0096801E /* RefreshTableHeaderView */,
 				B5D4C37F182263A700BB0A53 /* AirPlayDetector */,
@@ -810,6 +814,15 @@
 				B58B56EE18347A990096801E /* NSObject+Block.m */,
 			);
 			name = Additions;
+			sourceTree = "<group>";
+		};
+		B5F96D651846267C006A73FB /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				B5F96D661846267C006A73FB /* Reachability.h */,
+				B5F96D671846267C006A73FB /* Reachability.m */,
+			);
+			path = Reachability;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -973,6 +986,7 @@
 				B5AD78A817CDD30600C08E51 /* JSURLProtocol.m in Sources */,
 				B58B573418347F250096801E /* NSRelationshipDescription+MagicalDataImport.m in Sources */,
 				B58B56E118338E910096801E /* VideoGroup+VideoDetailSet.m in Sources */,
+				B5F96D681846267C006A73FB /* Reachability.m in Sources */,
 				B58B573C18347F250096801E /* NSManagedObjectContext+MagicalRecord.m in Sources */,
 				B58B573318347F240096801E /* NSObject+MagicalDataImport.m in Sources */,
 				B58B573918347F250096801E /* NSManagedObject+MagicalRecord.m in Sources */,

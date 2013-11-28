@@ -21,7 +21,7 @@
 
 @protocol MovieDownloaderDataSource <NSObject>
 @optional
-- (NSString *)titleForMoiveDownloader:(id<MovieDownloader>)downloader;
+- (NSString *)titleForMovieDownloader:(id<MovieDownloader>)downloader;
 @end
 
 typedef enum {
