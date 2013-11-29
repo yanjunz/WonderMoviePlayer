@@ -209,8 +209,17 @@
 
 - (void)showProgressTime:(BOOL)show animated:(BOOL)animated
 {
-    [UIView animateWithDuration:animated ? 1.f : 0 animations:^{
-        self.progressTimeLabel.alpha = show ? 1 : 0;
+    if (show) {
+        self.progressTimeLabel.alpha = 1;
+    }
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismissProgressTime) object:nil];
+    [self performSelector:@selector(dismissProgressTime) withObject:nil afterDelay:3];
+}
+
+- (void)dismissProgressTime
+{
+    [UIView animateWithDuration:1.f animations:^{
+        self.progressTimeLabel.alpha = 0;
     }];
 }
 
