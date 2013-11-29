@@ -33,6 +33,7 @@
 - (void)setupDatabase
 {
     [MagicalRecord saveWithBlockAndWait:^(NSManagedObjectContext *localContext) {
+        [VideoGroup MR_truncateAll];
         NSArray *videoGroups = [VideoGroup MR_findAll];
         if (videoGroups.count == 0) {
             VideoGroup *videoGroup = [VideoGroup MR_createEntity];
@@ -129,7 +130,7 @@
 - (VideoGroup *)extendDramaURLs:(TVDramaRequestType)requestType
 {
     int min = _minVideoSetNum, max = _maxVideoSetNum;
-    int delta = 50;
+    int delta = 15;
     VideoGroup *videoGroup = [VideoGroup MR_findFirst];
     if (requestType == TVDramaRequestTypeCurrent) {
         return videoGroup;
@@ -141,24 +142,34 @@
     else {
         max += delta;
     }
+    NSLog(@"extendDramaURLs %d, count=%d, %d", requestType, max - min + 1, videoGroup.videos.count);
     for (int i = min; i <= max; ++i) {
         if (i >= _minVideoSetNum && i <= _maxVideoSetNum) {
             continue;
         }
         else {
             Video *video = [Video MR_createEntity];
-            video.setNum = @(_minVideoSetNum + i - 1);
+            video.setNum = @(i);
             video.url = [NSString stringWithFormat:@"http://www.iqiyi.com/dongman/20130505/%d.html", i];
             video.brief = @"悠长的历史之中,人类曾一度因被巨人捕食而崩溃。幸存下来的人们建造了一面巨大的墙壁,防止了巨人的入侵。不过,作为“和平”的代价,人类失去了到墙壁的外面去这一“自由”主人公艾伦·耶格尔对还没见过的外面的世界抱有兴趣。在他正做着到墙壁的外面去这个梦的时候,毁坏墙壁的大巨人出现了！";
             [videoGroup addVideosObject:video];
         }
     }
+    _minVideoSetNum = min;
+    _maxVideoSetNum = max;
     videoGroup.maxId = @(_maxVideoSetNum);
+    [[NSManagedObjectContext MR_contextForCurrentThread] save:nil];
+    NSLog(@"videos = %d", videoGroup.videos.count);
     return videoGroup;
 }
 
 - (VideoGroup *)tvDramaManager:(TVDramaManager *)manager requestDramaInfoWithURL:(NSString *)URL curSetNum:(int *)curSetNumPtr requestType:(TVDramaRequestType)requestType
 {
+    if (_minVideoSetNum < 460) {
+        [NSThread sleepForTimeInterval:3];
+        return nil;
+    }
+    
     VideoGroup *videoGroup = [self extendDramaURLs:requestType]; //[VideoGroup MR_findFirst];
     if (videoGroup) {
         Video *video = [videoGroup videoAtURL:URL];

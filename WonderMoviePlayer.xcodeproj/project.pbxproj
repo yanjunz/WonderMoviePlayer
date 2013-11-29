@@ -149,6 +149,7 @@
 		B5F96D631845E296006A73FB /* brightness_prompt_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F96D621845E296006A73FB /* brightness_prompt_bg@2x.png */; };
 		B5F96D681846267C006A73FB /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = B5F96D671846267C006A73FB /* Reachability.m */; };
 		B5F96D6A18472E27006A73FB /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5F96D6918472E27006A73FB /* SystemConfiguration.framework */; };
+		B5F96D6E18476A65006A73FB /* DramaTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = B5F96D6D18476A65006A73FB /* DramaTableView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -365,6 +366,8 @@
 		B5F96D661846267C006A73FB /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		B5F96D671846267C006A73FB /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		B5F96D6918472E27006A73FB /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		B5F96D6C18476A65006A73FB /* DramaTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DramaTableView.h; sourceTree = "<group>"; };
+		B5F96D6D18476A65006A73FB /* DramaTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DramaTableView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -718,6 +721,8 @@
 				B58B57691836300B0096801E /* WonderMovieDramaListCell.m */,
 				B58B56EA183470F50096801E /* WonderMovieDramaView.h */,
 				B58B56EB183470F50096801E /* WonderMovieDramaView.m */,
+				B5F96D6C18476A65006A73FB /* DramaTableView.h */,
+				B5F96D6D18476A65006A73FB /* DramaTableView.m */,
 			);
 			path = drama;
 			sourceTree = "<group>";
@@ -956,6 +961,7 @@
 				B5D4C383182263A700BB0A53 /* AirPlayDetector.m in Sources */,
 				B58B573218347F240096801E /* NSNumber+MagicalDataImport.m in Sources */,
 				B517774417B36D44006B948E /* main.m in Sources */,
+				B5F96D6E18476A65006A73FB /* DramaTableView.m in Sources */,
 				B58B574118347F250096801E /* NSPersistentStoreCoordinator+MagicalRecord.m in Sources */,
 				B58B573A18347F250096801E /* NSManagedObject+MagicalRequests.m in Sources */,
 				B517774817B36D44006B948E /* AppDelegate.m in Sources */,

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "TVDramaManager.h"
+#import "DramaTableView.h"
 
 @class WonderMovieDramaView;
 
@@ -17,10 +18,10 @@
 
 @end
 
-@interface WonderMovieDramaView : UIView<UITableViewDataSource, UITableViewDelegate>
+@interface WonderMovieDramaView : UIView<UITableViewDataSource, DramaTableViewDelegate>
 @property (nonatomic, assign) id<WonderMovieDramaViewDelegate> delegate;
 @property (nonatomic, retain) TVDramaManager *tvDramaManager;
-@property (nonatomic, retain) UITableView *tableView;
+@property (nonatomic, retain) DramaTableView *tableView;
 @property (nonatomic, retain) UIView *errorView;
 @property (nonatomic, retain) UIView *loadingView;
 @property (nonatomic) int playingSetNum;

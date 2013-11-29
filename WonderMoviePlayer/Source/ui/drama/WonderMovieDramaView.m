@@ -54,7 +54,7 @@
         [label release];
         [headerView release];
         
-        UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, kDramaHeaderViewHeight, self.width, self.height - kDramaHeaderViewHeight) style:UITableViewStylePlain];
+        DramaTableView *tableView = [[DramaTableView alloc] initWithFrame:CGRectMake(0, kDramaHeaderViewHeight, self.width, self.height - kDramaHeaderViewHeight) style:UITableViewStylePlain];
         tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         tableView.delegate = self;
         tableView.dataSource = self;
@@ -177,6 +177,21 @@
     }
 }
 
+- (void)loadPreviousSection
+{
+    [self.tvDramaManager getDramaInfo:TVDramaRequestTypePrevious completionBlock:^(BOOL success) {
+        [self performBlock:^{
+            [self updateVideoGroupData];
+            if (success) {
+                [self finishPreviousSectionLoad];
+            }
+            else {
+                [self.tableView failHeaderLoadMore];
+            }
+        } afterDelay:0];
+    }];
+}
+
 - (void)updateVideoGroupData
 {
     self.videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
@@ -190,6 +205,35 @@
     [_loadingView removeFromSuperview];
     [self bringSubviewToFront:self.tableView];
     [self.tableView reloadData];
+    [self updateTableState];
+}
+
+- (void)finishPreviousSectionLoad
+{
+    _playingSetNum = self.tvDramaManager.curSetNum;
+    
+    [self.tableView finishHeaderLoadMore];
+    [self.tableView reloadData];
+    [self updateTableState];
+}
+
+- (void)updateTableState
+{
+    if (self.sortedVideos.count == 0) {
+        self.tableView.headerLoadingEnabled = NO;
+        self.tableView.footerLoadingEnabled = NO;
+    }
+    else {
+        Video *minVideo = self.sortedVideos[0];
+        if (minVideo.setNum.intValue > 1) {
+            self.tableView.headerLoadingEnabled = YES;
+        }
+        Video *maxVideo = [self.sortedVideos lastObject];
+        if (self.videoGroup.maxId.intValue > 0 &&
+            maxVideo.setNum.intValue < self.videoGroup.maxId.intValue) {
+            self.tableView.footerLoadingEnabled = YES;
+        }
+    }
 }
 
 - (void)showErrorView
@@ -198,7 +242,6 @@
     [self addSubview:self.errorView];
     [self bringSubviewToFront:self.errorView];
 }
-
 
 #pragma mark - UIAction
 - (IBAction)onClickRetry:(id)sender
@@ -295,6 +338,18 @@
         [self playWithSetNum:video.setNum.intValue];
         [self.tableView reloadData];
     }
+}
+
+#pragma mark UISrollViewDelegate
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self.tableView scrollViewDidScroll:scrollView];
+}
+
+#pragma mark DramaTableViewDelegate
+- (void)dramaTableViewDidTriggerLoadMoreHeader:(DramaTableView *)tableView
+{
+    [self loadPreviousSection];
 }
 
 #pragma mark WonderMovieDramaGridCellDelegate

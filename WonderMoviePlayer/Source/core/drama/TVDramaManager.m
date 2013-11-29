@@ -79,7 +79,7 @@
     for (id<TVDramaRequestHandler> handler in self.handlers) {
         if ([handler respondsToSelector:@selector(tvDramaManager:requestDramaInfoWithURL:requestType:completionBlock:)]) {
             [handler tvDramaManager:self requestDramaInfoWithURL:self.webURL requestType:requestType completionBlock:^(VideoGroup *videoGroup, int curSetNum) {
-                NSLog(@"remainingCallbackCount = %d, curSetNum=%d", remainingCallbackCount, curSetNum);
+//                NSLog(@"remainingCallbackCount = %d, curSetNum=%d", remainingCallbackCount, curSetNum);
                 BOOL success = videoGroup != nil;
                 
                 if (success && !hasSuccessed) { // no success before yet, but success this time, should be callback with success
