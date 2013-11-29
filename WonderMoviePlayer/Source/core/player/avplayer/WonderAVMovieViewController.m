@@ -948,7 +948,9 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     MovieDownloadState state = [self.movieDownloader mdQueryDownloadState:self.movieURL];
     if (state == MovieDownloadStateNotDownload || state == MovieDownloadStateFailed) {
 //        [self.movieDownloader mdStart];
-        [self checkNetworkForDownload];
+        if ([self checkNetworkForDownload]) {
+            [self.movieDownloader mdStart];
+        }
     }
     else if (state == MovieDownloadStateDownloading) {
         [self.movieDownloader mdPause];
@@ -1115,7 +1117,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     }
 }
 
-- (void)checkNetworkForDownload
+- (BOOL)checkNetworkForDownload
 {
     Reachability *reach = [Reachability reachabilityForInternetConnection];
     if (![reach isReachableViaWiFi]) {
@@ -1127,6 +1129,10 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
         else {
             // ...
         }
+        return NO;
+    }
+    else {
+        return YES;
     }
 }
 
