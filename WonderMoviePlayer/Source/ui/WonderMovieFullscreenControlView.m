@@ -326,9 +326,10 @@ void wonderMovieVolumeListenerCallback (
     self.startLabel.font = [UIFont systemFontOfSize:10];
     self.startLabel.backgroundColor = [UIColor clearColor];
     self.startLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
+    self.startLabel.hidden = YES; // Just hide it now for the fucking product requirement
     [progressBar addSubview:self.startLabel];
     
-    UILabel *durationLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.progressView.right - progressBarRightPadding - durationLabelWidth - kProgressViewPadding, self.startLabel.top, durationLabelWidth, bottomBarHeight / 2)];
+    UILabel *durationLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.progressView.right - progressBarRightPadding - durationLabelWidth * 2 - kProgressViewPadding, self.startLabel.top, durationLabelWidth * 2, bottomBarHeight / 2)];
     self.durationLabel = durationLabel;
     [durationLabel release];
     self.durationLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
@@ -978,7 +979,13 @@ void wonderMovieVolumeListenerCallback (
     int hour = time / 3600;
     int minute = time / 60 - hour * 60;
     int second = time % 60;
-    self.startLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d", hour, minute, second];
+//    self.startLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d", hour, minute, second];
+    if (hour == 0) {
+        self.startLabel.text = [NSString stringWithFormat:@"%02d:%02d", minute, second];
+    }
+    else {
+        self.startLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d", hour, minute, second];
+    }
 }
 
 - (void)setPlayableDuration:(NSTimeInterval)playableDuration
@@ -1009,7 +1016,18 @@ void wonderMovieVolumeListenerCallback (
     int hour = time / 3600;
     int minute = time / 60 - hour * 60;
     int second = time % 60;
-    self.durationLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d", hour, minute, second];
+//    self.durationLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d", hour, minute, second];
+    
+    long time1 = _playbackTime;
+    int hour1 = time1 / 3600;
+    int minute1 = time1 / 60 - hour * 60;
+    int second1 = time1 % 60;
+    if (hour == 0) {
+        self.durationLabel.text = [NSString stringWithFormat:@"%02d:%02d / %02d:%02d", minute1, second1, minute, second];
+    }
+    else {
+        self.durationLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d / %02d:%02d:%02d", hour1, minute1, second1, hour, minute, second];
+    }
 }
 
 - (CGFloat)getTimeControlWidth
