@@ -26,6 +26,7 @@ typedef enum {
 @interface DramaTableView : UITableView <UIScrollViewDelegate>
 {
     UIActivityIndicatorView *_headerLoadingView;
+    UIActivityIndicatorView *_footerLoadingView;
     
     DramaLoadMoreState _headerState;
     DramaLoadMoreState _footerState;
@@ -37,7 +38,8 @@ typedef enum {
 @property (nonatomic, retain) UIView *retryHeaderView;
 
 // Footer View
-@property (nonatomic, retain) UIView *dramaFooterView;
+@property (nonatomic, retain) UIView *loadingFooterView;
+@property (nonatomic, retain) UIView *retryFooterView;
 
 @property (nonatomic, assign) BOOL headerLoadingEnabled;
 @property (nonatomic, assign) BOOL footerLoadingEnabled;
@@ -45,8 +47,10 @@ typedef enum {
 @property (nonatomic, assign) BOOL isHeaderLoading;
 @property (nonatomic, assign) BOOL isFooterLoading;
 
-- (void)failHeaderLoadMore;
-- (void)finishHeaderLoadMore;
+- (void)failLoadMoreHeader;
+- (void)finishLoadMoreHeader;
+- (void)failLoadMoreFooter;
+- (void)finishLoadMoreFooter;
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView;
 @end

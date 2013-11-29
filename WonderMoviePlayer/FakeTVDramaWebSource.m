@@ -86,8 +86,8 @@
 //                              @"http://www.iqiyi.com/dongman/20130505/25.html",
                               
                               ]];
-            _minVideoSetNum = 500;
-            _maxVideoSetNum = 500 + urls.count - 1;
+            _minVideoSetNum = 50;
+            _maxVideoSetNum = _minVideoSetNum + urls.count - 1;
             
 //            for (int i = 500; i < 1000; i ++) {
 //                [urls addObject:[NSString stringWithFormat:@"http://www.iqiyi.com/dongman/20130505/%d.html", i+1]];
@@ -103,7 +103,7 @@
             videoGroup.showType = @(1);
             videoGroup.src = @"爱奇艺";
             videoGroup.totalCount = @(0);
-            videoGroup.maxId = @(_maxVideoSetNum);
+            videoGroup.maxId = @(_maxVideoSetNum + 100);
             
 
 //            videoGroup.videoId = @(1234567890);
@@ -137,7 +137,7 @@
     }
     else  if (requestType == TVDramaRequestTypePrevious) {
         min -= delta;
-        min = MAX(0, min);
+        min = MAX(1, min);
     }
     else {
         max += delta;
@@ -157,7 +157,7 @@
     }
     _minVideoSetNum = min;
     _maxVideoSetNum = max;
-    videoGroup.maxId = @(_maxVideoSetNum);
+    videoGroup.maxId = @(_maxVideoSetNum + 100);
     [[NSManagedObjectContext MR_contextForCurrentThread] save:nil];
     NSLog(@"videos = %d", videoGroup.videos.count);
     return videoGroup;
@@ -165,7 +165,11 @@
 
 - (VideoGroup *)tvDramaManager:(TVDramaManager *)manager requestDramaInfoWithURL:(NSString *)URL curSetNum:(int *)curSetNumPtr requestType:(TVDramaRequestType)requestType
 {
-    if (_minVideoSetNum < 460) {
+    if (_minVideoSetNum < 16) {
+        [NSThread sleepForTimeInterval:3];
+        return nil;
+    }
+    else if (_maxVideoSetNum > 76) {
         [NSThread sleepForTimeInterval:3];
         return nil;
     }

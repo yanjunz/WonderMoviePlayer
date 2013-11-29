@@ -16,10 +16,10 @@
 #import "WonderMovieDramaListCell.h"
 #import "WonderMoviePlayerConstants.h"
 
-#define kDramaHeaderViewHeight  44
-#define kVideoCountPerSection   9
+#define kDramaHeaderViewHeight      44
+#define kMaxVideoCountPerGridCell   9
 
-@interface WonderMovieDramaView () <WonderMovieDramaGridCellDelegate>
+@interface WonderMovieDramaView () <WonderMovieDramaGridCellDelegate>;
 @property (nonatomic, retain) VideoGroup *videoGroup;
 @property (nonatomic, retain) NSArray *sortedVideos;
 @end
@@ -186,7 +186,22 @@
                 [self finishPreviousSectionLoad];
             }
             else {
-                [self.tableView failHeaderLoadMore];
+                [self.tableView failLoadMoreHeader];
+            }
+        } afterDelay:0];
+    }];
+}
+
+- (void)loadNextSection
+{
+    [self.tvDramaManager getDramaInfo:TVDramaRequestTypeNext completionBlock:^(BOOL success) {
+        [self performBlock:^{
+            [self updateVideoGroupData];
+            if (success) {
+                [self finishNextSectionLoad];
+            }
+            else {
+                [self.tableView failLoadMoreFooter];
             }
         } afterDelay:0];
     }];
@@ -204,6 +219,7 @@
     
     [_loadingView removeFromSuperview];
     [self bringSubviewToFront:self.tableView];
+
     [self.tableView reloadData];
     [self updateTableState];
 }
@@ -212,7 +228,16 @@
 {
     _playingSetNum = self.tvDramaManager.curSetNum;
     
-    [self.tableView finishHeaderLoadMore];
+    [self.tableView finishLoadMoreHeader];
+    [self.tableView reloadData];
+    [self updateTableState];
+}
+
+- (void)finishNextSectionLoad
+{
+    _playingSetNum = self.tvDramaManager.curSetNum;
+    
+    [self.tableView finishLoadMoreFooter];
     [self.tableView reloadData];
     [self updateTableState];
 }
@@ -228,10 +253,17 @@
         if (minVideo.setNum.intValue > 1) {
             self.tableView.headerLoadingEnabled = YES;
         }
+        else {
+            self.tableView.headerLoadingEnabled = NO;
+        }
+        
         Video *maxVideo = [self.sortedVideos lastObject];
         if (self.videoGroup.maxId.intValue > 0 &&
             maxVideo.setNum.intValue < self.videoGroup.maxId.intValue) {
             self.tableView.footerLoadingEnabled = YES;
+        }
+        else {
+            self.tableView.footerLoadingEnabled = NO;
         }
     }
 }
@@ -258,7 +290,7 @@
     int showType = self.videoGroup.showType.intValue;
     int videoCount = self.sortedVideos.count;
     if (showType == VideoGroupShowTypeGrid) {
-        return (videoCount + kVideoCountPerSection - 1) / kVideoCountPerSection;
+        return (videoCount + kMaxVideoCountPerGridCell - 1) / kMaxVideoCountPerGridCell;
     }
     else {
         return videoCount;
@@ -278,11 +310,11 @@
             cell = [[[WonderMovieDramaGridCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kGridCellID] autorelease];
             cell.delegate = self;
         }
-        Video *minVideo = self.sortedVideos[indexPath.row * kVideoCountPerSection];
+        Video *minVideo = self.sortedVideos[indexPath.row * kMaxVideoCountPerGridCell];
         int minVideoSetNum = minVideo.setNum.intValue;
-        int maxVideoSetNum = (indexPath.row + 1) * kVideoCountPerSection >= videoCount ?
-        (minVideoSetNum + videoCount - indexPath.row * kVideoCountPerSection - 1) :
-        (minVideoSetNum + kVideoCountPerSection - 1);
+        int maxVideoSetNum = (indexPath.row + 1) * kMaxVideoCountPerGridCell >= videoCount ?
+        (minVideoSetNum + videoCount - indexPath.row * kMaxVideoCountPerGridCell - 1) :
+        (minVideoSetNum + kMaxVideoCountPerGridCell - 1);
         
         [cell configureCellWithMinVideoSetNum:minVideoSetNum maxVideoSetNum:maxVideoSetNum];
         [cell playWithSetNum:self.playingSetNum];
@@ -317,11 +349,11 @@
     int videoCount = self.sortedVideos.count;
     
     if (showType == VideoGroupShowTypeGrid) {
-        Video *minVideo = self.sortedVideos[indexPath.row * kVideoCountPerSection];
+        Video *minVideo = self.sortedVideos[indexPath.row * kMaxVideoCountPerGridCell];
         int minVideoSetNum = minVideo.setNum.intValue;
-        int maxVideoSetNum = (indexPath.row + 1) * kVideoCountPerSection >= videoCount ?
-        (minVideoSetNum + videoCount - indexPath.row * kVideoCountPerSection - 1) :
-        (minVideoSetNum + kVideoCountPerSection - 1);
+        int maxVideoSetNum = (indexPath.row + 1) * kMaxVideoCountPerGridCell >= videoCount ?
+        (minVideoSetNum + videoCount - indexPath.row * kMaxVideoCountPerGridCell - 1) :
+        (minVideoSetNum + kMaxVideoCountPerGridCell - 1);
         
         return [WonderMovieDramaGridCell cellHeightWithMinVideoSetNum:minVideoSetNum maxVideoSetNum:maxVideoSetNum];
     }
@@ -352,6 +384,11 @@
     [self loadPreviousSection];
 }
 
+- (void)dramaTableViewDidTriggerLoadMoreFooter:(DramaTableView *)tableView
+{
+    [self loadNextSection];
+}
+
 #pragma mark WonderMovieDramaGridCellDelegate
 - (void)wonderMovieDramaGridCell:(WonderMovieDramaGridCell *)cell didClickAtSetNum:(int)setNum
 {
@@ -368,5 +405,41 @@
     }
 }
 
+- (CGFloat)offsetOfCellAtSetNum:(int)setNum
+{
+    if (self.sortedVideos.count == 0) {
+        return 0;
+    }
+    
+    int showType = self.videoGroup.showType.intValue;
+    int videoCountPerCell = showType == VideoGroupShowTypeGrid ? kMaxVideoCountPerGridCell : 1;
+    
+
+    Video *minVideo = self.sortedVideos[0];
+    int minVideoSetNum = minVideo.setNum.intValue;
+    int order = setNum - minVideoSetNum;
+    int row = order / videoCountPerCell;
+    
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForItem:row inSection:0]];
+    return cell.top;
+}
+
+- (NSIndexPath *)indexPathAtSetNum:(int)setNum
+{
+    if (self.sortedVideos.count == 0) {
+        return nil;
+    }
+    
+    int showType = self.videoGroup.showType.intValue;
+    int videoCountPerCell = showType == VideoGroupShowTypeGrid ? kMaxVideoCountPerGridCell : 1;
+    
+    
+    Video *minVideo = self.sortedVideos[0];
+    int minVideoSetNum = minVideo.setNum.intValue;
+    int order = setNum - minVideoSetNum;
+    int row = order / videoCountPerCell;
+    
+    return [NSIndexPath indexPathForItem:row inSection:0];
+}
 
 @end
