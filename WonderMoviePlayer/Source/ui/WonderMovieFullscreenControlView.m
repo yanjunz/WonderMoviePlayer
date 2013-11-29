@@ -2057,7 +2057,7 @@ static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanni
     
 //    [self performBlockInBackground:^{
 //        BOOL ret = [self.tvDramaManager sniffVideoSource];
-//        [self performBlock:^{
+//        [self performBlockInMainThread:^{
 //            if (ret) {
 //                [self dramaDidFinishSniff:setNum];
 //            }
@@ -2069,7 +2069,7 @@ static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanni
     
     [self.tvDramaManager sniffVideoSource:^(BOOL success) {
         // make sure to invoke UI related code in main thread
-        [self performBlock:^{
+        [self performBlockInMainThread:^{
             NSLog(@"fullscreen sniffVideoSource %d", success);
             if (success) {
                 [self dramaDidFinishSniff:setNum];

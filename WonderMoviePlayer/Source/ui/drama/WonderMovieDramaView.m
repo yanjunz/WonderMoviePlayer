@@ -144,7 +144,7 @@
 {
 //    [self performBlockInBackground:^{
 //        BOOL ret = [self.tvDramaManager getDramaInfo:TVDramaRequestTypeCurrent];
-//        [self performBlock:^{
+//        [self performBlockInMainThread:^{
 //            self.videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
 //            self.sortedVideos = [self.videoGroup sortedVideos];
 //            NSLog(@"videos : %@", self.sortedVideos);
@@ -164,7 +164,7 @@
     else {
         [self.tvDramaManager getDramaInfo:TVDramaRequestTypeCurrent completionBlock:^(BOOL success) {
             // make sure to invoke UI related code in main thread
-            [self performBlock:^{
+            [self performBlockInMainThread:^{
                 [self updateVideoGroupData];
                 if (success) {
                     [self finishCurrentSectionLoad];
@@ -180,7 +180,7 @@
 - (void)loadPreviousSection
 {
     [self.tvDramaManager getDramaInfo:TVDramaRequestTypePrevious completionBlock:^(BOOL success) {
-        [self performBlock:^{
+        [self performBlockInMainThread:^{
             [self updateVideoGroupData];
             if (success) {
                 [self finishPreviousSectionLoad];
@@ -195,7 +195,7 @@
 - (void)loadNextSection
 {
     [self.tvDramaManager getDramaInfo:TVDramaRequestTypeNext completionBlock:^(BOOL success) {
-        [self performBlock:^{
+        [self performBlockInMainThread:^{
             [self updateVideoGroupData];
             if (success) {
                 [self finishNextSectionLoad];

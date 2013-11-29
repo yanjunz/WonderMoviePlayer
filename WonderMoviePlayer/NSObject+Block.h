@@ -9,6 +9,6 @@
 #import <Foundation/Foundation.h>
 
 @interface NSObject (Block)
-- (void)performBlock:(void(^)(void))block afterDelay:(NSTimeInterval)delay;
+- (void)performBlockInMainThread:(void(^)(void))block afterDelay:(NSTimeInterval)delay;
 - (void)performBlockInBackground:(void(^)(void))block;
 @end

@@ -194,7 +194,7 @@
     NSURL *webURL = [NSURL URLWithString:URL];
     self.videoSrc = nil;
     
-    [self performBlock:^{
+    [self performBlockInMainThread:^{
         if (self.webview == nil) {
             self.webview = [[[UIWebView alloc] initWithFrame:CGRectMake(-1000, -1000, 200, 200)] autorelease];
             self.webview.delegate = self;
@@ -246,7 +246,7 @@
 #pragma mark UIWebViewDelegate
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
-    [self performBlock:^{
+    [self performBlockInMainThread:^{
         NSString *videoSrc = [self getCurrentVideoSrc];
         NSLog(@"videoSrc = %@", videoSrc);
         self.videoSrc = videoSrc;
