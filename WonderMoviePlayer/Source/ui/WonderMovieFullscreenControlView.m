@@ -137,10 +137,10 @@ void wonderMovieVolumeListenerCallback (
     WonderMovieFullscreenControlView *bself = (WonderMovieFullscreenControlView *)inClientData;
     [bself performSelectorOnMainThread:@selector(tryToShowVerticalPanningTip) withObject:nil waitUntilDone:NO];
     
-//    const float *volumePointer = inData;
-//    float volume = *volumePointer;
-//    NSLog(@"wonderMovieVolumeListenerCallback %d, %f", (unsigned int)inID, volume);
-    
+    const float *volumePointer = inData;
+    float volume = *volumePointer;
+    NSLog(@"wonderMovieVolumeListenerCallback %d, %f", (unsigned int)inID, volume);
+    [bself setVolume:volume];
 }
 
 @implementation WonderMovieFullscreenControlView
