@@ -15,6 +15,7 @@
 #import "VideoGroup+VideoDetailSet.h"
 #import "Video.h"
 #import "Reachability.h"
+#import "NSObject+Block.h"
 
 #define OBSERVER_CONTEXT_NAME(prefix, property) prefix##property##_ObserverContext
 
@@ -1082,26 +1083,31 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 - (void)onReachabilityChanged:(NSNotification *)n
 {
     Reachability *reach = [n object];
-    if (![reach isReachableViaWiFi]) {
-        if ([reach isReachableViaWWAN]) {
-            [self.controlSource showToast:NSLocalizedString(@"切换到2G/3G网络", nil)];
-            [self.player pause];
-            
-            UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"正在使用2G/3G网络，继续播放会消耗流量。确认继续？", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"取消", nil) otherButtonTitles:@"继续播放", nil] autorelease];
-            alert.tag = kAlertTagForPlayInWWAN;
-            [alert show];
+    BOOL isReachableViaWiFi = [reach isReachableViaWiFi];
+    BOOL isReachableViaWWAN = [reach isReachableViaWWAN];
+    
+    [self performBlockInMainThread:^{
+        if (!isReachableViaWiFi) {
+            if (isReachableViaWWAN) {
+                [self.controlSource showToast:NSLocalizedString(@"切换到2G/3G网络", nil)];
+                [self.player pause];
+                
+                UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"正在使用2G/3G网络，继续播放会消耗流量。确认继续？", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"取消", nil) otherButtonTitles:@"继续播放", nil] autorelease];
+                alert.tag = kAlertTagForPlayInWWAN;
+                [alert show];
+            }
+            else {
+                // ...
+                
+            }
         }
         else {
-            // ...
-            
+            [self.controlSource showToast:NSLocalizedString(@"切换到WiFi网络", nil)];
         }
-    }
-    else {
-        [self.controlSource showToast:NSLocalizedString(@"切换到wifi网络", nil)];
-    }
+    } afterDelay:0];
 }
 
-#pragma mark 
+#pragma mark UIAlertViewDelegate
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (alertView.tag == kAlertTagForPlayInWWAN) {

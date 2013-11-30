@@ -59,4 +59,9 @@ static NSString *const kVideosKey = @"videos";
     return [self.videos sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"setNum" ascending:YES]]];
 }
 
+- (BOOL)isValidDrama
+{
+    return !(self.totalCount.intValue == 0 && self.maxId.intValue == 0 && self.showType.intValue == VideoGroupShowTypeNone);
+}
+
 @end

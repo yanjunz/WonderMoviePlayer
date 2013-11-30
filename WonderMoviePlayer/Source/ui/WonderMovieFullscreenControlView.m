@@ -1364,10 +1364,15 @@ void wonderMovieVolumeListenerCallback (
             [self setTitle:[NSString stringWithFormat:@"%@ 第%d集", videoGroup.videoName, setNum]
                   subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"（来源：%@）", videoGroup.src] : @"")];
         }
-        else {
+        else if (videoGroup.showType.intValue == VideoGroupShowTypeList) {
             Video *video = [videoGroup videoAtSetNum:@(setNum)];
             [self setBufferTitle:video.brief];
             [self setTitle:video.brief
+                  subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"（来源：%@）", videoGroup.src] : @"")];
+        }
+        else {
+            [self setBufferTitle:videoGroup.videoName];
+            [self setTitle:videoGroup.videoName
                   subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"（来源：%@）", videoGroup.src] : @"")];
         }
     }
@@ -1833,7 +1838,13 @@ void wonderMovieVolumeListenerCallback (
 
 - (void)finishLoadDramaInfo
 {
-    [self showDramaButton:YES animated:YES];
+    VideoGroup *videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
+    if ([videoGroup isValidDrama]) {
+        [self showDramaButton:YES animated:YES];
+    }
+    else {
+        [self showDramaButton:NO animated:NO];
+    }
     [self updateTitleAndSubtitle];
 }
 
@@ -1855,6 +1866,7 @@ void wonderMovieVolumeListenerCallback (
             self.progressBar.frame = CGRectMake(progressBarLeftPaddingForShowNext, self.progressBar.top, self.progressBar.width - (progressBarLeftPaddingForShowNext - progressBarLeftPaddingForHideNext), self.progressBar.height);
         }
         else if (needHide) {
+            self.tvDramaButton.hidden = YES;
             self.downloadButton.right = self.menuButton.left + 1;
             self.progressBar.frame = CGRectMake(progressBarLeftPaddingForHideNext, self.progressBar.top, self.progressBar.width + (progressBarLeftPaddingForShowNext - progressBarLeftPaddingForHideNext), self.progressBar.height);
         }
@@ -1868,7 +1880,6 @@ void wonderMovieVolumeListenerCallback (
             [self setNeedsLayout];
         }
         else if (needHide) {
-            self.tvDramaButton.hidden = YES;
             UIView *separatorView = [self.headerBar viewWithTag:kWonderMovieTagSeparatorAfterDownload];
             separatorView.hidden = YES;
             self.nextButton.hidden = YES;
