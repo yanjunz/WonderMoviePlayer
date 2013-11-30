@@ -278,27 +278,34 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
         _wasPlaying = YES; // start to play automatically
         _hasStarted = NO; // clear started flag
 //        return;
-        /*
-         Create an asset for inspection of a resource referenced by a given URL.
-         Load the values for the asset keys "tracks", "playable".
-         */
-        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:movieURL options:nil];
-        
-        NSArray *requestedKeys = @[kTracksKey, kPlayableKey];
-        
-        /* Tells the asset to load the values of any of the specified keys that are not already loaded. */
-        [asset loadValuesAsynchronouslyForKeys:requestedKeys completionHandler:^{
-            dispatch_async(dispatch_get_main_queue(), ^{
-                /* IMPORTANT: Must dispatch to main queue in order to operate on the AVPlayer and AVPlayerItem. */
-                if (!_isExited) { // _isExited means play has been cancel, so skip the next play
-                    [self prepareToPlayAsset:asset withKeys:requestedKeys];
-                }
-            });
-        }];
-        
-        // show buffer immediately
-        [self buffer];
+        if ([movieURL isFileURL] || [self checkNetworkForPreparePlay]) {
+            [self playMovieStreamAfterChecking];
+        }
     }
+}
+
+- (void)playMovieStreamAfterChecking
+{
+    /*
+     Create an asset for inspection of a resource referenced by a given URL.
+     Load the values for the asset keys "tracks", "playable".
+     */
+    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:self.movieURL options:nil];
+    
+    NSArray *requestedKeys = @[kTracksKey, kPlayableKey];
+    
+    /* Tells the asset to load the values of any of the specified keys that are not already loaded. */
+    [asset loadValuesAsynchronouslyForKeys:requestedKeys completionHandler:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            /* IMPORTANT: Must dispatch to main queue in order to operate on the AVPlayer and AVPlayerItem. */
+            if (!_isExited) { // _isExited means play has been cancel, so skip the next play
+                [self prepareToPlayAsset:asset withKeys:requestedKeys];
+            }
+        });
+    }];
+    
+    // show buffer immediately
+    [self buffer];
 }
 
 #pragma mark Prepare to play asset
@@ -1081,8 +1088,9 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 }
 
 #pragma mark Reachability Handler
-#define kAlertTagForPlayInWWAN      1
-#define kAlertTagForDownloadInWWAN  2
+#define kAlertTagForPlayInWWAN          1
+#define kAlertTagForDownloadInWWAN      2
+#define kAlertTagForPreparePlayInWWAN   3
 
 - (void)onReachabilityChanged:(NSNotification *)n
 {
@@ -1125,6 +1133,14 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
             [self.movieDownloader mdStart];
         }
     }
+    else if (alertView.tag == kAlertTagForPreparePlayInWWAN) {
+        if (buttonIndex != alertView.cancelButtonIndex) {
+            [self playMovieStreamAfterChecking];
+        }
+        else {
+            [self movieControlSourceExit:self.controlSource];
+        }
+    }
 }
 
 - (BOOL)checkNetworkForDownload
@@ -1134,6 +1150,25 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
         if ([reach isReachableViaWWAN]) {
             UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"正在使用2G/3G网络，缓存视频会消耗流量。确认继续？", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"取消", nil) otherButtonTitles:@"继续缓存", nil] autorelease];
             alert.tag = kAlertTagForDownloadInWWAN;
+            [alert show];
+        }
+        else {
+            // ...
+        }
+        return NO;
+    }
+    else {
+        return YES;
+    }
+}
+
+- (BOOL)checkNetworkForPreparePlay
+{
+    Reachability *reach = [Reachability reachabilityForInternetConnection];
+    if (![reach isReachableViaWiFi]) {
+        if ([reach isReachableViaWWAN]) {
+            UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"正在使用2G/3G网络，播放视频会消耗流量。确认继续？", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"取消", nil) otherButtonTitles:@"继续播放", nil] autorelease];
+            alert.tag = kAlertTagForPreparePlayInWWAN;
             [alert show];
         }
         else {
