@@ -82,6 +82,10 @@
 //                NSLog(@"remainingCallbackCount = %d, curSetNum=%d", remainingCallbackCount, curSetNum);
                 BOOL success = videoGroup != nil;
                 
+                if (remainingCallbackCount <= 0) {
+                    return;
+                }
+                
                 if (success && !hasSuccessed) { // no success before yet, but success this time, should be callback with success
                     self.curSetNum = curSetNum;
                     self.videoGroup = videoGroup;
@@ -139,7 +143,11 @@
         if ([handler respondsToSelector:@selector(tvDramaManager:sniffVideoSrcWithURL:src:completionBlock:)]) {
             [handler tvDramaManager:self sniffVideoSrcWithURL:self.webURL src:videoGroup.src completionBlock:^(NSString *videoSrc) {
                 BOOL success = videoSrc.length > 0;
-                NSLog(@"sniffVideoSource %@", videoSrc);
+                NSLog(@"sniffVideoSource %@, %d", videoSrc, remainingCallbackCount);
+                
+                if (remainingCallbackCount <= 0) {
+                    return;
+                }
                 
                 if (success && !hasSuccessed) { // no success before yet, but success this time, should be callback with success
                     Video *video = [videoGroup videoAtURL:self.webURL];

@@ -998,7 +998,11 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 - (void)movieControlSource:(id<MovieControlSource>)source didPlayNext:(NSString *)videoSource
 {
     NSLog(@"play %@", videoSource);
-    [self playMovieStream:[NSURL URLWithString:videoSource]];
+    [self.movieDownloader mdUnBind];
+    NSURL *url = [NSURL URLWithString:videoSource];
+    [self.movieDownloader mdBindDownloadURL:url delegate:self dataSource:self];
+    [self.controlSource resetState];
+    [self playMovieStream:url];
 }
 
 - (void)movieControlSourceFailToPlayNext:(id<MovieControlSource>)source

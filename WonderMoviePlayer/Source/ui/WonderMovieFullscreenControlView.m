@@ -90,6 +90,7 @@
 
 @property (nonatomic, retain) UIView *errorView;
 
+- (void)tryToSetVolume:(NSNumber *)volume;
 @end
 
 @interface WonderMovieFullscreenControlView (ProgressView) <WonderMovieProgressViewDelegate>
@@ -139,8 +140,8 @@ void wonderMovieVolumeListenerCallback (
     
     const float *volumePointer = inData;
     float volume = *volumePointer;
-    NSLog(@"wonderMovieVolumeListenerCallback %d, %f", (unsigned int)inID, volume);
-    [bself setVolume:volume];
+//    NSLog(@"wonderMovieVolumeListenerCallback %d, %f", (unsigned int)inID, volume);
+    [bself performSelectorOnMainThread:@selector(tryToSetVolume:) withObject:@(volume) waitUntilDone:NO];
 }
 
 @implementation WonderMovieFullscreenControlView
@@ -187,6 +188,7 @@ void wonderMovieVolumeListenerCallback (
 
 - (void)dealloc
 {
+    //NSLog(@"dealloc WonderMovieFullScreenControlView");
     [self removeTimer];
     
     self.contentView = nil;
@@ -877,8 +879,14 @@ void wonderMovieVolumeListenerCallback (
 #endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
     
     AudioSessionRemovePropertyListenerWithUserData(kAudioSessionProperty_CurrentHardwareOutputVolume, wonderMovieVolumeListenerCallback, self);
-    
+    //NSLog(@"uninstallControlSource");
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dimControl) object:nil];
+}
+
+- (void)resetState
+{
+    self.downloadButton.enabled = !_isLiveCast && _downloadEnabled;
+    [self.downloadButton setTitle:NSLocalizedString(@"缓存", nil) forState:UIControlStateNormal];
 }
 
 - (void)setTitle:(NSString *)title subtitle:(NSString *)subtitle
@@ -1390,6 +1398,11 @@ void wonderMovieVolumeListenerCallback (
     else {
         self.infoView.progressTimeLabel.text = [NSString stringWithFormat:@"%02d:%02d", minute, second];
     }
+}
+
+- (void)tryToSetVolume:(NSNumber *)volume
+{
+    [self setVolume:volume.floatValue];
 }
 
 #pragma mark Timer to update timeLabel in bettery

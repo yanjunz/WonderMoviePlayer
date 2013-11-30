@@ -60,6 +60,7 @@ typedef enum {
 // Resource install & uninstall
 - (void)installControlSource;
 - (void)uninstallControlSource;
+- (void)resetState;
 
 @optional
 
