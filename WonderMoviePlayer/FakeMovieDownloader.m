@@ -40,7 +40,7 @@
 {
     Task *t = self.task;
         if (t.state == TaskStateDownloading) {
-            CGFloat progress = t.progress + 0.03;
+            CGFloat progress = t.progress + 0.1;
             if (progress >= 1) {
                 t.state = TaskStateFinished;
                 t.progress = 1;
@@ -73,6 +73,11 @@
 {
     self.task = [Task taskWithURL:self.downloadURL];
     [self.movieDownloaderDelegate movieDownloaderStarted:self];
+    
+    NSError *error = nil;
+    NSString *content = [NSString stringWithContentsOfURL:self.downloadURL encoding:NSUTF8StringEncoding error:&error];
+    NSLog(@"start downloading ..\n%@\n%@\n%@", self.downloadURL, content, error);
+    
     return YES;
 }
 

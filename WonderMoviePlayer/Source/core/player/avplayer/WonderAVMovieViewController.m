@@ -265,6 +265,11 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     // Dispose of any resources that can be recreated.
 }
 
+- (BOOL)isLocalMovie
+{
+    return [self.movieURL isFileURL];
+}
+
 - (void)playMovieStream:(NSURL *)movieURL
 {
     [self playMovieStream:movieURL fromStartTime:0];
@@ -278,7 +283,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
         _wasPlaying = YES; // start to play automatically
         _hasStarted = NO; // clear started flag
 //        return;
-        if ([movieURL isFileURL] || [self checkNetworkForPreparePlay]) {
+        if ([self isLocalMovie] || [self checkNetworkForPreparePlay]) {
             [self playMovieStreamAfterChecking];
         }
     }

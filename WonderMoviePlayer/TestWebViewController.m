@@ -9,6 +9,7 @@
 #import "TestWebViewController.h"
 #import "WonderAVMovieViewController.h"
 #import "WonderMPMovieViewController.h"
+#import "FakeMovieDownloader.h"
 
 @interface TestWebViewController ()
 
@@ -28,10 +29,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [NSClassFromString(@"WebView") _enableRemoteInspector];
+//    [NSClassFromString(@"WebView") _enableRemoteInspector];
     // Do any additional setup after loading the view from its nib.
     [self.webview loadRequest:[NSURLRequest requestWithURL:
-                               [NSURL URLWithString:@"http://v.m.liebao.cn"]
+//                               [NSURL URLWithString:@"http://v.m.liebao.cn"]
+                               [NSURL URLWithString:@"http://v.html5.qq.com"]
 //                               [[NSBundle mainBundle] URLForResource:@"videoplay" withExtension:@"html"]
                                ]];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(MPMoviePlayerDidEnterFullScreen:) name:[NSString stringWithFormat:@"%@%@", @"UIMoviePlayerControllerD", @"idEnterFullscreenNotification"] object:nil];
@@ -61,8 +63,9 @@
     NSLog(@"src=%@", src);
     NSLog(@"%@", [[NSBundle mainBundle] pathForResource:@"video" ofType:@"js"]);
     NSString *js = [NSString stringWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"video" withExtension:@"js"] encoding:NSUTF8StringEncoding error:NULL];
-    NSLog(@"js=%@", js);
+//    NSLog(@"js=%@", js);
     [self exeJS:js];
+    NSLog(@"injection ok, %@", [self getCurrentVideoSrc]);
 
 //    NSLog(@"%@\n", [self exeJS:@"\
 //                    var v = document.getElementsByTagName(\'video\')[0]; \
@@ -145,6 +148,10 @@
         __block WonderAVMovieViewController *controller = [[[WonderAVMovieViewController alloc] init] autorelease];
         [controller setExitBlock:^{
             [controller dismissViewControllerAnimated:YES completion:nil];
+        }];
+        controller.movieDownloader = [[[FakeMovieDownloader alloc] init] autorelease];
+        [controller setCrossScreenBlock:^{
+            NSLog(@"cross screen");
         }];
         [self presentViewController:controller animated:YES completion:^{
             [controller playMovieStream:[NSURL URLWithString:[self getCurrentVideoSrc]]];

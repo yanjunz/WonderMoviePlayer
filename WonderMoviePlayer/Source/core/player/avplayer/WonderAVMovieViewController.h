@@ -36,6 +36,7 @@
 - (void)playMovieStream:(NSURL *)movieURL fromStartTime:(Float64)time;
 
 - (CMTime)playerItemDuration;
+- (BOOL)isLocalMovie;
 @end
 
 #endif // MTT_FEATURE_WONDER_AVMOVIE_PLAYER
