@@ -29,7 +29,8 @@
 
 // y / x
 #define kWonderMovieVerticalPanGestureCoordRatio    1.732050808f
-#define kWonderMovieHorizontalPanGestureCoordRatio  1.0f
+//#define kWonderMovieHorizontalPanGestureCoordRatio  1.0f
+#define kWonderMovieHorizontalPanGestureCoordRatio  0.6f
 #define kWonderMoviePanDistanceThrehold             5.0f
 
 #define kWonderMovieTagSeparatorAfterDownload       101
@@ -1500,6 +1501,7 @@ void wonderMovieVolumeListenerCallback (
             [self increaseBrightness:inc];
             
             [self dismissBrightnessTipIfShown];
+            [gr setTranslation:CGPointZero inView:gr.view];
         }
         else if (loc.x > gr.view.width * 0.6 &&
                  (sPanAction == WonderMoviePanAction_No || sPanAction == WonderMoviePanAction_Volume))
@@ -1511,12 +1513,13 @@ void wonderMovieVolumeListenerCallback (
             [self increaseVolume:inc];
             
             [self dismissVolumeTipIfShown];
+            [gr setTranslation:CGPointZero inView:gr.view];
         }
-        [gr setTranslation:CGPointZero inView:gr.view];
+        
     }
     else if (fabs(offset.y) <= fabs(offset.x) * kWonderMovieHorizontalPanGestureCoordRatio &&
              CGRectContainsPoint(progressValidRegion, loc) &&
-//             fabs(offset.x) > kWonderMoviePanDistanceThrehold &&
+             fabs(offset.x) > kWonderMoviePanDistanceThrehold &&
              (sPanAction == WonderMoviePanAction_No || sPanAction == WonderMoviePanAction_Progress))
     {
         if (_hasStarted) {
