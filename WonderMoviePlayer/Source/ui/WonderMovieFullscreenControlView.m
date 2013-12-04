@@ -495,6 +495,7 @@ void wonderMovieVolumeListenerCallback (
     [self installGestureHandlers];
     
     [self showDramaButton:NO animated:NO];
+    self.downloadButton.enabled = NO;
 }
 
 - (void)layoutSubviews
@@ -597,7 +598,7 @@ void wonderMovieVolumeListenerCallback (
 {
     _isLiveCast = isLiveCast;
     self.progressView.userInteractionEnabled = !isLiveCast;
-    self.downloadButton.enabled = !isLiveCast && _downloadEnabled;
+//    self.downloadButton.enabled = !isLiveCast && _downloadEnabled;
 }
 
 #pragma mark PopupMenu
@@ -1839,14 +1840,19 @@ void wonderMovieVolumeListenerCallback (
 
 - (void)loadDramaInfo
 {
-    [self.tvDramaManager getDramaInfo:TVDramaRequestTypeCurrent completionBlock:^(BOOL success) {
-        if (success) {
-            [self performSelectorOnMainThread:@selector(finishLoadDramaInfo) withObject:nil waitUntilDone:NO];
-        }
-        else {
-            [self performSelectorOnMainThread:@selector(failLoadDramaInfo) withObject:nil waitUntilDone:NO];
-        }
-    }];
+    if (self.tvDramaManager) {
+        [self.tvDramaManager getDramaInfo:TVDramaRequestTypeCurrent completionBlock:^(BOOL success) {
+            if (success) {
+                [self performSelectorOnMainThread:@selector(finishLoadDramaInfo) withObject:nil waitUntilDone:NO];
+            }
+            else {
+                [self performSelectorOnMainThread:@selector(failLoadDramaInfo) withObject:nil waitUntilDone:NO];
+            }
+        }];
+    }
+    else {
+        [self failLoadDramaInfo];
+    }
 }
 
 - (void)finishLoadDramaInfo
@@ -1859,11 +1865,13 @@ void wonderMovieVolumeListenerCallback (
         [self showDramaButton:NO animated:NO];
     }
     [self updateTitleAndSubtitle];
+    self.downloadButton.enabled = _downloadEnabled && !self.isLiveCast;
 }
 
 - (void)failLoadDramaInfo
 {
     [self showDramaButton:NO animated:YES];
+    self.downloadButton.enabled = _downloadEnabled && !self.isLiveCast;    
 }
 
 - (void)showDramaButton:(BOOL)show animated:(BOOL)animated
