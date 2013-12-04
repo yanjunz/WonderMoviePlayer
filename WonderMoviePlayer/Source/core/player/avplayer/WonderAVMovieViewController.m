@@ -48,6 +48,8 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     BOOL _isExited;
     BOOL _hasStarted;
     
+    int _seekingCount;
+    
     // for fake buffer progress
     BOOL _isBuffering;
 #ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
@@ -463,6 +465,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     
     [self.controlSource prepareToPlay];
     [self.movieDownloader mdBindDownloadURL:self.movieURL delegate:self dataSource:self];
+    _seekingCount = 0; // actually no need but for safe
 }
 
 #pragma mark -
@@ -752,6 +755,11 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
         return;
     }
     
+    if (_seekingCount > 0) {
+        // Skip when seeking
+        return;
+    }
+    
     double duration = CMTimeGetSeconds(playerDuration);
     if (isfinite(duration) && duration > 0) {
         double time = CMTimeGetSeconds([self.player currentTime]);
@@ -796,7 +804,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     if (CMTIME_IS_INVALID(playerDuration)) {
         return;
     }
-    
+    _seekingCount++;
     double duration = CMTimeGetSeconds(playerDuration);
     progress = MAX(0, MIN(1, progress));
     if (isfinite(duration)) {
@@ -804,7 +812,17 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 //        NSLog(@"scrub %f, %f, %f", progress, time, duration);
         
         [self.playerItem cancelPendingSeeks];
-        [self.player seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC) completionHandler:completion];
+        [self.player seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC) completionHandler:^(BOOL finished) {
+            _seekingCount --;
+            if (_seekingCount < 0) {
+                NSLog(@"Something wrong with seekingCount = %d", _seekingCount);
+                _seekingCount = 0;
+            }
+            
+            if (completion) {
+                completion(finished);
+            }
+        }];
     }
 }
 
