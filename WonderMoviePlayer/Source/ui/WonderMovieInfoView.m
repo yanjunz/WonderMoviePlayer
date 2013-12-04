@@ -212,8 +212,11 @@
     if (show) {
         self.progressTimeLabel.alpha = 1;
     }
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismissProgressTime) object:nil];
-    [self performSelector:@selector(dismissProgressTime) withObject:nil afterDelay:3];
+    else {
+        [self performSelector:@selector(dismissProgressTime) withObject:nil afterDelay:3];
+    }
+//    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismissProgressTime) object:nil];
+//    [self performSelector:@selector(dismissProgressTime) withObject:nil afterDelay:3];
 }
 
 - (void)dismissProgressTime

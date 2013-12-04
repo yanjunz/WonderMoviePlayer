@@ -896,6 +896,11 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     }
 }
 
+- (void)movieControlSourceEnd:(id<MovieControlSource>)source
+{
+    
+}
+
 - (void)movieControlSourceExit:(id<MovieControlSource>)source
 {
     _isExited = YES;

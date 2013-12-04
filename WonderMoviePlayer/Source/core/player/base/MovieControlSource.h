@@ -117,6 +117,7 @@ typedef enum {
 - (void)movieControlSourceBeginChangeProgress:(id<MovieControlSource>)source;
 - (void)movieControlSource:(id<MovieControlSource>)source endChangeProgress:(CGFloat)progress;
 - (void)movieControlSource:(id<MovieControlSource>)source setProgress:(CGFloat)progress;
+- (void)movieControlSourceEnd:(id<MovieControlSource>)source;
 - (void)movieControlSourceExit:(id<MovieControlSource>)source;
 
 @optional

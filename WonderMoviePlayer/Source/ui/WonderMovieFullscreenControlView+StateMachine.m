@@ -22,8 +22,8 @@
     if (cmd == MovieControlCommandEnd) {
         self.controlState = MovieControlStateEnded;
         
-        if (notify && [self.delegate respondsToSelector:@selector(movieControlSourceExit:)]) {
-            [self.delegate movieControlSourceExit:self];
+        if (notify && [self.delegate respondsToSelector:@selector(movieControlSourceEnd:)]) {
+            [self.delegate movieControlSourceEnd:self];
         }
     }
     else {

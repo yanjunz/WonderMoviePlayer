@@ -1149,7 +1149,9 @@ void wonderMovieVolumeListenerCallback (
 
 - (IBAction)onClickBack:(id)sender
 {
-    [self handleCommand:MovieControlCommandEnd param:nil notify:YES];
+    if ([self.delegate respondsToSelector:@selector(movieControlSourceExit:)]) {
+        [self.delegate movieControlSourceExit:self];
+    }
 }
 
 - (IBAction)onClickDownload:(id)sender
@@ -1871,7 +1873,7 @@ void wonderMovieVolumeListenerCallback (
 - (void)failLoadDramaInfo
 {
     [self showDramaButton:NO animated:YES];
-    self.downloadButton.enabled = _downloadEnabled && !self.isLiveCast;    
+    self.downloadButton.enabled = _downloadEnabled && !self.isLiveCast;
 }
 
 - (void)showDramaButton:(BOOL)show animated:(BOOL)animated
