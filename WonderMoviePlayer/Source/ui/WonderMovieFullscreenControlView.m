@@ -421,8 +421,9 @@ void wonderMovieVolumeListenerCallback (
     self.downloadButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.downloadButton.frame = CGRectOffset(btnRect, -buttonWidth+1, 0);
     self.downloadButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-    [self.downloadButton setTitle:NSLocalizedString(@"缓存", nil) forState:UIControlStateNormal];
+//    [self.downloadButton setTitle:NSLocalizedString(@"缓存", nil) forState:UIControlStateNormal];
     [self.downloadButton setTitleColor:QQColor(videoplayer_downloaded_color) forState:UIControlStateDisabled];
+    [self.downloadButton setImage:QQVideoPlayerImage(@"download") forState:UIControlStateNormal];
     self.downloadButton.titleLabel.font = buttonFont;
     [self.downloadButton addTarget:self action:@selector(onClickDownload:) forControlEvents:UIControlEventTouchUpInside];
     [self.downloadButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
@@ -558,6 +559,13 @@ void wonderMovieVolumeListenerCallback (
         self.titleLabel.frame = CGRectMake(self.titleLabel.left, headerBarHeight / 2 - titleLabelHeight, maxTitleWidth, titleLabelHeight);
         self.subtitleLabel.frame = CGRectMake(self.titleLabel.left, self.titleLabel.bottom, maxTitleWidth, headerBarHeight - self.titleLabel.bottom);
         [self.subtitleLabel sizeToFit];
+    }
+    
+    if (self.downloadButton.titleLabel.text.length > 0) {
+        CGSize size = [self.downloadButton.titleLabel sizeThatFits:self.downloadButton.size];
+        CGFloat buttonWidth = 60;
+        CGFloat right = self.downloadButton.right;
+        self.downloadButton.frame = CGRectMake(right - buttonWidth - size.width, self.downloadButton.top, buttonWidth + size.width, self.downloadButton.height);
     }
     
     // layout resolutions
@@ -1108,7 +1116,8 @@ void wonderMovieVolumeListenerCallback (
 - (void)pauseDownload
 {
     _isDownloading = NO;
-    [self.downloadButton setTitle:NSLocalizedString(@"缓存", nil) forState:UIControlStateNormal];
+    [self.downloadButton setTitle:NSLocalizedString(@"", nil) forState:UIControlStateNormal];
+    [self setNeedsLayout];
 }
 
 - (void)continueDownload
@@ -1120,9 +1129,10 @@ void wonderMovieVolumeListenerCallback (
 - (void)finishDownload
 {
     _isDownloading = NO;
-    [self.downloadButton setTitle:NSLocalizedString(@"已缓存", nil) forState:UIControlStateNormal];
+    [self.downloadButton setTitle:NSLocalizedString(@"100%", nil) forState:UIControlStateNormal];
     self.downloadButton.enabled = NO;
 //    [self.infoView showDownloadToast:NSLocalizedString(@"视频缓存完成，开始0流量本地播放", nil) show:YES animated:YES];
+    [self setNeedsLayout];
 }
 
 - (void)setDownloadProgress:(CGFloat)progress
@@ -1131,9 +1141,10 @@ void wonderMovieVolumeListenerCallback (
     if (_isDownloading) {
         NSString *fmt = NSLocalizedString(@"开始下载视频，%d%%已完成", nil);
         [self.infoView updateDownloadToast:[NSString stringWithFormat:fmt, (int)(_downloadProgress * 100)]];
-        NSString *title = [NSString stringWithFormat:NSLocalizedString(@"缓存 %d%%", nil), (int)(progress * 100)];
+        NSString *title = [NSString stringWithFormat:NSLocalizedString(@" %d%%", nil), (int)(progress * 100)];
         [self.downloadButton setTitle:title forState:UIControlStateNormal];
     }
+    [self setNeedsLayout];
 }
 
 - (BOOL)isDownloading
