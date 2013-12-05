@@ -151,6 +151,7 @@ void wonderMovieVolumeListenerCallback (
 @synthesize isLiveCast = _isLiveCast;
 @synthesize resolutions = _resolutions;
 @synthesize selectedResolutionIndex = _selectedResolutionIndex;
+@synthesize alertCopyrightInsteadOfDownload = _alertCopyrightInsteadOfDownload;
 @synthesize tvDramaManager = _tvDramaManager;
 
 //- (id)retain
@@ -923,6 +924,20 @@ void wonderMovieVolumeListenerCallback (
     return self.subtitleLabel.text;
 }
 
+- (void)setAlertCopyrightInsteadOfDownload:(BOOL)alertCopyrightInsteadOfDownload
+{
+    
+    if (_alertCopyrightInsteadOfDownload != alertCopyrightInsteadOfDownload) {
+        _alertCopyrightInsteadOfDownload = alertCopyrightInsteadOfDownload;
+        if (alertCopyrightInsteadOfDownload) {
+            [self.downloadButton setTitleColor:QQColor(videoplayer_downloaded_color) forState:UIControlStateNormal];
+        }
+        else {
+            [self.downloadButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        }        
+    }
+}
+
 - (void)prepareToPlay
 {
     _autoNextShown = NO;
@@ -1173,8 +1188,13 @@ void wonderMovieVolumeListenerCallback (
 - (IBAction)onClickDownload:(id)sender
 {
     [self dismissAllPopupViews];
-    if ([self.delegate respondsToSelector:@selector(movieControlSourceOnDownload:)]) {
-        [self.delegate movieControlSourceOnDownload:self];
+    if (self.alertCopyrightInsteadOfDownload) {
+        [self.infoView showDownloadToast:NSLocalizedString(@"由于版权问题，该网站视频暂不支持下载", nil) show:YES animated:YES];
+    }
+    else {
+        if ([self.delegate respondsToSelector:@selector(movieControlSourceOnDownload:)]) {
+            [self.delegate movieControlSourceOnDownload:self];
+        }
     }
     [self cancelPreviousAndPrepareToDimControl];
 }

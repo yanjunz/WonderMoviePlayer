@@ -221,6 +221,9 @@
     [tvDramaManager addRequestHandler:fakeDramaWebSource];
     [controller.controlSource setTvDramaManager:tvDramaManager];
     
+    static int alertCount = 0;
+    [controller.controlSource setAlertCopyrightInsteadOfDownload:++alertCount % 2];
+    
     [controller setExitBlock:^{
         [UIApplication sharedApplication].statusBarHidden = NO;
         if ([controller respondsToSelector:@selector(dismissViewControllerAnimated:completion:)]) {

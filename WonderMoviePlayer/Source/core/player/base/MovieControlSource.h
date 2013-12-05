@@ -101,6 +101,8 @@ typedef enum {
 @property (nonatomic, readonly) NSString *title;
 @property (nonatomic, readonly) NSString *subtitle;
 
+@property (nonatomic, assign) BOOL alertCopyrightInsteadOfDownload;
+
 @property (nonatomic, retain) TVDramaManager *tvDramaManager;
 
 @required
