@@ -16,6 +16,7 @@
 #import "Video.h"
 #import "Reachability.h"
 #import "NSObject+Block.h"
+#import "TVDramaManager.h"
 
 #define OBSERVER_CONTEXT_NAME(prefix, property) prefix##property##_ObserverContext
 
@@ -1090,7 +1091,8 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 #pragma mark MovieDownloaderDataSource
 - (NSString *)titleForMovieDownloader:(id<MovieDownloader>)downloader
 {
-    if ([self.controlSource respondsToSelector:@selector(title)]) {
+    VideoGroup *videoGroup = [self.controlSource.tvDramaManager videoGroupInCurrentThread];
+    if ([videoGroup.videoId intValue] != 0 && [self.controlSource respondsToSelector:@selector(title)]) {
         return [self.controlSource title];
     }
     return nil;
