@@ -213,7 +213,7 @@
 //    }];
 
     
-    [controller.controlSource setTitle:@"我叫MTMTMTMMTMTMTMTMMTMTMTMMTMTMMTMTMMTMMTMTMTMMTTMMTMTMMT" subtitle:@"(来源: 爱奇艺)"];
+    [controller.controlSource setTitle:@"我叫MTMTMTMMTMTMTMTMMTMTMTMMTMTMMTMTMMTMMTMTMTMMTTMMTMTMMT" subtitle:@""];
     
     TVDramaManager *tvDramaManager = [[[TVDramaManager alloc] init] autorelease];
     tvDramaManager.webURL = @"http://www.iqiyi.com/dongman/20130414/8d6929ed7ac9a7b8.html"; // the second one

@@ -502,8 +502,8 @@ void wonderMovieVolumeListenerCallback (
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    
-    // relayout title & subtitle
+    /*
+    // linear layout title & subtitle
     CGFloat gapWidth = 7;
     CGFloat headerBarHeight = self.headerBar.height;
     CGFloat maxTitleWidth = self.downloadButton.left - self.titleLabel.left - gapWidth;
@@ -543,6 +543,21 @@ void wonderMovieVolumeListenerCallback (
         self.titleLabel.height = headerBarHeight;
     }
     self.subtitleLabel.frame = CGRectMake(self.titleLabel.right + gapWidth, 0, self.subtitleLabel.width, headerBarHeight);
+    */
+    
+    // two line layout
+    CGFloat gapWidth = 7;
+    CGFloat headerBarHeight = self.headerBar.height;
+    CGFloat maxTitleWidth = self.downloadButton.left - self.titleLabel.left - gapWidth;
+    if (self.subtitleLabel.text.length == 0) {
+        self.titleLabel.frame = CGRectMake(self.titleLabel.left, 0, maxTitleWidth, headerBarHeight);
+    }
+    else {
+        CGFloat titleLabelHeight = self.titleLabel.font.lineHeight;
+        self.titleLabel.frame = CGRectMake(self.titleLabel.left, headerBarHeight / 2 - titleLabelHeight, maxTitleWidth, titleLabelHeight);
+        self.subtitleLabel.frame = CGRectMake(self.titleLabel.left, self.titleLabel.bottom, maxTitleWidth, headerBarHeight - self.titleLabel.bottom);
+        [self.subtitleLabel sizeToFit];
+    }
     
     // layout resolutions
     if (_resolutionsChanged) {
@@ -1374,18 +1389,18 @@ void wonderMovieVolumeListenerCallback (
         if (videoGroup.showType.intValue == VideoGroupShowTypeGrid) {
             [self setBufferTitle:[NSString stringWithFormat:@"%@ 第%d集", videoGroup.videoName, setNum]];
             [self setTitle:[NSString stringWithFormat:@"%@ 第%d集", videoGroup.videoName, setNum]
-                  subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"（来源：%@）", videoGroup.src] : @"")];
+                  subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"来源：%@", videoGroup.src] : @"")];
         }
         else if (videoGroup.showType.intValue == VideoGroupShowTypeList) {
             Video *video = [videoGroup videoAtSetNum:@(setNum)];
             [self setBufferTitle:video.brief];
             [self setTitle:video.brief
-                  subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"（来源：%@）", videoGroup.src] : @"")];
+                  subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"来源：%@", videoGroup.src] : @"")];
         }
         else {
             [self setBufferTitle:videoGroup.videoName];
             [self setTitle:videoGroup.videoName
-                  subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"（来源：%@）", videoGroup.src] : @"")];
+                  subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"来源：%@", videoGroup.src] : @"")];
         }
     }
 }
