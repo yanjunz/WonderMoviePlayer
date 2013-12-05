@@ -1166,7 +1166,8 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
             [self playMovieStreamAfterChecking];
         }
         else {
-            [self movieControlSourceExit:self.controlSource];
+            // Bugfix: 49119857 【视频】【2G/3G网络】竖屏播放视频时，视频自动切换到横屏，点击弹出actionsheet上的“取消”后，不能切回到竖屏
+            [self performSelector:@selector(movieControlSourceExit:) withObject:self.controlSource afterDelay:1.0f];
         }
     }
 }

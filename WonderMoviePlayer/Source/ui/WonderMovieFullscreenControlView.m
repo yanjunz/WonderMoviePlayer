@@ -1071,8 +1071,8 @@ void wonderMovieVolumeListenerCallback (
 //    self.downloadButton.enabled = NO;
     _isDownloading = YES;
     NSLog(@"startDownload");
-    NSString *fmt = NSLocalizedString(@"开始下载视频，%d%%已完成", nil);
-    [self.infoView showDownloadToast:[NSString stringWithFormat:fmt, (int)(_downloadProgress * 100)] show:YES animated:YES];
+//    NSString *fmt = NSLocalizedString(@"开始缓存视频，%d%%已完成", nil);
+//    [self.infoView showDownloadToast:[NSString stringWithFormat:fmt, (int)(_downloadProgress * 100)] show:YES animated:YES];
 }
 
 - (void)pauseDownload
@@ -1092,7 +1092,7 @@ void wonderMovieVolumeListenerCallback (
     _isDownloading = NO;
     [self.downloadButton setTitle:NSLocalizedString(@"已缓存", nil) forState:UIControlStateNormal];
     self.downloadButton.enabled = NO;
-    [self.infoView showDownloadToast:NSLocalizedString(@"视频下载完成，开始0流量本地播放", nil) show:YES animated:YES];
+//    [self.infoView showDownloadToast:NSLocalizedString(@"视频缓存完成，开始0流量本地播放", nil) show:YES animated:YES];
 }
 
 - (void)setDownloadProgress:(CGFloat)progress
