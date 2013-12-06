@@ -438,6 +438,11 @@ void wonderMovieVolumeListenerCallback (
     [self.headerBar addSubview:separatorView];
     [separatorView release];
     
+    if (!_downloadEnabled) {
+        separatorView.hidden = YES;
+        self.downloadButton.hidden = YES;
+    }
+    
     // title label
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(backButton.right + 1 + 9, 0, (self.downloadButton.left - (backButton.right + 1 + 9) - 20) * 3.f / 4, headerBarHeight)];
     titleLabel.backgroundColor = [UIColor clearColor];
