@@ -1108,7 +1108,7 @@ void wonderMovieVolumeListenerCallback (
 {
 //    self.downloadButton.enabled = NO;
     _isDownloading = YES;
-    NSLog(@"startDownload");
+//    NSLog(@"startDownload");
 //    NSString *fmt = NSLocalizedString(@"开始缓存视频，%d%%已完成", nil);
 //    [self.infoView showDownloadToast:[NSString stringWithFormat:fmt, (int)(_downloadProgress * 100)] show:YES animated:YES];
 }
@@ -1123,7 +1123,7 @@ void wonderMovieVolumeListenerCallback (
 - (void)continueDownload
 {
     _isDownloading = YES;
-    NSLog(@"continueDownload");
+//    NSLog(@"continueDownload");
 }
 
 - (void)finishDownload
@@ -2171,7 +2171,7 @@ static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanni
     [self.tvDramaManager sniffVideoSource:^(BOOL success) {
         // make sure to invoke UI related code in main thread
         [self performBlockInMainThread:^{
-            NSLog(@"fullscreen sniffVideoSource %d", success);
+//            NSLog(@"fullscreen sniffVideoSource %d", success);
             if (success) {
                 [self dramaDidFinishSniff:setNum];
             }

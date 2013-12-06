@@ -106,7 +106,7 @@
 #pragma mark State
 - (void)setHeaderState:(DramaLoadMoreState)state
 {
-    NSLog(@"setHeaderState %d", state);
+//    NSLog(@"setHeaderState %d", state);
     _headerState = state;
     switch (state) {
         case DramaLoadMoreStateNormal:
@@ -126,7 +126,7 @@
 
 - (void)setFooterState:(DramaLoadMoreState)state
 {
-    NSLog(@"setFooterState %d", state);
+//    NSLog(@"setFooterState %d", state);
     _footerState = state;
     switch (state) {
         case DramaLoadMoreStateNormal:

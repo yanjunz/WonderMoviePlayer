@@ -143,7 +143,7 @@
         if ([handler respondsToSelector:@selector(tvDramaManager:sniffVideoSrcWithURL:src:completionBlock:)]) {
             [handler tvDramaManager:self sniffVideoSrcWithURL:self.webURL src:videoGroup.src completionBlock:^(NSString *videoSrc) {
                 BOOL success = videoSrc.length > 0;
-                NSLog(@"sniffVideoSource %@, %d", videoSrc, remainingCallbackCount);
+//                NSLog(@"sniffVideoSource %@, %d", videoSrc, remainingCallbackCount);
                 
                 if (remainingCallbackCount <= 0) {
                     return;
