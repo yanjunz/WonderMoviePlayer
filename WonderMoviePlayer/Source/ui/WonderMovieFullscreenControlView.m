@@ -917,7 +917,7 @@ void wonderMovieVolumeListenerCallback (
 - (void)resetState
 {
     self.downloadButton.enabled = !_isLiveCast && _downloadEnabled;
-    [self.downloadButton setTitle:NSLocalizedString(@"缓存", nil) forState:UIControlStateNormal];
+    [self.downloadButton setTitle:NSLocalizedString(@"", nil) forState:UIControlStateNormal];
 }
 
 - (void)setTitle:(NSString *)title subtitle:(NSString *)subtitle
