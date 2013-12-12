@@ -1873,6 +1873,9 @@ void wonderMovieVolumeListenerCallback (
     }
     if (show) {
         [self.dramaView reloadData];
+        
+        // Scroll to the pos of current set
+        [self.dramaView scrollToThePlayingOne];
     }
 
     [UIView animateWithDuration:0.5 animations:^{

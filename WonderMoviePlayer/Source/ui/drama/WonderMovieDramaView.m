@@ -106,6 +106,26 @@
     }
 }
 
+- (void)scrollToThePlayingOne
+{
+    if (self.sortedVideos.count == 0) {
+        return;
+    }
+    
+    int showType = self.videoGroup.showType.intValue;
+    int index = 0;
+    
+    if (showType == VideoGroupShowTypeGrid) {
+        Video *minVideo = self.sortedVideos[0];
+        index = (self.playingSetNum - minVideo.setNum.intValue) / kMaxVideoCountPerGridCell;
+    }
+    else if (showType == VideoGroupShowTypeList) {
+        Video *minVideo = self.sortedVideos[0];
+        index = self.playingSetNum - minVideo.setNum.intValue;
+    }
+    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+}
+
 - (UIView *)loadingView
 {
     if (_loadingView == nil) {

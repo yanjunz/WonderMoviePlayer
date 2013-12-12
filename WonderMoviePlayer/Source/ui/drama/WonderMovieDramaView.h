@@ -26,4 +26,5 @@
 @property (nonatomic, retain) UIView *loadingView;
 @property (nonatomic) int playingSetNum;
 - (void)reloadData;
+- (void)scrollToThePlayingOne;
 @end
