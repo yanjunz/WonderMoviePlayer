@@ -114,8 +114,17 @@
             button.selected = (i == _selectedButtonIndex);
 
             if (setNum <= _maxVideoSetNum) {
-                [button setTitle:[NSString stringWithFormat:@"%d", setNum] forState:UIControlStateNormal];
+                
                 button.hidden = NO;
+                
+                if (setNum == _maxVideoSetNum && self.cellType != WonderMovieDramaGridCellTypeDefault) {
+                    [button setTitle:[NSString stringWithFormat:@"%d(%@)", setNum,
+                                      self.cellType == WonderMovieDramaGridCellTypeEnded ? @"终" : @"新"]
+                            forState:UIControlStateNormal];
+                }
+                else {
+                    [button setTitle:[NSString stringWithFormat:@"%d", setNum] forState:UIControlStateNormal];
+                }
             }
             else {
                 button.hidden = YES;

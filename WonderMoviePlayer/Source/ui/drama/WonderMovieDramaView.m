@@ -335,7 +335,13 @@
         int maxVideoSetNum = (indexPath.row + 1) * kMaxVideoCountPerGridCell >= videoCount ?
         (minVideoSetNum + videoCount - indexPath.row * kMaxVideoCountPerGridCell - 1) :
         (minVideoSetNum + kMaxVideoCountPerGridCell - 1);
-        
+
+        if (maxVideoSetNum == self.videoGroup.maxId.intValue) {
+            cell.cellType = self.videoGroup.totalCount.intValue == 0 ? WonderMovieDramaGridCellTypeNewest : WonderMovieDramaGridCellTypeEnded;
+        }
+        else {
+            cell.cellType = WonderMovieDramaGridCellTypeDefault;
+        }
         [cell configureCellWithMinVideoSetNum:minVideoSetNum maxVideoSetNum:maxVideoSetNum];
         [cell playWithSetNum:self.playingSetNum];
         
@@ -357,6 +363,14 @@
         Video *video = self.sortedVideos[indexPath.row];
         cell.isPlaying = video.setNum.intValue == self.playingSetNum;
         cell.textLabel.text = video.brief;
+        
+        if (video.setNum.intValue == self.videoGroup.maxId.intValue) {
+            cell.textLabel.text = [NSString stringWithFormat:@"%@(%@)", video.brief,
+                                   self.videoGroup.totalCount.intValue == 0 ? @"新" : @"终"];
+        }
+        else {
+            cell.textLabel.text = video.brief;
+        }
         
         return cell;
     }
