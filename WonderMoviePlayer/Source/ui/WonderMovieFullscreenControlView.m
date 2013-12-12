@@ -320,7 +320,7 @@ void wonderMovieVolumeListenerCallback (
     [self.nextButton addTarget:self action:@selector(onClickNext:) forControlEvents:UIControlEventTouchUpInside];
     self.nextButton.frame = CGRectMake(progressBarLeftPadding - 20 - 6, (self.bottomBar.height - 17 * 2) / 2, 15 * 2, 17 * 2);
     [self.bottomBar addSubview:self.nextButton];
-    self.nextButton.enabled = NO;
+    self.nextButton.enabled = YES;
     
     UILabel *startLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.progressView.left + kProgressViewPadding, bottomBarHeight / 2 + 2, durationLabelWidth, bottomBarHeight / 2)];
     self.startLabel = startLabel;
@@ -503,6 +503,7 @@ void wonderMovieVolumeListenerCallback (
     [self installGestureHandlers];
     
     [self showDramaButton:NO animated:NO];
+    [self showNextButton:NO animated:NO];
     self.downloadButton.enabled = NO;
 }
 
@@ -986,7 +987,7 @@ void wonderMovieVolumeListenerCallback (
         [self.progressView setProgress:progress];
         
         if (_playbackTime + 5 >= _duration && !_autoNextShown &&
-            self.nextButton.enabled) {
+            [self hasNextDrama]) {
             [self prepareToPlayNextDrama];
         }
     }
@@ -1010,7 +1011,7 @@ void wonderMovieVolumeListenerCallback (
 {
     [self handleCommand:MovieControlCommandEnd param:nil notify:NO];
     
-    if (self.nextButton.enabled) {
+    if ([self hasNextDrama]) {
         [self playNextDrama];
     }
 }
@@ -1920,6 +1921,7 @@ void wonderMovieVolumeListenerCallback (
     else {
         [self showDramaButton:NO animated:NO];
     }
+    [self updateNextButtonState];
     [self updateTitleAndSubtitle];
     self.downloadButton.enabled = _downloadEnabled && !self.isLiveCast;
 }
@@ -1927,6 +1929,7 @@ void wonderMovieVolumeListenerCallback (
 - (void)failLoadDramaInfo
 {
     [self showDramaButton:NO animated:YES];
+    [self showNextButton:NO animated:YES];
     self.downloadButton.enabled = _downloadEnabled && !self.isLiveCast;
 }
 
@@ -1934,40 +1937,65 @@ void wonderMovieVolumeListenerCallback (
 {
     BOOL needShow = show && self.tvDramaButton.hidden;
     BOOL needHide = !show && !self.tvDramaButton.hidden;
-    CGFloat progressBarLeftPaddingForShowNext = (60+15+10) + 8 - 10;
-    CGFloat progressBarLeftPaddingForHideNext = (60) + 8 - 10;
     
     [UIView animateWithDuration:animated ? 0.5f : 0 animations:^{
         if (needShow) {
             self.downloadButton.right = self.tvDramaButton.left + 1;
-            self.progressBar.frame = CGRectMake(progressBarLeftPaddingForShowNext, self.progressBar.top, self.progressBar.width - (progressBarLeftPaddingForShowNext - progressBarLeftPaddingForHideNext), self.progressBar.height);
         }
         else if (needHide) {
             self.tvDramaButton.hidden = YES;
             self.downloadButton.right = self.menuButton.left + 1;
-            self.progressBar.frame = CGRectMake(progressBarLeftPaddingForHideNext, self.progressBar.top, self.progressBar.width + (progressBarLeftPaddingForShowNext - progressBarLeftPaddingForHideNext), self.progressBar.height);
         }
     } completion:^(BOOL finished) {
         if (needShow) {
             self.tvDramaButton.hidden = NO;
             UIView *separatorView = [self.headerBar viewWithTag:kWonderMovieTagSeparatorAfterDownload];
             separatorView.hidden = NO;
-            self.nextButton.hidden = NO;
-            [self updateNextButtonState];
             [self setNeedsLayout];
         }
         else if (needHide) {
             UIView *separatorView = [self.headerBar viewWithTag:kWonderMovieTagSeparatorAfterDownload];
             separatorView.hidden = YES;
-            self.nextButton.hidden = YES;
             [self setNeedsLayout];
+        }
+    }];
+}
+
+- (void)showNextButton:(BOOL)show animated:(BOOL)animated
+{
+    BOOL needShow = show && self.nextButton.hidden;
+    BOOL needHide = !show && !self.nextButton.hidden;
+    CGFloat progressBarLeftPaddingForShowNext = (60+15+10) + 8 - 10;
+    CGFloat progressBarLeftPaddingForHideNext = (60) + 8 - 10;
+    
+    [UIView animateWithDuration:animated ? 0.5f : 0 animations:^{
+        if (needShow) {
+            self.progressBar.frame = CGRectMake(progressBarLeftPaddingForShowNext, self.progressBar.top, self.progressBar.width - (progressBarLeftPaddingForShowNext - progressBarLeftPaddingForHideNext), self.progressBar.height);
+            self.nextButton.alpha = 1;
+        }
+        else if (needHide) {
+            self.progressBar.frame = CGRectMake(progressBarLeftPaddingForHideNext, self.progressBar.top, self.progressBar.width + (progressBarLeftPaddingForShowNext - progressBarLeftPaddingForHideNext), self.progressBar.height);
+            self.nextButton.alpha = 0;
+        }
+    } completion:^(BOOL finished) {
+        if (needShow) {
+            self.nextButton.hidden = NO;
+        }
+        else if (needHide) {
+            self.nextButton.hidden = YES;
         }
     }];
 }
 
 - (void)updateNextButtonState
 {
-    self.nextButton.enabled = [self.tvDramaManager hasNext];
+    //self.nextButton.enabled = [self.tvDramaManager hasNext];
+    [self showNextButton:[self.tvDramaManager hasNext] animated:YES];
+}
+
+- (BOOL)hasNextDrama
+{
+    return !self.nextButton.hidden;
 }
 
 #pragma mark UIGestureRecognizerDelegate
