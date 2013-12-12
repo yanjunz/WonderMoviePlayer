@@ -313,6 +313,7 @@ void wonderMovieVolumeListenerCallback (
     self.actionButton.titleLabel.font = [UIFont systemFontOfSize:10];
     self.actionButton.frame = CGRectMake(8, 0, 50, 50);
     [self.actionButton addTarget:self action:@selector(onClickAction:) forControlEvents:UIControlEventTouchUpInside];
+    self.actionButton.showsTouchWhenHighlighted = YES;
     [self.bottomBar addSubview:self.actionButton];
     
     self.nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -1231,7 +1232,7 @@ void wonderMovieVolumeListenerCallback (
     BOOL isLocked = _isLocked;
     self.panGestureRecognizer.enabled = !isLocked;
     [self dismissAllPopupViews];
-    [UIView animateWithDuration:0.2f animations:^{
+    [UIView animateWithDuration:0.2f delay:0.3f options:UIViewAnimationOptionCurveEaseIn animations:^{
         for (UIView *view in self.viewsToBeLocked) {
             view.alpha = isLocked ? 0 : 1;
         }
@@ -1283,7 +1284,7 @@ void wonderMovieVolumeListenerCallback (
         return;
     }
 
-    [UIView animateWithDuration:0.5f animations:^{
+    [UIView animateWithDuration:0.3f animations:^{
         if (show) {
             self.popupMenu.top = -1;
             self.popupMenu.alpha = 1;
@@ -1342,7 +1343,7 @@ void wonderMovieVolumeListenerCallback (
         self.resolutionsView.top = self.infoView.height;
         self.resolutionsView.hidden = NO;
     }
-    [UIView animateWithDuration:0.5 animations:^{
+    [UIView animateWithDuration:0.3 animations:^{
         if (show) {
             self.resolutionsView.bottom = self.infoView.height;
             self.resolutionsView.alpha = 1;
