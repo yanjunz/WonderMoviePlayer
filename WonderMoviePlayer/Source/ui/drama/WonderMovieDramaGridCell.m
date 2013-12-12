@@ -35,7 +35,8 @@
             [button setBackgroundImage:QQVideoPlayerImage(@"tv_drama_button_normal") forState:UIControlStateNormal];
             [button setBackgroundImage:QQVideoPlayerImage(@"tv_drama_button_press") forState:UIControlStateHighlighted];
             [button setBackgroundImage:QQVideoPlayerImage(@"tv_drama_button_press") forState:UIControlStateReserved];
-            [button setBackgroundImage:QQVideoPlayerImage(@"tv_drama_button_selected") forState:UIControlStateSelected];
+//            [button setBackgroundImage:QQVideoPlayerImage(@"tv_drama_button_selected") forState:UIControlStateSelected];
+//            [button setImage:QQVideoPlayerImage(@"list_play") forState:UIControlStateSelected];
             button.hidden = YES;
             button.frame = CGRectMake(leftPadding + (i % kDramaGridCellButtonCountPerRow) * (kDramaGridCellButtonWidth + 8),
                                       topPadding + (i / kDramaGridCellButtonCountPerRow) * (kDramaGridCellButtonHeight + 19),
@@ -121,9 +122,13 @@
                     [button setTitle:[NSString stringWithFormat:@"%d(%@)", setNum,
                                       self.cellType == WonderMovieDramaGridCellTypeEnded ? @"终" : @"新"]
                             forState:UIControlStateNormal];
+                    [button setBackgroundImage:nil forState:UIControlStateSelected];
+                    [button setImage:QQVideoPlayerImage(@"list_play") forState:UIControlStateSelected];
                 }
                 else {
                     [button setTitle:[NSString stringWithFormat:@"%d", setNum] forState:UIControlStateNormal];
+                    [button setBackgroundImage:QQVideoPlayerImage(@"tv_drama_button_selected") forState:UIControlStateSelected];
+                    [button setImage:nil forState:UIControlStateSelected];
                 }
             }
             else {
