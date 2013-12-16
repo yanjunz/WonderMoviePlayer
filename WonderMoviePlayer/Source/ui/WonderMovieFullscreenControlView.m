@@ -1075,7 +1075,7 @@ void wonderMovieVolumeListenerCallback (
     
     long time1 = _playbackTime;
     int hour1 = time1 / 3600;
-    int minute1 = time1 / 60 - hour * 60;
+    int minute1 = time1 / 60 - hour1 * 60;
     int second1 = time1 % 60;
     if (hour == 0) {
         self.durationLabel.text = [NSString stringWithFormat:@"%02d:%02d / %02d:%02d", minute1, second1, minute, second];
