@@ -303,7 +303,7 @@
         self.volumeImageView.highlighted = NO;
     }
     self.volumeLabel.text = [NSString stringWithFormat:@"%d%%", (int)(volume * 100)];
-    [UIView animateWithDuration:1.0f animations:^{
+    [UIView animateWithDuration:3.0f animations:^{
         self.volumeView.alpha = 0;
     }];
 }
@@ -315,7 +315,7 @@
     self.volumeView.alpha = 0;
     self.brightnessView.alpha = 1;
     self.brightnessLabel.text = [NSString stringWithFormat:@"%d%%", (int)(brightness * 100)];
-    [UIView animateWithDuration:1.0f animations:^{
+    [UIView animateWithDuration:3.0f animations:^{
         self.brightnessView.alpha = 0;
     }];
 }
