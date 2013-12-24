@@ -120,7 +120,7 @@
                 Video *video = [Video MR_createEntity];
                 video.setNum = @(_minVideoSetNum + i - 1);
                 video.url = urls[i-1];
-                video.brief = @"悠长的历史之中";
+                video.brief = [NSString stringWithFormat:@"悠长的历史之中 %d", i];
                 //,人类曾一度因被巨人捕食而崩溃。幸存下来的人们建造了一面巨大的墙壁,防止了巨人的入侵。不过,作为“和平”的代价,人类失去了到墙壁的外面去这一“自由”主人公艾伦·耶格尔对还没见过的外面的世界抱有兴趣。在他正做着到墙壁的外面去这个梦的时候,毁坏墙壁的大巨人出现了！";
 //                video.videoGroup = videoGroup;
                 [videoGroup addVideosObject:video];
