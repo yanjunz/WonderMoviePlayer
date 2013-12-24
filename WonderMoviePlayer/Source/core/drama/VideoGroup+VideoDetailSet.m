@@ -9,8 +9,6 @@
 #import "VideoGroup+VideoDetailSet.h"
 #import "Video.h"
 
-static NSString *const kVideosKey = @"videos";
-
 @implementation VideoGroup (VideoDetailSet)
 
 - (Video *)videoAtURL:(NSString *)URL
