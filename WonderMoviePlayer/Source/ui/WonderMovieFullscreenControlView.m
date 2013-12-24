@@ -342,6 +342,7 @@ void wonderMovieVolumeListenerCallback (
     self.durationLabel.font = [UIFont systemFontOfSize:10];
     self.durationLabel.backgroundColor = [UIColor clearColor];
     self.durationLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
+    self.durationLabel.text = @"--:-- / --:--";
     [progressBar addSubview:self.durationLabel];
     
     CGFloat statusBarHeight = 20;
@@ -506,6 +507,9 @@ void wonderMovieVolumeListenerCallback (
     [self showDramaButton:NO animated:NO];
     [self showNextButton:NO animated:NO];
     self.downloadButton.enabled = NO;
+    self.actionButton.enabled = NO;
+    self.progressView.enabled = NO;
+    self.nextButton.enabled = NO;
 }
 
 - (void)layoutSubviews
@@ -876,6 +880,9 @@ void wonderMovieVolumeListenerCallback (
 - (void)onPlayingStarted
 {
     _hasStarted = YES; // start to play now, should show bottom bar
+    self.actionButton.enabled = YES;
+    self.progressView.enabled = YES;
+    self.nextButton.enabled = YES;
     
 #ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
     [UIView animateWithDuration:0.5f animations:^{

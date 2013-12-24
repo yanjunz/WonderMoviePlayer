@@ -27,6 +27,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        _enabled = YES;
         [self setupView];
     }
     return self;
@@ -111,6 +112,13 @@
     else {
         self.progressTopView.contentMode = UIViewContentModeScaleToFill;
     }
+}
+
+#pragma mark State
+- (void)setEnabled:(BOOL)enabled
+{
+    _enabled = enabled;
+    self.progressIndicator.enabled = enabled;
 }
 
 #pragma mark Progress action

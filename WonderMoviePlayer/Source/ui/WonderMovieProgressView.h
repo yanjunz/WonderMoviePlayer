@@ -23,6 +23,7 @@
 @property (nonatomic, assign) id<WonderMovieProgressViewDelegate> delegate;
 @property (nonatomic, assign) CGFloat progress;
 @property (nonatomic, assign) CGFloat cacheProgress;
+@property (nonatomic, assign) BOOL enabled;
 @end
 
 #endif // MTT_FEATURE_WONDER_MOVIE_PLAYER
