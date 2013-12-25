@@ -912,6 +912,7 @@ void wonderMovieVolumeListenerCallback (
 
 - (void)uninstallControlSource
 {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dimControl) object:nil];
     [self removeTimer];
     
 #ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY

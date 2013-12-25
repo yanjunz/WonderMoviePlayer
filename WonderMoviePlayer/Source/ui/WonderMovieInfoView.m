@@ -110,6 +110,8 @@
 
 - (void)dealloc
 {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismissToastView) object:nil];
+    
     self.progressTimeLabel = nil;
     
     self.loadingView = nil;
