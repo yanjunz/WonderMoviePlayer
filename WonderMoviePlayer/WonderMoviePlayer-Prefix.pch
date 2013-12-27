@@ -22,7 +22,7 @@
 
 #define QQImage(src)         [UIImage imageNamed:src]
 #define QQVideoPlayerImage(src) [UIImage imageNamed:src]
-#define QQCommonImage(src)   [UIImage imageNamed:src]
+#define QQActivityIndicatorImage(src)   [UIImage imageNamed:src]
 
 #if !defined(QQImage)
 #define QQImage(src)        [UIImageEx loadAndCacheImageFromApp:src]

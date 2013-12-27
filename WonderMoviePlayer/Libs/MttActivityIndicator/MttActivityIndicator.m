@@ -61,32 +61,32 @@ NSString *const MttActivityIndicatorAnimationKey = @"MttActivityIndicatorAnimati
     switch (style) {
         case MttActivityIndicatorStyleBig:
             frame = CGRectMake(0, 0, INDICATOR_SIZE_BIG, INDICATOR_SIZE_BIG);
-            image = QQCommonImage(@"b"); //[UIImageEx loadAndCacheImageFromApp:@"common_activityindicator_b"];
+            image = QQActivityIndicatorImage(@"b"); //[UIImageEx loadAndCacheImageFromApp:@"common_activityindicator_b"];
             break;
             
         case MttActivityIndicatorStyleColorBig:
             frame = CGRectMake(0, 0, INDICATOR_SIZE_BIG, INDICATOR_SIZE_BIG);
-            image = QQCommonImage(@"color_b");  //[UIImageEx loadAndCacheImageFromApp:@"common_activityindicator_color_b"];
+            image = QQActivityIndicatorImage(@"color_b");  //[UIImageEx loadAndCacheImageFromApp:@"common_activityindicator_color_b"];
             break;
             
         case MttActivityIndicatorStyleMiddle:
             frame = CGRectMake(0, 0, INDICATOR_SIZE_MIDDLE, INDICATOR_SIZE_MIDDLE);
-            image = QQCommonImage(@"m");  //[UIImageEx loadAndCacheImageFromApp:@"common_activityindicator_m"];
+            image = QQActivityIndicatorImage(@"m");  //[UIImageEx loadAndCacheImageFromApp:@"common_activityindicator_m"];
             break;
             
         case MttActivityIndicatorStyleColorMiddle:
             frame = CGRectMake(0, 0, INDICATOR_SIZE_MIDDLE, INDICATOR_SIZE_MIDDLE);
-            image = QQCommonImage(@"color_m");  //[UIImageEx loadAndCacheImageFromApp:@"common_activityindicator_color_m"];
+            image = QQActivityIndicatorImage(@"color_m");  //[UIImageEx loadAndCacheImageFromApp:@"common_activityindicator_color_m"];
             break;
             
         case MttActivityIndicatorStyleSmall:
             frame = CGRectMake(0, 0, INDICATOR_SIZE_SMALL, INDICATOR_SIZE_SMALL);
-            image = QQCommonImage(@"s");  //[UIImageEx loadAndCacheImageFromApp:@"common_activityindicator_s"];
+            image = QQActivityIndicatorImage(@"s");  //[UIImageEx loadAndCacheImageFromApp:@"common_activityindicator_s"];
             break;
             
         case MttActivityIndicatorStyleColorSmall:
             frame = CGRectMake(0, 0, INDICATOR_SIZE_SMALL, INDICATOR_SIZE_SMALL);
-            image = QQCommonImage(@"color_s");  //[UIImageEx loadAndCacheImageFromApp:@"common_activityindicator_color_s"];
+            image = QQActivityIndicatorImage(@"color_s");  //[UIImageEx loadAndCacheImageFromApp:@"common_activityindicator_color_s"];
             break;
             
         default:
