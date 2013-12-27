@@ -1111,7 +1111,7 @@ void wonderMovieVolumeListenerCallback (
 
 - (void)resetBufferTitle
 {
-    self.infoView.loadingMessageLabel.text = NSLocalizedString(@" 正在缓冲...", @"");
+    self.infoView.loadingMessageLabel.text = @"";// NSLocalizedString(@" 正在缓冲...", @"");
 }
 
 - (void)showToast:(NSString *)toast
