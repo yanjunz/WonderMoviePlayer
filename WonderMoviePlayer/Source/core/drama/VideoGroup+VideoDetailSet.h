@@ -18,6 +18,6 @@ typedef enum {
 - (Video *)videoAtURL:(NSString *)URL;
 - (Video *)videoAtSetNum:(NSNumber *)setNum;
 - (void)setVideo:(Video *)video atSetNum:(NSNumber *)setNum inContext:(NSManagedObjectContext *)context;
-- (NSArray *)sortedVideos;
+- (NSArray *)sortedVideos:(BOOL)ascending;
 - (BOOL)isValidDrama;
 @end

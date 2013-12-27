@@ -52,9 +52,9 @@
     }
 }
 
-- (NSArray *)sortedVideos
+- (NSArray *)sortedVideos:(BOOL)ascending
 {
-    return [self.videos sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"setNum" ascending:YES]]];
+    return [self.videos sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"setNum" ascending:ascending]]];
 }
 
 - (BOOL)isValidDrama

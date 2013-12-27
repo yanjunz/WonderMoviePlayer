@@ -120,8 +120,8 @@
         index = (self.playingSetNum - minVideo.setNum.intValue) / kMaxVideoCountPerGridCell;
     }
     else if (showType == VideoGroupShowTypeList) {
-        Video *minVideo = self.sortedVideos[0];
-        index = self.playingSetNum - minVideo.setNum.intValue;
+        Video *maxVideo = self.sortedVideos[0];
+        index = maxVideo.setNum.intValue - self.playingSetNum;
     }
     [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
 }
@@ -162,21 +162,6 @@
 
 - (void)loadCurrentSection
 {
-//    [self performBlockInBackground:^{
-//        BOOL ret = [self.tvDramaManager getDramaInfo:TVDramaRequestTypeCurrent];
-//        [self performBlockInMainThread:^{
-//            self.videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
-//            self.sortedVideos = [self.videoGroup sortedVideos];
-//            NSLog(@"videos : %@", self.sortedVideos);
-//            if (ret) {
-//                [self finishCurrentSectionLoad];
-//            }
-//            else {
-//                [self showErrorView];
-//            }
-//        } afterDelay:0];
-//    }];
-    
     if (self.tvDramaManager.videoGroup != nil) {
         [self updateVideoGroupData];
         [self finishCurrentSectionLoad];
@@ -199,7 +184,8 @@
 
 - (void)loadPreviousSection
 {
-    [self.tvDramaManager getDramaInfo:TVDramaRequestTypePrevious completionBlock:^(BOOL success) {
+    TVDramaRequestType requestType = self.videoGroup.showType.intValue == VideoGroupShowTypeList ? TVDramaRequestTypeNext : TVDramaRequestTypePrevious;
+    [self.tvDramaManager getDramaInfo:requestType completionBlock:^(BOOL success) {
         [self performBlockInMainThread:^{
             [self updateVideoGroupData];
             if (success) {
@@ -214,7 +200,8 @@
 
 - (void)loadNextSection
 {
-    [self.tvDramaManager getDramaInfo:TVDramaRequestTypeNext completionBlock:^(BOOL success) {
+    TVDramaRequestType requestType = self.videoGroup.showType.intValue == VideoGroupShowTypeList ? TVDramaRequestTypeNext : TVDramaRequestTypePrevious;
+    [self.tvDramaManager getDramaInfo:requestType completionBlock:^(BOOL success) {
         [self performBlockInMainThread:^{
             [self updateVideoGroupData];
             if (success) {
@@ -230,7 +217,7 @@
 - (void)updateVideoGroupData
 {
     self.videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
-    self.sortedVideos = [self.videoGroup sortedVideos];
+    self.sortedVideos = [self.videoGroup sortedVideos:self.videoGroup.showType.intValue != VideoGroupShowTypeList];
 }
 
 - (void)finishCurrentSectionLoad

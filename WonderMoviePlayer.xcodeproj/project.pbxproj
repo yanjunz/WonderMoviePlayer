@@ -35,6 +35,7 @@
 		B51F619617E9ADC200344122 /* Test2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B51F619417E9ADC200344122 /* Test2ViewController.m */; };
 		B51F619717E9ADC200344122 /* Test2ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B51F619517E9ADC200344122 /* Test2ViewController.xib */; };
 		B52DCDA9183F4E890020485B /* WonderMovieFullscreenControlView+StateMachine.m in Sources */ = {isa = PBXBuildFile; fileRef = B52DCDA8183F4E890020485B /* WonderMovieFullscreenControlView+StateMachine.m */; };
+		B5435570186AE7230090AFEE /* WonderMovieURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = B543556F186AE7230090AFEE /* WonderMovieURLProtocol.m */; };
 		B56EE42E182A1E9F00241DDA /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B56EE42D182A1E9F00241DDA /* CoreAudio.framework */; };
 		B56EE430182A1F0000241DDA /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B56EE42F182A1F0000241DDA /* AudioToolbox.framework */; };
 		B58B56E018338E910096801E /* TVDramaManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B56D818338E910096801E /* TVDramaManager.m */; };
@@ -191,6 +192,8 @@
 		B51F619517E9ADC200344122 /* Test2ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Test2ViewController.xib; sourceTree = "<group>"; };
 		B52DCDA7183F4E890020485B /* WonderMovieFullscreenControlView+StateMachine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WonderMovieFullscreenControlView+StateMachine.h"; sourceTree = "<group>"; };
 		B52DCDA8183F4E890020485B /* WonderMovieFullscreenControlView+StateMachine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WonderMovieFullscreenControlView+StateMachine.m"; sourceTree = "<group>"; };
+		B543556E186AE7230090AFEE /* WonderMovieURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMovieURLProtocol.h; sourceTree = "<group>"; };
+		B543556F186AE7230090AFEE /* WonderMovieURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderMovieURLProtocol.m; sourceTree = "<group>"; };
 		B56EE42D182A1E9F00241DDA /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		B56EE42F182A1F0000241DDA /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		B58B56D818338E910096801E /* TVDramaManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TVDramaManager.m; sourceTree = "<group>"; };
@@ -440,6 +443,7 @@
 		B517773D17B36D44006B948E /* WonderMoviePlayer */ = {
 			isa = PBXGroup;
 			children = (
+				B543556D186AE1940090AFEE /* Integration */,
 				B5D4C3731822636E00BB0A53 /* Libs */,
 				B5AD78A217CDCFBB00C08E51 /* JSPlugin */,
 				B517775A17B36E04006B948E /* Source */,
@@ -538,6 +542,15 @@
 				B5D4C326181F966C00BB0A53 /* volume@2x.png */,
 			);
 			path = images;
+			sourceTree = "<group>";
+		};
+		B543556D186AE1940090AFEE /* Integration */ = {
+			isa = PBXGroup;
+			children = (
+				B543556E186AE7230090AFEE /* WonderMovieURLProtocol.h */,
+				B543556F186AE7230090AFEE /* WonderMovieURLProtocol.m */,
+			);
+			path = Integration;
 			sourceTree = "<group>";
 		};
 		B58B56E618346F8D0096801E /* RefreshTableHeaderView */ = {
@@ -1018,6 +1031,7 @@
 				B58B574218347F250096801E /* MagicalRecord+Actions.m in Sources */,
 				B5D4C3631820F51A00BB0A53 /* BatteryIconView.m in Sources */,
 				B5D4C37E1822636E00BB0A53 /* RegexKitLite.m in Sources */,
+				B5435570186AE7230090AFEE /* WonderMovieURLProtocol.m in Sources */,
 				B5AD78BE17CE043B00C08E51 /* JSCommandQueue.m in Sources */,
 				B58B573818347F250096801E /* NSManagedObject+MagicalFinders.m in Sources */,
 				B51F619617E9ADC200344122 /* Test2ViewController.m in Sources */,
