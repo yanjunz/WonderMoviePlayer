@@ -346,6 +346,7 @@ void wonderMovieVolumeListenerCallback (
     [progressBar addSubview:self.durationLabel];
     
     CGFloat statusBarHeight = 20;
+    UIImage *highlightedImage = [self imageWithColor:[[UIColor whiteColor] colorWithAlphaComponent:0.15]];
     
     // Setup headerBar
     UIView *headerBar = [[UIView alloc] initWithFrame:CGRectMake(0, statusBarHeight, self.width, headerBarHeight)];
@@ -366,6 +367,7 @@ void wonderMovieVolumeListenerCallback (
     backButton.frame = CGRectMake(2, 0, 53, headerBarHeight);
     backButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
     [backButton addTarget:self action:@selector(onClickBack:) forControlEvents:UIControlEventTouchUpInside];
+    [backButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
     [self.headerBar addSubview:backButton];
     
     UIImageView *separatorView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"headerbar_separator")];
@@ -379,7 +381,7 @@ void wonderMovieVolumeListenerCallback (
     CGFloat headerBarRightPadding = 5;
     CGFloat buttonFontSize = 13;
     UIFont *buttonFont = [UIFont systemFontOfSize:buttonFontSize];
-    UIImage *highlightedImage = [self imageWithColor:[[UIColor whiteColor] colorWithAlphaComponent:0.15]];
+    
   
     
     UILabel *menuLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.headerBar.width - headerBarRightPadding - buttonWidth, 0, buttonWidth, headerBarHeight)];
