@@ -884,6 +884,9 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 {
     _wasPlaying = NO;
     [self.player pause];
+    
+    // Pause download if reachability is in 2G/3G
+    [self pauseDownloadIfWWAN];
 }
 
 - (void)movieControlSourceResume:(id<MovieControlSource>)source
@@ -1219,6 +1222,20 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     }
     else {
         return YES;
+    }
+}
+
+- (void)pauseDownloadIfWWAN
+{
+    MovieDownloadState state = [self.movieDownloader mdQueryDownloadState:self.movieURL];
+    if (state == MovieDownloadStateDownloading) {
+        Reachability *reach = [Reachability reachabilityForInternetConnection];
+        if (![reach isReachableViaWiFi]) {
+            if ([reach isReachableViaWWAN]) {
+                // In 2G/3G
+                [self.movieDownloader mdPause];
+            }
+        }
     }
 }
 
