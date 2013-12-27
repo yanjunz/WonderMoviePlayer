@@ -575,10 +575,16 @@ void wonderMovieVolumeListenerCallback (
     }
     
     if (self.downloadButton.titleLabel.text.length > 0) {
-        CGSize size = [self.downloadButton.titleLabel sizeThatFits:self.downloadButton.size];
         CGFloat buttonWidth = 60;
         CGFloat right = self.downloadButton.right;
-        self.downloadButton.frame = CGRectMake(right - buttonWidth - size.width, self.downloadButton.top, buttonWidth + size.width, self.downloadButton.height);
+        
+        if (self.downloadButton.currentTitle.length == 0) {
+            self.downloadButton.frame = CGRectMake(right - buttonWidth, self.downloadButton.top, buttonWidth, self.downloadButton.height);
+        }
+        else {
+            CGSize size = [[self.downloadButton currentTitle] sizeWithFont:self.downloadButton.titleLabel.font];
+            self.downloadButton.frame = CGRectMake(right - buttonWidth - size.width, self.downloadButton.top, buttonWidth + size.width, self.downloadButton.height);
+        }
     }
     
     // layout resolutions
