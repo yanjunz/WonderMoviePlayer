@@ -642,6 +642,14 @@ void wonderMovieVolumeListenerCallback (
 {
     _isLiveCast = isLiveCast;
     self.progressView.userInteractionEnabled = !isLiveCast;
+    
+    if (isLiveCast) {
+        self.durationLabel.text = @"直播";
+    }
+    if (_hasStarted) {
+        self.progressView.enabled = !self.isLiveCast;
+        self.nextButton.enabled = !self.isLiveCast;
+    }
 //    self.downloadButton.enabled = !isLiveCast && _downloadEnabled;
 }
 
@@ -889,8 +897,8 @@ void wonderMovieVolumeListenerCallback (
 {
     _hasStarted = YES; // start to play now, should show bottom bar
     self.actionButton.enabled = YES;
-    self.progressView.enabled = YES;
-    self.nextButton.enabled = YES;
+    self.progressView.enabled = !self.isLiveCast;
+    self.nextButton.enabled = !self.isLiveCast;
     
 #ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
     [UIView animateWithDuration:0.5f animations:^{
@@ -1222,14 +1230,20 @@ void wonderMovieVolumeListenerCallback (
 - (IBAction)onClickDownload:(id)sender
 {
     [self dismissAllPopupViews];
-    if (self.alertCopyrightInsteadOfDownload) {
-        [self.infoView showDownloadToast:NSLocalizedString(@"由于版权问题，该网站视频暂不支持下载", nil) show:YES animated:YES];
+    if (self.isLiveCast) {
+        [self.infoView showDownloadToast:NSLocalizedString(@"直播视频不支持下载", nil) show:YES animated:YES];
     }
     else {
-        if ([self.delegate respondsToSelector:@selector(movieControlSourceOnDownload:)]) {
-            [self.delegate movieControlSourceOnDownload:self];
+        if (self.alertCopyrightInsteadOfDownload) {
+            [self.infoView showDownloadToast:NSLocalizedString(@"由于版权问题，该网站视频暂不支持下载", nil) show:YES animated:YES];
+        }
+        else {
+            if ([self.delegate respondsToSelector:@selector(movieControlSourceOnDownload:)]) {
+                [self.delegate movieControlSourceOnDownload:self];
+            }
         }
     }
+    
     [self cancelPreviousAndPrepareToDimControl];
 }
 
