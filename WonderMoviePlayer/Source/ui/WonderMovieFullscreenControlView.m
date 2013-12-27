@@ -1433,7 +1433,8 @@ void wonderMovieVolumeListenerCallback (
     if (videoGroup) {
         int setNum = self.tvDramaManager.curSetNum;
         if (videoGroup.showType.intValue == VideoGroupShowTypeGrid) {
-            [self setBufferTitle:[NSString stringWithFormat:@"%@ 第%d集", videoGroup.videoName, setNum]];
+//            [self setBufferTitle:[NSString stringWithFormat:@"%@ 第%d集", videoGroup.videoName, setNum]];
+            [self setBufferTitle:[NSString stringWithFormat:@"即将播放%@第%d集", videoGroup.videoName, setNum]];
             [self setTitle:[NSString stringWithFormat:@"%@ 第%d集", videoGroup.videoName, setNum]
                   subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"来源：%@", videoGroup.src] : @"")];
         }

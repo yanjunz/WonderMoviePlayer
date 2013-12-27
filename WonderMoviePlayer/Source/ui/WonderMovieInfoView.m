@@ -167,11 +167,12 @@
                                         CGRectMake(- (maxMessageWidth - _loadingView.width)/2, self.loadingIndicator.bottom, maxMessageWidth, 20)];
                                         //CGRectMake(0, self.loadingIndicator.bottom, _loadingView.width , 20)];
         self.loadingMessageLabel = loadingMessageLabel;
-        self.loadingMessageLabel.text = NSLocalizedString(@" 正在缓冲...", @"");
+        self.loadingMessageLabel.text = @"";// NSLocalizedString(@" 正在缓冲...", @"");
         self.loadingMessageLabel.textAlignment = UITextAlignmentCenter;
         self.loadingMessageLabel.backgroundColor = [UIColor clearColor];
         self.loadingMessageLabel.textColor = [UIColor whiteColor];
-        self.loadingMessageLabel.hidden = YES;
+        self.loadingMessageLabel.font = [UIFont systemFontOfSize:12];
+//        self.loadingMessageLabel.hidden = YES;
         [_loadingView addSubview:self.loadingMessageLabel];
         [loadingMessageLabel release];
         
