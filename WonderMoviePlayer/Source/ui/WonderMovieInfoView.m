@@ -69,6 +69,7 @@
         toastView.textColor = [UIColor whiteColor];
         toastView.textAlignment = UITextAlignmentCenter;
         toastView.alpha = 0;
+        toastView.font = [UIFont systemFontOfSize:12];
         [self addSubview:toastView];
         self.toastView = toastView;
         [toastView release];
