@@ -58,7 +58,7 @@
     [super layoutSubviews];
     
     CGFloat imageWidth = 10, imageHeight = 13;
-    self.imageView.frame = CGRectMake(20, (self.height - imageHeight) / 2, imageWidth, imageHeight);
+    self.imageView.frame = CGRectMake(16, (self.height - imageHeight) / 2, imageWidth, imageHeight);
     
     self.textLabel.frame = CGRectMake(36, 0, self.width - 36 - 20, self.height);
 }
