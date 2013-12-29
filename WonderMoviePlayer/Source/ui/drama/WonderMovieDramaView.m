@@ -123,6 +123,7 @@
         Video *maxVideo = self.sortedVideos[0];
         index = maxVideo.setNum.intValue - self.playingSetNum;
     }
+    index = MAX(0, MIN(index, ([self tableView:self.tableView numberOfRowsInSection:0] - 1)));
     [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
 }
 
