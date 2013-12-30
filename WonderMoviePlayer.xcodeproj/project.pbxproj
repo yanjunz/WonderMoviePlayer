@@ -58,10 +58,8 @@
 		B54355C3186D26DF0090AFEE /* mute@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B543558B186D26DE0090AFEE /* mute@2x.png */; };
 		B54355C4186D26DF0090AFEE /* next_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B543558C186D26DE0090AFEE /* next_normal@2x.png */; };
 		B54355C5186D26DF0090AFEE /* pause_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B543558D186D26DE0090AFEE /* pause_normal@2x.png */; };
-		B54355C6186D26DF0090AFEE /* pause_press@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B543558E186D26DE0090AFEE /* pause_press@2x.png */; };
 		B54355C7186D26DF0090AFEE /* play@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B543558F186D26DE0090AFEE /* play@2x.png */; };
 		B54355C8186D26DF0090AFEE /* play_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5435590186D26DE0090AFEE /* play_normal@2x.png */; };
-		B54355C9186D26DF0090AFEE /* play_press@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5435591186D26DE0090AFEE /* play_press@2x.png */; };
 		B54355CA186D26DF0090AFEE /* popup_menu_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5435592186D26DE0090AFEE /* popup_menu_bg@2x.png */; };
 		B54355CB186D26DF0090AFEE /* progress_prompt_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5435593186D26DE0090AFEE /* progress_prompt_bg@2x.png */; };
 		B54355CC186D26DF0090AFEE /* progress_prompt_circle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5435594186D26DE0090AFEE /* progress_prompt_circle@2x.png */; };
@@ -224,10 +222,8 @@
 		B543558B186D26DE0090AFEE /* mute@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mute@2x.png"; sourceTree = "<group>"; };
 		B543558C186D26DE0090AFEE /* next_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "next_normal@2x.png"; sourceTree = "<group>"; };
 		B543558D186D26DE0090AFEE /* pause_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pause_normal@2x.png"; sourceTree = "<group>"; };
-		B543558E186D26DE0090AFEE /* pause_press@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pause_press@2x.png"; sourceTree = "<group>"; };
 		B543558F186D26DE0090AFEE /* play@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play@2x.png"; sourceTree = "<group>"; };
 		B5435590186D26DE0090AFEE /* play_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play_normal@2x.png"; sourceTree = "<group>"; };
-		B5435591186D26DE0090AFEE /* play_press@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play_press@2x.png"; sourceTree = "<group>"; };
 		B5435592186D26DE0090AFEE /* popup_menu_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "popup_menu_bg@2x.png"; sourceTree = "<group>"; };
 		B5435593186D26DE0090AFEE /* progress_prompt_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "progress_prompt_bg@2x.png"; sourceTree = "<group>"; };
 		B5435594186D26DE0090AFEE /* progress_prompt_circle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "progress_prompt_circle@2x.png"; sourceTree = "<group>"; };
@@ -554,10 +550,8 @@
 				B543558B186D26DE0090AFEE /* mute@2x.png */,
 				B543558C186D26DE0090AFEE /* next_normal@2x.png */,
 				B543558D186D26DE0090AFEE /* pause_normal@2x.png */,
-				B543558E186D26DE0090AFEE /* pause_press@2x.png */,
 				B543558F186D26DE0090AFEE /* play@2x.png */,
 				B5435590186D26DE0090AFEE /* play_normal@2x.png */,
-				B5435591186D26DE0090AFEE /* play_press@2x.png */,
 				B5435592186D26DE0090AFEE /* popup_menu_bg@2x.png */,
 				B5435593186D26DE0090AFEE /* progress_prompt_bg@2x.png */,
 				B5435594186D26DE0090AFEE /* progress_prompt_circle@2x.png */,
@@ -973,14 +967,12 @@
 				B54355B7186D26DF0090AFEE /* download@2x.png in Resources */,
 				B517774E17B36D44006B948E /* Default-568h@2x.png in Resources */,
 				B54355C2186D26DF0090AFEE /* locked@2x.png in Resources */,
-				B54355C9186D26DF0090AFEE /* play_press@2x.png in Resources */,
 				B517775417B36D44006B948E /* ViewController.xib in Resources */,
 				B5D4C384182263A700BB0A53 /* README.md in Resources */,
 				B54355E0186D26DF0090AFEE /* volume_prompt_circle@2x.png in Resources */,
 				B54355E5186D26DF0090AFEE /* color_s@2x.png in Resources */,
 				B54355BD186D26DF0090AFEE /* headerbar@2x.png in Resources */,
 				B54355BE186D26DF0090AFEE /* headerbar_separator@2x.png in Resources */,
-				B54355C6186D26DF0090AFEE /* pause_press@2x.png in Resources */,
 				B54355B6186D26DF0090AFEE /* cross_screen@2x.png in Resources */,
 				B54355BB186D26DF0090AFEE /* downloaded@2x.png in Resources */,
 				B54355B5186D26DF0090AFEE /* brightness_prompt_bg@2x.png in Resources */,

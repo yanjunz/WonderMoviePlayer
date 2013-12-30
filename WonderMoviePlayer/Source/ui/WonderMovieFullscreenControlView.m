@@ -1409,7 +1409,6 @@ void wonderMovieVolumeListenerCallback (
             self.controlState == MovieControlStatePlaying ||
             (self.controlState == MovieControlStateBuffering && !_bufferFromPaused)) {
             [self.actionButton setImage:QQVideoPlayerImage(@"pause_normal") forState:UIControlStateNormal];
-            [self.actionButton setImage:QQVideoPlayerImage(@"pause_press") forState:UIControlStateHighlighted];
             self.infoView.centerPlayButton.hidden = YES;
             self.infoView.replayButton.hidden = YES;
             [self resetBufferTitle];
@@ -1417,7 +1416,6 @@ void wonderMovieVolumeListenerCallback (
         else if (self.controlState == MovieControlStatePaused ||
                  (self.controlState == MovieControlStateBuffering && _bufferFromPaused)) {
             [self.actionButton setImage:QQVideoPlayerImage(@"play_normal") forState:UIControlStateNormal];
-            [self.actionButton setImage:QQVideoPlayerImage(@"play_press") forState:UIControlStateHighlighted];
             self.infoView.centerPlayButton.hidden = _isLoading;
             self.infoView.replayButton.hidden = YES;
             [self resetBufferTitle];
@@ -1425,7 +1423,6 @@ void wonderMovieVolumeListenerCallback (
         else if (self.controlState == MovieControlStateEnded) {
             // set replay
             [self.actionButton setImage:QQVideoPlayerImage(@"play_normal") forState:UIControlStateNormal];
-            [self.actionButton setImage:QQVideoPlayerImage(@"play_press") forState:UIControlStateHighlighted];
             self.infoView.replayButton.hidden = NO;
             self.infoView.centerPlayButton.hidden = YES;
             _isLoading = NO; // clear loading flag
