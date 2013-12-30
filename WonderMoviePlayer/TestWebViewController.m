@@ -32,8 +32,9 @@
 //    [NSClassFromString(@"WebView") _enableRemoteInspector];
     // Do any additional setup after loading the view from its nib.
     [self.webview loadRequest:[NSURLRequest requestWithURL:
-//                               [NSURL URLWithString:@"http://v.m.liebao.cn"]
-                               [NSURL URLWithString:@"http://v.html5.qq.com"]
+                               [NSURL URLWithString:@"http://v.m.liebao.cn"]
+//                               [NSURL URLWithString:@"http://pan.baidu.com"]
+//                               [NSURL URLWithString:@"http://v.html5.qq.com"]
 //                               [[NSBundle mainBundle] URLForResource:@"videoplay" withExtension:@"html"]
                                ]];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(MPMoviePlayerDidEnterFullScreen:) name:[NSString stringWithFormat:@"%@%@", @"UIMoviePlayerControllerD", @"idEnterFullscreenNotification"] object:nil];

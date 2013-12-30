@@ -13,6 +13,7 @@
 #import "JSURLProtocol.h"
 #import "JSVideoPlugin.h"
 #import "JSPluginEngine.h"
+#import "WonderMovieURLProtocol.h"
 
 void uncaughtExceptionHandler(NSException *exception)
 {
@@ -35,6 +36,8 @@ void uncaughtExceptionHandler(NSException *exception)
     NSLog(@"%@", NSHomeDirectory());
     
     [MagicalRecord setupCoreDataStack];
+    
+//    [NSURLProtocol registerClass:[WonderMovieURLProtocol class]];
     
 //    [NSURLProtocol registerClass:[JSURLProtocol class]];
 //    [[JSPluginEngine sharedInstance] registerPlugin:[[JSVideoPlugin alloc] init] withPluginName:@"qqvideo"];
