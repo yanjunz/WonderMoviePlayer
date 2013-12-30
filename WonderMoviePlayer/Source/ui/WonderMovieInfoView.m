@@ -17,8 +17,8 @@
 @property (nonatomic, retain) UILabel *volumeLabel;
 @property (nonatomic, retain) UIImageView *volumeImageView;
 @property (nonatomic, retain) UILabel *brightnessLabel;
-
-@property (nonatomic, retain) UILabel *toastView;
+@property (nonatomic, retain) UIView *toastView;
+@property (nonatomic, retain) UILabel *toastLabel;
 @property (nonatomic, retain) UIView *errorView;
 @end
 
@@ -63,18 +63,28 @@
         self.centerPlayButton.hidden = YES;
         self.centerPlayButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         [self addSubview:self.centerPlayButton];
-        
-        UILabel *toastView = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, kAutoNextToastWidth, kAutoNextToastHeight)];
+
+        UIView *toastView = [[UIView alloc] initWithFrame:CGRectMake(0, 10, kAutoNextToastWidth, kAutoNextToastHeight)];
+        toastView.backgroundColor = [UIColor clearColor];
+        toastView.alpha = 0;
         toastView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         toastView.center = CGPointMake(CGRectGetMidX(self.bounds), toastView.center.y);
-        toastView.layer.cornerRadius = 4;
-        toastView.layer.borderColor = [[UIColor whiteColor] colorWithAlphaComponent:03].CGColor;
-        toastView.layer.borderWidth = 0.2;
-        toastView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
-        toastView.textColor = [UIColor whiteColor];
-        toastView.textAlignment = UITextAlignmentCenter;
-        toastView.alpha = 0;
-        toastView.font = [UIFont systemFontOfSize:12];
+        
+        UIImageView *toastFrameImageView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"toast_frame")];
+        toastFrameImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        toastFrameImageView.frame = toastView.bounds;
+        toastFrameImageView.contentStretch = CGRectMake(0.5, 0.5, 0, 0);
+        [toastView addSubview:toastFrameImageView];
+        [toastFrameImageView release];
+        
+        UILabel *toastLabel = [[UILabel alloc] initWithFrame:toastView.bounds];
+        toastLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        toastLabel.textColor = [UIColor whiteColor];
+        toastLabel.textAlignment = UITextAlignmentCenter;
+        toastLabel.font = [UIFont systemFontOfSize:12];
+        [toastView addSubview:toastLabel];
+        [toastLabel release];
+        self.toastLabel = toastLabel;
         [self addSubview:toastView];
         self.toastView = toastView;
         [toastView release];
@@ -334,7 +344,7 @@
     [self.toastView removeFromSuperview];
     [self addSubview:self.toastView];
     self.toastView.center = CGPointMake(CGRectGetMidX(self.bounds), self.toastView.center.y);
-    self.toastView.text = NSLocalizedString(@"即将自动播放下一集", nil);
+    self.toastLabel.text = NSLocalizedString(@"即将自动播放下一集", nil);
     self.toastView.size = CGSizeMake(kAutoNextToastWidth, kAutoNextToastHeight);
     
     [self showToast:show animated:animated];
@@ -344,7 +354,7 @@
 {
     [self.toastView removeFromSuperview];
     [self addSubview:self.toastView];
-    self.toastView.text = toast;
+    self.toastLabel.text = toast;
     [self fitDownloadToastFrame];
     
     [self showToast:show animated:animated];
@@ -354,7 +364,7 @@
 {
     [self.toastView removeFromSuperview];
     [self addSubview:self.toastView];
-    self.toastView.text = toast;
+    self.toastLabel.text = toast;
     [self fitCenterToastFrame];
     
     [self showToast:show animated:animated];
@@ -362,20 +372,21 @@
 
 - (void)updateDownloadToast:(NSString *)toast
 {
-    self.toastView.text = toast;
+    self.toastLabel.text = toast;
     [self fitDownloadToastFrame];
 }
 
 - (void)fitDownloadToastFrame
 {
     self.toastView.size = CGSizeMake(kAutoNextToastWidth, kAutoNextToastHeight);
-    [self.toastView sizeToFit];
-    CGRect rect = self.toastView.frame;
+    [self.toastLabel sizeToFit];
+    CGRect rect = self.toastLabel.frame;
     rect.size.width += 20;
     rect.size.height = kAutoNextToastHeight;
     rect.origin.y = 10;
     rect.origin.x = self.width - 10 - rect.size.width;
     self.toastView.frame = rect;
+    self.toastLabel.frame = self.toastView.bounds;
 }
 
 - (void)fitCenterToastFrame
