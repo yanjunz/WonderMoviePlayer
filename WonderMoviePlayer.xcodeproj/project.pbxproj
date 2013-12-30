@@ -153,7 +153,6 @@
 		B5DC0782182CD4690046A7A5 /* WonderAVMovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DC0776182CD4690046A7A5 /* WonderAVMovieViewController.m */; };
 		B5DC0783182CD4690046A7A5 /* WonderAVPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DC0778182CD4690046A7A5 /* WonderAVPlayerView.m */; };
 		B5DC0784182CD4690046A7A5 /* WonderMPMovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DC077A182CD4690046A7A5 /* WonderMPMovieViewController.m */; };
-		B5F45FC617E986D600F0873B /* Reveal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5F45FC517E986D600F0873B /* Reveal.framework */; };
 		B5F96D5118437748006A73FB /* FakeMovieDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = B5F96D5018437748006A73FB /* FakeMovieDownloader.m */; };
 		B5F96D681846267C006A73FB /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = B5F96D671846267C006A73FB /* Reachability.m */; };
 		B5F96D6A18472E27006A73FB /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5F96D6918472E27006A73FB /* SystemConfiguration.framework */; };
@@ -377,7 +376,6 @@
 		B5DC077D182CD4690046A7A5 /* MovieControlSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovieControlSource.h; sourceTree = "<group>"; };
 		B5DC077E182CD4690046A7A5 /* MoviePlayerHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoviePlayerHandler.h; sourceTree = "<group>"; };
 		B5DC077F182CD4690046A7A5 /* WonderMoviePlayerConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMoviePlayerConstants.h; sourceTree = "<group>"; };
-		B5F45FC517E986D600F0873B /* Reveal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Reveal.framework; sourceTree = "<group>"; };
 		B5F96D4B1843603A006A73FB /* MovieDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovieDownloader.h; sourceTree = "<group>"; };
 		B5F96D4F18437748006A73FB /* FakeMovieDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FakeMovieDownloader.h; sourceTree = "<group>"; };
 		B5F96D5018437748006A73FB /* FakeMovieDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeMovieDownloader.m; sourceTree = "<group>"; };
@@ -400,7 +398,6 @@
 				B517792217C1AFB6006B948E /* CoreMedia.framework in Frameworks */,
 				B5D4C3BD182917E000BB0A53 /* CoreText.framework in Frameworks */,
 				B516CA0F17DD6AA100D8E3A2 /* CFNetwork.framework in Frameworks */,
-				B5F45FC617E986D600F0873B /* Reveal.framework in Frameworks */,
 				B517795617C21BD7006B948E /* libicucore.dylib in Frameworks */,
 				B517795417C21B59006B948E /* CoreFoundation.framework in Frameworks */,
 				B517792017C1AF7F006B948E /* AVFoundation.framework in Frameworks */,
@@ -440,7 +437,6 @@
 				B56EE42F182A1F0000241DDA /* AudioToolbox.framework */,
 				B56EE42D182A1E9F00241DDA /* CoreAudio.framework */,
 				B5D4C3BC182917E000BB0A53 /* CoreText.framework */,
-				B5F45FC517E986D600F0873B /* Reveal.framework */,
 				B516CA0E17DD6AA100D8E3A2 /* CFNetwork.framework */,
 				B517795517C21BD6006B948E /* libicucore.dylib */,
 				B517795317C21B58006B948E /* CoreFoundation.framework */,
