@@ -10,6 +10,9 @@
 #import "WonderMovieInfoView.h"
 #import "UIView+Sizes.h"
 
+#define kAutoNextToastWidth (180 * (27. / 40))
+#define kAutoNextToastHeight 27
+
 @interface WonderMovieInfoView ()
 @property (nonatomic, retain) UILabel *volumeLabel;
 @property (nonatomic, retain) UIImageView *volumeImageView;
@@ -61,7 +64,7 @@
         self.centerPlayButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         [self addSubview:self.centerPlayButton];
         
-        UILabel *toastView = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, 180, 40)];
+        UILabel *toastView = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, kAutoNextToastWidth, kAutoNextToastHeight)];
         toastView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         toastView.center = CGPointMake(CGRectGetMidX(self.bounds), toastView.center.y);
         toastView.layer.cornerRadius = 3;
@@ -330,7 +333,7 @@
     [self addSubview:self.toastView];
     self.toastView.center = CGPointMake(CGRectGetMidX(self.bounds), self.toastView.center.y);
     self.toastView.text = NSLocalizedString(@"即将自动播放下一集", nil);
-    self.toastView.size = CGSizeMake(180, 40);
+    self.toastView.size = CGSizeMake(kAutoNextToastWidth, kAutoNextToastHeight);
     
     [self showToast:show animated:animated];
 }
@@ -363,11 +366,11 @@
 
 - (void)fitDownloadToastFrame
 {
-    self.toastView.size = CGSizeMake(180, 40);
+    self.toastView.size = CGSizeMake(kAutoNextToastWidth, kAutoNextToastHeight);
     [self.toastView sizeToFit];
     CGRect rect = self.toastView.frame;
     rect.size.width += 20;
-    rect.size.height = 40;
+    rect.size.height = kAutoNextToastHeight;
     rect.origin.y = 10;
     rect.origin.x = self.width - 10 - rect.size.width;
     self.toastView.frame = rect;

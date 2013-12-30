@@ -309,7 +309,7 @@ void wonderMovieVolumeListenerCallback (
     
     self.actionButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.actionButton setImage:QQVideoPlayerImage(@"play_normal") forState:UIControlStateNormal];
-    [self.actionButton setImage:QQVideoPlayerImage(@"play_press") forState:UIControlStateHighlighted];
+//    [self.actionButton setImage:QQVideoPlayerImage(@"play_press") forState:UIControlStateHighlighted];
     self.actionButton.titleLabel.font = [UIFont systemFontOfSize:10];
     self.actionButton.frame = CGRectMake(8, 0, 50, 50);
     [self.actionButton addTarget:self action:@selector(onClickAction:) forControlEvents:UIControlEventTouchUpInside];
