@@ -67,8 +67,10 @@
         UILabel *toastView = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, kAutoNextToastWidth, kAutoNextToastHeight)];
         toastView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         toastView.center = CGPointMake(CGRectGetMidX(self.bounds), toastView.center.y);
-        toastView.layer.cornerRadius = 3;
-        toastView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+        toastView.layer.cornerRadius = 4;
+        toastView.layer.borderColor = [[UIColor whiteColor] colorWithAlphaComponent:03].CGColor;
+        toastView.layer.borderWidth = 0.2;
+        toastView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
         toastView.textColor = [UIColor whiteColor];
         toastView.textAlignment = UITextAlignmentCenter;
         toastView.alpha = 0;

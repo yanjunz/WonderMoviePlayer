@@ -16,6 +16,7 @@
 
 @interface WonderMovieDramaGridCell ()
 @property (nonatomic, retain) NSMutableArray *buttons;
+@property (nonatomic, retain) NSMutableArray *playImageViews;
 @property (nonatomic, retain) UILabel *headerLabel;
 @end
 
@@ -29,6 +30,7 @@
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         
         self.buttons = [NSMutableArray arrayWithCapacity:kDramaGridCellButtonMaxRow * kDramaGridCellButtonCountPerRow];
+        self.playImageViews = [NSMutableArray arrayWithCapacity:kDramaGridCellButtonMaxRow * kDramaGridCellButtonCountPerRow];
         CGFloat leftPadding = 20, topPadding = 15 + 11 + 8;
         for (int i = 0; i < kDramaGridCellButtonCountPerRow * kDramaGridCellButtonMaxRow; ++i) {
             UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
