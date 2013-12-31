@@ -79,6 +79,11 @@
 //        leftShadow.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin;
 //        [self addSubview:leftShadow];
 //        [leftShadow release];
+        
+        UIView *edgeView = [[UIView alloc] initWithFrame:CGRectMake(-1, 0, 1, self.height)];
+        edgeView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.09];
+        [self addSubview:edgeView];
+        [edgeView release];
     }
     return self;
 }

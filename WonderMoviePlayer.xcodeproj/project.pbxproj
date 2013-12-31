@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AEBDBD5D18717548000B94ED /* kuaibo.png in Resources */ = {isa = PBXBuildFile; fileRef = AEBDBD5B18717548000B94ED /* kuaibo.png */; };
-		AEBDBD5E18717548000B94ED /* toast_frame.png in Resources */ = {isa = PBXBuildFile; fileRef = AEBDBD5C18717548000B94ED /* toast_frame.png */; };
+		AE4FA7CA1872ADAA005B7BD6 /* toast_frame@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AE4FA7C91872ADAA005B7BD6 /* toast_frame@2x.png */; };
 		B516CA0F17DD6AA100D8E3A2 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B516CA0E17DD6AA100D8E3A2 /* CFNetwork.framework */; };
 		B517773817B36D44006B948E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517773717B36D44006B948E /* UIKit.framework */; };
 		B517773A17B36D44006B948E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517773917B36D44006B948E /* Foundation.framework */; };
@@ -151,8 +150,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		AEBDBD5B18717548000B94ED /* kuaibo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kuaibo.png; sourceTree = "<group>"; };
-		AEBDBD5C18717548000B94ED /* toast_frame.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = toast_frame.png; sourceTree = "<group>"; };
+		AE4FA7C91872ADAA005B7BD6 /* toast_frame@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toast_frame@2x.png"; sourceTree = "<group>"; };
 		B516CA0E17DD6AA100D8E3A2 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		B517773417B36D44006B948E /* WonderMoviePlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WonderMoviePlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B517773717B36D44006B948E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -510,8 +508,7 @@
 		B5435578186D26DE0090AFEE /* videoplayer */ = {
 			isa = PBXGroup;
 			children = (
-				AEBDBD5B18717548000B94ED /* kuaibo.png */,
-				AEBDBD5C18717548000B94ED /* toast_frame.png */,
+				AE4FA7C91872ADAA005B7BD6 /* toast_frame@2x.png */,
 				B5435579186D26DE0090AFEE /* back@2x.png */,
 				B543557C186D26DE0090AFEE /* brightness@2x.png */,
 				B543557D186D26DE0090AFEE /* brightness_prompt_bg@2x.png */,
@@ -913,7 +910,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B54355C7186D26DF0090AFEE /* play@2x.png in Resources */,
-				AEBDBD5E18717548000B94ED /* toast_frame.png in Resources */,
 				B54355CC186D26DF0090AFEE /* progress_prompt_circle@2x.png in Resources */,
 				B54355E6186D26DF0090AFEE /* m@2x.png in Resources */,
 				B5AD785317CDA5E800C08E51 /* video.js in Resources */,
@@ -921,8 +917,8 @@
 				B54355DE186D26DF0090AFEE /* volume@2x.png in Resources */,
 				B54355D7186D26DF0090AFEE /* separator_line@2x.png in Resources */,
 				B54355DB186D26DF0090AFEE /* tv_drama_button_press@2x.png in Resources */,
+				AE4FA7CA1872ADAA005B7BD6 /* toast_frame@2x.png in Resources */,
 				B54355E2186D26DF0090AFEE /* b@2x.png in Resources */,
-				AEBDBD5D18717548000B94ED /* kuaibo.png in Resources */,
 				B54355D1186D26DF0090AFEE /* progressbar_indicator_press@2x.png in Resources */,
 				B54355D5186D26DF0090AFEE /* resolution_button_selected@2x.png in Resources */,
 				B54355E1186D26DF0090AFEE /* volume_prompt_gesture@2x.png in Resources */,
