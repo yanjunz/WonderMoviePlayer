@@ -48,10 +48,11 @@
         [self addSubview:self.progressTimeLabel];
         [progressTimeLabel release];
         
-        CGFloat centerButtonSize = 138 / 2;
+//        CGFloat centerButtonSize = 138 / 2;
         self.replayButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.replayButton setImage:QQVideoPlayerImage(@"replay") forState:UIControlStateNormal];
-        self.replayButton.size = CGSizeMake(centerButtonSize, centerButtonSize);
+//        self.replayButton.size = CGSizeMake(centerButtonSize, centerButtonSize);
+        self.replayButton.size = self.replayButton.currentImage.size;
         self.replayButton.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
         self.replayButton.hidden = YES;
         self.replayButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
@@ -59,7 +60,8 @@
         
         self.centerPlayButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.centerPlayButton setImage:QQVideoPlayerImage(@"play") forState:UIControlStateNormal];
-        self.centerPlayButton.frame = self.replayButton.frame;
+        self.centerPlayButton.size = self.centerPlayButton.currentImage.size;
+        self.centerPlayButton.center = self.replayButton.center;
         self.centerPlayButton.hidden = YES;
         self.centerPlayButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         [self addSubview:self.centerPlayButton];
