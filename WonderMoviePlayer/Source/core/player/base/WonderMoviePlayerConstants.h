@@ -18,6 +18,10 @@
 #define QQVideoPlayerImage(src) [UIImageEx loadAndCacheImageFromApp:[NSString stringWithFormat:@"function_videoplayer_%@", src]]
 #endif
 
+#ifndef QQActivityIndicatorImage
+#define QQActivityIndicatorImage(src) [UIImageEx loadAndCacheImageFromApp:[NSString stringWithFormat:@"common_activityindicator_%@", src]]
+#endif
+
 // define colors
 #define RGBAColor(r, g, b, a) [UIColor colorWithRed:r / 255.f green:g / 255.f blue:b / 255.f alpha:a / 255.f]
 #define QQColor(colorName) colorName

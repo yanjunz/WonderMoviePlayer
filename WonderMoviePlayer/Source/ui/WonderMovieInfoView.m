@@ -158,7 +158,9 @@
         _loadingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 181, 101 + 20)];
         _loadingView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         
-        UIImageView *loadingIndicator = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"loading")];
+        UIImageView *loadingIndicator = [[UIImageView alloc] initWithImage:
+                                         QQActivityIndicatorImage(@"color_b")];
+//                                         QQVideoPlayerImage(@"loading")];
         self.loadingIndicator = loadingIndicator;
         self.loadingIndicator.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         self.loadingIndicator.contentMode = UIViewContentModeCenter;
