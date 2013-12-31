@@ -16,8 +16,8 @@
 
 @interface WonderMovieDramaGridCell ()
 @property (nonatomic, retain) NSMutableArray *buttons;
-@property (nonatomic, retain) NSMutableArray *playImageViews;
 @property (nonatomic, retain) UILabel *headerLabel;
+@property (nonatomic, retain) UIImageView *playingFlagView;
 @end
 
 @implementation WonderMovieDramaGridCell
@@ -29,16 +29,17 @@
         // Initialization code
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         
+        UIImageView *playingFlagView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"list_play")];
+        self.playingFlagView = playingFlagView;
+        [playingFlagView release];
+        
         self.buttons = [NSMutableArray arrayWithCapacity:kDramaGridCellButtonMaxRow * kDramaGridCellButtonCountPerRow];
-        self.playImageViews = [NSMutableArray arrayWithCapacity:kDramaGridCellButtonMaxRow * kDramaGridCellButtonCountPerRow];
         CGFloat leftPadding = 20, topPadding = 15 + 11 + 8;
         for (int i = 0; i < kDramaGridCellButtonCountPerRow * kDramaGridCellButtonMaxRow; ++i) {
             UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
             [button setBackgroundImage:QQVideoPlayerImage(@"tv_drama_button_normal") forState:UIControlStateNormal];
             [button setBackgroundImage:QQVideoPlayerImage(@"tv_drama_button_press") forState:UIControlStateHighlighted];
             [button setBackgroundImage:QQVideoPlayerImage(@"tv_drama_button_press") forState:UIControlStateReserved];
-//            [button setBackgroundImage:QQVideoPlayerImage(@"tv_drama_button_selected") forState:UIControlStateSelected];
-//            [button setImage:QQVideoPlayerImage(@"list_play") forState:UIControlStateSelected];
             button.hidden = YES;
             button.frame = CGRectMake(leftPadding + (i % kDramaGridCellButtonCountPerRow) * (kDramaGridCellButtonWidth + 8),
                                       topPadding + (i / kDramaGridCellButtonCountPerRow) * (kDramaGridCellButtonHeight + 19),
@@ -108,14 +109,13 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
+    BOOL showPlayingFlag = NO;
     if (_minVideoSetNum != NSNotFound && _maxVideoSetNum != NSNotFound) {
         for (int i = 0; i < kDramaGridCellButtonCountPerRow * kDramaGridCellButtonMaxRow; ++i) {
             UIButton *button = self.buttons[i];
             int setNum = _minVideoSetNum + i;
             button.tag = setNum;
             
-            button.selected = (i == _selectedButtonIndex);
-
             if (setNum <= _maxVideoSetNum) {
                 
                 button.hidden = NO;
@@ -125,18 +125,31 @@
                                       self.cellType == WonderMovieDramaGridCellTypeEnded ? @"终" : @"新"]
                             forState:UIControlStateNormal];
                     [button setBackgroundImage:nil forState:UIControlStateSelected];
-                    [button setImage:QQVideoPlayerImage(@"list_play") forState:UIControlStateSelected];
                 }
                 else {
                     [button setTitle:[NSString stringWithFormat:@"%d", setNum] forState:UIControlStateNormal];
-                    [button setBackgroundImage:QQVideoPlayerImage(@"tv_drama_button_selected") forState:UIControlStateSelected];
-                    [button setImage:nil forState:UIControlStateSelected];
                 }
             }
             else {
                 button.hidden = YES;
             }
+            
+            if (i == _selectedButtonIndex) {
+                button.selected = YES;
+                CGSize size = [button.titleLabel sizeThatFits:button.bounds.size];
+                CGPoint center = button.center;
+                center.x -= (size.width / 2 + 15.0);
+                self.playingFlagView.center = center;
+                [self.contentView addSubview:self.playingFlagView];
+                showPlayingFlag = YES;
+            }
+            else {
+                button.selected = NO;
+            }
         }
+    }
+    if (!showPlayingFlag) {
+        [self.playingFlagView removeFromSuperview];
     }
 }
 
@@ -148,6 +161,7 @@
     else {
         _selectedButtonIndex = NSNotFound;
     }
+    [self setNeedsLayout];
 }
 
 #pragma mark - UIAction

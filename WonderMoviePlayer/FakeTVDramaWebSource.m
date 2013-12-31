@@ -173,7 +173,7 @@
         [NSThread sleepForTimeInterval:3];
         return nil;
     }
-    else if (_maxVideoSetNum > 176) {
+    else if (_maxVideoSetNum > 100) {
         [NSThread sleepForTimeInterval:3];
         return nil;
     }
