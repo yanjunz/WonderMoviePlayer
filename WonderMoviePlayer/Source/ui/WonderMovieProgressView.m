@@ -92,7 +92,7 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    CGFloat progressHeight = 6;
+    CGFloat progressHeight = 2;
     /*
      * NOTE: the inner progress view width should not be the same as self.width,
      * otherwise the progressIndicator will be hard to pressed since half of it is outside the superview
