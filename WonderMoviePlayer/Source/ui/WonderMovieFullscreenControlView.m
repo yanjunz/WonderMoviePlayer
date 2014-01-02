@@ -922,7 +922,8 @@ void wonderMovieVolumeListenerCallback (
     
 #ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAirPlayAvailabilityChanged) name:AirPlayAvailabilityChanged object:nil];
-    [self onAirPlayAvailabilityChanged]; // Check it at once
+//    [self onAirPlayAvailabilityChanged]; // Check it at once
+    [self performSelector:@selector(onAirPlayAvailabilityChanged) withObject:nil afterDelay:0.5];
 #endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
 }
 
