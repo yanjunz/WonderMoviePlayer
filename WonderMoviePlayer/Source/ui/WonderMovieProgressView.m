@@ -10,7 +10,6 @@
 #import "WonderMoviePlayerConstants.h"
 #import "WonderMovieProgressView.h"
 #import "UIView+Sizes.h"
-#import "WonderMoviePlayerConstants.h"
 
 @interface WonderMovieProgressView ()
 //@property (nonatomic, retain) UIProgressView *progressView;
