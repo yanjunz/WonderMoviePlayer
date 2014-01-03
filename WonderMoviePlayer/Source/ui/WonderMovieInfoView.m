@@ -84,6 +84,7 @@
         toastLabel.textColor = [UIColor whiteColor];
         toastLabel.textAlignment = UITextAlignmentCenter;
         toastLabel.font = [UIFont systemFontOfSize:12];
+        toastLabel.backgroundColor = [UIColor clearColor];
         [toastView addSubview:toastLabel];
         [toastLabel release];
         self.toastLabel = toastLabel;
