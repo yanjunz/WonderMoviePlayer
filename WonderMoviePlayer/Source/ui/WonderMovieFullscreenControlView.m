@@ -191,13 +191,21 @@ void wonderMovieVolumeListenerCallback (
 - (void)dealloc
 {
     //NSLog(@"dealloc WonderMovieFullScreenControlView");
+    
+    // 1. remove timer resource, actually it should be released already
     [self removeTimer];
     
-    self.contentView = nil;
+    // 2. release MovieControlSource
+    self.delegate = nil;
+    self.tvDramaManager = nil;
+    self.resolutions = nil;
     
+    // 3. release public var
     self.infoView = nil;
     
+    // 4. release private var
     self.progressView = nil;
+    self.contentView = nil;
     
     self.bottomBar = nil;
     self.progressBar = nil;
@@ -209,8 +217,9 @@ void wonderMovieVolumeListenerCallback (
     self.headerBar = nil;
     self.lockButton = nil;
     self.downloadButton = nil;
-    //    self.crossScreenButton = nil;
+//    self.crossScreenButton = nil;
     self.menuButton = nil;
+    self.tvDramaButton = nil;
     
     self.titleLabel = nil;
     self.subtitleLabel = nil;
@@ -221,16 +230,14 @@ void wonderMovieVolumeListenerCallback (
     
     self.viewsToBeLocked = nil;
     
-    self.delegate = nil;
     self.panGestureRecognizer = nil;
     
-    self.horizontalPanningTipView = nil;
-    self.verticalPanningTipView = nil;
-    
-    self.tvDramaManager = nil;
     self.dramaContainerView = nil;
     self.dramaView = nil;
     
+    self.horizontalPanningTipView = nil;
+    self.verticalPanningTipView = nil;
+
     self.errorView = nil;
     [super dealloc];
 }

@@ -12,7 +12,6 @@
 #import "UIView+Sizes.h"
 
 @interface WonderMovieProgressView ()
-//@property (nonatomic, retain) UIProgressView *progressView;
 @property (nonatomic, retain) UIImageView *progressBottomView;
 @property (nonatomic, retain) UIImageView *progressCacheView;
 @property (nonatomic, retain) UIImageView *progressTopView;
@@ -34,6 +33,8 @@
 
 - (void)dealloc
 {
+    self.delegate = nil;
+    
     [_progressBottomView release];
     [_progressCacheView release];
     [_progressTopView release];

@@ -90,6 +90,7 @@
 
 - (void)dealloc
 {
+    self.delegate = nil;
     self.tvDramaManager = nil;
     self.tableView = nil;
     self.errorView = nil;

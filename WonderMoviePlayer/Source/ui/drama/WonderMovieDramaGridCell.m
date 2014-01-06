@@ -76,6 +76,7 @@
     self.delegate = nil;
     self.buttons = nil;
     self.headerLabel = nil;
+    self.playingFlagView = nil;
     [super dealloc];
 }
 

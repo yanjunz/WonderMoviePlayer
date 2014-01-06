@@ -140,14 +140,19 @@
     
     self.replayButton = nil;
     self.centerPlayButton = nil;
-    
-    self.toastView = nil;
-    
-    self.errorView = nil;
+
     self.openSourceButton = nil;
     
     [_volumeView release];
     [_brightnessView release];
+    
+    self.volumeLabel = nil;
+    self.volumeImageView = nil;
+    self.brightnessLabel = nil;
+    self.toastView = nil;
+    self.toastLabel = nil;
+    self.errorView = nil;
+    
     [super dealloc];
 }
 
