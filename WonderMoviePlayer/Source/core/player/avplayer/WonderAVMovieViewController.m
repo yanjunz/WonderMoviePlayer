@@ -73,7 +73,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        
+        self.wantsFullScreenLayout = YES; // NOTE: wantsFullScreenLayout must be set in init, sometime it will not work if it is set in viewDidLoad
         // observe parentViewController to get notification of dismiss from parent view controller
         // http://stackoverflow.com/questions/2444112/method-called-when-dismissing-a-uiviewcontroller
         [self addObserver:self forKeyPath:@"parentViewController" options:0 context:NULL];
@@ -160,7 +160,6 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 {
     [super viewDidLoad];
     [UIApplication sharedApplication].statusBarHidden = YES;
-    self.wantsFullScreenLayout = YES;
     UIView *backgroundView = [[UIView alloc] init];
     backgroundView.backgroundColor = QQColor(videoplayer_bg_color);
     backgroundView.contentMode = UIViewContentModeBottom;
