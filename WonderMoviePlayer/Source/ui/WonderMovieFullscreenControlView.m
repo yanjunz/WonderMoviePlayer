@@ -600,6 +600,8 @@ void wonderMovieVolumeListenerCallback (
         [self rebuildResolutionsView];
         [self updateResolutions];
     }
+    
+    
 }
 
 - (void)installGestureHandlers

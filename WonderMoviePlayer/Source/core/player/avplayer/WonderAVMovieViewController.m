@@ -339,6 +339,13 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     //默认情况下扬声器播放
     [audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
+    OSStatus propertySetError = 0;
+    UInt32 allowMixing = false;
+    
+    propertySetError = AudioSessionSetProperty (
+                                                kAudioSessionProperty_OverrideCategoryMixWithOthers,
+                                                sizeof (allowMixing),
+                                                &allowMixing);
     [audioSession setActive:YES error:nil];
     
     

@@ -40,7 +40,7 @@
 {
     Task *t = self.task;
         if (t.state == TaskStateDownloading) {
-            CGFloat progress = t.progress + 0.01;
+            CGFloat progress = t.progress + 0.05;
             if (progress >= 1) {
                 t.state = TaskStateFinished;
                 t.progress = 1;
