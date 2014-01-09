@@ -27,6 +27,11 @@
 #import "AirPlayDetector.h"
 #endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
 
+#define kWonderMovieProgressBarLeftPaddingWithNext      (60+15+10+8-10)
+#define kWonderMovieProgressBarLeftPaddingWithoutNext   (60+8-10)
+#define kWonderMovieNextLeftPadding                     (kWonderMovieProgressBarLeftPaddingWithNext - 20 - 6)
+#define kWonderMovieAirplayLeftPadding                  5
+
 // y / x
 #define kWonderMovieVerticalPanGestureCoordRatio    1.732050808f
 //#define kWonderMovieHorizontalPanGestureCoordRatio  1.0f
@@ -267,7 +272,7 @@ void wonderMovieVolumeListenerCallback (
     
     CGFloat bottomBarHeight = 50;
     CGFloat headerBarHeight = 44;
-    CGFloat progressBarLeftPadding = (YES ? 60+15+10 : 60) + 8 - 10;
+    CGFloat progressBarLeftPadding = kWonderMovieProgressBarLeftPaddingWithNext;
     CGFloat progressBarRightPadding = 0;
     CGFloat durationLabelWidth = 100;
     
@@ -326,7 +331,7 @@ void wonderMovieVolumeListenerCallback (
     self.nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.nextButton setImage:QQVideoPlayerImage(@"next_normal") forState:UIControlStateNormal];
     [self.nextButton addTarget:self action:@selector(onClickNext:) forControlEvents:UIControlEventTouchUpInside];
-    self.nextButton.frame = CGRectMake(progressBarLeftPadding - 20 - 6, (self.bottomBar.height - 17 * 2) / 2, 15 * 2, 17 * 2);
+    self.nextButton.frame = CGRectMake(kWonderMovieNextLeftPadding, (self.bottomBar.height - 17 * 2) / 2, 15 * 2, 17 * 2);
     [self.bottomBar addSubview:self.nextButton];
     self.nextButton.enabled = YES;
     
@@ -388,8 +393,6 @@ void wonderMovieVolumeListenerCallback (
     CGFloat headerBarRightPadding = 5;
     CGFloat buttonFontSize = 13;
     UIFont *buttonFont = [UIFont systemFontOfSize:buttonFontSize];
-    
-  
     
     UILabel *menuLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.headerBar.width - headerBarRightPadding - buttonWidth, 0, buttonWidth, headerBarHeight)];
     menuLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
@@ -1757,9 +1760,9 @@ void wonderMovieVolumeListenerCallback (
         [volumeView sizeToFit];
         [self.bottomBar addSubview:volumeView];
         _airPlayButton = volumeView;
-        CGFloat delta = volumeView.width + 5;
+        CGFloat delta = volumeView.width + kWonderMovieAirplayLeftPadding;
         self.progressBar.width = self.bottomBar.width - self.progressBar.left - delta;
-        volumeView.left = self.progressBar.right - 5;
+        volumeView.left = self.progressBar.right - kWonderMovieAirplayLeftPadding; // NOTE: progress bar is longer than progress view
         volumeView.center = CGPointMake(volumeView.center.x, self.bottomBar.height / 2);
         [volumeView release];
     }
@@ -2007,8 +2010,15 @@ void wonderMovieVolumeListenerCallback (
 {
     BOOL needShow = show && self.nextButton.hidden;
     BOOL needHide = !show && !self.nextButton.hidden;
-    CGFloat progressBarLeftPaddingForShowNext = (60+15+10) + 8 - 10;
-    CGFloat progressBarLeftPaddingForHideNext = (60) + 8 - 10;
+    CGFloat progressBarLeftPaddingForShowNext = kWonderMovieProgressBarLeftPaddingWithNext;
+    CGFloat progressBarLeftPaddingForHideNext = kWonderMovieProgressBarLeftPaddingWithoutNext;
+    
+    if (needShow) {
+        self.nextButton.hidden = NO;
+    }
+    else if (needHide) {
+        self.nextButton.hidden = YES;
+    }
     
     [UIView animateWithDuration:animated ? 0.5f : 0 animations:^{
         if (needShow) {
@@ -2019,14 +2029,7 @@ void wonderMovieVolumeListenerCallback (
             self.progressBar.frame = CGRectMake(progressBarLeftPaddingForHideNext, self.progressBar.top, self.progressBar.width + (progressBarLeftPaddingForShowNext - progressBarLeftPaddingForHideNext), self.progressBar.height);
             self.nextButton.alpha = 0;
         }
-    } completion:^(BOOL finished) {
-        if (needShow) {
-            self.nextButton.hidden = NO;
-        }
-        else if (needHide) {
-            self.nextButton.hidden = YES;
-        }
-    }];
+    } completion:nil];
 }
 
 - (void)updateNextButtonState
