@@ -594,7 +594,14 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
             }
             else if (_hasStarted) {
                 if (self.player.rate == 0) {
-                    [self.controlSource pause];
+                    // Workaround:
+                    if (_wasPlaying) {
+                        // Force to play
+                        [self.player play];
+                    }
+                    else {
+                        [self.controlSource pause];
+                    }
                 }
                 else {
                     [self.controlSource play];
