@@ -50,7 +50,8 @@
         
 //        CGFloat centerButtonSize = 138 / 2;
         self.replayButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.replayButton setImage:QQVideoPlayerImage(@"replay") forState:UIControlStateNormal];
+//        [self.replayButton setImage:QQVideoPlayerImage(@"replay") forState:UIControlStateNormal];
+        [self.replayButton setImage:QQVideoPlayerImage(@"play") forState:UIControlStateNormal];
 //        self.replayButton.size = CGSizeMake(centerButtonSize, centerButtonSize);
         self.replayButton.size = self.replayButton.currentImage.size;
         self.replayButton.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
