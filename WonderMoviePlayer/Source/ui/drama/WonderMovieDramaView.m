@@ -263,21 +263,43 @@
         self.tableView.footerLoadingEnabled = NO;
     }
     else {
-        Video *minVideo = self.sortedVideos[0];
-        if (minVideo.setNum.intValue > 1) {
-            self.tableView.headerLoadingEnabled = YES;
+        if (self.videoGroup.showType.intValue != VideoGroupShowTypeList) {
+            // ascend
+            Video *minVideo = self.sortedVideos[0];
+            if (minVideo.setNum.intValue > 1) {
+                self.tableView.headerLoadingEnabled = YES;
+            }
+            else {
+                self.tableView.headerLoadingEnabled = NO;
+            }
+            
+            Video *maxVideo = [self.sortedVideos lastObject];
+            if (self.videoGroup.maxId.intValue > 0 &&
+                maxVideo.setNum.intValue < self.videoGroup.maxId.intValue) {
+                self.tableView.footerLoadingEnabled = YES;
+            }
+            else {
+                self.tableView.footerLoadingEnabled = NO;
+            }
         }
         else {
-            self.tableView.headerLoadingEnabled = NO;
-        }
-        
-        Video *maxVideo = [self.sortedVideos lastObject];
-        if (self.videoGroup.maxId.intValue > 0 &&
-            maxVideo.setNum.intValue < self.videoGroup.maxId.intValue) {
-            self.tableView.footerLoadingEnabled = YES;
-        }
-        else {
-            self.tableView.footerLoadingEnabled = NO;
+            // descend
+            Video *minVideo = [self.sortedVideos lastObject];
+            if (minVideo.setNum.intValue > 1) {
+                self.tableView.footerLoadingEnabled = YES;
+            }
+            else {
+                self.tableView.footerLoadingEnabled = NO;
+            }
+            
+            Video *maxVideo = self.sortedVideos[0];
+            if (self.videoGroup.maxId.intValue > 0 &&
+                maxVideo.setNum.intValue < self.videoGroup.maxId.intValue) {
+                self.tableView.headerLoadingEnabled = YES;
+            }
+            else {
+                self.tableView.headerLoadingEnabled = NO;
+            }
         }
     }
 }
