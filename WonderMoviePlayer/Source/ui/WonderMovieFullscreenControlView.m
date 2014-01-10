@@ -1425,6 +1425,9 @@ void wonderMovieVolumeListenerCallback (
             self.infoView.centerPlayButton.hidden = YES;
             self.infoView.replayButton.hidden = YES;
             [self resetBufferTitle];
+            if (self.controlState == MovieControlStatePlaying) {
+                _isLoading = NO;
+            }
         }
         else if (self.controlState == MovieControlStatePaused ||
                  (self.controlState == MovieControlStateBuffering && _bufferFromPaused)) {
