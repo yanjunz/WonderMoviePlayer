@@ -390,7 +390,7 @@ void wonderMovieVolumeListenerCallback (
     [separatorView release];
     
     CGFloat buttonWidth = 60;
-    CGFloat headerBarRightPadding = 5;
+    CGFloat headerBarRightPadding = 0;
     CGFloat buttonFontSize = 13;
     UIFont *buttonFont = [UIFont systemFontOfSize:buttonFontSize];
     
@@ -701,7 +701,7 @@ void wonderMovieVolumeListenerCallback (
         [lockButton addTarget:self action:@selector(onClickLock:) forControlEvents:UIControlEventTouchUpInside];
         [popupMenu addSubview:lockButton];
         
-        CGFloat delta = 20;
+        CGFloat delta = 16;
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, topOffset, menuWidth - delta, menuButtonHeight)];
         label.text = NSLocalizedString(@"锁屏", nil);
         label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
