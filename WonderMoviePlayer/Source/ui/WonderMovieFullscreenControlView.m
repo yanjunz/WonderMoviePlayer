@@ -1114,11 +1114,19 @@ void wonderMovieVolumeListenerCallback (
     int hour1 = time1 / 3600;
     int minute1 = time1 / 60 - hour1 * 60;
     int second1 = time1 % 60;
+    NSString *durationText;
     if (hour == 0) {
-        self.durationLabel.text = [NSString stringWithFormat:@"%02d:%02d / %02d:%02d", minute1, second1, minute, second];
+        durationText = [NSString stringWithFormat:@"%02d:%02d", minute, second];
     }
     else {
-        self.durationLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d / %02d:%02d:%02d", hour1, minute1, second1, hour, minute, second];
+        durationText = [NSString stringWithFormat:@"%02d:%02d:%02d", hour, minute, second];
+    }
+    
+    if (hour1 == 0) {
+        self.durationLabel.text = [NSString stringWithFormat:@"%02d:%02d / %@", minute1, second1, durationText];
+    }
+    else {
+        self.durationLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d / %@", hour1, minute1, second1, durationText];
     }
 }
 
