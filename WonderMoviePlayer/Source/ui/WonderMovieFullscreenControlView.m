@@ -437,6 +437,7 @@ void wonderMovieVolumeListenerCallback (
     self.downloadButton.frame = CGRectOffset(btnRect, -buttonWidth+1, 0);
     self.downloadButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 //    [self.downloadButton setTitle:NSLocalizedString(@"缓存", nil) forState:UIControlStateNormal];
+    [self.downloadButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 7.5, 0, 0)];
     [self.downloadButton setTitleColor:QQColor(videoplayer_downloaded_color) forState:UIControlStateDisabled];
     [self.downloadButton setImage:QQVideoPlayerImage(@"download") forState:UIControlStateNormal];
     self.downloadButton.titleLabel.font = buttonFont;

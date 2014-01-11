@@ -32,6 +32,7 @@
 @property (retain, nonatomic) IBOutlet UISlider *slider;
 @property (retain, nonatomic) IBOutlet UIProgressView *progressView;
 @property (retain, nonatomic) IBOutlet UIView *testView;
+@property (retain, nonatomic) IBOutlet UIButton *tableButton;
 
 @end
 
@@ -81,6 +82,11 @@
     Reachability *reach = [Reachability reachabilityForInternetConnection];
     [reach startNotifier];
     _reach = [reach retain];
+}
+
+- (void)testTableButton
+{
+
 }
 
 - (void)volumeChanged:(id)n
@@ -282,6 +288,7 @@
     [_progressView release];
     [_loadingIndicator release];
     [_testView release];
+    [_tableButton release];
     [super dealloc];
 }
 - (void)viewDidUnload {
@@ -289,6 +296,7 @@
     [self setProgressView:nil];
     [self setLoadingIndicator:nil];
     [self setTestView:nil];
+    [self setTableButton:nil];
     [super viewDidUnload];
 }
 - (IBAction)onClickTest2:(id)sender {
