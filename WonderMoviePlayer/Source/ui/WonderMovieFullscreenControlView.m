@@ -333,6 +333,7 @@ void wonderMovieVolumeListenerCallback (
     [self.nextButton addTarget:self action:@selector(onClickNext:) forControlEvents:UIControlEventTouchUpInside];
     self.nextButton.frame = CGRectMake(kWonderMovieNextLeftPadding, (self.bottomBar.height - 17 * 2) / 2, 15 * 2, 17 * 2);
     [self.bottomBar addSubview:self.nextButton];
+    self.nextButton.showsTouchWhenHighlighted = YES;
     self.nextButton.enabled = YES;
     
     UILabel *startLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.progressView.left + kProgressViewPadding, bottomBarHeight / 2 + 2, durationLabelWidth, bottomBarHeight / 2)];

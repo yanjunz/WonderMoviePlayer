@@ -17,11 +17,15 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         // Initialization code
-        self.selectionStyle = UITableViewCellSelectionStyleGray;
+        self.selectionStyle = UITableViewCellSelectionStyleBlue;
         self.imageView.hidden = YES;
         self.textLabel.textColor = [UIColor whiteColor];
         
         self.backgroundColor = [UIColor clearColor];
+        UIView *selectedBackgroundView = [[UIView alloc] initWithFrame:self.bounds];
+        self.selectedBackgroundView = selectedBackgroundView;
+        selectedBackgroundView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.15];
+        [selectedBackgroundView release];
     }
     return self;
 }
