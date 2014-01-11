@@ -333,9 +333,9 @@
         self.volumeImageView.highlighted = NO;
     }
     self.volumeLabel.text = [NSString stringWithFormat:@"%d%%", (int)(volume * 100)];
-    [UIView animateWithDuration:3.0f animations:^{
+    [UIView animateWithDuration:0.5f delay:1.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
         self.volumeView.alpha = 0;
-    }];
+    } completion:nil];
 }
 
 - (void)showBrightness:(CGFloat)brightness
@@ -345,9 +345,9 @@
     self.volumeView.alpha = 0;
     self.brightnessView.alpha = 1;
     self.brightnessLabel.text = [NSString stringWithFormat:@"%d%%", (int)(brightness * 100)];
-    [UIView animateWithDuration:3.0f animations:^{
+    [UIView animateWithDuration:0.5f delay:1.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
         self.brightnessView.alpha = 0;
-    }];
+    } completion:nil];
 }
 
 - (void)showAutoNextToast:(BOOL)show animated:(BOOL)animated
