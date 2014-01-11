@@ -573,9 +573,9 @@ void wonderMovieVolumeListenerCallback (
     */
     
     // two line layout
-    CGFloat gapWidth = 7;
+//    CGFloat gapWidth = 7;
     CGFloat headerBarHeight = self.headerBar.height;
-    CGFloat maxTitleWidth = self.downloadButton.left - self.titleLabel.left - gapWidth;
+    CGFloat maxTitleWidth = self.headerBar.width / 2 - self.titleLabel.left; //self.downloadButton.left - self.titleLabel.left - gapWidth;
     if (self.subtitleLabel.text.length == 0) {
         self.titleLabel.frame = CGRectMake(self.titleLabel.left, 0, maxTitleWidth, headerBarHeight);
     }
