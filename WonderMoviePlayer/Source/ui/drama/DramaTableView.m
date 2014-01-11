@@ -23,7 +23,6 @@
         [loadingHeaderView addSubview:loadingIndicator];
         loadingIndicator.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         loadingIndicator.hidesWhenStopped = YES;
-        loadingIndicator.center = CGPointMake(CGRectGetMidX(loadingHeaderView.bounds) - 40, CGRectGetMidY(loadingHeaderView.bounds));
         [loadingHeaderView addSubview:loadingIndicator];
         [loadingIndicator release];
         _headerLoadingView = loadingIndicator;
@@ -37,7 +36,14 @@
         loadingLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         [loadingHeaderView addSubview:loadingLabel];
         [loadingLabel release];
-
+        
+        // Adjust center
+        [loadingLabel sizeToFit];
+        CGFloat padding = 5;
+        CGFloat width = loadingIndicator.width + loadingLabel.width + padding;
+        loadingIndicator.center = CGPointMake(CGRectGetMidX(loadingHeaderView.bounds) - width / 2 + loadingIndicator.width / 2, CGRectGetMidY(loadingHeaderView.bounds));
+        loadingLabel.center = CGPointMake(CGRectGetMidX(loadingHeaderView.bounds) + width / 2 - loadingLabel.width / 2 , CGRectGetMidY(loadingHeaderView.bounds));
+        
         UIView *retryHeaderView = [[UIView alloc] initWithFrame:loadingHeaderView.frame];
         retryHeaderView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.retryHeaderView = retryHeaderView;
@@ -61,7 +67,6 @@
         [loadingFooterView addSubview:loadingIndicator];
         loadingIndicator.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         loadingIndicator.hidesWhenStopped = YES;
-        loadingIndicator.center = CGPointMake(CGRectGetMidX(loadingFooterView.bounds) - 40, CGRectGetMidY(loadingFooterView.bounds));
         [loadingFooterView addSubview:loadingIndicator];
         [loadingIndicator release];
         _footerLoadingView = loadingIndicator;
@@ -75,6 +80,12 @@
         loadingLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         [loadingFooterView addSubview:loadingLabel];
         [loadingLabel release];
+        
+        // Adjust center
+        [loadingLabel sizeToFit];
+        width = loadingIndicator.width + loadingLabel.width + padding;
+        loadingIndicator.center = CGPointMake(CGRectGetMidX(loadingFooterView.bounds) - width / 2 + loadingIndicator.width / 2, CGRectGetMidY(loadingFooterView.bounds));
+        loadingLabel.center = CGPointMake(CGRectGetMidX(loadingFooterView.bounds) + width / 2 - loadingLabel.width / 2 , CGRectGetMidY(loadingFooterView.bounds));
         
         UIView *retryFooterView = [[UIView alloc] initWithFrame:loadingFooterView.frame];
         retryFooterView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
