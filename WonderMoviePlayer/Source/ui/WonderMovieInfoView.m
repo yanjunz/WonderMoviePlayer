@@ -366,7 +366,8 @@
     [self.toastView removeFromSuperview];
     [self addSubview:self.toastView];
     self.toastLabel.text = toast;
-    [self fitDownloadToastFrame];
+//    [self fitDownloadToastFrame];
+    [self fitCenterToastFrame];
     
     [self showToast:show animated:animated];
 }
@@ -384,7 +385,8 @@
 - (void)updateDownloadToast:(NSString *)toast
 {
     self.toastLabel.text = toast;
-    [self fitDownloadToastFrame];
+//    [self fitDownloadToastFrame];
+    [self fitCenterToastFrame];
 }
 
 - (void)fitDownloadToastFrame
@@ -403,13 +405,14 @@
 - (void)fitCenterToastFrame
 {
     self.toastView.size = CGSizeMake(180, 40);
-    [self.toastView sizeToFit];
-    CGRect rect = self.toastView.frame;
+    [self.toastLabel sizeToFit];
+    CGRect rect = self.toastLabel.frame;
     rect.size.width += 20;
     rect.size.height = 40;
     rect.origin.y = 10;
     rect.origin.x = (self.width - rect.size.width) / 2;
     self.toastView.frame = rect;
+    self.toastLabel.frame = self.toastView.bounds;
 }
 
 - (void)showToast:(BOOL)show animated:(BOOL)animated
