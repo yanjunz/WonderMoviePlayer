@@ -197,7 +197,9 @@
 
 - (IBAction)onClickPlayRemote:(id)sender {
 #ifdef MTT_FEATURE_WONDER_AVMOVIE_PLAYER
-    DefineBlockVar(WonderAVMovieViewController *, controller, [[[WonderAVMovieViewController alloc] init] autorelease]);
+//    DefineBlockVar(WonderAVMovieViewController *, controller, [[[WonderAVMovieViewController alloc] init] autorelease]);
+    WonderAVMovieViewController *controller = [[WonderAVMovieViewController alloc] init];
+    DefineBlockVar(typeof(controller), weakController, controller);
     [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeRight animated:YES];
     [UIApplication sharedApplication].statusBarHidden = YES;
     
@@ -232,12 +234,13 @@
     
     [controller setExitBlock:^{
         [UIApplication sharedApplication].statusBarHidden = NO;
-        if ([controller respondsToSelector:@selector(dismissViewControllerAnimated:completion:)]) {
-            [controller dismissViewControllerAnimated:YES completion:nil];
+        if ([weakController respondsToSelector:@selector(dismissViewControllerAnimated:completion:)]) {
+            [weakController dismissViewControllerAnimated:YES completion:nil];
         }
         else {
-            [controller dismissModalViewControllerAnimated:YES];
+            [weakController dismissModalViewControllerAnimated:YES];
         }
+        [weakController release];
     }];
     
     
