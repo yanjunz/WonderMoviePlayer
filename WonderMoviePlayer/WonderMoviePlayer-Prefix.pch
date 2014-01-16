@@ -52,6 +52,7 @@ __weak type var = __real_##var
 #define DefineBlockVar(type, var, assignment)    __block type var = assignment
 #endif
 
+#define AddCrashRecord(str) NSLog(@"%@", str)
 
 #undef YES
 #define YES 1
@@ -110,6 +111,6 @@ __weak type var = __real_##var
 #define MTT_TWEAK_WONDER_MOVIE_AIRPLAY
 //#define MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
 //#define MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
-
+#define MTT_TWEAK_DEBUG_AVPLAYER_LEFTCYCLE
 
 #define MTT_DEBUG_FLAG_VIDEO 1

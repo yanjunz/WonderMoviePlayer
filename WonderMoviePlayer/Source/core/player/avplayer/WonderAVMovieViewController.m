@@ -18,6 +18,42 @@
 #import "NSObject+Block.h"
 #import "TVDramaManager.h"
 
+#ifdef MTT_TWEAK_DEBUG_AVPLAYER_LEFTCYCLE
+@interface WonderMovieAVPlayer : AVPlayer
+
+@end
+
+@implementation WonderMovieAVPlayer
+
+- (id)initWithPlayerItem:(AVPlayerItem *)item
+{
+    if (self = [super initWithPlayerItem:item]) {
+        AddCrashRecord(@"AVPlayer initWithPlayerItem");
+    }
+    return self;
+}
+
+- (id)init
+{
+    if (self = [super init]) {
+        AddCrashRecord(@"AVPlayer init");
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    AddCrashRecord(@"AVPlayer dealloc");
+    [super dealloc];
+}
+
+@end
+#define AVPlayerClass WonderMovieAVPlayer
+#else 
+#define AVPlayerClass AVPlayer
+#endif // MTT_TWEAK_DEBUG_AVPLAYER_LEFTCYCLE
+
+
 #define OBSERVER_CONTEXT_NAME(prefix, property) prefix##property##_ObserverContext
 
 #define DECLARE_OBSERVER_CONTEXT(prefix, property) \
@@ -108,6 +144,8 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     
     [self removeObserver:self forKeyPath:@"parentViewController"];
     [self.controlSource uninstallControlSource];
+    
+    [self removeAllObservers]; // Actually all observors should be removed yet
     
     self.movieURL = nil;
     self.player = nil;
@@ -444,7 +482,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     if (![self player])
     {
         /* Get a new AVPlayer initialized to play the specified player item. */
-        [self setPlayer:[AVPlayer playerWithPlayerItem:self.playerItem]];
+        [self setPlayer:[[[AVPlayerClass alloc] initWithPlayerItem:self.playerItem] autorelease]];
 		
         /* Observe the AVPlayer "currentItem" property to find out when any
          AVPlayer replaceCurrentItemWithPlayerItem: replacement will/did
