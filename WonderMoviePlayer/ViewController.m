@@ -119,10 +119,13 @@
 - (IBAction)onClickPlay:(id)sender {
     @autoreleasepool {
 #ifdef MTT_FEATURE_WONDER_AVMOVIE_PLAYER
-        DefineBlockVar(WonderAVMovieViewController *, controller, [[WonderAVMovieViewController alloc] init]);
-        self.player = controller;
+//        DefineBlockVar(WonderAVMovieViewController *, controller, [[WonderAVMovieViewController alloc] init]);
+        WonderAVMovieViewController *controller = [[WonderAVMovieViewController alloc] init];
+        DefineWeakVarBeforeBlock(controller);
+//        self.player = controller;
         [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeRight animated:YES];
         [controller setCrossScreenBlock:^{
+            DefineStrongVarInBlock(controller);
             [controller.controlSource setTitle:@"我叫MT" subtitle:@"(来源: 爱奇艺)"];
             if ([controller.controlSource resolutions].count > 0) {
                 [controller.controlSource setResolutions:nil];
@@ -148,8 +151,9 @@
         
         [controller setExitBlock:^{
             _testString = @"Hello";
-            self.testString = @"YEs";
-            self.player = nil;
+//            self.testString = @"YEs";
+//            self.player = nil;
+            DefineStrongVarInBlock(controller);
             if ([controller respondsToSelector:@selector(dismissViewControllerAnimated:completion:)]) {
                 [controller dismissViewControllerAnimated:YES completion:nil];
             }
@@ -198,7 +202,7 @@
 #ifdef MTT_FEATURE_WONDER_AVMOVIE_PLAYER
 //    DefineBlockVar(WonderAVMovieViewController *, controller, [[[WonderAVMovieViewController alloc] init] autorelease]);
     WonderAVMovieViewController *controller = [[WonderAVMovieViewController alloc] init];
-    DefineBlockVar(typeof(controller), weakController, controller);
+    DefineWeakVarBeforeBlock(controller);
     [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeRight animated:YES];
     [UIApplication sharedApplication].statusBarHidden = YES;
     
@@ -232,12 +236,13 @@
     [controller.controlSource setAlertCopyrightInsteadOfDownload:++alertCount % 2];
     
     [controller setExitBlock:^{
+        DefineStrongVarInBlock(controller);
         [UIApplication sharedApplication].statusBarHidden = NO;
-        if ([weakController respondsToSelector:@selector(dismissViewControllerAnimated:completion:)]) {
-            [weakController dismissViewControllerAnimated:YES completion:nil];
+        if ([controller respondsToSelector:@selector(dismissViewControllerAnimated:completion:)]) {
+            [controller dismissViewControllerAnimated:YES completion:nil];
         }
         else {
-            [weakController dismissModalViewControllerAnimated:YES];
+            [controller dismissModalViewControllerAnimated:YES];
         }
     }];
     

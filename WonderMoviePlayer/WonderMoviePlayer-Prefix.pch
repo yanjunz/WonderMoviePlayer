@@ -43,7 +43,6 @@
 #define CommonLog_e(fmt,...)
 #endif
 
-
 #if __has_feature(objc_arc)
 #define DefineBlockVar(type, var, assignment)  \
 type __real_##var = assignment; \
@@ -51,6 +50,40 @@ __weak type var = __real_##var
 #else
 #define DefineBlockVar(type, var, assignment)    __block type var = assignment
 #endif
+
+/**
+ Macro For Weak-Strong Dance for ARC
+ 
+ Purpose: avoid name definition issue for Weak-Strong Dance
+ 
+ Example:
+ UserClass *obj = [[UserClass alloc] init];
+ DefineWeakVarBeforeBlock(obj);
+ obj.block = ^{
+    DefineStrongVarInBlock(obj);
+    [obj doSomething:"No retain cycle"];
+ };
+ 
+ NOTE: these macro is not suitable for 'self'
+ __weak typeof(self) wself = self;
+ self.block = ^{
+    typeof(wself) sself = wself;
+    [sself doSomething];
+ };
+ **/
+#define DefineWeakVarBeforeBlock(var) \
+__weak typeof(var) __weak_##var = var
+
+#define DefineStrongVarInBlock(var) \
+typeof(__weak_##var) var = __weak_##var
+
+#define DefineWeakSelfBeforeBlock() \
+__weak typeof(self) __weak_self = self
+
+#define DefineStrongSelfInBlock(strongSelf) \
+typeof(__weak_self) strongSelf = __weak_self
+
+
 
 #define AddCrashRecord(str) NSLog(@"%@", str)
 

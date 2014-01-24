@@ -768,9 +768,11 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     BOOL isLiveCast = !isfinite(duration); // check live cast here
     self.controlSource.liveCastState = isLiveCast ? LiveCastStateYes : LiveCastStateNo;
     
+    DefineWeakSelfBeforeBlock();
     timeObserver = [self.player addPeriodicTimeObserverForInterval:CMTimeMake(interval, NSEC_PER_SEC)
                                                               queue:NULL usingBlock:^(CMTime time) {
-                                                                  [self syncScrubber];
+                                                                  DefineStrongSelfInBlock(sself);
+                                                                  [sself syncScrubber];
                                                               }];
 //    NSLog(@"initScrubberTimer");
 }

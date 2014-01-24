@@ -140,27 +140,30 @@
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
     NSLog(@"shouldStartLoadWithRequest %@", request.URL);
-    if ([@"qqvideo" isEqualToString:request.URL.scheme]) {
-#ifdef MTT_FEATURE_WONDER_AVMOVIE_PLAYER
-        __weak WonderAVMovieViewController *controller = [[WonderAVMovieViewController alloc] init];
-        [controller setExitBlock:^{
-            [controller dismissViewControllerAnimated:YES completion:nil];
-        }];
-        controller.movieDownloader = [[FakeMovieDownloader alloc] init];
-        [controller setCrossScreenBlock:^{
-            NSLog(@"cross screen");
-        }];
-        [self presentViewController:controller animated:YES completion:^{
-            [controller playMovieStream:[NSURL URLWithString:[self getCurrentVideoSrc]]];
-        }];
-#else 
-        WonderMPMovieViewController *controller = [[WonderMPMovieViewController alloc] init];
-        [self presentViewController:controller animated:YES completion:^{
-            [controller playMovieStream:[NSURL URLWithString:[self getCurrentVideoSrc]]];
-        }];
-#endif
-        return NO;
-    }
+//    if ([@"qqvideo" isEqualToString:request.URL.scheme]) {
+//#ifdef MTT_FEATURE_WONDER_AVMOVIE_PLAYER
+//        WonderAVMovieViewController *controller = [[WonderAVMovieViewController alloc] init];
+//
+//        [weakController setExitBlock:^{
+//            DefineStrongVarInBlock(controller, weakController);
+//            [controller dismissViewControllerAnimated:YES completion:nil];
+//        }];
+//        weakController.movieDownloader = [[FakeMovieDownloader alloc] init];
+//        [weakController setCrossScreenBlock:^{
+//            NSLog(@"cross screen");
+//        }];
+//        [self presentViewController:weakController animated:YES completion:^{
+//            DefineStrongVarInBlock(controller, weakController);
+//            [controller playMovieStream:[NSURL URLWithString:[self getCurrentVideoSrc]]];
+//        }];
+//#else 
+//        WonderMPMovieViewController *controller = [[WonderMPMovieViewController alloc] init];
+//        [self presentViewController:controller animated:YES completion:^{
+//            [controller playMovieStream:[NSURL URLWithString:[self getCurrentVideoSrc]]];
+//        }];
+//#endif
+//        return NO;
+//    }
     return YES;
 }
 @end
