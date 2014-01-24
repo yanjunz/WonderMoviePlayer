@@ -93,6 +93,8 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     CGFloat _fakeBufferProgress;
 #endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
     BOOL _prefersStatusBarHidden;
+    
+    BOOL _inForeground;
 }
 @property (nonatomic, retain) UIView *controlView;
 @property (nonatomic, assign) BOOL isEnd;
@@ -101,7 +103,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 @implementation WonderAVMovieViewController
 @synthesize crossScreenBlock, exitBlock;
 @synthesize movieDownloader;
-@synthesize controlSource, isLiveCast;
+@synthesize controlSource;
 @synthesize isEnd = _isEnd;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -114,6 +116,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
         // http://stackoverflow.com/questions/2444112/method-called-when-dismissing-a-uiviewcontroller
         [self addObserver:self forKeyPath:@"parentViewController" options:0 context:NULL];
 //        NSLog(@"[WonderAVMovieViewController] init    0x%0x -->", self.hash);
+        _inForeground = YES;        
     }
     return self;
 }
@@ -139,7 +142,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     self.movieDownloader = nil;
     
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
+    [audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
     [audioSession setActive:NO error:nil];
     
     [self removeObserver:self forKeyPath:@"parentViewController"];
@@ -625,7 +628,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
         }
     }
     else if (context == WonderAVMovieObserverContextName(Rate)) {
-//        NSLog(@"rate = %f", self.player.rate);
+//        NSLog(@"rate = %f, %d, %d", self.player.rate, _inForeground, _wasPlaying);
         if (!_isExited) {
             if (_isEnd) {
                 [self.controlSource end];
@@ -634,8 +637,10 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
                 if (self.player.rate == 0) {
                     // Workaround:
                     if (_wasPlaying) {
-                        // Force to play
-                        [self.player play];
+                        if (_inForeground) {
+                            // Force to play
+                            [self.player play];
+                        }
                     }
                     else {
                         [self.controlSource pause];
@@ -740,7 +745,6 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
                                                                                                         crossScreenEnabled:crossScreenEnabled];
         fullscreenControlView.delegate = self;
         fullscreenControlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        fullscreenControlView.isLiveCast = self.isLiveCast;
         [fullscreenControlView installControlSource];
         
         self.controlView = fullscreenControlView;
@@ -780,8 +784,8 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
         }
     }
 
-    self.isLiveCast = !isfinite(duration); // check live cast here
-    self.controlSource.isLiveCast = self.isLiveCast;
+    BOOL isLiveCast = !isfinite(duration); // check live cast here
+    self.controlSource.liveCastState = isLiveCast ? LiveCastStateYes : LiveCastStateNo;
     
     timeObserver = [[self.player addPeriodicTimeObserverForInterval:CMTimeMake(interval, NSEC_PER_SEC)
                                                               queue:NULL usingBlock:^(CMTime time) {
@@ -977,18 +981,21 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 
 - (void)movieControlSourceExit:(id<MovieControlSource>)source
 {
-    _isExited = YES;
-    [self.player pause];
-    if([self.player respondsToSelector:@selector(cancelPendingPrerolls)]){
-        [self.player cancelPendingPrerolls];
+    // must make sure exitBlock is called one time!
+    if (!_isExited) {
+        _isExited = YES;
+        [self.player pause];
+        if([self.player respondsToSelector:@selector(cancelPendingPrerolls)]){
+            [self.player cancelPendingPrerolls];
+        }
+        if ([self.playerItem respondsToSelector:@selector(cancelPendingSeeks)]) {
+            [self.playerItem cancelPendingSeeks];
+        }
+        if (self.exitBlock) {
+            self.exitBlock();
+        }
+        [self removeAllObservers];
     }
-    if ([self.playerItem respondsToSelector:@selector(cancelPendingSeeks)]) {
-        [self.playerItem cancelPendingSeeks];
-    }
-    if (self.exitBlock) {
-        self.exitBlock();
-    }
-    [self removeAllObservers];
 }
 
 - (void)movieControlSourceBeginChangeProgress:(id<MovieControlSource>)source
@@ -1166,11 +1173,13 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 #pragma mark Notification
 - (void)onEnterForeground:(NSNotification *)n
 {
+    _inForeground = YES;
     [self performSelector:@selector(resumePlayback) withObject:nil afterDelay:0.2f];
 }
 
 - (void)onEnterBackground:(NSNotification *)n
 {
+    _inForeground = NO;
     // Even though the player will pause when entering background in theory, but still pause here to make sure it is paused
     [self.player pause];
 }

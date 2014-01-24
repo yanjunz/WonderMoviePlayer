@@ -26,7 +26,7 @@
 
 @implementation WonderMPMovieViewController
 @synthesize crossScreenBlock, downloadBlock, exitBlock;
-@synthesize controlSource, isLiveCast;
+@synthesize controlSource;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -269,7 +269,6 @@
                                                                                                        crossScreenEnabled:crossScreenEnabled];
         fullscreenControlView.delegate = self;
         fullscreenControlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        fullscreenControlView.isLiveCast = self.isLiveCast;
         [fullscreenControlView installControlSource];
         
         self.controlView = fullscreenControlView;
@@ -520,6 +519,7 @@
 
 - (void)movieControlSourceExit:(id<MovieControlSource>)source
 {
+    // FIXME: should make sure exitBlock is called only one time
     [self.moviePlayerController stop];
     
     if (self.exitBlock) {

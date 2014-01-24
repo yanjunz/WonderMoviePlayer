@@ -14,5 +14,4 @@
 @protocol BaseMoviePlayer <MovieControlSourceDelegate, MoviePlayerHandler, MovieDownloaderDelegate, MovieDownloaderDataSource>
 @property (nonatomic, retain) id<MovieControlSource> controlSource;
 @property (nonatomic, retain) id<MovieDownloader> movieDownloader;
-@property (nonatomic, assign) BOOL isLiveCast;
 @end

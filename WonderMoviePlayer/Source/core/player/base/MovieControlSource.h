@@ -32,6 +32,12 @@ typedef enum {
     MovieControlCommandError,
 } MovieControlCommand;
 
+typedef enum {
+    LiveCastStateNotCheckYet,   // live cast state is not checked yet, default value
+    LiveCastStateNo,            // is not live cast
+    LiveCastStateYes,           // is live cast
+} LiveCastState;
+
 /**
  * delegate will not be notified if functions such as play, pause, etc. were called.
  * delegate will only be notified when MovieControlSource internally trigger play/pause and other video operations.
@@ -82,10 +88,6 @@ typedef enum {
 // Set movie screen state
 - (void)setFullscreen:(BOOL)fullscreen animated:(BOOL)animated;
 
-// Set system state
-- (void)setBrightness:(CGFloat)brightness;
-- (void)setVolume:(CGFloat)volume;
-
 // Update play time info
 - (void)setPlaybackTime:(NSTimeInterval)playbackTime;
 - (void)setPlayableDuration:(NSTimeInterval)playableDuration;
@@ -95,7 +97,7 @@ typedef enum {
 - (CGFloat)getTimeControlWidth;
 - (void)setTitle:(NSString *)title subtitle:(NSString *)subtitle;
 
-@property (nonatomic, assign) BOOL isLiveCast;
+@property (nonatomic, assign) LiveCastState liveCastState;
 @property (nonatomic, copy) NSArray *resolutions;
 @property (nonatomic) int selectedResolutionIndex;
 @property (nonatomic, readonly) NSString *title;
@@ -105,6 +107,9 @@ typedef enum {
 
 @property (nonatomic, retain) TVDramaManager *tvDramaManager;
 
+// system state
+@property (nonatomic, assign) CGFloat brightness;
+@property (nonatomic, assign) CGFloat volume;
 @required
 @property (nonatomic, assign) MovieControlState controlState;
 @property (nonatomic, assign) id<MovieControlSourceDelegate> delegate;

@@ -159,7 +159,7 @@
         }];
         
         NSLog(@"start to play av");
-        [controller playMovieStream:[[NSBundle mainBundle] URLForResource:@"MenDaily1" withExtension:@"mp4"]];
+        [controller playMovieStream:[[NSBundle mainBundle] URLForResource:@"Movie" withExtension:@"m4v"]];
         [controller release];
 //        NSLog(@"retain count1= %d", [controller retainCount]);
 #else

@@ -153,11 +153,13 @@ void wonderMovieVolumeListenerCallback (
 @implementation WonderMovieFullscreenControlView
 @synthesize delegate;
 @synthesize controlState;
-@synthesize isLiveCast = _isLiveCast;
+@synthesize liveCastState = _liveCastState;
 @synthesize resolutions = _resolutions;
 @synthesize selectedResolutionIndex = _selectedResolutionIndex;
 @synthesize alertCopyrightInsteadOfDownload = _alertCopyrightInsteadOfDownload;
 @synthesize tvDramaManager = _tvDramaManager;
+@synthesize brightness = _brightness;
+@synthesize volume = _volume;
 
 //- (id)retain
 //{
@@ -314,9 +316,7 @@ void wonderMovieVolumeListenerCallback (
     
     self.progressView.delegate = self;
     self.progressView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    if (self.isLiveCast) {
-        self.progressView.userInteractionEnabled = NO;
-    }
+    self.progressView.userInteractionEnabled = NO;
     [progressBar addSubview:self.progressView];
     
     self.actionButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -443,7 +443,7 @@ void wonderMovieVolumeListenerCallback (
     self.downloadButton.titleLabel.font = buttonFont;
     [self.downloadButton addTarget:self action:@selector(onClickDownload:) forControlEvents:UIControlEventTouchUpInside];
     [self.downloadButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
-    self.downloadButton.enabled = _downloadEnabled;
+    self.downloadButton.enabled = NO;
     [self.headerBar addSubview:self.downloadButton];
 //    btnRect = self.downloadButton.frame;
     
@@ -651,20 +651,28 @@ void wonderMovieVolumeListenerCallback (
     return CGRectMake(0, self.headerBar.bottom, self.width, self.height - self.headerBar.bottom - self.bottomBar.height);
 }
 
-
-- (void)setIsLiveCast:(BOOL)isLiveCast
+- (void)setLiveCastState:(LiveCastState)liveCastState
 {
-    _isLiveCast = isLiveCast;
-    self.progressView.userInteractionEnabled = !isLiveCast;
+    _liveCastState = liveCastState;
+    self.progressView.userInteractionEnabled = (liveCastState == LiveCastStateNo);
     
-    if (isLiveCast) {
+    if (liveCastState == LiveCastStateYes) {
         self.durationLabel.text = @"直播";
     }
     if (_hasStarted) {
-        self.progressView.enabled = !self.isLiveCast;
-        self.nextButton.enabled = !self.isLiveCast;
+        self.progressView.enabled = (liveCastState == LiveCastStateNo);
+        self.nextButton.enabled = (liveCastState == LiveCastStateNo);
     }
-//    self.downloadButton.enabled = !isLiveCast && _downloadEnabled;
+    
+    [self updateDownloadState];
+}
+
+- (void)updateDownloadState
+{
+    // only update download button enable state when liveCast is checked
+    if (_liveCastState != LiveCastStateNotCheckYet) {
+        self.downloadButton.enabled = _downloadEnabled;
+    }
 }
 
 #pragma mark PopupMenu
@@ -911,8 +919,8 @@ void wonderMovieVolumeListenerCallback (
 {
     _hasStarted = YES; // start to play now, should show bottom bar
     self.actionButton.enabled = YES;
-    self.progressView.enabled = !self.isLiveCast;
-    self.nextButton.enabled = !self.isLiveCast;
+    self.progressView.enabled = (_liveCastState == LiveCastStateNo);
+    self.nextButton.enabled = (_liveCastState == LiveCastStateNo);
     
 #ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
     [UIView animateWithDuration:0.5f animations:^{
@@ -957,7 +965,7 @@ void wonderMovieVolumeListenerCallback (
 
 - (void)resetState
 {
-    self.downloadButton.enabled = !_isLiveCast && _downloadEnabled;
+    [self updateDownloadState];
     [self.downloadButton setTitle:NSLocalizedString(@"", nil) forState:UIControlStateNormal];
 }
 
@@ -1208,11 +1216,13 @@ void wonderMovieVolumeListenerCallback (
 
 - (void)setBrightness:(CGFloat)brightness
 {
+    _brightness = brightness;
     [self.infoView showBrightness:brightness];
 }
 
 - (void)setVolume:(CGFloat)volume
 {
+    _volume = volume;
     [self.infoView showVolume:volume];
 }
 
@@ -1253,7 +1263,7 @@ void wonderMovieVolumeListenerCallback (
 - (IBAction)onClickDownload:(id)sender
 {
     [self dismissAllPopupViews];
-    if (self.isLiveCast) {
+    if (_liveCastState == LiveCastStateYes) {
         [self.infoView showDownloadToast:NSLocalizedString(@"直播视频不支持下载", nil) show:YES animated:YES];
     }
     else {
@@ -1981,14 +1991,14 @@ void wonderMovieVolumeListenerCallback (
     }
     [self updateNextButtonState];
     [self updateTitleAndSubtitle];
-    self.downloadButton.enabled = _downloadEnabled && !self.isLiveCast;
+    [self updateDownloadState];
 }
 
 - (void)failLoadDramaInfo
 {
     [self showDramaButton:NO animated:YES];
     [self showNextButton:NO animated:YES];
-    self.downloadButton.enabled = _downloadEnabled && !self.isLiveCast;
+    [self updateDownloadState];
 }
 
 - (void)showDramaButton:(BOOL)show animated:(BOOL)animated
