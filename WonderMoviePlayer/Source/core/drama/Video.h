@@ -13,10 +13,10 @@
 
 @interface Video : NSManagedObject
 
-@property (nonatomic, retain) NSString * brief;
-@property (nonatomic, retain) NSNumber * setNum;
-@property (nonatomic, retain) NSString * url;
-@property (nonatomic, retain) NSString * videoSrc;
-@property (nonatomic, retain) VideoGroup *videoGroup;
+@property (nonatomic, strong) NSString * brief;
+@property (nonatomic, strong) NSNumber * setNum;
+@property (nonatomic, strong) NSString * url;
+@property (nonatomic, strong) NSString * videoSrc;
+@property (nonatomic, strong) VideoGroup *videoGroup;
 
 @end

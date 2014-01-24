@@ -15,9 +15,9 @@
     int _minVideoSetNum;
     int _maxVideoSetNum;
 }
-@property (nonatomic, retain) UIWebView *webview;
+@property (nonatomic, strong) UIWebView *webview;
 @property (nonatomic, copy) NSString *videoSrc;
-@property (nonatomic, retain) NSMutableArray *urls;
+@property (nonatomic, strong) NSMutableArray *urls;
 @end
 
 @implementation FakeTVDramaWebSource
@@ -200,7 +200,7 @@
     
     [self performBlockInMainThread:^{
         if (self.webview == nil) {
-            self.webview = [[[UIWebView alloc] initWithFrame:CGRectMake(-1000, -1000, 200, 200)] autorelease];
+            self.webview = [[UIWebView alloc] initWithFrame:CGRectMake(-1000, -1000, 200, 200)];
             self.webview.delegate = self;
             [[UIApplication sharedApplication].keyWindow addSubview:self.webview];
         }

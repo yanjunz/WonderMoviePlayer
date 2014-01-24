@@ -9,16 +9,16 @@
 #import <Foundation/Foundation.h>
 
 @interface JSInvokedUrlCommand : NSObject {
-    NSString* _callbackId;
-    NSString* _className;
-    NSString* _methodName;
-    NSArray* _arguments;
+    NSString* __weak _callbackId;
+    NSString* __weak _className;
+    NSString* __weak _methodName;
+    NSArray* __weak _arguments;
 }
 
-@property (nonatomic, readonly) NSArray* arguments;
-@property (nonatomic, readonly) NSString* callbackId;
-@property (nonatomic, readonly) NSString* className;
-@property (nonatomic, readonly) NSString* methodName;
+@property (weak, nonatomic, readonly) NSArray* arguments;
+@property (weak, nonatomic, readonly) NSString* callbackId;
+@property (weak, nonatomic, readonly) NSString* className;
+@property (weak, nonatomic, readonly) NSString* methodName;
 
 + (JSInvokedUrlCommand*)commandFromJson:(NSArray*)jsonEntry;
 

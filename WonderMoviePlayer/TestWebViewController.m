@@ -49,10 +49,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)dealloc {
-    [_webview release];
-    [super dealloc];
-}
 - (IBAction)onClickBtn:(id)sender {
     // v.setAttribute('webkit-playsinline', 'YES');"
 //    [self exeJS:@"\
@@ -146,11 +142,11 @@
     NSLog(@"shouldStartLoadWithRequest %@", request.URL);
     if ([@"qqvideo" isEqualToString:request.URL.scheme]) {
 #ifdef MTT_FEATURE_WONDER_AVMOVIE_PLAYER
-        __block WonderAVMovieViewController *controller = [[[WonderAVMovieViewController alloc] init] autorelease];
+        __weak WonderAVMovieViewController *controller = [[WonderAVMovieViewController alloc] init];
         [controller setExitBlock:^{
             [controller dismissViewControllerAnimated:YES completion:nil];
         }];
-        controller.movieDownloader = [[[FakeMovieDownloader alloc] init] autorelease];
+        controller.movieDownloader = [[FakeMovieDownloader alloc] init];
         [controller setCrossScreenBlock:^{
             NSLog(@"cross screen");
         }];

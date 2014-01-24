@@ -32,14 +32,14 @@ typedef enum {
     DramaLoadMoreState _footerState;
 }
 
-@property (nonatomic, assign) id<DramaTableViewDelegate> delegate;
+@property (nonatomic, weak) id<DramaTableViewDelegate> delegate;
 // Header View
-@property (nonatomic, retain) UIView *loadingHeaderView;
-@property (nonatomic, retain) UIView *retryHeaderView;
+@property (nonatomic, strong) UIView *loadingHeaderView;
+@property (nonatomic, strong) UIView *retryHeaderView;
 
 // Footer View
-@property (nonatomic, retain) UIView *loadingFooterView;
-@property (nonatomic, retain) UIView *retryFooterView;
+@property (nonatomic, strong) UIView *loadingFooterView;
+@property (nonatomic, strong) UIView *retryFooterView;
 
 @property (nonatomic, assign) BOOL headerLoadingEnabled;
 @property (nonatomic, assign) BOOL footerLoadingEnabled;

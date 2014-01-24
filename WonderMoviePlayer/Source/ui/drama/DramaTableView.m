@@ -17,14 +17,12 @@
         UIView *loadingHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, 35)];
         loadingHeaderView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.loadingHeaderView = loadingHeaderView;
-        [loadingHeaderView release];
         
         UIActivityIndicatorView *loadingIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
         [loadingHeaderView addSubview:loadingIndicator];
         loadingIndicator.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         loadingIndicator.hidesWhenStopped = YES;
         [loadingHeaderView addSubview:loadingIndicator];
-        [loadingIndicator release];
         _headerLoadingView = loadingIndicator;
         
         UILabel *loadingLabel = [[UILabel alloc] initWithFrame:loadingHeaderView.bounds];
@@ -35,7 +33,6 @@
         loadingLabel.backgroundColor = [UIColor clearColor];
         loadingLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         [loadingHeaderView addSubview:loadingLabel];
-        [loadingLabel release];
         
         // Adjust center
         [loadingLabel sizeToFit];
@@ -47,7 +44,6 @@
         UIView *retryHeaderView = [[UIView alloc] initWithFrame:loadingHeaderView.frame];
         retryHeaderView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.retryHeaderView = retryHeaderView;
-        [retryHeaderView release];
         
         UIButton *retryButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [retryButton setTitle:NSLocalizedString(@"加载失败，点击重试", nil) forState:UIControlStateNormal];
@@ -61,14 +57,12 @@
         UIView *loadingFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, 35)];
         loadingFooterView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.loadingFooterView = loadingFooterView;
-        [loadingFooterView release];
         
         loadingIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
         [loadingFooterView addSubview:loadingIndicator];
         loadingIndicator.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         loadingIndicator.hidesWhenStopped = YES;
         [loadingFooterView addSubview:loadingIndicator];
-        [loadingIndicator release];
         _footerLoadingView = loadingIndicator;
         
         loadingLabel = [[UILabel alloc] initWithFrame:loadingFooterView.bounds];
@@ -79,7 +73,6 @@
         loadingLabel.backgroundColor = [UIColor clearColor];
         loadingLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         [loadingFooterView addSubview:loadingLabel];
-        [loadingLabel release];
         
         // Adjust center
         [loadingLabel sizeToFit];
@@ -90,7 +83,6 @@
         UIView *retryFooterView = [[UIView alloc] initWithFrame:loadingFooterView.frame];
         retryFooterView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.retryFooterView = retryFooterView;
-        [retryFooterView release];
         
         retryButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [retryButton setTitle:NSLocalizedString(@"加载失败，点击重试", nil) forState:UIControlStateNormal];
@@ -104,15 +96,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    self.loadingHeaderView = nil;
-    self.retryHeaderView = nil;
-    
-    self.loadingFooterView = nil;
-    self.retryFooterView = nil;
-    [super dealloc];
-}
 
 #pragma mark State
 - (void)setHeaderState:(DramaLoadMoreState)state

@@ -13,7 +13,7 @@
 @class AVPlayerLayer;
 
 @interface WonderAVPlayerView : UIView
-@property (nonatomic, readonly) AVPlayerLayer *playerLayer;
+@property (weak, nonatomic, readonly) AVPlayerLayer *playerLayer;
 
 - (void)setVideoFillMode:(NSString *)fillMode;
 @end

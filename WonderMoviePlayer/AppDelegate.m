@@ -23,12 +23,6 @@ void uncaughtExceptionHandler(NSException *exception)
 
 @implementation AppDelegate
 
-- (void)dealloc
-{
-    [_window release];
-    [_viewController release];
-    [super dealloc];
-}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -41,11 +35,11 @@ void uncaughtExceptionHandler(NSException *exception)
     
 //    [NSURLProtocol registerClass:[JSURLProtocol class]];
 //    [[JSPluginEngine sharedInstance] registerPlugin:[[JSVideoPlugin alloc] init] withPluginName:@"qqvideo"];
-    self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
 
-    self.viewController = [[[ViewController alloc] initWithNibName:@"ViewController" bundle:nil] autorelease];
-        UINavigationController *navController = [[[UINavigationController alloc] initWithRootViewController:self.viewController] autorelease];
+    self.viewController = [[ViewController alloc] initWithNibName:@"ViewController" bundle:nil];
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
     self.window.rootViewController = navController;
     [self.window makeKeyAndVisible];
 //    [NSNotificationCenter swizzleMethod];

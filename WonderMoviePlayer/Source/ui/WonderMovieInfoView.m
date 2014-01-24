@@ -14,12 +14,12 @@
 #define kAutoNextToastHeight 27
 
 @interface WonderMovieInfoView ()
-@property (nonatomic, retain) UILabel *volumeLabel;
-@property (nonatomic, retain) UIImageView *volumeImageView;
-@property (nonatomic, retain) UILabel *brightnessLabel;
-@property (nonatomic, retain) UIView *toastView;
-@property (nonatomic, retain) UILabel *toastLabel;
-@property (nonatomic, retain) UIView *errorView;
+@property (nonatomic, strong) UILabel *volumeLabel;
+@property (nonatomic, strong) UIImageView *volumeImageView;
+@property (nonatomic, strong) UILabel *brightnessLabel;
+@property (nonatomic, strong) UIView *toastView;
+@property (nonatomic, strong) UILabel *toastLabel;
+@property (nonatomic, strong) UIView *errorView;
 @end
 
 @implementation WonderMovieInfoView
@@ -46,7 +46,6 @@
         self.progressTimeLabel.layer.shadowRadius = 1;
         self.progressTimeLabel.layer.shadowOffset = CGSizeMake(0, 1);
         [self addSubview:self.progressTimeLabel];
-        [progressTimeLabel release];
         
 //        CGFloat centerButtonSize = 138 / 2;
         self.replayButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -78,7 +77,6 @@
         toastFrameImageView.frame = toastView.bounds;
         toastFrameImageView.contentStretch = CGRectMake(0.5, 0.5, 0, 0);
         [toastView addSubview:toastFrameImageView];
-        [toastFrameImageView release];
         
         UILabel *toastLabel = [[UILabel alloc] initWithFrame:toastView.bounds];
         toastLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -87,11 +85,9 @@
         toastLabel.font = [UIFont systemFontOfSize:12];
         toastLabel.backgroundColor = [UIColor clearColor];
         [toastView addSubview:toastLabel];
-        [toastLabel release];
         self.toastLabel = toastLabel;
         [self addSubview:toastView];
         self.toastView = toastView;
-        [toastView release];
         
         UIView *errorView = [[UIView alloc] initWithFrame:self.bounds];
         errorView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -117,13 +113,10 @@
         button.origin = CGPointMake(label.right, 0);
         [titleView addSubview:button];
         [errorView addSubview:titleView];
-        [label release];
-        [titleView release];
         titleView.center = CGPointMake(CGRectGetMidX(errorView.bounds), CGRectGetMidY(errorView.bounds));
 
         self.errorView = errorView;
         [self addSubview:errorView];
-        [errorView release];
     }
     return self;
 }
@@ -132,29 +125,12 @@
 {
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismissToastView) object:nil];
     
-    self.progressTimeLabel = nil;
     
-    self.loadingView = nil;
-    self.loadingIndicator = nil;
-    self.loadingMessageLabel = nil;
-    self.loadingPercentLabel = nil;
     
-    self.replayButton = nil;
-    self.centerPlayButton = nil;
 
-    self.openSourceButton = nil;
     
-    [_volumeView release];
-    [_brightnessView release];
     
-    self.volumeLabel = nil;
-    self.volumeImageView = nil;
-    self.brightnessLabel = nil;
-    self.toastView = nil;
-    self.toastLabel = nil;
-    self.errorView = nil;
     
-    [super dealloc];
 }
 
 #pragma mark Loading View
@@ -173,7 +149,6 @@
         self.loadingIndicator.contentMode = UIViewContentModeCenter;
         self.loadingIndicator.frame = CGRectMake(0, 0, _loadingView.width, _loadingView.height - 20);
         [_loadingView addSubview:self.loadingIndicator];
-        [loadingIndicator release];
 
         UILabel *loadingPercentLabel = [[UILabel alloc] initWithFrame:self.loadingIndicator.frame];
         self.loadingPercentLabel = loadingPercentLabel;
@@ -187,7 +162,6 @@
 #endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
         
         [_loadingView addSubview:self.loadingPercentLabel];
-        [loadingPercentLabel release];
         
         CGFloat maxMessageWidth = self.width / 2 > _loadingView.width ? self.width / 2 : _loadingView.width;
         UILabel *loadingMessageLabel = [[UILabel alloc] initWithFrame:
@@ -201,7 +175,6 @@
         self.loadingMessageLabel.font = [UIFont systemFontOfSize:12];
 //        self.loadingMessageLabel.hidden = YES;
         [_loadingView addSubview:self.loadingMessageLabel];
-        [loadingMessageLabel release];
         
         _loadingView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
         _loadingView.hidden = YES;
@@ -277,7 +250,6 @@
         self.volumeImageView = imageView;
         [_volumeView addSubview:imageView];
         imageView.origin = CGPointMake(14, (_volumeView.height - imageView.height) / 2);
-        [imageView release];
         
         _volumeLabel = [[UILabel alloc] initWithFrame:CGRectMake(imageView.right + 7, 0, _volumeView.width - imageView.right - 7, _volumeView.height)];
         _volumeLabel.backgroundColor = [UIColor clearColor];
@@ -306,7 +278,6 @@
         UIImageView *imageView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"brightness")];
         [_brightnessView addSubview:imageView];
         imageView.origin = CGPointMake(14, (_brightnessView.height - imageView.height) / 2);
-        [imageView release];
         
         _brightnessLabel = [[UILabel alloc] initWithFrame:CGRectMake(imageView.right + 7, 0, _brightnessView.width - imageView.right - 7, _brightnessView.height)];
         _brightnessLabel.backgroundColor = [UIColor clearColor];

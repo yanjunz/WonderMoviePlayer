@@ -28,11 +28,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [_queue release];
-    [super dealloc];
-}
 
 - (void)resetRequestId
 {

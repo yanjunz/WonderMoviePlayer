@@ -19,7 +19,7 @@ NSString *const MttActivityIndicatorAnimationKey = @"MttActivityIndicatorAnimati
 
 @interface MttActivityIndicator()
 
-@property (nonatomic,retain) UIImageView* imageView;
+@property (nonatomic,strong) UIImageView* imageView;
 
 @end
 
@@ -46,12 +46,6 @@ NSString *const MttActivityIndicatorAnimationKey = @"MttActivityIndicatorAnimati
     return self;
 }
 
-- (void)dealloc
-{
-    [_imageView release];
-    
-    [super dealloc];
-}
 
 - (void)setStyle:(MttActivityIndicatorStyle)style
 {

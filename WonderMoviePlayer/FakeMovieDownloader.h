@@ -13,8 +13,8 @@
 @class Task;
 
 @interface FakeMovieDownloader : NSObject<MovieDownloader>
-@property (nonatomic, retain) Task *task;
-@property (nonatomic, retain) NSTimer *timer;
+@property (nonatomic, strong) Task *task;
+@property (nonatomic, strong) NSTimer *timer;
 @end
 
 typedef enum {
@@ -26,7 +26,7 @@ typedef enum {
 }TaskState;
 
 @interface Task : NSObject
-@property (nonatomic, retain) NSURL *downloadURL;
+@property (nonatomic, strong) NSURL *downloadURL;
 @property (nonatomic) CGFloat progress;
 @property (nonatomic) TaskState state;
 + (id)taskWithURL:(NSURL *)url;

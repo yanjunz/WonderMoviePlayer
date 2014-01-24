@@ -19,11 +19,11 @@
 @end
 
 @interface WonderMovieDramaView : UIView<UITableViewDataSource, DramaTableViewDelegate>
-@property (nonatomic, assign) id<WonderMovieDramaViewDelegate> delegate;
-@property (nonatomic, retain) TVDramaManager *tvDramaManager;
-@property (nonatomic, retain) DramaTableView *tableView;
-@property (nonatomic, retain) UIView *errorView;
-@property (nonatomic, retain) UIView *loadingView;
+@property (nonatomic, weak) id<WonderMovieDramaViewDelegate> delegate;
+@property (nonatomic, strong) TVDramaManager *tvDramaManager;
+@property (nonatomic, strong) DramaTableView *tableView;
+@property (nonatomic, strong) UIView *errorView;
+@property (nonatomic, strong) UIView *loadingView;
 @property (nonatomic) int playingSetNum;
 - (void)reloadData;
 - (void)scrollToThePlayingOne;

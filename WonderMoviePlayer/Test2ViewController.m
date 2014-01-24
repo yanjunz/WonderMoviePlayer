@@ -44,10 +44,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)dealloc {
-    [_loadingIndicator release];
-    [super dealloc];
-}
 - (void)viewDidUnload {
     [self setLoadingIndicator:nil];
     [super viewDidUnload];

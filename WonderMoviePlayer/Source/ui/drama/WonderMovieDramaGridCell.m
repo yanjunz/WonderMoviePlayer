@@ -15,9 +15,9 @@
 #define kDramaGridCellButtonMaxRow      3
 
 @interface WonderMovieDramaGridCell ()
-@property (nonatomic, retain) NSMutableArray *buttons;
-@property (nonatomic, retain) UILabel *headerLabel;
-@property (nonatomic, retain) UIImageView *playingFlagView;
+@property (nonatomic, strong) NSMutableArray *buttons;
+@property (nonatomic, strong) UILabel *headerLabel;
+@property (nonatomic, strong) UIImageView *playingFlagView;
 @end
 
 @implementation WonderMovieDramaGridCell
@@ -31,7 +31,6 @@
         
         UIImageView *playingFlagView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"list_play")];
         self.playingFlagView = playingFlagView;
-        [playingFlagView release];
         
         self.buttons = [NSMutableArray arrayWithCapacity:kDramaGridCellButtonMaxRow * kDramaGridCellButtonCountPerRow];
         CGFloat leftPadding = 20, topPadding = 15 + 11 + 8;
@@ -62,7 +61,6 @@
         headerLabel.textColor = QQColor(videoplayer_drama_header_color);
         self.headerLabel = headerLabel;
         [self.contentView addSubview:headerLabel];
-        [headerLabel release];
         
         self.backgroundColor = [UIColor clearColor];
         self.contentView.backgroundColor = [UIColor clearColor];
@@ -74,10 +72,6 @@
 - (void)dealloc
 {
     self.delegate = nil;
-    self.buttons = nil;
-    self.headerLabel = nil;
-    self.playingFlagView = nil;
-    [super dealloc];
 }
 
 + (CGFloat)cellHeightWithMinVideoSetNum:(int)minVideoSetNum maxVideoSetNum:(int)maxVideoSetNum

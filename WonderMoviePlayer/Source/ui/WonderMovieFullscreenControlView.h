@@ -47,7 +47,7 @@
 @property (nonatomic, assign) BOOL autoPlayWhenStarted;
 @property (nonatomic, assign) BOOL downloadEnabled;
 @property (nonatomic, assign) BOOL crossScreenEnabled;
-@property (nonatomic, retain) WonderMovieInfoView *infoView;
+@property (nonatomic, strong) WonderMovieInfoView *infoView;
 
 - (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted downloadEnabled:(BOOL)downloadEnabled crossScreenEnabled:(BOOL)crossScreenEnabled;
 

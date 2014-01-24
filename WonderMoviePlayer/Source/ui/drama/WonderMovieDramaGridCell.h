@@ -23,7 +23,7 @@ typedef enum {
 @end
 
 @interface WonderMovieDramaGridCell : UITableViewCell
-@property (nonatomic, assign) id<WonderMovieDramaGridCellDelegate> delegate;
+@property (nonatomic, weak) id<WonderMovieDramaGridCellDelegate> delegate;
 @property (nonatomic, assign) int minVideoSetNum;
 @property (nonatomic, assign) int maxVideoSetNum;
 @property (nonatomic, assign) int selectedButtonIndex; // NSNotFound for invalid value

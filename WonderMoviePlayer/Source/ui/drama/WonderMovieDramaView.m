@@ -20,8 +20,8 @@
 #define kMaxVideoCountPerGridCell   9
 
 @interface WonderMovieDramaView () <WonderMovieDramaGridCellDelegate>;
-@property (nonatomic, retain) VideoGroup *videoGroup;
-@property (nonatomic, retain) NSArray *sortedVideos;
+@property (nonatomic, strong) VideoGroup *videoGroup;
+@property (nonatomic, strong) NSArray *sortedVideos;
 @end
 
 @implementation WonderMovieDramaView
@@ -48,11 +48,8 @@
         separatorView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         separatorView.image = QQVideoPlayerImage(@"separator_line");
         [headerView addSubview:separatorView];
-        [separatorView release];
         
         [self addSubview:headerView];
-        [label release];
-        [headerView release];
         
         DramaTableView *tableView = [[DramaTableView alloc] initWithFrame:CGRectMake(0, kDramaHeaderViewHeight, self.width, self.height - kDramaHeaderViewHeight) style:UITableViewStylePlain];
         tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -65,7 +62,6 @@
         if ([tableView respondsToSelector:@selector(setSeparatorInset:)]) {
             [tableView setSeparatorInset:UIEdgeInsetsZero];
         }
-        [tableView release];
         
         CAGradientLayer *gradientLayer = [CAGradientLayer layer];
         gradientLayer.frame = self.bounds;
@@ -83,7 +79,6 @@
         UIView *edgeView = [[UIView alloc] initWithFrame:CGRectMake(-1, 0, 1, self.height)];
         edgeView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.09];
         [self addSubview:edgeView];
-        [edgeView release];
     }
     return self;
 }
@@ -91,13 +86,6 @@
 - (void)dealloc
 {
     self.delegate = nil;
-    self.tvDramaManager = nil;
-    self.tableView = nil;
-    self.errorView = nil;
-    self.loadingView = nil;
-    self.videoGroup = nil;
-    self.sortedVideos = nil;
-    [super dealloc];
 }
 
 - (void)reloadData
@@ -144,7 +132,6 @@
         loadingIndicator.center = CGPointMake(CGRectGetMidX(loadingView.bounds), CGRectGetMidY(loadingView.bounds));
         [loadingView addSubview:loadingIndicator];
         [loadingIndicator startAnimating];
-        [loadingIndicator release];
         _loadingView = loadingView;
     }
     return _loadingView;
@@ -343,7 +330,7 @@
     if (showType == VideoGroupShowTypeGrid) {
         WonderMovieDramaGridCell *cell = [tableView dequeueReusableCellWithIdentifier:kGridCellID];
         if (cell == nil) {
-            cell = [[[WonderMovieDramaGridCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kGridCellID] autorelease];
+            cell = [[WonderMovieDramaGridCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kGridCellID];
             cell.delegate = self;
         }
         Video *minVideo = self.sortedVideos[indexPath.row * kMaxVideoCountPerGridCell];
@@ -366,7 +353,7 @@
     else {
         WonderMovieDramaListCell *cell = [tableView dequeueReusableCellWithIdentifier:kListCellID];
         if (cell == nil) {
-            cell = [[[WonderMovieDramaListCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kListCellID] autorelease];
+            cell = [[WonderMovieDramaListCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kListCellID];
             cell.imageView.image = QQVideoPlayerImage(@"list_play");
             cell.textLabel.font = [UIFont systemFontOfSize:13];
 
@@ -374,7 +361,6 @@
             separatorView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
             separatorView.image = QQVideoPlayerImage(@"separator_line");
             [cell addSubview:separatorView];
-            [separatorView release];
         }
         Video *video = self.sortedVideos[indexPath.row];
         cell.isPlaying = video.setNum.intValue == self.playingSetNum;

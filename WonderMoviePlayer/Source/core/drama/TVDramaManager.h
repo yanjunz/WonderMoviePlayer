@@ -22,7 +22,7 @@ typedef enum {
 
 @interface TVDramaManager : NSObject
 @property (nonatomic, copy) NSString *webURL;
-@property (nonatomic, retain) VideoGroup *videoGroup;
+@property (nonatomic, strong) VideoGroup *videoGroup;
 @property (nonatomic) int curSetNum;
 
 - (void)addRequestHandler:(id<TVDramaRequestHandler>)handler;

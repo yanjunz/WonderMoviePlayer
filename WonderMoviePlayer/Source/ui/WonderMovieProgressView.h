@@ -20,7 +20,7 @@
 @end
 
 @interface WonderMovieProgressView : UIView<UIGestureRecognizerDelegate>
-@property (nonatomic, assign) id<WonderMovieProgressViewDelegate> delegate;
+@property (nonatomic, weak) id<WonderMovieProgressViewDelegate> delegate;
 @property (nonatomic, assign) CGFloat progress;
 @property (nonatomic, assign) CGFloat cacheProgress;
 @property (nonatomic, assign) BOOL enabled;

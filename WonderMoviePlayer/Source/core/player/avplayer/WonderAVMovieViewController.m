@@ -44,7 +44,6 @@
 - (void)dealloc
 {
     AddCrashRecord(@"AVPlayer dealloc");
-    [super dealloc];
 }
 
 @end
@@ -96,7 +95,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     
     BOOL _inForeground;
 }
-@property (nonatomic, retain) UIView *controlView;
+@property (nonatomic, strong) UIView *controlView;
 @property (nonatomic, assign) BOOL isEnd;
 @end
 
@@ -139,7 +138,6 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 {
 //    NSLog(@"[WonderAVMovieViewController] dealloc 0x%0x <--", self.hash);
     [self.movieDownloader mdUnBind];
-    self.movieDownloader = nil;
     
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     [audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
@@ -150,18 +148,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     
     [self removeAllObservers]; // Actually all observors should be removed yet
     
-    self.movieURL = nil;
-    self.player = nil;
-    self.playerItem = nil;
-    self.playerLayerView = nil;
-    self.controlSource = nil;
-    self.overlayView = nil;
-    self.maskView = nil;
-    self.controlView = nil;
     
-    self.crossScreenBlock = nil;
-    self.exitBlock = nil;
-    [super dealloc];
 }
 
 - (void)removeAllObservers
@@ -207,14 +194,12 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     backgroundView.frame = self.view.bounds;
     [self.view addSubview:backgroundView];
-    [backgroundView release];
     
 	// Do any additional setup after loading the view.
     if (self.playerLayerView == nil) {
         WonderAVPlayerView *playerLayerView = [[WonderAVPlayerView alloc] initWithFrame:self.view.bounds];
         self.playerLayerView = playerLayerView;
         self.playerLayerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [playerLayerView release];
     }
     [self.view addSubview:self.playerLayerView];
     
@@ -223,7 +208,6 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
         self.maskView = maskView;
         self.maskView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         self.maskView.backgroundColor = [UIColor blackColor];
-        [maskView release];
     }
     self.maskView.userInteractionEnabled = NO;
     self.maskView.alpha = 0;
@@ -234,7 +218,6 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
         self.overlayView = overlayView;
         self.overlayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         self.overlayView.backgroundColor = [UIColor clearColor];
-        [overlayView release];
     }
     
     [self setupControlSource:YES];
@@ -485,7 +468,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     if (![self player])
     {
         /* Get a new AVPlayer initialized to play the specified player item. */
-        [self setPlayer:[[[AVPlayerClass alloc] initWithPlayerItem:self.playerItem] autorelease]];
+        [self setPlayer:[[AVPlayerClass alloc] initWithPlayerItem:self.playerItem]];
 		
         /* Observe the AVPlayer "currentItem" property to find out when any
          AVPlayer replaceCurrentItemWithPlayerItem: replacement will/did
@@ -704,7 +687,6 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 											  cancelButtonTitle:NSLocalizedString(@"确认", @"")
 											  otherButtonTitles:nil];
 	[alertView show];
-	[alertView release];
     NSLog(@"[VideoPlayer] %@", errorMsg);
     
     [self.controlSource error:errorMsg];
@@ -750,7 +732,6 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
         self.controlView = fullscreenControlView;
         [self.overlayView addSubview:fullscreenControlView];
         self.controlSource = fullscreenControlView;
-        [fullscreenControlView release];
     }
 }
 
@@ -787,10 +768,10 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     BOOL isLiveCast = !isfinite(duration); // check live cast here
     self.controlSource.liveCastState = isLiveCast ? LiveCastStateYes : LiveCastStateNo;
     
-    timeObserver = [[self.player addPeriodicTimeObserverForInterval:CMTimeMake(interval, NSEC_PER_SEC)
+    timeObserver = [self.player addPeriodicTimeObserverForInterval:CMTimeMake(interval, NSEC_PER_SEC)
                                                               queue:NULL usingBlock:^(CMTime time) {
                                                                   [self syncScrubber];
-                                                              }] retain];
+                                                              }];
 //    NSLog(@"initScrubberTimer");
 }
 
@@ -799,7 +780,6 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     if (timeObserver) {
 //        NSLog(@"removePlayerTimeObserver");
         [self.player removeTimeObserver:timeObserver];
-        [timeObserver release];
         timeObserver = nil;
     }
 }
@@ -1208,7 +1188,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
                 [self.controlSource showToast:NSLocalizedString(@"切换到2G/3G网络", nil)];
                 [self.player pause];
                 
-                UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"正在使用2G/3G网络，继续播放会消耗流量。确认继续？", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"取消", nil) otherButtonTitles:@"继续播放", nil] autorelease];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"正在使用2G/3G网络，继续播放会消耗流量。确认继续？", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"取消", nil) otherButtonTitles:@"继续播放", nil];
                 alert.tag = kAlertTagForPlayInWWAN;
                 [alert show];
             }
@@ -1253,7 +1233,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     Reachability *reach = [Reachability reachabilityForInternetConnection];
     if (![reach isReachableViaWiFi]) {
         if ([reach isReachableViaWWAN]) {
-            UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"正在使用2G/3G网络，缓存视频会消耗流量。确认继续？", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"取消", nil) otherButtonTitles:@"继续缓存", nil] autorelease];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"正在使用2G/3G网络，缓存视频会消耗流量。确认继续？", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"取消", nil) otherButtonTitles:@"继续缓存", nil];
             alert.tag = kAlertTagForDownloadInWWAN;
             [alert show];
         }
@@ -1272,7 +1252,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     Reachability *reach = [Reachability reachabilityForInternetConnection];
     if (![reach isReachableViaWiFi]) {
         if ([reach isReachableViaWWAN]) {
-            UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"正在使用2G/3G网络，播放视频会消耗流量。确认继续？", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"取消", nil) otherButtonTitles:@"继续播放", nil] autorelease];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"正在使用2G/3G网络，播放视频会消耗流量。确认继续？", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"取消", nil) otherButtonTitles:@"继续播放", nil];
             alert.tag = kAlertTagForPreparePlayInWWAN;
             [alert show];
         }

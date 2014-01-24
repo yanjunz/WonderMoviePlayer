@@ -10,22 +10,22 @@
 
 @interface WonderMovieInfoView : UIView
 // Only show when setting progress
-@property (nonatomic, retain) UILabel *progressTimeLabel;
+@property (nonatomic, strong) UILabel *progressTimeLabel;
 
 // buffering
-@property (nonatomic, retain) UIView *loadingView;
-@property (nonatomic, retain) UIImageView *loadingIndicator;
-@property (nonatomic, retain) UILabel *loadingPercentLabel;
-@property (nonatomic, retain) UILabel *loadingMessageLabel;
+@property (nonatomic, strong) UIView *loadingView;
+@property (nonatomic, strong) UIImageView *loadingIndicator;
+@property (nonatomic, strong) UILabel *loadingPercentLabel;
+@property (nonatomic, strong) UILabel *loadingMessageLabel;
 
 // center button
-@property (nonatomic, retain) UIButton *replayButton;
-@property (nonatomic, retain) UIButton *centerPlayButton;
+@property (nonatomic, strong) UIButton *replayButton;
+@property (nonatomic, strong) UIButton *centerPlayButton;
 
-@property (nonatomic, retain) UIView *volumeView;
-@property (nonatomic, retain) UIView *brightnessView;
+@property (nonatomic, strong) UIView *volumeView;
+@property (nonatomic, strong) UIView *brightnessView;
 
-@property (nonatomic, retain) UIButton *openSourceButton;
+@property (nonatomic, strong) UIButton *openSourceButton;
 
 - (void)showProgressTime:(BOOL)show animated:(BOOL)animated;
 - (void)startLoading;

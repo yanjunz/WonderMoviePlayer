@@ -25,12 +25,12 @@
     id timeObserver;
     BOOL _isEnd;
 }
-@property (nonatomic, retain) NSURL *movieURL;
-@property (nonatomic, retain) AVPlayer *player;
-@property (nonatomic, retain) AVPlayerItem *playerItem;
-@property (nonatomic, retain) IBOutlet WonderAVPlayerView *playerLayerView;
-@property (nonatomic, retain) UIView *overlayView;
-@property (nonatomic, retain) IBOutlet UIView *maskView;
+@property (nonatomic, strong) NSURL *movieURL;
+@property (nonatomic, strong) AVPlayer *player;
+@property (nonatomic, strong) AVPlayerItem *playerItem;
+@property (nonatomic, strong) IBOutlet WonderAVPlayerView *playerLayerView;
+@property (nonatomic, strong) UIView *overlayView;
+@property (nonatomic, strong) IBOutlet UIView *maskView;
 
 - (void)playMovieStream:(NSURL *)movieURL;
 - (void)playMovieStream:(NSURL *)movieURL fromStartTime:(Float64)time;

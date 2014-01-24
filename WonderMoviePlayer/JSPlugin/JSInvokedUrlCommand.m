@@ -49,12 +49,4 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [_arguments release];
-    [_callbackId release];
-    [_className release];
-    [_methodName release];
-    [super dealloc];
-}
 @end

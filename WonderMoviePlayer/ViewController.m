@@ -27,12 +27,12 @@
     NSString *_testString;
     Reachability *_reach;
 }
-@property (nonatomic, retain) WonderMovieViewController *player;
-@property (nonatomic, retain) NSString *testString;
-@property (retain, nonatomic) IBOutlet UISlider *slider;
-@property (retain, nonatomic) IBOutlet UIProgressView *progressView;
-@property (retain, nonatomic) IBOutlet UIView *testView;
-@property (retain, nonatomic) IBOutlet UIButton *tableButton;
+@property (nonatomic, strong) WonderMovieViewController *player;
+@property (nonatomic, strong) NSString *testString;
+@property (strong, nonatomic) IBOutlet UISlider *slider;
+@property (strong, nonatomic) IBOutlet UIProgressView *progressView;
+@property (strong, nonatomic) IBOutlet UIView *testView;
+@property (strong, nonatomic) IBOutlet UIButton *tableButton;
 
 @end
 
@@ -81,7 +81,7 @@
     
     Reachability *reach = [Reachability reachabilityForInternetConnection];
     [reach startNotifier];
-    _reach = [reach retain];
+    _reach = reach;
 }
 
 - (void)testTableButton
@@ -139,7 +139,7 @@
             [self presentModalViewController:controller animated:YES];
         }
         
-        TVDramaManager *tvDramaManager = [[[TVDramaManager alloc] init] autorelease];
+        TVDramaManager *tvDramaManager = [[TVDramaManager alloc] init];
         tvDramaManager.webURL = @"http://www.iqiyi.com/dongman/20130414/8d6929ed7ac9a7b8.html";
         FakeTVDramaWebSource *fakeDramaWebSource = [[FakeTVDramaWebSource alloc] init];
         [tvDramaManager addRequestHandler:fakeDramaWebSource];
@@ -160,7 +160,6 @@
         
         NSLog(@"start to play av");
         [controller playMovieStream:[[NSBundle mainBundle] URLForResource:@"Movie" withExtension:@"m4v"]];
-        [controller release];
 //        NSLog(@"retain count1= %d", [controller retainCount]);
 #else
         DefineBlockVar(WonderMovieViewController *, controller, [[WonderMovieViewController alloc] init]);
@@ -203,7 +202,7 @@
     [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeRight animated:YES];
     [UIApplication sharedApplication].statusBarHidden = YES;
     
-    controller.movieDownloader = [[[FakeMovieDownloader alloc] init] autorelease];
+    controller.movieDownloader = [[FakeMovieDownloader alloc] init];
     [controller setCrossScreenBlock:^{
         NSLog(@"cross screen");
     }];
@@ -223,7 +222,7 @@
     
     [controller.controlSource setTitle:@"我叫MTMTMTMMTMTMTMTMMTMTMTMMTMTMMTMTMMTMMTMTMTMMTTMMTMTMMT" subtitle:@""];
     
-    TVDramaManager *tvDramaManager = [[[TVDramaManager alloc] init] autorelease];
+    TVDramaManager *tvDramaManager = [[TVDramaManager alloc] init];
     tvDramaManager.webURL = @"http://www.iqiyi.com/dongman/20130414/8d6929ed7ac9a7b8.html"; // the second one
     FakeTVDramaWebSource *fakeDramaWebSource = [[FakeTVDramaWebSource alloc] init];
     [tvDramaManager addRequestHandler:fakeDramaWebSource];
@@ -240,7 +239,6 @@
         else {
             [weakController dismissModalViewControllerAnimated:YES];
         }
-        [weakController release];
     }];
     
     
@@ -280,20 +278,12 @@
 }
 
 - (IBAction)onClickWebView:(id)sender {
-    [self.navigationController pushViewController:[[[TestWebViewController alloc] init] autorelease] animated:YES];
+    [self.navigationController pushViewController:[[TestWebViewController alloc] init] animated:YES];
 }
 - (IBAction)onClickTable:(id)sender {
-    [self.navigationController pushViewController:[[[TestTableViewController alloc] init] autorelease] animated:YES];
+    [self.navigationController pushViewController:[[TestTableViewController alloc] init] animated:YES];
 }
 
-- (void)dealloc {
-    [_slider release];
-    [_progressView release];
-    [_loadingIndicator release];
-    [_testView release];
-    [_tableButton release];
-    [super dealloc];
-}
 - (void)viewDidUnload {
     [self setSlider:nil];
     [self setProgressView:nil];

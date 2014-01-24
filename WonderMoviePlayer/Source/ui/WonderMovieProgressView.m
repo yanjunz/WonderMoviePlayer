@@ -12,10 +12,10 @@
 #import "UIView+Sizes.h"
 
 @interface WonderMovieProgressView ()
-@property (nonatomic, retain) UIImageView *progressBottomView;
-@property (nonatomic, retain) UIImageView *progressCacheView;
-@property (nonatomic, retain) UIImageView *progressTopView;
-@property (nonatomic, retain) UIButton *progressIndicator;
+@property (nonatomic, strong) UIImageView *progressBottomView;
+@property (nonatomic, strong) UIImageView *progressCacheView;
+@property (nonatomic, strong) UIImageView *progressTopView;
+@property (nonatomic, strong) UIButton *progressIndicator;
 @end
 
 @implementation WonderMovieProgressView
@@ -35,11 +35,6 @@
 {
     self.delegate = nil;
     
-    [_progressBottomView release];
-    [_progressCacheView release];
-    [_progressTopView release];
-    [_progressIndicator release];
-    [super dealloc];
 }
 
 - (void)setupView
@@ -50,7 +45,6 @@
     self.progressBottomView.contentStretch = CGRectMake(0.5, 0.5, 0, 0);
     self.progressBottomView.image = QQVideoPlayerImage(@"progressbar_bottom");
     [self addSubview:self.progressBottomView];
-    [progressBottomView release];
     
     UIImageView *progressCacheView = [[UIImageView alloc] init];
     self.progressCacheView = progressCacheView;
@@ -58,7 +52,6 @@
     self.progressCacheView.contentStretch = CGRectMake(0.5, 0.5, 0, 0);
     self.progressCacheView.image = QQVideoPlayerImage(@"progressbar_cache");
     [self addSubview:self.progressCacheView];
-    [progressCacheView release];
     
     UIImageView *progressTopView = [[UIImageView alloc] init];
     self.progressTopView = progressTopView;
@@ -67,7 +60,6 @@
     self.progressTopView.image = QQVideoPlayerImage(@"progressbar_top");
     self.progressTopView.clipsToBounds = YES;
     [self addSubview:self.progressTopView];
-    [progressTopView release];
     
     self.progressIndicator = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.progressIndicator setImage:QQVideoPlayerImage(@"progressbar_indicator_normal") forState:UIControlStateNormal];
@@ -81,9 +73,8 @@
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPan:)];
     panGesture.delegate = self;
     [self addGestureRecognizer:panGesture];
-    [panGesture release];
     
-    [self addGestureRecognizer:[[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)] autorelease]];
+    [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)]];
     
     [self setProgress:0];
     [self setNeedsLayout];

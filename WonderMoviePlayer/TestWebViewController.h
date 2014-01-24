@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface TestWebViewController : UIViewController<UIWebViewDelegate>
-@property (retain, nonatomic) IBOutlet UIWebView *webview;
+@property (strong, nonatomic) IBOutlet UIWebView *webview;
 
 - (IBAction)onClickBtn:(id)sender;
 - (IBAction)onClickPlayOrg:(id)sender;

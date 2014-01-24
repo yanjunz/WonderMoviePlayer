@@ -25,7 +25,6 @@
         UIView *selectedBackgroundView = [[UIView alloc] initWithFrame:self.bounds];
         self.selectedBackgroundView = selectedBackgroundView;
         selectedBackgroundView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.15];
-        [selectedBackgroundView release];
     }
     return self;
 }

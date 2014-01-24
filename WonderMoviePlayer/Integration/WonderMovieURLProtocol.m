@@ -11,9 +11,9 @@
 static NSString *PBProxyURLHeader = @"X-PB";
 
 @interface WonderMovieURLProtocol ()
-@property (nonatomic, retain) NSURLConnection *connection;
-@property (nonatomic, retain) NSMutableData *data;
-@property (nonatomic, retain) NSURLRequest *request;
+@property (nonatomic, strong) NSURLConnection *connection;
+@property (nonatomic, strong) NSMutableData *data;
+@property (nonatomic, strong) NSURLRequest *request;
 @end
 
 @implementation WonderMovieURLProtocol
@@ -29,13 +29,6 @@ static NSString *PBProxyURLHeader = @"X-PB";
 }
 
 
-- (void)dealloc
-{
-    self.connection = nil;
-    self.data = nil;
-    self.request = nil;
-    [super dealloc];
-}
 
 + (BOOL)canInitWithRequest:(NSURLRequest *)request
 {
@@ -97,7 +90,7 @@ static NSString *PBProxyURLHeader = @"X-PB";
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
     [[self client] URLProtocol:self didFailWithError:error];
 	[self setConnection:nil];
-	[_data release]; _data = nil;
+	 _data = nil;
 }
 
 -(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
@@ -109,7 +102,7 @@ static NSString *PBProxyURLHeader = @"X-PB";
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection {
     [[self client] URLProtocolDidFinishLoading:self];
 	[self setConnection:nil];
-	[_data release]; _data = nil;
+	 _data = nil;
 }
 
 @end

@@ -12,7 +12,7 @@
 #import "Video.h"
 
 @interface TVDramaManager ()
-@property (nonatomic, retain) NSMutableArray *handlers;
+@property (nonatomic, strong) NSMutableArray *handlers;
 @end
 
 @implementation TVDramaManager
@@ -25,13 +25,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    self.webURL = nil;
-    self.videoGroup = nil;
-    self.handlers = nil;
-    [super dealloc];
-}
 
 - (void)addRequestHandler:(id<TVDramaRequestHandler>)handler
 {

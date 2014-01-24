@@ -27,13 +27,10 @@
 {
     self.movieDownloaderDelegate = nil;
     self.movieDownloaderDataSource = nil;
-    self.downloadURL = nil;
 
     
     // FIXME: should not be released here
     [self.timer invalidate];
-    self.timer = nil;
-    [super dealloc];
 }
 
 - (void)onTimer:(NSTimer *)timer
@@ -121,17 +118,12 @@
 
 + (id)taskWithURL:(NSURL *)url
 {
-    Task *t = [[[Task alloc] init] autorelease];
+    Task *t = [[Task alloc] init];
     t.downloadURL = url;
     t.state = TaskStateDownloading;
     t.progress = 0;
     return t;
 }
 
-- (void)dealloc
-{
-    self.downloadURL = nil;
-    [super dealloc];
-}
 
 @end

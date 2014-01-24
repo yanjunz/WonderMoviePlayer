@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface Test2ViewController : UIViewController
-@property (retain, nonatomic) IBOutlet UIImageView *loadingIndicator;
+@property (strong, nonatomic) IBOutlet UIImageView *loadingIndicator;
 
 @end

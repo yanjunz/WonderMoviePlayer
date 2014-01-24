@@ -12,8 +12,8 @@
 
 @interface JSPluginEngine : NSObject
 //@property (nonatomic, assign) UIWebView *webView;
-@property (nonatomic, retain) NSMutableDictionary *pluginsMap;
-@property (nonatomic, retain) JSCommandQueue *commandQueue;
+@property (nonatomic, strong) NSMutableDictionary *pluginsMap;
+@property (nonatomic, strong) JSCommandQueue *commandQueue;
 
 + (JSPluginEngine *)sharedInstance;
 - (void)registerPlugin:(JSPlugin *)plugin withPluginName:(NSString*)pluginName;

@@ -19,11 +19,6 @@
     return _instance;
 }
 
-- (void)dealloc
-{
-    self.pluginsMap = nil;
-    [super dealloc];
-}
 
 - (NSMutableDictionary *)pluginsMap
 {

@@ -13,13 +13,13 @@
 
 @interface VideoGroup : NSManagedObject
 
-@property (nonatomic, retain) NSNumber * maxId;
-@property (nonatomic, retain) NSNumber * showType;
-@property (nonatomic, retain) NSString * src;
-@property (nonatomic, retain) NSNumber * totalCount;
-@property (nonatomic, retain) NSNumber * videoId;
-@property (nonatomic, retain) NSString * videoName;
-@property (nonatomic, retain) NSSet *videos;
+@property (nonatomic, strong) NSNumber * maxId;
+@property (nonatomic, strong) NSNumber * showType;
+@property (nonatomic, strong) NSString * src;
+@property (nonatomic, strong) NSNumber * totalCount;
+@property (nonatomic, strong) NSNumber * videoId;
+@property (nonatomic, strong) NSString * videoName;
+@property (nonatomic, strong) NSSet *videos;
 @end
 
 @interface VideoGroup (CoreDataGeneratedAccessors)
