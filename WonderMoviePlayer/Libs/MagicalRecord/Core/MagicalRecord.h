@@ -22,8 +22,7 @@
 
 #if MR_ENABLE_ACTIVE_RECORD_LOGGING != 0
       // First, check if we can use Cocoalumberjack for logging
-    #if defined(LOG_VERBOSE) || defined(COCOAPODS_POD_AVAILABLE_CocoaLumberjack)
-        #import "DDLog.h"
+    #ifdef LOG_VERBOSE
         extern int ddLogLevel;
         #define MRLog(...)  DDLogVerbose(__VA_ARGS__)
     #else

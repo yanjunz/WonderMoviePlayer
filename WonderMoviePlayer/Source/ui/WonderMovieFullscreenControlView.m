@@ -141,7 +141,7 @@ void wonderMovieVolumeListenerCallback (
         return;
     }
     
-    WonderMovieFullscreenControlView *bself = (WonderMovieFullscreenControlView *)inClientData;
+    WonderMovieFullscreenControlView *bself = (__bridge WonderMovieFullscreenControlView *)inClientData;
     [bself performSelectorOnMainThread:@selector(tryToShowVerticalPanningTip) withObject:nil waitUntilDone:NO];
     
     const float *volumePointer = inData;

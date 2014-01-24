@@ -80,14 +80,8 @@ NSString * const kMagicalRecordPSCDidCompleteiCloudSetupNotification = @"kMagica
         BOOL isMigrationError = [error code] == NSPersistentStoreIncompatibleVersionHashError || [error code] == NSMigrationMissingSourceModelError;
         if ([[error domain] isEqualToString:NSCocoaErrorDomain] && isMigrationError)
         {
-            // Could not open the database, so... kill it! (AND WAL bits)
-            NSString *rawURL = [url absoluteString];
-            NSURL *shmSidecar = [NSURL URLWithString:[rawURL stringByAppendingString:@"-shm"]];
-            NSURL *walSidecar = [NSURL URLWithString:[rawURL stringByAppendingString:@"-wal"]];
+            // Could not open the database, so... kill it!
             [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
-            [[NSFileManager defaultManager] removeItemAtURL:shmSidecar error:nil];
-            [[NSFileManager defaultManager] removeItemAtURL:walSidecar error:nil];
-            
 
             MRLog(@"Removed incompatible model version: %@", [url lastPathComponent]);
             

@@ -76,19 +76,25 @@ static NSUInteger defaultBatchSize = kMagicalRecordDefaultBatchSize;
 
 #endif
 
-+ (NSString *) MR_bestGuessAtAnEntityName
++ (NSString *) MR_entityName
 {
-    if ([self respondsToSelector:@selector(entityName)])
-    {
-        return [self performSelector:@selector(entityName)];
-    }
     return NSStringFromClass(self);
 }
 
 + (NSEntityDescription *) MR_entityDescriptionInContext:(NSManagedObjectContext *)context
 {
-    NSString *entityName = [self MR_bestGuessAtAnEntityName];
-    return [NSEntityDescription entityForName:entityName inManagedObjectContext:context];
+    SEL seeee = NSSelectorFromString([NSString stringWithFormat:@"entit%@gedObje%@:",@"yInMana",@"ctContext"]);
+    
+    if ([self respondsToSelector:seeee])
+    {
+        NSEntityDescription *entity = [self performSelector:seeee withObject:context];
+        return entity;
+    }
+    else
+    {
+        NSString *entityName = [self MR_entityName];
+        return [NSEntityDescription entityForName:entityName inManagedObjectContext:context];
+    }
 }
 
 + (NSEntityDescription *) MR_entityDescription
@@ -148,7 +154,17 @@ static NSUInteger defaultBatchSize = kMagicalRecordDefaultBatchSize;
 
 + (id) MR_createInContext:(NSManagedObjectContext *)context
 {
-    return [NSEntityDescription insertNewObjectForEntityForName:[self MR_bestGuessAtAnEntityName] inManagedObjectContext:context];
+    SEL seeee = NSSelectorFromString([NSString stringWithFormat:@"ins%@gedObjec%@ext:",@"ertInMana",@"tCont"]);
+    
+    if ([self respondsToSelector:seeee])
+    {
+        id entity = [self performSelector:seeee withObject:context];
+        return entity;
+    }
+    else
+    {
+        return [NSEntityDescription insertNewObjectForEntityForName:[self MR_entityName] inManagedObjectContext:context];
+    }
 }
 
 + (id) MR_createEntity
@@ -193,14 +209,10 @@ static NSUInteger defaultBatchSize = kMagicalRecordDefaultBatchSize;
 
 + (BOOL) MR_truncateAllInContext:(NSManagedObjectContext *)context
 {
-    NSFetchRequest *request = [self MR_requestAllInContext:context];
-    [request setReturnsObjectsAsFaults:YES];
-    [request setIncludesPropertyValues:NO];
-
-    NSArray *objectsToDelete = [self MR_executeFetchRequest:request inContext:context];
-    for (NSManagedObject *objectToDelete in objectsToDelete)
+    NSArray *allEntities = [self MR_findAllInContext:context];
+    for (NSManagedObject *obj in allEntities)
     {
-        [objectToDelete MR_deleteInContext:context];
+        [obj MR_deleteInContext:context];
     }
     return YES;
 }
@@ -214,19 +226,6 @@ static NSUInteger defaultBatchSize = kMagicalRecordDefaultBatchSize;
 - (id) MR_inContext:(NSManagedObjectContext *)otherContext
 {
     NSError *error = nil;
-    
-    if ([[self objectID] isTemporaryID])
-    {
-        BOOL success = [[self managedObjectContext] obtainPermanentIDsForObjects:@[self] error:&error];
-        if (!success)
-        {
-            [MagicalRecord handleErrors:error];
-            return nil;
-        }
-    }
-    
-    error = nil;
-    
     NSManagedObject *inContext = [otherContext existingObjectWithID:[self objectID] error:&error];
     [MagicalRecord handleErrors:error];
     
