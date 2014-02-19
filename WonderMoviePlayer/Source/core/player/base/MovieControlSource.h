@@ -9,7 +9,6 @@
 
 #import <Foundation/Foundation.h>
 
-
 typedef enum {
     MovieControlStateDefault, // not started
     MovieControlStatePlaying,
@@ -44,6 +43,8 @@ typedef enum {
  */
 
 @protocol MovieControlSourceDelegate;
+@protocol VideoHistoryOperator;
+@protocol VideoBookmarkOperator;
 @class TVDramaManager;
 @class Video;
 @class VideoGroup;
@@ -105,14 +106,16 @@ typedef enum {
 
 @property (nonatomic, assign) BOOL alertCopyrightInsteadOfDownload;
 
-@property (nonatomic, retain) TVDramaManager *tvDramaManager;
+@property (nonatomic, strong) TVDramaManager *tvDramaManager;
+@property (nonatomic, strong) id<VideoBookmarkOperator> bookmarkOperator;
+@property (nonatomic, strong) id<VideoHistoryOperator> historyOperator;
 
 // system state
 @property (nonatomic, assign) CGFloat brightness;
 @property (nonatomic, assign) CGFloat volume;
 @required
 @property (nonatomic, assign) MovieControlState controlState;
-@property (nonatomic, assign) id<MovieControlSourceDelegate> delegate;
+@property (nonatomic, weak) id<MovieControlSourceDelegate> delegate;
 @end
 
 @protocol MovieControlSourceDelegate <NSObject>

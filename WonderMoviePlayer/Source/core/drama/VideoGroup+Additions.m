@@ -1,15 +1,15 @@
 //
-//  VideoGroup+VideoDetailSet.m
+//  VideoGroup+Additions.m
 //  mtt
 //
 //  Created by Zhuang Yanjun on 11/13/13.
 //  Copyright (c) 2013 Tencent. All rights reserved.
 //
 
-#import "VideoGroup+VideoDetailSet.h"
+#import "VideoGroup+Additions.h"
 #import "Video.h"
 
-@implementation VideoGroup (VideoDetailSet)
+@implementation VideoGroup (Additions)
 
 - (Video *)videoAtURL:(NSString *)URL
 {

@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @class VideoGroup;
+@class Video;
 typedef void (^GetDramaInfoBlock)(VideoGroup *videoGroup, int setNum);
 typedef void (^FailedBlock)();
 
@@ -29,6 +30,7 @@ typedef enum {
 - (void)removeRequestHandler:(id<TVDramaRequestHandler>)handler;
 
 - (VideoGroup *)videoGroupInCurrentThread;
+- (Video *)playingVideo;
 - (BOOL)getDramaInfo:(TVDramaRequestType)requestType;
 - (void)getDramaInfo:(TVDramaRequestType)requestType completionBlock:(void (^)(BOOL success))completionBlock;
 - (BOOL)sniffVideoSource;

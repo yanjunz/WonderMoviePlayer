@@ -8,7 +8,7 @@
 
 #import "FakeTVDramaWebSource.h"
 #import "Video.h"
-#import "VideoGroup+VideoDetailSet.h"
+#import "VideoGroup+Additions.h"
 #import "NSObject+Block.h"
 
 @interface FakeTVDramaWebSource () <UIWebViewDelegate> {
@@ -100,7 +100,7 @@
 //            }
             
             // save video group info
-            videoGroup.videoId = @(1234567890);
+            videoGroup.videoId = @"1234567890";
             videoGroup.videoName = @"进击的巨人";
             videoGroup.showType = @(2);
             videoGroup.src = @"爱奇艺";

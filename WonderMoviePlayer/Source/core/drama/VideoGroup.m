@@ -2,8 +2,8 @@
 //  VideoGroup.m
 //  mtt
 //
-//  Created by Zhuang Yanjun on 11/19/13.
-//  Copyright (c) 2013 Tencent. All rights reserved.
+//  Created by Zhuang Yanjun on 17/2/14.
+//  Copyright (c) 2014 Tencent. All rights reserved.
 //
 
 #import "VideoGroup.h"

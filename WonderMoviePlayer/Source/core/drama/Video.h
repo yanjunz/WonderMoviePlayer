@@ -2,8 +2,8 @@
 //  Video.h
 //  mtt
 //
-//  Created by Zhuang Yanjun on 11/19/13.
-//  Copyright (c) 2013 Tencent. All rights reserved.
+//  Created by Zhuang Yanjun on 11/2/14.
+//  Copyright (c) 2014 Tencent. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -13,10 +13,19 @@
 
 @interface Video : NSManagedObject
 
-@property (nonatomic, strong) NSString * brief;
-@property (nonatomic, strong) NSNumber * setNum;
-@property (nonatomic, strong) NSString * url;
-@property (nonatomic, strong) NSString * videoSrc;
-@property (nonatomic, strong) VideoGroup *videoGroup;
+@property (nonatomic, retain) NSString * brief;
+@property (nonatomic, retain) NSNumber * setNum;
+@property (nonatomic, retain) NSString * url;
+@property (nonatomic, retain) NSString * videoSrc;
+@property (nonatomic, retain) NSString * path;
+@property (nonatomic, retain) NSNumber * resolution;
+@property (nonatomic, retain) NSString * storageType;
+@property (nonatomic, retain) NSString * status;
+@property (nonatomic, retain) NSString * statusCode;
+@property (nonatomic, retain) NSNumber * fileSize;
+@property (nonatomic, retain) NSNumber * progress;
+@property (nonatomic, retain) NSNumber * createTime;
+@property (nonatomic, retain) NSString * completedTime;
+@property (nonatomic, retain) VideoGroup *videoGroup;
 
 @end

@@ -27,6 +27,9 @@
 @implementation WonderMPMovieViewController
 @synthesize crossScreenBlock, downloadBlock, exitBlock;
 @synthesize controlSource;
+@synthesize historyOperator;
+@synthesize bookmarkOperator;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {

@@ -11,7 +11,7 @@
 #import "UIView+Sizes.h"
 #import "NSObject+Block.h"
 #import "Video.h"
-#import "VideoGroup+VideoDetailSet.h"
+#import "VideoGroup+Additions.h"
 #import "WonderMovieDramaGridCell.h"
 #import "WonderMovieDramaListCell.h"
 #import "WonderMoviePlayerConstants.h"

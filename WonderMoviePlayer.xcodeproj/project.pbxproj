@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		AE4FA7CA1872ADAA005B7BD6 /* toast_frame@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AE4FA7C91872ADAA005B7BD6 /* toast_frame@2x.png */; };
+		AE96680418B4395B00158788 /* VideoGroup+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = AE96680318B4395B00158788 /* VideoGroup+Additions.m */; };
+		AE96680718B4398D00158788 /* NSString+Hash.m in Sources */ = {isa = PBXBuildFile; fileRef = AE96680618B4398D00158788 /* NSString+Hash.m */; };
 		B516CA0F17DD6AA100D8E3A2 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B516CA0E17DD6AA100D8E3A2 /* CFNetwork.framework */; };
 		B517773817B36D44006B948E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517773717B36D44006B948E /* UIKit.framework */; };
 		B517773A17B36D44006B948E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517773917B36D44006B948E /* Foundation.framework */; };
@@ -85,7 +87,6 @@
 		B56EE42E182A1E9F00241DDA /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B56EE42D182A1E9F00241DDA /* CoreAudio.framework */; };
 		B56EE430182A1F0000241DDA /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B56EE42F182A1F0000241DDA /* AudioToolbox.framework */; };
 		B58B56E018338E910096801E /* TVDramaManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B56D818338E910096801E /* TVDramaManager.m */; };
-		B58B56E118338E910096801E /* VideoGroup+VideoDetailSet.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B56DA18338E910096801E /* VideoGroup+VideoDetailSet.m */; };
 		B58B56E518338EAC0096801E /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B58B56E418338EAC0096801E /* CoreData.framework */; };
 		B58B56E918346F8D0096801E /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B56E818346F8D0096801E /* EGORefreshTableHeaderView.m */; };
 		B58B56EC183470F50096801E /* WonderMovieDramaView.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B56EB183470F50096801E /* WonderMovieDramaView.m */; };
@@ -150,6 +151,12 @@
 
 /* Begin PBXFileReference section */
 		AE4FA7C91872ADAA005B7BD6 /* toast_frame@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toast_frame@2x.png"; sourceTree = "<group>"; };
+		AE96680218B4395B00158788 /* VideoGroup+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "VideoGroup+Additions.h"; sourceTree = "<group>"; };
+		AE96680318B4395B00158788 /* VideoGroup+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "VideoGroup+Additions.m"; sourceTree = "<group>"; };
+		AE96680518B4398D00158788 /* NSString+Hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Hash.h"; sourceTree = "<group>"; };
+		AE96680618B4398D00158788 /* NSString+Hash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Hash.m"; sourceTree = "<group>"; };
+		AE96680818B439F100158788 /* VideoBookmarkOperator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoBookmarkOperator.h; sourceTree = "<group>"; };
+		AE96680918B439F100158788 /* VideoHistoryOperator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoHistoryOperator.h; sourceTree = "<group>"; };
 		B516CA0E17DD6AA100D8E3A2 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		B517773417B36D44006B948E /* WonderMoviePlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WonderMoviePlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B517773717B36D44006B948E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -240,8 +247,6 @@
 		B56EE42F182A1F0000241DDA /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		B58B56D818338E910096801E /* TVDramaManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TVDramaManager.m; sourceTree = "<group>"; };
 		B58B56D918338E910096801E /* TVDramaManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TVDramaManager.h; sourceTree = "<group>"; };
-		B58B56DA18338E910096801E /* VideoGroup+VideoDetailSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "VideoGroup+VideoDetailSet.m"; sourceTree = "<group>"; };
-		B58B56DB18338E910096801E /* VideoGroup+VideoDetailSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "VideoGroup+VideoDetailSet.h"; sourceTree = "<group>"; };
 		B58B56E418338EAC0096801E /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		B58B56E718346F8D0096801E /* EGORefreshTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EGORefreshTableHeaderView.h; sourceTree = "<group>"; };
 		B58B56E818346F8D0096801E /* EGORefreshTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EGORefreshTableHeaderView.m; sourceTree = "<group>"; };
@@ -782,6 +787,8 @@
 		B5DC077B182CD4690046A7A5 /* base */ = {
 			isa = PBXGroup;
 			children = (
+				AE96680818B439F100158788 /* VideoBookmarkOperator.h */,
+				AE96680918B439F100158788 /* VideoHistoryOperator.h */,
 				B5DC077C182CD4690046A7A5 /* BaseMoviePlayer.h */,
 				B5DC077D182CD4690046A7A5 /* MovieControlSource.h */,
 				B5DC077E182CD4690046A7A5 /* MoviePlayerHandler.h */,
@@ -794,10 +801,10 @@
 		B5DC0780182CD4690046A7A5 /* drama */ = {
 			isa = PBXGroup;
 			children = (
+				AE96680218B4395B00158788 /* VideoGroup+Additions.h */,
+				AE96680318B4395B00158788 /* VideoGroup+Additions.m */,
 				B58B56D818338E910096801E /* TVDramaManager.m */,
 				B58B56D918338E910096801E /* TVDramaManager.h */,
-				B58B56DA18338E910096801E /* VideoGroup+VideoDetailSet.m */,
-				B58B56DB18338E910096801E /* VideoGroup+VideoDetailSet.h */,
 				B58B575E1834D2AD0096801E /* Video.h */,
 				B58B575F1834D2AD0096801E /* Video.m */,
 				B58B57641835F6190096801E /* VideoGroup.h */,
@@ -838,6 +845,8 @@
 		B5F96D4E184376E7006A73FB /* Additions */ = {
 			isa = PBXGroup;
 			children = (
+				AE96680518B4398D00158788 /* NSString+Hash.h */,
+				AE96680618B4398D00158788 /* NSString+Hash.m */,
 				B517776817B37FEB006B948E /* UIView+Sizes.h */,
 				B517776917B37FEB006B948E /* UIView+Sizes.m */,
 				B58B56ED18347A990096801E /* NSObject+Block.h */,
@@ -1007,13 +1016,13 @@
 				B5DC075B182CD2CA0046A7A5 /* WonderMovieDramaGridCell.m in Sources */,
 				B5D4C3651820F51A00BB0A53 /* WonderMovieInfoView.m in Sources */,
 				B58B573E18347F250096801E /* NSManagedObjectContext+MagicalThreading.m in Sources */,
+				AE96680418B4395B00158788 /* VideoGroup+Additions.m in Sources */,
 				B517792517C1B896006B948E /* NSNotificationCenter+SwizzleMethod.m in Sources */,
 				B5DC0783182CD4690046A7A5 /* WonderAVPlayerView.m in Sources */,
 				B5AD785217CDA50E00C08E51 /* video.js in Sources */,
 				B58B57601834D2AD0096801E /* Video.m in Sources */,
 				B5AD78A817CDD30600C08E51 /* JSURLProtocol.m in Sources */,
 				B58B573418347F250096801E /* NSRelationshipDescription+MagicalDataImport.m in Sources */,
-				B58B56E118338E910096801E /* VideoGroup+VideoDetailSet.m in Sources */,
 				B5F96D681846267C006A73FB /* Reachability.m in Sources */,
 				B58B573C18347F250096801E /* NSManagedObjectContext+MagicalRecord.m in Sources */,
 				B58B573318347F240096801E /* NSObject+MagicalDataImport.m in Sources */,
@@ -1030,6 +1039,7 @@
 				B52DCDA9183F4E890020485B /* WonderMovieFullscreenControlView+StateMachine.m in Sources */,
 				B58B57661835F6190096801E /* VideoGroup.m in Sources */,
 				B58B573D18347F250096801E /* NSManagedObjectContext+MagicalSaves.m in Sources */,
+				AE96680718B4398D00158788 /* NSString+Hash.m in Sources */,
 				B5F96D5118437748006A73FB /* FakeMovieDownloader.m in Sources */,
 				B5AD78B817CDF06100C08E51 /* JSJSON.m in Sources */,
 				B58B574018347F250096801E /* NSPersistentStore+MagicalRecord.m in Sources */,

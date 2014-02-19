@@ -12,7 +12,7 @@
 #import "WonderAVPlayerView.h"
 #import "WonderMovieFullscreenControlView.h"
 #import "UIView+Sizes.h"
-#import "VideoGroup+VideoDetailSet.h"
+#import "VideoGroup+Additions.h"
 #import "Video.h"
 #import "Reachability.h"
 #import "NSObject+Block.h"
@@ -1146,7 +1146,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 - (NSString *)titleForMovieDownloader:(id<MovieDownloader>)downloader
 {
     VideoGroup *videoGroup = [self.controlSource.tvDramaManager videoGroupInCurrentThread];
-    if ([videoGroup.videoId intValue] != 0 && [self.controlSource respondsToSelector:@selector(title)]) {
+    if ([videoGroup.videoId length] != 0 && [self.controlSource respondsToSelector:@selector(title)]) {
         return [self.controlSource title];
     }
     return nil;

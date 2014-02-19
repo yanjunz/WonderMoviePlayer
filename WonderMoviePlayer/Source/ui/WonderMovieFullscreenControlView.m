@@ -20,8 +20,10 @@
 #import "WonderMovieDramaView.h"
 #import "NSObject+Block.h"
 #import "VideoGroup.h"
-#import "VideoGroup+VideoDetailSet.h"
+#import "VideoGroup+Additions.h"
 #import "Video.h"
+#import "VideoHistoryOperator.h"
+#import "VideoBookmarkOperator.h"
 
 #ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
 #import "AirPlayDetector.h"
@@ -81,6 +83,7 @@
 @property (nonatomic, strong) UIView *popupMenu;
 @property (nonatomic, strong) UIView *resolutionsView;
 @property (nonatomic, strong) UIButton *resolutionButton;
+@property (nonatomic, strong) UILabel *bookmarkLabel;
 
 // utils
 @property (nonatomic, strong) NSArray *viewsToBeLocked;
@@ -160,6 +163,8 @@ void wonderMovieVolumeListenerCallback (
 @synthesize tvDramaManager = _tvDramaManager;
 @synthesize brightness = _brightness;
 @synthesize volume = _volume;
+@synthesize historyOperator;
+@synthesize bookmarkOperator;
 
 //- (id)retain
 //{
@@ -640,7 +645,7 @@ void wonderMovieVolumeListenerCallback (
         CGFloat buttonFontSize = 13;
         UIFont *buttonFont = [UIFont systemFontOfSize:buttonFontSize];
         UIImage *highlightedImage = [self imageWithColor:[[UIColor whiteColor] colorWithAlphaComponent:0.15]];
-        CGFloat menuHeight = self.crossScreenEnabled ? menuButtonHeight * 2 + menuSeparatorHeight : menuButtonHeight;
+        CGFloat menuHeight = self.crossScreenEnabled ? menuButtonHeight * 3 + menuSeparatorHeight : menuButtonHeight * 2 + menuSeparatorHeight;
         UIView *popupMenu = [[UIView alloc] initWithFrame:CGRectMake(self.width - menuWidth, -menuHeight, menuWidth, menuHeight)];
         
         popupMenu.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
@@ -654,11 +659,11 @@ void wonderMovieVolumeListenerCallback (
         popupMenuBgImageView.frame = popupMenu.bounds;
         [popupMenu addSubview:popupMenuBgImageView];
         
+        ////// Lock //////
         UIButton *lockButton = [UIButton buttonWithType:UIButtonTypeCustom];
         lockButton.frame = CGRectMake(0, topOffset, menuWidth, menuButtonHeight);
         lockButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         lockButton.titleLabel.font = buttonFont;
-//        [lockButton setTitle:NSLocalizedString(@"锁屏", nil) forState:UIControlStateNormal];
         [lockButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
         [lockButton addTarget:self action:@selector(onClickLock:) forControlEvents:UIControlEventTouchUpInside];
         [popupMenu addSubview:lockButton];
@@ -672,14 +677,45 @@ void wonderMovieVolumeListenerCallback (
         label.backgroundColor = [UIColor clearColor];
         label.textColor = [UIColor whiteColor];
         [popupMenu addSubview:label];
+        ////// Lock //////
+        
+        UIButton *lastButton = lockButton;
+        
+        ///// Bookmark //////
+        UIImageView *menuSeparatorView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"separator_line")];
+        menuSeparatorView.frame = CGRectMake(0, lastButton.bottom, menuWidth, menuSeparatorHeight);
+        [popupMenu addSubview:menuSeparatorView];
+        
+        topOffset += lastButton.height;
+        UIButton *bookmarkButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        bookmarkButton.frame = CGRectMake(0, topOffset, menuWidth, menuButtonHeight);
+        bookmarkButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        bookmarkButton.titleLabel.font = buttonFont;
+        [bookmarkButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
+        [bookmarkButton addTarget:self action:@selector(onClickBookmark:) forControlEvents:UIControlEventTouchUpInside];
+        [popupMenu addSubview:bookmarkButton];
+        
+        label = [[UILabel alloc] initWithFrame:CGRectMake(0, topOffset, menuWidth - delta, menuButtonHeight)];
+        label.text = NSLocalizedString(@"收藏", nil);
+        label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        label.textAlignment = UITextAlignmentRight;
+        label.font = buttonFont;
+        label.backgroundColor = [UIColor clearColor];
+        label.textColor = [UIColor whiteColor];
+        self.bookmarkLabel = label;
+        [popupMenu addSubview:label];
+        [self updateBookmarkTitle];
+        
+        ///// Bookmark /////
+        lastButton = bookmarkButton;
         
         if (self.crossScreenEnabled) {
             UIImageView *menuSeparatorView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"separator_line")];
-            menuSeparatorView.frame = CGRectMake(0, lockButton.bottom, menuWidth, menuSeparatorHeight);
+            menuSeparatorView.frame = CGRectMake(0, lastButton.bottom, menuWidth, menuSeparatorHeight);
             [popupMenu addSubview:menuSeparatorView];
             
             UIButton *crossButton = [UIButton buttonWithType:UIButtonTypeCustom];
-            crossButton.frame = CGRectOffset(lockButton.frame, 0, menuButtonHeight + menuSeparatorHeight);
+            crossButton.frame = CGRectOffset(lastButton.frame, 0, menuButtonHeight + menuSeparatorHeight);
             crossButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
             crossButton.titleLabel.font = buttonFont;
 //            [crossButton setTitle:NSLocalizedString(@"跨屏穿越", nil) forState:UIControlStateNormal];
@@ -1259,6 +1295,16 @@ void wonderMovieVolumeListenerCallback (
     [self cancelPreviousAndPrepareToDimControl];
 }
 
+- (IBAction)onClickBookmark:(id)sender
+{
+    VideoGroup *videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
+    if (videoGroup) {
+        BOOL hasBookmarked = [self.bookmarkOperator isVideoGroupBookmarked:videoGroup];
+        [self.bookmarkOperator bookmarkVideoGroup:videoGroup bookmark:!hasBookmarked];
+        [self updateBookmarkTitle];
+    }
+}
+
 - (IBAction)onClickReplay:(id)sender
 {
     [self handleCommand:MovieControlCommandReplay param:nil notify:YES];
@@ -1463,6 +1509,18 @@ void wonderMovieVolumeListenerCallback (
     }
     else {
         self.infoView.progressTimeLabel.text = [NSString stringWithFormat:@"%02d:%02d", minute, second];
+    }
+}
+
+- (void)updateBookmarkTitle
+{
+    VideoGroup *videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
+    BOOL hasBookmarked = [self.bookmarkOperator isVideoGroupBookmarked:videoGroup];
+    if ([videoGroup isValidDrama]) {
+        self.bookmarkLabel.text = hasBookmarked ? NSLocalizedString(@"取消追剧", nil) : NSLocalizedString(@"追剧", nil);
+    }
+    else {
+        self.bookmarkLabel.text = hasBookmarked ? NSLocalizedString(@"取消收藏", nil) : NSLocalizedString(@"收藏", nil);
     }
 }
 
@@ -1922,6 +1980,8 @@ void wonderMovieVolumeListenerCallback (
     [self updateNextButtonState];
     [self updateTitleAndSubtitle];
     [self updateDownloadState];
+    [self visitVideo:YES];
+    [self updateBookmarkTitle];
 }
 
 - (void)failLoadDramaInfo
@@ -1929,6 +1989,8 @@ void wonderMovieVolumeListenerCallback (
     [self showDramaButton:NO animated:YES];
     [self showNextButton:NO animated:YES];
     [self updateDownloadState];
+    [self visitVideo:YES];
+    [self updateBookmarkTitle];
 }
 
 - (void)showDramaButton:(BOOL)show animated:(BOOL)animated
@@ -1994,6 +2056,12 @@ void wonderMovieVolumeListenerCallback (
 - (BOOL)hasNextDrama
 {
     return !self.nextButton.hidden;
+}
+
+#pragma mark History
+- (void)visitVideo:(BOOL)visit
+{
+    [self.historyOperator visitVideo:[self.tvDramaManager playingVideo] visit:visit];
 }
 
 #pragma mark UIGestureRecognizerDelegate
@@ -2165,6 +2233,24 @@ static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanni
 {
     if ([self canShowVerticalPanningTip]) {
         [self showVerticalPanningTip:YES];
+    }
+}
+
+#pragma mark History
+- (void)addVideoHistory
+{
+    VideoGroup *videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
+    if (videoGroup) {
+        Video *video = nil;
+        if ([videoGroup isValidDrama]) {
+            video = [videoGroup videoAtSetNum:@(self.tvDramaManager.curSetNum)];
+        }
+        else {
+            video = [videoGroup.videos anyObject];
+        }
+        if (video) {
+            [self.historyOperator visitVideo:video visit:YES];
+        }
     }
 }
 
