@@ -146,6 +146,7 @@ typedef enum {
 - (void)movieControlSource:(id<MovieControlSource>)source didChangeResolution:(NSString *)resolution;
 
 // Drama
+- (void)movieControlSourceDramaLoadFinished:(id<MovieControlSource>)source;
 - (void)movieControlSourceWillPlayNext:(id<MovieControlSource>)source;
 - (void)movieControlSource:(id<MovieControlSource>)source didPlayNext:(NSString *)videoSource;
 - (void)movieControlSourceFailToPlayNext:(id<MovieControlSource>)source;

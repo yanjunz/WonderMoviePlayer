@@ -62,4 +62,19 @@
     return !(self.totalCount.intValue == 0 && self.maxId.intValue == 0 && self.showType.intValue == VideoGroupShowTypeNone);
 }
 
+- (NSString *)displayNameForSetNum:(NSNumber *)setNum
+{
+    if ([self isValidDrama]) {
+        return [NSString stringWithFormat:@"%@ 第%d集", self.videoName, [setNum intValue]];
+    }
+    else if (self.videoName.length > 0) {
+        return self.videoName;
+    }
+    else {
+        NSDateFormatter *df = [[NSDateFormatter alloc] init];
+        df.dateFormat = @"yyyyMMddhhmmss";
+        return [NSString stringWithFormat:@"视频 %@",  [df stringFromDate:[NSDate date]]];
+    }
+}
+
 @end

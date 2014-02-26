@@ -163,7 +163,7 @@
         }];
         
         NSLog(@"start to play av");
-        [controller playMovieStream:[[NSBundle mainBundle] URLForResource:@"Movie" withExtension:@"m4v"]];
+        [controller playMovieStream:[[NSBundle mainBundle] URLForResource:@"Movie" withExtension:@"m4v"] fromProgress:0];
 //        NSLog(@"retain count1= %d", [controller retainCount]);
 #else
         DefineBlockVar(WonderMovieViewController *, controller, [[WonderMovieViewController alloc] init]);
@@ -258,7 +258,7 @@
 //                                     @"http://v.youku.com/player/getRealM3U8/vid/XNDUwNjc4MzA4/type/video.m3u8"
 //                                     @"http://jq.v.ismartv.tv/cdn/1/81/95e68bbdce46b5b8963b504bf73d1b/normal/slice/index.m3u8"
 //                                     @"http://att.livem3u8.na.itv.cn/live/97acb1b2cbed4a4281a68356f8c2bd00.m3u8"
-                                     ] fromStartTime:0];
+                                     ] fromProgress:0];
     
 
 #else

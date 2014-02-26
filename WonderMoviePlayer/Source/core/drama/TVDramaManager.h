@@ -23,6 +23,7 @@ typedef enum {
 
 @interface TVDramaManager : NSObject
 @property (nonatomic, copy) NSString *webURL;
+@property (nonatomic, copy) NSString *playingURL;
 @property (nonatomic, strong) VideoGroup *videoGroup;
 @property (nonatomic) int curSetNum;
 
@@ -31,9 +32,7 @@ typedef enum {
 
 - (VideoGroup *)videoGroupInCurrentThread;
 - (Video *)playingVideo;
-- (BOOL)getDramaInfo:(TVDramaRequestType)requestType;
 - (void)getDramaInfo:(TVDramaRequestType)requestType completionBlock:(void (^)(BOOL success))completionBlock;
-- (BOOL)sniffVideoSource;
 - (void)sniffVideoSource:(void (^)(BOOL success))completionBlock;
 - (BOOL)hasNext;
 @end
@@ -41,9 +40,6 @@ typedef enum {
 
 @protocol TVDramaRequestHandler <NSObject>
 @optional
-- (VideoGroup *)tvDramaManager:(TVDramaManager *)manager requestDramaInfoWithURL:(NSString *)URL curSetNum:(int *)curSetNumPtr requestType:(TVDramaRequestType)requestType;
-- (NSString *)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURL:(NSString *)URL src:(NSString *)src;
-
 - (void)tvDramaManager:(TVDramaManager *)manager requestDramaInfoWithURL:(NSString *)URL requestType:(TVDramaRequestType)requestType completionBlock:(void (^)(VideoGroup *videoGroup, int curSetNum))completionBlock;
 
 - (void)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURL:(NSString *)URL src:(NSString *)src completionBlock:(void (^)(NSString *videoSrc))completionBlock;

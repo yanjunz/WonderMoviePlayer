@@ -20,4 +20,5 @@ typedef enum {
 - (void)setVideo:(Video *)video atSetNum:(NSNumber *)setNum inContext:(NSManagedObjectContext *)context;
 - (NSArray *)sortedVideos:(BOOL)ascending;
 - (BOOL)isValidDrama;
+- (NSString *)displayNameForSetNum:(NSNumber *)setNum;
 @end

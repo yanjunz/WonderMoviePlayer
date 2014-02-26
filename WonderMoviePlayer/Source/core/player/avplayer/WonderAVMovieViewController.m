@@ -104,6 +104,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 @synthesize movieDownloader;
 @synthesize controlSource;
 @synthesize isEnd = _isEnd;
+@synthesize delegate;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -297,19 +298,45 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     return [self.movieURL isFileURL];
 }
 
-- (void)playMovieStream:(NSURL *)movieURL
-{
-    [self playMovieStream:movieURL fromStartTime:0];
-}
+//- (void)playMovieStream:(NSURL *)movieURL
+//{
+//    [self playMovieStream:movieURL fromStartTime:0];
+//}
+//
+//- (void)playMovieStream:(NSURL *)movieURL fromStartTime:(Float64)time
+//{
+//    if ([movieURL scheme]) {
+//        startTime = time;
+//        self.movieURL = movieURL;
+//        _wasPlaying = YES; // start to play automatically
+//        _hasStarted = NO; // clear started flag
+////        return;
+//        if ([self isLocalMovie] || [self checkNetworkForPreparePlay]) {
+//            [self playMovieStreamAfterChecking];
+//        }
+//    }
+//}
 
-- (void)playMovieStream:(NSURL *)movieURL fromStartTime:(Float64)time
+- (void)playMovieStream:(NSURL *)movieURL fromTime:(CGFloat)time
 {
     if ([movieURL scheme]) {
-        startTime = time;
+        _startTime = time;
         self.movieURL = movieURL;
         _wasPlaying = YES; // start to play automatically
         _hasStarted = NO; // clear started flag
-//        return;
+        if ([self isLocalMovie] || [self checkNetworkForPreparePlay]) {
+            [self playMovieStreamAfterChecking];
+        }
+    }
+}
+
+- (void)playMovieStream:(NSURL *)movieURL fromProgress:(CGFloat)progress
+{
+    if ([movieURL scheme]) {
+        _startProgress = MAX(0, MIN(progress, 1));
+        self.movieURL = movieURL;
+        _wasPlaying = YES; // start to play automatically
+        _hasStarted = NO; // clear started flag
         if ([self isLocalMovie] || [self checkNetworkForPreparePlay]) {
             [self playMovieStreamAfterChecking];
         }
@@ -567,7 +594,15 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
                 [self.playerLayerView.playerLayer setPlayer:self.player];
                 
                 [self initScrubberTimer];
-                _hasStarted = YES;
+                
+                if (!_hasStarted) {
+                    _hasStarted = YES;
+                    
+                    if ([self.delegate respondsToSelector:@selector(baseMoviePlayerDidStart:)]) {
+                        [self.delegate baseMoviePlayerDidStart:self];
+                    }
+                }
+                
             }
                 break;
             case AVPlayerStatusFailed:
@@ -597,15 +632,15 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
             [self.playerLayerView setVideoFillMode:AVLayerVideoGravityResizeAspect];
             
             // FIXME
-            if (startTime > 0) {
+            if (_startProgress > 0 || _startTime > 0) {
                 CMTime playerDuration = [self playerItemDuration];
                 double totalTime = CMTimeGetSeconds(playerDuration);
-                if (startTime >= totalTime) {
-                    startTime = 0;
-                }
+                CGFloat newTime = _startProgress > 0 ? totalTime * _startProgress : _startTime;
+                newTime = MAX(MIN(newTime, totalTime), 0);
                 [self.playerItem cancelPendingSeeks];
-                [self.player seekToTime:CMTimeMakeWithSeconds(startTime, 1)];
-                startTime = 0;
+                [self.player seekToTime:CMTimeMakeWithSeconds(newTime, 1)];
+                _startProgress = 0;
+                _startTime = 0;
             }
             [self.player play];
         }
@@ -911,6 +946,45 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     return kCMTimeInvalid;
 }
 
+#pragma mark BaseMoviePlayer
+- (UIImage *)screenShot:(CGFloat)progress size:(CGSize)size
+{
+    CMTime actualTime;
+    NSError *error;
+    
+    progress = MAX(0, MIN(progress, 1));
+    
+    Float64 durationSeconds = CMTimeGetSeconds([self.player.currentItem.asset duration]);
+    CMTime point = CMTimeMakeWithSeconds(durationSeconds * progress, 600);
+    
+    AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:self.player.currentItem.asset];
+    generator.maximumSize = size;
+    
+    CGImageRef cgImage = [generator copyCGImageAtTime:point actualTime:&actualTime error:&error];
+    if (cgImage) {
+        UIImage *image = [UIImage imageWithCGImage:cgImage];
+        CFRelease(cgImage);
+        if (error == nil) {
+            return image;
+        }
+    }
+    return nil;
+}
+
+- (CGFloat)playedProgress
+{
+    CMTime playerDuration = [self playerItemDuration];
+    double duration = CMTimeGetSeconds(playerDuration);
+    if (isfinite(duration) && duration > 0) {
+        double time = CMTimeGetSeconds([self.player currentTime]);
+        CGFloat progress = time / duration;
+        return progress;
+    }
+    else {
+        return 0;
+    }
+}
+
 #pragma mark MovieControlSourceDelegate
 - (void)movieControlSourcePlay:(id<MovieControlSource>)source
 {
@@ -966,6 +1040,14 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     // must make sure exitBlock is called one time!
     if (!_isExited) {
         _isExited = YES;
+        
+        if (_hasStarted) {
+            _hasStarted = NO;
+            if ([self.delegate respondsToSelector:@selector(baseMoviePlayerDidEnd:)]) {
+                [self.delegate baseMoviePlayerDidEnd:self];
+            }
+        }
+        
         [self.player pause];
         if([self.player respondsToSelector:@selector(cancelPendingPrerolls)]){
             [self.player cancelPendingPrerolls];
@@ -1079,9 +1161,22 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 }
 
 // Drama
+- (void)movieControlSourceDramaLoadFinished:(id<MovieControlSource>)source
+{
+    if ([self.delegate respondsToSelector:@selector(baseMoviePlayer:didGetVideoGroup:)]) {
+        [self.delegate baseMoviePlayer:self didGetVideoGroup:[self.controlSource.tvDramaManager videoGroupInCurrentThread]];
+    }
+}
+
 - (void)movieControlSourceWillPlayNext:(id<MovieControlSource>)source
 {
-    _hasStarted = NO;
+    if (_hasStarted) {
+        _hasStarted = NO;
+        if ([self.delegate respondsToSelector:@selector(baseMoviePlayerDidEnd:)]) {
+            [self.delegate baseMoviePlayerDidEnd:self];
+        }
+    }
+    
     [self.player pause];
 }
 
@@ -1092,7 +1187,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     NSURL *url = [NSURL URLWithString:videoSource];
     [self.movieDownloader mdBindDownloadURL:url delegate:self dataSource:self];
     [self.controlSource resetState];
-    [self playMovieStream:url];
+    [self playMovieStream:url fromProgress:0];
 }
 
 - (void)movieControlSourceFailToPlayNext:(id<MovieControlSource>)source

@@ -9,6 +9,6 @@
 #import <Foundation/Foundation.h>
 
 @protocol VideoHistoryOperator <NSObject>
-- (void)visitVideo:(Video *)video visit:(BOOL)visit;
+- (void)visitVideo:(Video *)video playedProgress:(CGFloat)playedProgress visit:(BOOL)visit;
 - (void)removeAllVideoHistories;
 @end

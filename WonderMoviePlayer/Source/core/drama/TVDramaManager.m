@@ -47,23 +47,11 @@
 - (Video *)playingVideo
 {
     VideoGroup *videoGroup = [self videoGroupInCurrentThread];
-    return [videoGroup isValidDrama] ? [videoGroup videoAtSetNum:@(self.curSetNum)] : [videoGroup.videos anyObject];
-}
-
-- (BOOL)getDramaInfo:(TVDramaRequestType)requestType
-{
-    if (self.webURL.length > 0) {
-        for (id<TVDramaRequestHandler> handler in self.handlers) {
-            if ([handler respondsToSelector:@selector(tvDramaManager:requestDramaInfoWithURL:curSetNum:requestType:)]) {
-                int curSetNum = 0;
-                VideoGroup *videoGroup = [handler tvDramaManager:self requestDramaInfoWithURL:self.webURL curSetNum:&curSetNum requestType:requestType];
-                self.curSetNum = curSetNum;
-                self.videoGroup = videoGroup;
-                return YES;
-            }
-        }
-    }
-    return NO;
+    Video* ret = [videoGroup isValidDrama] ? [videoGroup videoAtSetNum:@(self.curSetNum)] : [videoGroup.videos anyObject];
+    
+    ret.videoSrc = self.playingURL;
+    
+    return ret;
 }
 
 - (void)getDramaInfo:(TVDramaRequestType)requestType completionBlock:(void (^)(BOOL success))completionBlock
@@ -111,25 +99,6 @@
             remainingCallbackCount --;
         }
     }
-}
-
-- (BOOL)sniffVideoSource
-{
-    if (self.webURL.length > 0) {
-        VideoGroup *videoGroup = [self videoGroupInCurrentThread];
-        for (id<TVDramaRequestHandler> handler in self.handlers) {
-            if ([handler respondsToSelector:@selector(tvDramaManager:sniffVideoSrcWithURL:src:)]) {
-                NSString *videoSrc = [handler tvDramaManager:self sniffVideoSrcWithURL:self.webURL src:videoGroup.src];
-                if (videoSrc.length > 0) {
-                    Video *video = [videoGroup videoAtURL:self.webURL];
-                    video.videoSrc = videoSrc;
-                    [[NSManagedObjectContext MR_contextForCurrentThread] save:NULL];
-                    return YES;
-                }
-            }
-        }
-    }
-    return NO;
 }
 
 - (void)sniffVideoSource:(void (^)(BOOL success))completionBlock
@@ -193,17 +162,16 @@
     if (![videoGroup isValidDrama]) {
         [MagicalRecord saveUsingCurrentThreadContextWithBlockAndWait:^(NSManagedObjectContext *localContext) {
             DefineStrongSelfInBlock(sself);
-            NSDateFormatter *df = [[NSDateFormatter alloc] init];
-            df.dateFormat = @"yyyyMMddhhmmss";
-            NSString *title = [NSString stringWithFormat:@"视频 %@",  [df stringFromDate:[NSDate date]]];
-
+            
+            NSString *title = [videoGroup displayNameForSetNum:nil];
+            
             if (videoGroup == nil) {
                 NSString *videoId = [sself generateVideoIdWithKey:sself.webURL];
                 videoGroup = [VideoGroup MR_findFirstByAttribute:@"videoId" withValue:videoId inContext:localContext];
                 if (videoGroup == nil) {
                     // Need create a videoGroup for it
                     videoGroup = [VideoGroup MR_createInContext:localContext];
-                    videoGroup.videoName = title;
+                    videoGroup.videoName = [videoGroup displayNameForSetNum:nil];
                     videoGroup.videoId = videoId;
                 }
             }

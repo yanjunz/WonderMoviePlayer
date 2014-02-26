@@ -28,8 +28,10 @@ void uncaughtExceptionHandler(NSException *exception)
 {
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
     NSLog(@"%@", NSHomeDirectory());
-    
+
+    [MagicalRecord setShouldDeleteStoreOnModelMismatch:YES];
     [MagicalRecord setupCoreDataStack];
+
     
 //    [NSURLProtocol registerClass:[WonderMovieURLProtocol class]];
     

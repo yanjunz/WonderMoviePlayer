@@ -2,7 +2,7 @@
 //  VideoGroup.h
 //  mtt
 //
-//  Created by Zhuang Yanjun on 17/2/14.
+//  Created by Zhuang Yanjun on 26/2/14.
 //  Copyright (c) 2014 Tencent. All rights reserved.
 //
 
@@ -19,6 +19,7 @@
 @property (nonatomic, retain) NSNumber * totalCount;
 @property (nonatomic, retain) NSString * videoId;
 @property (nonatomic, retain) NSString * videoName;
+@property (nonatomic, retain) NSString * picUrl;
 @property (nonatomic, retain) NSSet *videos;
 @end
 

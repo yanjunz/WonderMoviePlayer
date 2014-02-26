@@ -1982,6 +1982,10 @@ void wonderMovieVolumeListenerCallback (
     [self updateDownloadState];
     [self visitVideo:YES];
     [self updateBookmarkTitle];
+    
+    if ([self.delegate respondsToSelector:@selector(movieControlSourceDramaLoadFinished:)]) {
+        [self.delegate movieControlSourceDramaLoadFinished:self];
+    }
 }
 
 - (void)failLoadDramaInfo
@@ -1991,6 +1995,10 @@ void wonderMovieVolumeListenerCallback (
     [self updateDownloadState];
     [self visitVideo:YES];
     [self updateBookmarkTitle];
+    
+    if ([self.delegate respondsToSelector:@selector(movieControlSourceDramaLoadFinished:)]) {
+        [self.delegate movieControlSourceDramaLoadFinished:self];
+    }
 }
 
 - (void)showDramaButton:(BOOL)show animated:(BOOL)animated
@@ -2061,7 +2069,8 @@ void wonderMovieVolumeListenerCallback (
 #pragma mark History
 - (void)visitVideo:(BOOL)visit
 {
-    [self.historyOperator visitVideo:[self.tvDramaManager playingVideo] visit:visit];
+    CGFloat progress = _duration == 0 ? 0 : _playbackTime / _duration;
+    [self.historyOperator visitVideo:[self.tvDramaManager playingVideo] playedProgress:progress visit:visit];
 }
 
 #pragma mark UIGestureRecognizerDelegate
@@ -2249,7 +2258,7 @@ static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanni
             video = [videoGroup.videos anyObject];
         }
         if (video) {
-            [self.historyOperator visitVideo:video visit:YES];
+            [self visitVideo:YES];
         }
     }
 }

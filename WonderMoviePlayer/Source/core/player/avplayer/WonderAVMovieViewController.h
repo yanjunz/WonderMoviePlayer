@@ -20,7 +20,8 @@
 @interface WonderAVMovieViewController : UIViewController<BaseMoviePlayer> {
     BOOL isSeeking;
 	float restoreAfterScrubbingRate;
-    Float64 startTime;
+    CGFloat _startProgress;
+    CGFloat _startTime;
     
     id timeObserver;
     BOOL _isEnd;
@@ -32,8 +33,8 @@
 @property (nonatomic, strong) UIView *overlayView;
 @property (nonatomic, strong) IBOutlet UIView *maskView;
 
-- (void)playMovieStream:(NSURL *)movieURL;
-- (void)playMovieStream:(NSURL *)movieURL fromStartTime:(Float64)time;
+//- (void)playMovieStream:(NSURL *)movieURL;
+//- (void)playMovieStream:(NSURL *)movieURL fromStartTime:(Float64)time;
 
 - (CMTime)playerItemDuration;
 - (BOOL)isLocalMovie;
