@@ -29,9 +29,6 @@
 #import "AirPlayDetector.h"
 #endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
 
-#define kWonderMovieProgressBarLeftPaddingWithNext      (60+15+10+8-10)
-#define kWonderMovieProgressBarLeftPaddingWithoutNext   (60+8-10)
-#define kWonderMovieNextLeftPadding                     (kWonderMovieProgressBarLeftPaddingWithNext - 20 - 6)
 #define kWonderMovieAirplayLeftPadding                  5
 
 // y / x
@@ -40,8 +37,9 @@
 #define kWonderMovieHorizontalPanGestureCoordRatio  0.6f
 #define kWonderMoviePanDistanceThrehold             5.0f
 
-#define kWonderMovieTagSeparatorAfterDownload       101
-#define kWonderMovieTagSeparatorAfterTVDrama        102
+#define kWonderMovieTagSeparatorBeforeMyVideo       101
+#define kWonderMovieTagSeparatorAfterMyVideo        102
+#define kWonderMovieTagSeparatorAfterTVDrama        103
 
 #define kWonderMovieResolutionButtonTagBase         100
 
@@ -58,13 +56,11 @@
 @property (nonatomic, strong) UIView *contentView;
 
 // bottom bar
+@property (nonatomic, strong) UIView *bottomBarContainer;
 @property (nonatomic, strong) UIView *bottomBar;
-@property (nonatomic, strong) UIView *progressBar;
 @property (nonatomic, strong) UIButton *actionButton;
 @property (nonatomic, strong) UIButton *nextButton;
-@property (nonatomic, strong) UILabel *startLabel;
 @property (nonatomic, strong) UILabel *durationLabel;
-//@property (nonatomic, retain) UIButton *fullscreenButton;
 
 // header bar
 @property (nonatomic, strong) UIView *headerBar;
@@ -74,6 +70,7 @@
 
 @property (nonatomic, strong) UIButton *menuButton;
 @property (nonatomic, strong) UIButton *tvDramaButton;
+@property (nonatomic, strong) UIButton *myVideoButton;
 
 // title & subtitle
 @property (nonatomic, strong) UILabel *titleLabel;
@@ -218,18 +215,19 @@ void wonderMovieVolumeListenerCallback (
     
     
 //    self.crossScreenButton = nil;
-    
-    
-    
-    
-    
-    
-
 }
 
 #pragma mark UIView Layout
 - (void)setupView
 {
+    CGFloat buttonWidth = 60;
+    CGFloat buttonMyVideoWidth = 60 * 1.5;
+    CGFloat headerBarRightPadding = 0;
+    CGFloat buttonFontSize = 13;
+    UIFont *buttonFont = [UIFont systemFontOfSize:buttonFontSize];
+    CGFloat statusBarHeight = 20;
+    UIImage *highlightedImage = [self imageWithColor:[[UIColor whiteColor] colorWithAlphaComponent:0.15]];
+    
     NSMutableArray *lockedViews = [NSMutableArray array];
     
     self.backgroundColor = [UIColor clearColor];
@@ -248,32 +246,36 @@ void wonderMovieVolumeListenerCallback (
     self.contentView = contentView;
     [self addSubview:self.contentView];
     
-    CGFloat bottomBarHeight = 50;
+    CGFloat bottomBarHeight = 49;
+    CGFloat progressLineHeight = 2;
+    CGFloat progressIndicatorHeight = 30;
+    CGFloat progressIndicatorCenterY = kProgressIndicatorLeading + progressIndicatorHeight / 2;
+    CGFloat bottomBarContainerHeight = bottomBarHeight + progressLineHeight / 2 + progressIndicatorCenterY;
     CGFloat headerBarHeight = 44;
-    CGFloat progressBarLeftPadding = kWonderMovieProgressBarLeftPaddingWithNext;
-    CGFloat progressBarRightPadding = 0;
     CGFloat durationLabelWidth = 100;
-    
+
     // Setup bottomBar
-    UIView *bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.height - bottomBarHeight, self.width, bottomBarHeight)];
+    
+    UIView *bottomBarContainer = [[UIView alloc] initWithFrame:CGRectMake(0, self.height - bottomBarContainerHeight, self.width, bottomBarContainerHeight)];
+    bottomBarContainer.backgroundColor = [UIColor clearColor];
+    bottomBarContainer.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    [contentView addSubview:bottomBarContainer];
+    self.bottomBarContainer = bottomBarContainer;
+    self.bottomBarContainer.userInteractionEnabled = NO;
+
+    UIView *bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0, bottomBarContainerHeight - bottomBarHeight, self.width, bottomBarHeight)];
     self.bottomBar = bottomBar;
     
 #ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
-    self.bottomBar.top = self.bottom; // hide bottom bar until movie started
+    self.bottomBarContainer.top = self.bottom; // hide bottom bar until movie started
 #endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
-    self.bottomBar.userInteractionEnabled = NO;
-    
-//    self.bottomBar.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+
     self.bottomBar.backgroundColor = [UIColor colorWithPatternImage:QQVideoPlayerImage(@"toolbar")];
-    self.bottomBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
-    [contentView addSubview:self.bottomBar];
+    self.bottomBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [bottomBarContainer addSubview:self.bottomBar];
     
-    UIView *progressBar = [[UIView alloc] initWithFrame:CGRectMake(progressBarLeftPadding, 0, self.bottomBar.width - progressBarLeftPadding - progressBarRightPadding, bottomBarHeight)];
-    self.progressBar = progressBar;
-    self.progressBar.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    [self.bottomBar addSubview:progressBar];
-    
-    CGFloat resolutionButtonWidth = 32 + 20 * 2, resolutionButtonHeight = 18 + 20, resolutionButtonPadding = 25 - 20;
+    CGFloat resolutionButtonWidth = 32 + 20 * 2, resolutionButtonHeight = 18 + 20;
+//    CGFloat resolutionButtonPadding = 25 - 20;
     UIButton *resolutionButton = [UIButton buttonWithType:UIButtonTypeCustom];
     resolutionButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     resolutionButton.titleLabel.font = [UIFont systemFontOfSize:11];
@@ -281,20 +283,19 @@ void wonderMovieVolumeListenerCallback (
     [resolutionButton setBackgroundImage:bgImage forState:UIControlStateNormal];
     [resolutionButton addTarget:self action:@selector(onClickResolution:) forControlEvents:UIControlEventTouchUpInside];
     self.resolutionButton = resolutionButton;
-    resolutionButton.frame = CGRectMake(progressBar.width - resolutionButtonPadding - resolutionButtonWidth, (progressBar.height - resolutionButtonHeight) / 2, resolutionButtonWidth, resolutionButtonHeight);
-    [progressBar addSubview:resolutionButton];
+    resolutionButton.frame = CGRectMake(self.width - resolutionButtonWidth, (bottomBarHeight - resolutionButtonHeight) / 2, resolutionButtonWidth, resolutionButtonHeight);
+    [self.bottomBar addSubview:resolutionButton];
     
-    WonderMovieProgressView *progressView = [[WonderMovieProgressView alloc] initWithFrame:CGRectMake(0, 0, progressBar.width - resolutionButtonPadding * 2 - resolutionButtonWidth + kProgressViewPadding, progressBar.height)];
+    WonderMovieProgressView *progressView = [[WonderMovieProgressView alloc] initWithFrame:CGRectMake(0, 0, self.width, progressIndicatorHeight)];
     self.progressView = progressView;
+    [bottomBarContainer addSubview:progressView];
     
     self.progressView.delegate = self;
     self.progressView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     self.progressView.userInteractionEnabled = NO;
-    [progressBar addSubview:self.progressView];
     
     self.actionButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.actionButton setImage:QQVideoPlayerImage(@"play_normal") forState:UIControlStateNormal];
-//    [self.actionButton setImage:QQVideoPlayerImage(@"play_press") forState:UIControlStateHighlighted];
     self.actionButton.titleLabel.font = [UIFont systemFontOfSize:10];
     self.actionButton.frame = CGRectMake(8, 0, 50, 50);
     [self.actionButton addTarget:self action:@selector(onClickAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -304,33 +305,34 @@ void wonderMovieVolumeListenerCallback (
     self.nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.nextButton setImage:QQVideoPlayerImage(@"next_normal") forState:UIControlStateNormal];
     [self.nextButton addTarget:self action:@selector(onClickNext:) forControlEvents:UIControlEventTouchUpInside];
-    self.nextButton.frame = CGRectMake(kWonderMovieNextLeftPadding, (self.bottomBar.height - 17 * 2) / 2, 15 * 2, 17 * 2);
+    self.nextButton.size = self.nextButton.currentImage.size;
+    self.nextButton.frame = CGRectMake(self.actionButton.right, 0, self.nextButton.width, bottomBarHeight);
     [self.bottomBar addSubview:self.nextButton];
     self.nextButton.showsTouchWhenHighlighted = YES;
     self.nextButton.enabled = YES;
     
-    UILabel *startLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.progressView.left + kProgressViewPadding, bottomBarHeight / 2 + 2, durationLabelWidth, bottomBarHeight / 2)];
-    self.startLabel = startLabel;
-    self.startLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight;
-    self.startLabel.textAlignment = UITextAlignmentLeft;
-    self.startLabel.font = [UIFont systemFontOfSize:10];
-    self.startLabel.backgroundColor = [UIColor clearColor];
-    self.startLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
-    self.startLabel.hidden = YES; // Just hide it now for the fucking product requirement
-    [progressBar addSubview:self.startLabel];
-    
-    UILabel *durationLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.progressView.right - progressBarRightPadding - durationLabelWidth * 2 - kProgressViewPadding, self.startLabel.top, durationLabelWidth * 2, bottomBarHeight / 2)];
+    UILabel *durationLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.nextButton.right, 0, durationLabelWidth, bottomBarHeight)];
     self.durationLabel = durationLabel;
-    self.durationLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
-    self.durationLabel.textAlignment = UITextAlignmentRight;
+    self.durationLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight;
+    self.durationLabel.textAlignment = UITextAlignmentLeft;
     self.durationLabel.font = [UIFont systemFontOfSize:10];
     self.durationLabel.backgroundColor = [UIColor clearColor];
     self.durationLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
     self.durationLabel.text = @"--:-- / --:--";
-    [progressBar addSubview:self.durationLabel];
+    [self.durationLabel sizeToFit];
+    [self.bottomBar addSubview:self.durationLabel];
     
-    CGFloat statusBarHeight = 20;
-    UIImage *highlightedImage = [self imageWithColor:[[UIColor whiteColor] colorWithAlphaComponent:0.15]];
+    self.downloadButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.downloadButton.frame = CGRectOffset(self.resolutionButton.frame, -self.resolutionButton.width+1, 0);
+    self.downloadButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    [self.downloadButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 7.5, 0, 0)];
+    [self.downloadButton setTitleColor:QQColor(videoplayer_downloaded_color) forState:UIControlStateDisabled];
+    [self.downloadButton setImage:QQVideoPlayerImage(@"download") forState:UIControlStateNormal];
+    self.downloadButton.titleLabel.font = buttonFont;
+    [self.downloadButton addTarget:self action:@selector(onClickDownload:) forControlEvents:UIControlEventTouchUpInside];
+    [self.downloadButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
+    self.downloadButton.enabled = NO;
+    [self.bottomBar addSubview:self.downloadButton];
     
     // Setup headerBar
     UIView *headerBar = [[UIView alloc] initWithFrame:CGRectMake(0, statusBarHeight, self.width, headerBarHeight)];
@@ -358,10 +360,7 @@ void wonderMovieVolumeListenerCallback (
     [self.headerBar addSubview:separatorView];
     [lockedViews addObject:separatorView];
     
-    CGFloat buttonWidth = 60;
-    CGFloat headerBarRightPadding = 0;
-    CGFloat buttonFontSize = 13;
-    UIFont *buttonFont = [UIFont systemFontOfSize:buttonFontSize];
+    
     
     UILabel *menuLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.headerBar.width - headerBarRightPadding - buttonWidth, 0, buttonWidth, headerBarHeight)];
     menuLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
@@ -376,7 +375,6 @@ void wonderMovieVolumeListenerCallback (
     self.menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.menuButton.frame = CGRectMake(self.headerBar.width - headerBarRightPadding - buttonWidth, 0, buttonWidth + headerBarRightPadding, headerBarHeight);
     self.menuButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-//    [self.menuButton setTitle:NSLocalizedString(@"菜单", nil) forState:UIControlStateNormal];
     self.menuButton.titleLabel.font = buttonFont;
     [self.menuButton addTarget:self action:@selector(onClickMenu:) forControlEvents:UIControlEventTouchUpInside];
     [self.menuButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
@@ -393,30 +391,33 @@ void wonderMovieVolumeListenerCallback (
     [self.headerBar addSubview:self.tvDramaButton];
     btnRect = self.tvDramaButton.frame;
     
+    self.myVideoButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    btnRect = CGRectMake(btnRect.origin.x - buttonMyVideoWidth + 1, btnRect.origin.y, buttonMyVideoWidth, btnRect.size.height);
+    self.myVideoButton.frame = btnRect;
+    self.myVideoButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    [self.myVideoButton setTitle:NSLocalizedString(@"我的视频", nil) forState:UIControlStateNormal];
+    self.myVideoButton.titleLabel.font = buttonFont;
+    [self.myVideoButton addTarget:self action:@selector(onClickTVDrama:) forControlEvents:UIControlEventTouchUpInside];
+    [self.myVideoButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
+    [self.headerBar addSubview:self.myVideoButton];
+    btnRect = self.myVideoButton.frame;
+    
     separatorView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"headerbar_separator")];
     separatorView.center = CGPointMake(self.tvDramaButton.right, self.headerBar.height / 2);
     separatorView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     separatorView.tag = kWonderMovieTagSeparatorAfterTVDrama;
     [self.headerBar addSubview:separatorView];
     
-    self.downloadButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.downloadButton.frame = CGRectOffset(btnRect, -buttonWidth+1, 0);
-    self.downloadButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-//    [self.downloadButton setTitle:NSLocalizedString(@"缓存", nil) forState:UIControlStateNormal];
-    [self.downloadButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 7.5, 0, 0)];
-    [self.downloadButton setTitleColor:QQColor(videoplayer_downloaded_color) forState:UIControlStateDisabled];
-    [self.downloadButton setImage:QQVideoPlayerImage(@"download") forState:UIControlStateNormal];
-    self.downloadButton.titleLabel.font = buttonFont;
-    [self.downloadButton addTarget:self action:@selector(onClickDownload:) forControlEvents:UIControlEventTouchUpInside];
-    [self.downloadButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
-    self.downloadButton.enabled = NO;
-    [self.headerBar addSubview:self.downloadButton];
-//    btnRect = self.downloadButton.frame;
-    
     separatorView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"headerbar_separator")];
-    separatorView.center = CGPointMake(self.downloadButton.right, self.headerBar.height / 2);
+    separatorView.center = CGPointMake(self.myVideoButton.right, self.headerBar.height / 2);
     separatorView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-    separatorView.tag = kWonderMovieTagSeparatorAfterDownload;
+    separatorView.tag = kWonderMovieTagSeparatorAfterMyVideo;
+    [self.headerBar addSubview:separatorView];
+
+    separatorView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"headerbar_separator")];
+    separatorView.center = CGPointMake(self.myVideoButton.left, self.headerBar.height / 2);
+    separatorView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    separatorView.tag = kWonderMovieTagSeparatorBeforeMyVideo;
     [self.headerBar addSubview:separatorView];
     
     if (!_downloadEnabled) {
@@ -445,9 +446,11 @@ void wonderMovieVolumeListenerCallback (
     
     
     [self showResolutionButton:NO];
-//    self.resolutions = @[@"高清", @"流畅", @"标清"];
-//    [self rebuildResolutionsView];
-//    [self updateResolutions];
+    
+    // for debug
+    self.resolutions = @[@"高清", @"流畅", @"标清"];
+    [self rebuildResolutionsView];
+    [self updateResolutions];
     
     
 
@@ -486,56 +489,14 @@ void wonderMovieVolumeListenerCallback (
     self.actionButton.enabled = NO;
     self.progressView.enabled = NO;
     self.nextButton.enabled = NO;
+    
+    [self reCalcDurationLabelOffset];
 }
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    /*
-    // linear layout title & subtitle
-    CGFloat gapWidth = 7;
-    CGFloat headerBarHeight = self.headerBar.height;
-    CGFloat maxTitleWidth = self.downloadButton.left - self.titleLabel.left - gapWidth;
-    CGFloat maxSubtitleWidth = maxTitleWidth * 1 / 4;
-    self.titleLabel.size = CGSizeMake(maxTitleWidth, headerBarHeight);
-    self.subtitleLabel.size = self.titleLabel.size;
-    [self.titleLabel sizeToFit];
-    [self.subtitleLabel sizeToFit];
-    BOOL truncateTitle = NO, truncateSubtitle = NO;
-    if (self.titleLabel.width + self.subtitleLabel.width > maxTitleWidth) {
-        if (self.subtitleLabel.width > maxSubtitleWidth) {
-            truncateSubtitle = YES;
-            if (self.titleLabel.width > maxTitleWidth - maxSubtitleWidth) {
-                truncateTitle = YES;
-            }
-        }
-        else {
-            truncateTitle = YES;
-        }
-    }
-    
-    // 1. truncate subtitle for maxSubtitleWidth
-    if (truncateSubtitle) {
-        if (truncateTitle) {
-            self.subtitleLabel.width = maxSubtitleWidth;
-        }
-        else {
-            self.subtitleLabel.width = maxTitleWidth - self.titleLabel.width;
-        }
-    }
-    
-    // 2. truncate title for the remaining space
-    if (truncateTitle) {
-        self.titleLabel.size = CGSizeMake(maxTitleWidth - self.subtitleLabel.width, headerBarHeight);
-    }
-    else {
-        self.titleLabel.height = headerBarHeight;
-    }
-    self.subtitleLabel.frame = CGRectMake(self.titleLabel.right + gapWidth, 0, self.subtitleLabel.width, headerBarHeight);
-    */
-    
     // two line layout
-//    CGFloat gapWidth = 7;
     CGFloat headerBarHeight = self.headerBar.height;
     CGFloat maxTitleWidth = self.headerBar.width / 2 - self.titleLabel.left; //self.downloadButton.left - self.titleLabel.left - gapWidth;
     if (self.subtitleLabel.text.length == 0) {
@@ -560,7 +521,7 @@ void wonderMovieVolumeListenerCallback (
             self.downloadButton.frame = CGRectMake(right - buttonWidth - size.width, self.downloadButton.top, buttonWidth + size.width, self.downloadButton.height);
         }
     }
-    
+
     // layout resolutions
     if (_resolutionsChanged) {
         [self showResolutionButton:self.resolutions.count > 0];
@@ -568,8 +529,20 @@ void wonderMovieVolumeListenerCallback (
         [self updateResolutions];
     }
     
-    
+#ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
+    if (_airPlayButton) {
+        _airPlayButton.right = self.bottomBar.width;
+        _airPlayButton.center = CGPointMake(_airPlayButton.center.x, self.bottomBar.height / 2);
+        self.resolutionButton.right = _airPlayButton.left;
+    }
+    else {
+        self.resolutionButton.right = self.bottomBar.width;
+    }
+#endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
+    [self reCalcDownloadOffset];
 }
+
+
 
 - (void)installGestureHandlers
 {
@@ -616,6 +589,7 @@ void wonderMovieVolumeListenerCallback (
     
     if (liveCastState == LiveCastStateYes) {
         self.durationLabel.text = @"直播";
+        [self reCalcDurationLabelOffset];
     }
     if (_hasStarted) {
         self.progressView.enabled = (liveCastState == LiveCastStateNo);
@@ -718,7 +692,6 @@ void wonderMovieVolumeListenerCallback (
             crossButton.frame = CGRectOffset(lastButton.frame, 0, menuButtonHeight + menuSeparatorHeight);
             crossButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
             crossButton.titleLabel.font = buttonFont;
-//            [crossButton setTitle:NSLocalizedString(@"跨屏穿越", nil) forState:UIControlStateNormal];
             [crossButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
             [crossButton addTarget:self action:@selector(onClickCrossScreen:) forControlEvents:UIControlEventTouchUpInside];
             [popupMenu addSubview:crossButton];
@@ -814,22 +787,20 @@ void wonderMovieVolumeListenerCallback (
 
 - (void)showResolutionButton:(BOOL)show
 {
-    CGFloat resolutionButtonWidth = 32 + 20 * 2, resolutionButtonPadding = 25 - 20;
+//    CGFloat resolutionButtonWidth = 32 + 20 * 2, resolutionButtonPadding = 25 - 20;
     CGFloat duration = 0.2f;
     if (show && self.resolutionButton.hidden) {
         // show
         self.resolutionButton.hidden = NO;
         [UIView animateWithDuration:duration animations:^{
-            self.progressView.frame = CGRectMake(0, 0, self.progressBar.width - resolutionButtonPadding * 2 - resolutionButtonWidth + kProgressViewPadding, self.progressBar.height);
-            self.durationLabel.right = self.progressView.right - kProgressViewPadding;
+            self.downloadButton.right = self.resolutionButton.left;
         }];
     }
     else if (!show && !self.resolutionButton.hidden) {
         // hide
         self.resolutionButton.hidden = YES;
         [UIView animateWithDuration:duration animations:^{
-            self.progressView.frame = CGRectMake(0, 0, self.progressBar.width, self.progressBar.height);
-            self.durationLabel.right = self.progressView.right - kProgressViewPadding;
+            self.downloadButton.right = self.resolutionButton.right;
         }];
     }
 }
@@ -905,10 +876,10 @@ void wonderMovieVolumeListenerCallback (
     
 #ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
     [UIView animateWithDuration:0.5f animations:^{
-        self.bottomBar.bottom = self.bottom;
+        self.bottomBarContainer.bottom = self.bottom;
     }];
 #endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
-    self.bottomBar.userInteractionEnabled = YES;
+    self.bottomBarContainer.userInteractionEnabled = YES;
     
     [self cancelPreviousAndPrepareToDimControl];
     
@@ -1058,17 +1029,6 @@ void wonderMovieVolumeListenerCallback (
 - (void)setPlaybackTime:(NSTimeInterval)playbackTime
 {
     _playbackTime = playbackTime;
-    long time = playbackTime;
-    int hour = time / 3600;
-    int minute = time / 60 - hour * 60;
-    int second = time % 60;
-//    self.startLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d", hour, minute, second];
-    if (hour == 0) {
-        self.startLabel.text = [NSString stringWithFormat:@"%02d:%02d", minute, second];
-    }
-    else {
-        self.startLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d", hour, minute, second];
-    }
 }
 
 - (void)setPlayableDuration:(NSTimeInterval)playableDuration
@@ -1099,7 +1059,6 @@ void wonderMovieVolumeListenerCallback (
     int hour = time / 3600;
     int minute = time / 60 - hour * 60;
     int second = time % 60;
-//    self.durationLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d", hour, minute, second];
     
     long time1 = _playbackTime;
     int hour1 = time1 / 3600;
@@ -1119,6 +1078,7 @@ void wonderMovieVolumeListenerCallback (
     else {
         self.durationLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d / %@", hour1, minute1, second1, durationText];
     }
+    [self reCalcDurationLabelOffset];
 }
 
 - (CGFloat)getTimeControlWidth
@@ -1149,11 +1109,7 @@ void wonderMovieVolumeListenerCallback (
 
 - (void)startToDownload
 {
-//    self.downloadButton.enabled = NO;
     _isDownloading = YES;
-//    NSLog(@"startDownload");
-//    NSString *fmt = NSLocalizedString(@"开始缓存视频，%d%%已完成", nil);
-//    [self.infoView showDownloadToast:[NSString stringWithFormat:fmt, (int)(_downloadProgress * 100)] show:YES animated:YES];
 }
 
 - (void)pauseDownload
@@ -1166,7 +1122,6 @@ void wonderMovieVolumeListenerCallback (
 - (void)continueDownload
 {
     _isDownloading = YES;
-//    NSLog(@"continueDownload");
 }
 
 - (void)finishDownload
@@ -1479,7 +1434,6 @@ void wonderMovieVolumeListenerCallback (
     if (videoGroup) {
         int setNum = self.tvDramaManager.curSetNum;
         if (videoGroup.showType.intValue == VideoGroupShowTypeGrid) {
-//            [self setBufferTitle:[NSString stringWithFormat:@"%@ 第%d集", videoGroup.videoName, setNum]];
             [self setBufferTitle:[NSString stringWithFormat:@"即将播放%@第%d集", videoGroup.videoName, setNum]];
             [self setTitle:[NSString stringWithFormat:@"%@ 第%d集", videoGroup.videoName, setNum]
                   subtitle:(videoGroup.src.length > 0 ? [NSString stringWithFormat:@"来源：%@", videoGroup.src] : @"")];
@@ -1775,7 +1729,7 @@ void wonderMovieVolumeListenerCallback (
     if (_airPlayButton && !isAirPlayAvailable) {
         [_airPlayButton removeFromSuperview];
         _airPlayButton = nil;
-        self.progressBar.width = self.bottomBar.width - self.progressBar.left;
+        [self setNeedsLayout];
     }
     // airplay became available and no airplay button yet, just add one
     else if (_airPlayButton == nil && isAirPlayAvailable) {
@@ -1786,10 +1740,8 @@ void wonderMovieVolumeListenerCallback (
         [volumeView sizeToFit];
         [self.bottomBar addSubview:volumeView];
         _airPlayButton = volumeView;
-        CGFloat delta = volumeView.width + kWonderMovieAirplayLeftPadding;
-        self.progressBar.width = self.bottomBar.width - self.progressBar.left - delta;
-        volumeView.left = self.progressBar.right - kWonderMovieAirplayLeftPadding; // NOTE: progress bar is longer than progress view
-        volumeView.center = CGPointMake(volumeView.center.x, self.bottomBar.height / 2);
+//        CGFloat delta = volumeView.width + kWonderMovieAirplayLeftPadding;
+        [self setNeedsLayout];
     }
 }
 #endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
@@ -2008,22 +1960,30 @@ void wonderMovieVolumeListenerCallback (
     
     [UIView animateWithDuration:animated ? 0.5f : 0 animations:^{
         if (needShow) {
-            self.downloadButton.right = self.tvDramaButton.left + 1;
+            self.myVideoButton.right = self.tvDramaButton.left + 1;
         }
         else if (needHide) {
             self.tvDramaButton.hidden = YES;
-            self.downloadButton.right = self.menuButton.left + 1;
+            self.myVideoButton.right = self.menuButton.left + 1;
         }
     } completion:^(BOOL finished) {
         if (needShow) {
             self.tvDramaButton.hidden = NO;
-            UIView *separatorView = [self.headerBar viewWithTag:kWonderMovieTagSeparatorAfterDownload];
+            UIView *separatorView = [self.headerBar viewWithTag:kWonderMovieTagSeparatorAfterMyVideo];
             separatorView.hidden = NO;
+            
+            separatorView = [self.headerBar viewWithTag:kWonderMovieTagSeparatorBeforeMyVideo];
+            separatorView.hidden = NO;
+            
             [self setNeedsLayout];
         }
         else if (needHide) {
-            UIView *separatorView = [self.headerBar viewWithTag:kWonderMovieTagSeparatorAfterDownload];
+            UIView *separatorView = [self.headerBar viewWithTag:kWonderMovieTagSeparatorAfterMyVideo];
             separatorView.hidden = YES;
+            
+            separatorView = [self.headerBar viewWithTag:kWonderMovieTagSeparatorBeforeMyVideo];
+            separatorView.hidden = YES;
+            
             [self setNeedsLayout];
         }
     }];
@@ -2033,8 +1993,6 @@ void wonderMovieVolumeListenerCallback (
 {
     BOOL needShow = show && self.nextButton.hidden;
     BOOL needHide = !show && !self.nextButton.hidden;
-    CGFloat progressBarLeftPaddingForShowNext = kWonderMovieProgressBarLeftPaddingWithNext;
-    CGFloat progressBarLeftPaddingForHideNext = kWonderMovieProgressBarLeftPaddingWithoutNext;
     
     if (needShow) {
         self.nextButton.hidden = NO;
@@ -2045,14 +2003,35 @@ void wonderMovieVolumeListenerCallback (
     
     [UIView animateWithDuration:animated ? 0.5f : 0 animations:^{
         if (needShow) {
-            self.progressBar.frame = CGRectMake(progressBarLeftPaddingForShowNext, self.progressBar.top, self.progressBar.width - (progressBarLeftPaddingForShowNext - progressBarLeftPaddingForHideNext), self.progressBar.height);
             self.nextButton.alpha = 1;
         }
         else if (needHide) {
-            self.progressBar.frame = CGRectMake(progressBarLeftPaddingForHideNext, self.progressBar.top, self.progressBar.width + (progressBarLeftPaddingForShowNext - progressBarLeftPaddingForHideNext), self.progressBar.height);
             self.nextButton.alpha = 0;
         }
+        [self reCalcDurationLabelOffset];
     } completion:nil];
+}
+
+- (void)reCalcDurationLabelOffset
+{
+    [self.durationLabel sizeToFit];
+    if (self.nextButton.hidden) {
+        self.durationLabel.left = self.nextButton.left;
+    }
+    else {
+        self.durationLabel.left = self.nextButton.right;
+    }
+    self.durationLabel.center = CGPointMake(self.durationLabel.center.x, self.bottomBar.height / 2);
+}
+
+- (void)reCalcDownloadOffset
+{
+    if (self.resolutionButton.hidden) {
+        self.downloadButton.right = self.resolutionButton.right;
+    }
+    else {
+        self.downloadButton.right = self.resolutionButton.left;
+    }
 }
 
 - (void)updateNextButtonState

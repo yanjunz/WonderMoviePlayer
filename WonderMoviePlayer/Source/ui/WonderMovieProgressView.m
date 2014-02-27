@@ -63,8 +63,8 @@
     
     self.progressIndicator = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.progressIndicator setImage:QQVideoPlayerImage(@"progressbar_indicator_normal") forState:UIControlStateNormal];
-    [self.progressIndicator setImage:QQVideoPlayerImage(@"progressbar_indicator_press") forState:UIControlStateHighlighted];
-    [self.progressIndicator setImage:QQVideoPlayerImage(@"progressbar_indicator_press") forState:UIControlStateSelected];
+//    [self.progressIndicator setImage:QQVideoPlayerImage(@"progressbar_indicator_press") forState:UIControlStateHighlighted];
+//    [self.progressIndicator setImage:QQVideoPlayerImage(@"progressbar_indicator_press") forState:UIControlStateSelected];
 //    self.progressIndicator.size = CGSizeMake(39, 39);
     self.progressIndicator.size = CGSizeMake(39 + 10, 39 + 10);
 //    self.progressIndicator.backgroundColor = [UIColor lightTextColor];
@@ -88,21 +88,22 @@
      * NOTE: the inner progress view width should not be the same as self.width,
      * otherwise the progressIndicator will be hard to pressed since half of it is outside the superview
      */
-    CGFloat width = self.width - kProgressViewPadding * 2;
-    self.progressBottomView.frame = CGRectMake((self.width - width) / 2, (self.height - progressHeight) / 2, width, progressHeight);
+    CGFloat width = self.width;
+    CGFloat progressIndicatorVisualWidth = 20;
+    self.progressBottomView.frame = CGRectMake(0, (self.height - progressHeight) / 2 + kProgressIndicatorLeading, width, progressHeight);
     self.progressCacheView.frame = self.progressBottomView.frame;
     self.progressCacheView.width = self.progressBottomView.width * self.cacheProgress;
     self.progressTopView.frame = self.progressCacheView.frame;
     self.progressTopView.width = self.progressBottomView.width * self.progress;
-    self.progressIndicator.center = CGPointMake(self.progressBottomView.left + self.progressBottomView.width * self.progress, self.progressBottomView.center.y);
+    self.progressIndicator.center = CGPointMake(progressIndicatorVisualWidth / 2 + self.progressBottomView.left + (self.progressBottomView.width - progressIndicatorVisualWidth) * self.progress, self.center.y);
     
-    // ugly tuning
-    if (self.progressTopView.width < self.progressTopView.image.size.width) {
-        self.progressTopView.contentMode = UIViewContentModeLeft;
-    }
-    else {
-        self.progressTopView.contentMode = UIViewContentModeScaleToFill;
-    }
+//    // ugly tuning
+//    if (self.progressTopView.width < self.progressTopView.image.size.width) {
+//        self.progressTopView.contentMode = UIViewContentModeLeft;
+//    }
+//    else {
+//        self.progressTopView.contentMode = UIViewContentModeScaleToFill;
+//    }
 }
 
 #pragma mark State

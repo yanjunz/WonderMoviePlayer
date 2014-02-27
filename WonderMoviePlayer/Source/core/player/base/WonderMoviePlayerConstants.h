@@ -44,4 +44,6 @@
 #define kWonderMovieControlDimDuration              0.8f
 #define kWonderMovieControlShowDuration             0.2f
 
+#define kProgressIndicatorLeading                   3
+
 #endif
