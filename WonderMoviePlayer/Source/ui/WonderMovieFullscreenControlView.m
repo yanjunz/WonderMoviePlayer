@@ -220,6 +220,8 @@ void wonderMovieVolumeListenerCallback (
 #pragma mark UIView Layout
 - (void)setupView
 {
+    BOOL hasBlurSupport = NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_6_1;
+    
     CGFloat buttonWidth = 60;
     CGFloat buttonMyVideoWidth = 60 * 1.5;
     CGFloat headerBarRightPadding = 0;
@@ -263,14 +265,24 @@ void wonderMovieVolumeListenerCallback (
     self.bottomBarContainer = bottomBarContainer;
     self.bottomBarContainer.userInteractionEnabled = NO;
 
-    UIView *bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0, bottomBarContainerHeight - bottomBarHeight, self.width, bottomBarHeight)];
-    self.bottomBar = bottomBar;
+    UIView *bottomBar = nil;
+    if (hasBlurSupport) {
+        UIToolbar *bottomBarWithBlur = [[UIToolbar alloc] initWithFrame:CGRectMake(0, bottomBarContainerHeight - bottomBarHeight, self.width, bottomBarHeight)];
+        bottomBarWithBlur.barStyle = UIBarStyleBlack;
+        bottomBarWithBlur.translucent = YES;
+        bottomBar = bottomBarWithBlur;
+    }
+    else {
+        bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0, bottomBarContainerHeight - bottomBarHeight, self.width, bottomBarHeight)];
+        bottomBar.backgroundColor = [UIColor colorWithPatternImage:QQVideoPlayerImage(@"toolbar")];
+    }
     
+    self.bottomBar = bottomBar;
+
 #ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
     self.bottomBarContainer.top = self.bottom; // hide bottom bar until movie started
 #endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_HIDE_BOTTOMBAR_UNTIL_STARTED
 
-    self.bottomBar.backgroundColor = [UIColor colorWithPatternImage:QQVideoPlayerImage(@"toolbar")];
     self.bottomBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [bottomBarContainer addSubview:self.bottomBar];
     
