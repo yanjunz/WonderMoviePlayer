@@ -1748,7 +1748,8 @@ void wonderMovieVolumeListenerCallback (
     }
     // airplay became available and no airplay button yet, just add one
     else if (_airPlayButton == nil && isAirPlayAvailable) {
-        MPVolumeView *volumeView = [[MPVolumeView alloc] init] ;
+        MPVolumeView *volumeView = [[MPVolumeView alloc] init];
+        volumeView.origin = CGPointMake(10000, 10000);
         volumeView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 //        volumeView.backgroundColor = [UIColor redColor];
         [volumeView setShowsVolumeSlider:NO];

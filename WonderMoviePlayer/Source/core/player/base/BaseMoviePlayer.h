@@ -16,10 +16,14 @@
 
 @protocol BaseMoviePlayer <
 MovieControlSourceDelegate, MoviePlayerHandler
+#ifdef MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
 , MovieDownloaderDelegate, MovieDownloaderDataSource
+#endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
 >
 @property (nonatomic, retain) id<MovieControlSource> controlSource;
+#ifdef MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
 @property (nonatomic, retain) id<MovieDownloader> movieDownloader;
+#endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
 @property (nonatomic, weak) id<BaseMoviePlayerDelegate> delegate;
 
 - (void)playMovieStream:(NSURL *)movieURL fromProgress:(CGFloat)progress;

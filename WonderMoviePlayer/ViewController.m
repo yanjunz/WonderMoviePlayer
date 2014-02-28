@@ -206,7 +206,10 @@
     [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeRight animated:YES];
     [UIApplication sharedApplication].statusBarHidden = YES;
     
+#ifdef MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
     controller.movieDownloader = [[FakeMovieDownloader alloc] init];
+#endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+    
     [controller setCrossScreenBlock:^{
         NSLog(@"cross screen");
     }];

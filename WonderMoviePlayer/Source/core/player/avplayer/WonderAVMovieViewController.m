@@ -101,7 +101,11 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 
 @implementation WonderAVMovieViewController
 @synthesize crossScreenBlock, exitBlock;
+#ifdef MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
 @synthesize movieDownloader;
+#else // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+@synthesize downloadBlock;
+#endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
 @synthesize controlSource;
 @synthesize isEnd = _isEnd;
 @synthesize delegate;
@@ -138,7 +142,9 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 - (void)dealloc
 {
 //    NSLog(@"[WonderAVMovieViewController] dealloc 0x%0x <--", self.hash);
+#ifdef MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
     [self.movieDownloader mdUnBind];
+#endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
     
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     [audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
@@ -523,7 +529,9 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     }
     
     [self.controlSource prepareToPlay];
+#ifdef MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
     [self.movieDownloader mdBindDownloadURL:self.movieURL delegate:self dataSource:self];
+#endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
     _seekingCount = 0; // actually no need but for safe
 }
 
@@ -754,7 +762,11 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 - (void)setupControlSource:(BOOL)fullscreen
 {
     if (fullscreen) {
+#ifdef MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
         BOOL downloadEnabled = !!self.movieDownloader;
+#else // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+        BOOL downloadEnabled = !!self.downloadBlock;
+#endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
         BOOL crossScreenEnabled = !!self.crossScreenBlock;
         WonderMovieFullscreenControlView *fullscreenControlView = [[WonderMovieFullscreenControlView alloc] initWithFrame:self.overlayView.bounds
                                                                                                        autoPlayWhenStarted:YES
@@ -997,8 +1009,10 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     _wasPlaying = NO;
     [self.player pause];
     
+#ifdef MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
     // Pause download if reachability is in 2G/3G
     [self pauseDownloadIfWWAN];
+#endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
 }
 
 - (void)movieControlSourceResume:(id<MovieControlSource>)source
@@ -1116,8 +1130,10 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     }
 }
 
+
 - (void)movieControlSourceOnDownload:(id<MovieControlSource>)source
 {
+#ifdef MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
     MovieDownloadState state = [self.movieDownloader mdQueryDownloadState:self.movieURL];
     if (state == MovieDownloadStateNotDownload || state == MovieDownloadStateFailed) {
 //        [self.movieDownloader mdStart];
@@ -1134,7 +1150,13 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     else if (state == MovieDownloadStateFinished) {
         // Nothing
     }
+#else  // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+    if (self.downloadBlock) {
+        self.downloadBlock();
+    }
+#endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
 }
+
 
 - (void)movieControlSourceSwitchVideoGravity:(id<MovieControlSource>)source
 {
@@ -1183,9 +1205,13 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 - (void)movieControlSource:(id<MovieControlSource>)source didPlayNext:(NSString *)videoSource
 {
 //    NSLog(@"play %@", videoSource);
-    [self.movieDownloader mdUnBind];
     NSURL *url = [NSURL URLWithString:videoSource];
+
+#ifdef MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+    [self.movieDownloader mdUnBind];
     [self.movieDownloader mdBindDownloadURL:url delegate:self dataSource:self];
+#endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+    
     [self.controlSource resetState];
     [self playMovieStream:url fromProgress:0];
 }
@@ -1200,6 +1226,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     [self movieControlSourceExit:source];
 }
 
+#ifdef MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
 #pragma mark MovieDownladerDelegate
 - (void)movieDownloaderStarted:(id<MovieDownloader>)downloader
 {
@@ -1246,6 +1273,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     }
     return nil;
 }
+#endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
 
 #pragma mark Notification
 - (void)onEnterForeground:(NSNotification *)n
@@ -1311,7 +1339,9 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     }
     else if (alertView.tag == kAlertTagForDownloadInWWAN) {
         if (buttonIndex != alertView.cancelButtonIndex) {
+#ifdef MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
             [self.movieDownloader mdStart];
+#endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
         }
     }
     else if (alertView.tag == kAlertTagForPreparePlayInWWAN) {
@@ -1363,6 +1393,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     }
 }
 
+#ifdef MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
 - (void)pauseDownloadIfWWAN
 {
     MovieDownloadState state = [self.movieDownloader mdQueryDownloadState:self.movieURL];
@@ -1376,6 +1407,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
         }
     }
 }
+#endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
 
 @end
 #endif // MTT_FEATURE_WONDER_AVMOVIE_PLAYER
