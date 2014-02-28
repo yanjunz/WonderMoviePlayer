@@ -13,7 +13,6 @@
 #import "NSString+Hash.h"
 
 @interface TVDramaManager ()
-@property (nonatomic, strong) NSMutableArray *handlers;
 @end
 
 @implementation TVDramaManager
@@ -21,22 +20,8 @@
 - (id)init
 {
     if (self = [super init]) {
-        self.handlers = [NSMutableArray array];
     }
     return self;
-}
-
-
-- (void)addRequestHandler:(id<TVDramaRequestHandler>)handler
-{
-    if (![self.handlers containsObject:handler]) {
-        [self.handlers addObject:handler];
-    }
-}
-
-- (void)removeRequestHandler:(id<TVDramaRequestHandler>)handler
-{
-    [self.handlers removeObject:handler];
 }
 
 - (VideoGroup *)videoGroupInCurrentThread
@@ -62,43 +47,25 @@
         return;
     }
     
-    __block BOOL hasSuccessed = NO;
-    __block int remainingCallbackCount = self.handlers.count;
     DefineWeakSelfBeforeBlock();
-    for (id<TVDramaRequestHandler> handler in self.handlers) {
-        if ([handler respondsToSelector:@selector(tvDramaManager:requestDramaInfoWithURL:requestType:completionBlock:)]) {
-            [handler tvDramaManager:self requestDramaInfoWithURL:self.webURL requestType:requestType completionBlock:^(VideoGroup *videoGroup, int curSetNum) {
-                DefineStrongSelfInBlock(sself);
-//                NSLog(@"remainingCallbackCount = %d, curSetNum=%d", remainingCallbackCount, curSetNum);
-                BOOL success = videoGroup != nil;
-                
-                if (remainingCallbackCount <= 0) {
-                    return;
-                }
-                
-                if (success && !hasSuccessed) { // no success before yet, but success this time, should be callback with success
-                    sself.curSetNum = curSetNum;
-                    sself.videoGroup = videoGroup;
-                    
-                    hasSuccessed = YES;
-                    [sself fullFillVideoGroup:YES];
-                    if (completionBlock) {
-                        completionBlock(YES);
-                    }
-                }
-                else if (remainingCallbackCount == 1 && !hasSuccessed) { // the last handler callback and on success before yet
-                    [sself fullFillVideoGroup:NO];
-                    if (completionBlock) {
-                        completionBlock(NO);
-                    }
-                }
-                remainingCallbackCount --;
-            }];
+    [self.requestHandler tvDramaManager:self requestDramaInfoWithURL:self.webURL requestType:requestType completionBlock:^(VideoGroup *videoGroup, int curSetNum) {
+        DefineStrongSelfInBlock(sself);
+        if (videoGroup) {
+            sself.curSetNum = curSetNum;
+            sself.videoGroup = videoGroup;
+            
+            [sself fullFillVideoGroup:YES];
+            if (completionBlock) {
+                completionBlock(YES);
+            }
         }
         else {
-            remainingCallbackCount --;
+            [sself fullFillVideoGroup:NO];
+            if (completionBlock) {
+                completionBlock(NO);
+            }
         }
-    }
+    }];
 }
 
 - (void)sniffVideoSource:(void (^)(BOOL success))completionBlock
@@ -109,41 +76,23 @@
         return;
     }
     
-    __block BOOL hasSuccessed = NO;
-    __block int remainingCallbackCount = self.handlers.count;
     VideoGroup *videoGroup = [self videoGroupInCurrentThread];
-    for (id<TVDramaRequestHandler> handler in self.handlers) {
-        if ([handler respondsToSelector:@selector(tvDramaManager:sniffVideoSrcWithURL:src:completionBlock:)]) {
-            [handler tvDramaManager:self sniffVideoSrcWithURL:self.webURL src:videoGroup.src completionBlock:^(NSString *videoSrc) {
-                BOOL success = videoSrc.length > 0;
-//                NSLog(@"sniffVideoSource %@, %d", videoSrc, remainingCallbackCount);
-                
-                if (remainingCallbackCount <= 0) {
-                    return;
-                }
-                
-                if (success && !hasSuccessed) { // no success before yet, but success this time, should be callback with success
-                    Video *video = [videoGroup videoAtURL:self.webURL];
-                    video.videoSrc = videoSrc;
-                    [[NSManagedObjectContext MR_contextForCurrentThread] save:NULL];
-                    
-                    hasSuccessed = YES;
-                    if (completionBlock) {
-                        completionBlock(YES);
-                    }
-                }
-                else if (remainingCallbackCount == 1 && !hasSuccessed) { // the last handler callback and on success before yet
-                    if (completionBlock) {
-                        completionBlock(NO);
-                    }
-                }
-                remainingCallbackCount --;
-            }];
+    [self.requestHandler tvDramaManager:self sniffVideoSrcWithURL:self.webURL src:videoGroup.src completionBlock:^(NSString *videoSrc) {
+        if (videoSrc.length > 0) {
+            Video *video = [videoGroup videoAtURL:self.webURL];
+            video.videoSrc = videoSrc;
+            [[NSManagedObjectContext MR_contextForCurrentThread] save:NULL];
+            
+            if (completionBlock) {
+                completionBlock(YES);
+            }
         }
         else {
-            remainingCallbackCount --;
+            if (completionBlock) {
+                completionBlock(NO);
+            }
         }
-    }
+    }];
 }
 
 - (BOOL)hasNext
@@ -200,6 +149,180 @@
 {
     NSString *md5 = [key MD5];
     return md5;
+}
+
+@end
+
+@implementation CompositeTVDramaRequestHandler
+
+- (id)init
+{
+    if (self = [super init]) {
+        self.handlers = [NSMutableArray array];
+    }
+    return self;
+}
+
++ (instancetype)handlerWithHandlers:(NSArray *)handlers
+{
+    CompositeTVDramaRequestHandler *instance = [[CompositeTVDramaRequestHandler alloc] init];
+    [instance.handlers addObjectsFromArray:handlers];
+    return instance;
+}
+
+- (void)addHandler:(id<TVDramaRequestHandler>)handler
+{
+    [self.handlers addObject:handler];
+}
+- (void)removeHandler:(id<TVDramaRequestHandler>)hanlder
+{
+    [self.handlers removeObject:hanlder];
+}
+
+- (void)tvDramaManager:(TVDramaManager *)manager requestDramaInfoWithURL:(NSString *)URL requestType:(TVDramaRequestType)requestType completionBlock:(void (^)(VideoGroup *videoGroup, int curSetNum))completionBlock
+{
+    __block BOOL hasSuccessed = NO;
+    __block int remainingCallbackCount = self.handlers.count;
+    for (id<TVDramaRequestHandler> handler in self.handlers) {
+        if ([handler respondsToSelector:@selector(tvDramaManager:requestDramaInfoWithURL:requestType:completionBlock:)]) {
+            [handler tvDramaManager:manager requestDramaInfoWithURL:URL requestType:requestType completionBlock:^(VideoGroup *videoGroup, int curSetNum) {
+//                NSLog(@"[P2] requestDramaInfoWithURL  %d, %d, handler = %@", remainingCallbackCount, curSetNum, handler);
+                BOOL success = videoGroup != nil;
+                
+                if (remainingCallbackCount <= 0) {
+                    return;
+                }
+                
+                if (success && !hasSuccessed) { // no success before yet, but success this time, should be callback with success
+                    hasSuccessed = YES;
+                    if (completionBlock) {
+                        completionBlock(videoGroup, curSetNum);
+                    }
+                }
+                else if (remainingCallbackCount == 1 && !hasSuccessed) { // the last handler callback and on success before yet
+                    if (completionBlock) {
+                        completionBlock(nil, 0);
+                    }
+                }
+                remainingCallbackCount --;
+            }];
+        }
+        else {
+            remainingCallbackCount --;
+        }
+    }
+}
+
+- (void)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURL:(NSString *)URL src:(NSString *)src completionBlock:(void (^)(NSString *videoSrc))completionBlock
+{
+    __block BOOL hasSuccessed = NO;
+    __block int remainingCallbackCount = self.handlers.count;
+
+    for (id<TVDramaRequestHandler> handler in self.handlers) {
+        if ([handler respondsToSelector:@selector(tvDramaManager:sniffVideoSrcWithURL:src:completionBlock:)]) {
+            [handler tvDramaManager:manager sniffVideoSrcWithURL:URL src:src completionBlock:^(NSString *videoSrc) {
+                BOOL success = videoSrc.length > 0;
+//                NSLog(@"[P2] sniffVideoSource %@, %d, handler = %@", videoSrc, remainingCallbackCount, handler);
+                
+                if (remainingCallbackCount <= 0) {
+                    return;
+                }
+                
+                if (success && !hasSuccessed) { // no success before yet, but success this time, should be callback with success
+                    hasSuccessed = YES;
+                    if (completionBlock) {
+                        completionBlock(videoSrc);
+                    }
+                }
+                else if (remainingCallbackCount == 1 && !hasSuccessed) { // the last handler callback and on success before yet
+                    if (completionBlock) {
+                        completionBlock(nil);
+                    }
+                }
+                remainingCallbackCount --;
+            }];
+        }
+        else {
+            remainingCallbackCount --;
+        }
+    }
+}
+
+@end
+
+@implementation ResponsibilityChainTVDramaRequestHandler
+
++ (instancetype)handlerWithActualHandler:(id<TVDramaRequestHandler>)actualHandler
+                             nextHandler:(ResponsibilityChainTVDramaRequestHandler *)nextHandler
+{
+    ResponsibilityChainTVDramaRequestHandler *instance = [[ResponsibilityChainTVDramaRequestHandler alloc] init];
+    instance.actualHandler = actualHandler;
+    instance.nextHandler = nextHandler;
+    return instance;
+}
+
+- (void)tvDramaManager:(TVDramaManager *)manager requestDramaInfoWithURL:(NSString *)URL requestType:(TVDramaRequestType)requestType completionBlock:(void (^)(VideoGroup *videoGroup, int curSetNum))completionBlock
+{
+    DefineWeakSelfBeforeBlock();
+    if ([self.actualHandler respondsToSelector:@selector(tvDramaManager:requestDramaInfoWithURL:requestType:completionBlock:)]) {
+        [self.actualHandler tvDramaManager:manager requestDramaInfoWithURL:URL requestType:requestType completionBlock:^(VideoGroup *videoGroup, int curSetNum) {
+//            NSLog(@"[P1] requestDramaInfoWithURL  %d, handler = %@", curSetNum, self.actualHandler);
+            DefineStrongSelfInBlock(sself);
+            if (videoGroup) {
+                if (completionBlock) {
+                    completionBlock(videoGroup, curSetNum);
+                }
+            }
+            else if (sself.nextHandler) {
+                [sself.nextHandler tvDramaManager:manager requestDramaInfoWithURL:URL requestType:requestType completionBlock:completionBlock];
+            }
+            else {
+                if (completionBlock) {
+                    completionBlock(nil, 0);
+                }
+            }
+        }];
+    }
+    else if (self.nextHandler) {
+        [self.nextHandler tvDramaManager:manager requestDramaInfoWithURL:URL requestType:requestType completionBlock:completionBlock];
+    }
+    else {
+        if (completionBlock) {
+            completionBlock(nil, 0);
+        }
+    }
+}
+
+- (void)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURL:(NSString *)URL src:(NSString *)src completionBlock:(void (^)(NSString *videoSrc))completionBlock
+{
+    DefineWeakSelfBeforeBlock();
+    if ([self.actualHandler respondsToSelector:@selector(tvDramaManager:sniffVideoSrcWithURL:src:completionBlock:)]) {
+        [self.actualHandler tvDramaManager:manager sniffVideoSrcWithURL:URL src:src completionBlock:^(NSString *videoSrc) {
+//            NSLog(@"[P1] sniffVideoSource %@, handler = %@", videoSrc, self.actualHandler);
+            DefineStrongSelfInBlock(sself);
+            if (videoSrc.length > 0) {
+                if (completionBlock) {
+                    completionBlock(videoSrc);
+                }
+            }
+            else if (sself.nextHandler) {
+                [sself.nextHandler tvDramaManager:manager sniffVideoSrcWithURL:URL src:src completionBlock:completionBlock];
+            }
+            else {
+                if (completionBlock) {
+                    completionBlock(nil);
+                }
+            }
+        }];
+    }
+    else if (self.nextHandler) {
+        [self.nextHandler tvDramaManager:manager sniffVideoSrcWithURL:URL src:src completionBlock:completionBlock];
+    }
+    else {
+        if (completionBlock) {
+            completionBlock(nil);
+        }
+    }
 }
 
 @end

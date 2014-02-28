@@ -8,8 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+
 @class VideoGroup;
 @class Video;
+@class ResponsibilityChainTVDramaRequestHandler;
+
 typedef void (^GetDramaInfoBlock)(VideoGroup *videoGroup, int setNum);
 typedef void (^FailedBlock)();
 
@@ -27,8 +30,7 @@ typedef enum {
 @property (nonatomic, strong) VideoGroup *videoGroup;
 @property (nonatomic) int curSetNum;
 
-- (void)addRequestHandler:(id<TVDramaRequestHandler>)handler;
-- (void)removeRequestHandler:(id<TVDramaRequestHandler>)handler;
+@property (nonatomic, strong) ResponsibilityChainTVDramaRequestHandler *requestHandler;
 
 - (VideoGroup *)videoGroupInCurrentThread;
 - (Video *)playingVideo;
@@ -43,4 +45,28 @@ typedef enum {
 - (void)tvDramaManager:(TVDramaManager *)manager requestDramaInfoWithURL:(NSString *)URL requestType:(TVDramaRequestType)requestType completionBlock:(void (^)(VideoGroup *videoGroup, int curSetNum))completionBlock;
 
 - (void)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURL:(NSString *)URL src:(NSString *)src completionBlock:(void (^)(NSString *videoSrc))completionBlock;
+@end
+
+/**
+ * Use Composite Design Pattern for TVDramaRequestHandler
+ * It is a bit complicated since the handler is not blocked but asynchronized
+ **/
+@interface CompositeTVDramaRequestHandler : NSObject<TVDramaRequestHandler>
+@property (nonatomic, strong) NSMutableArray *handlers;
+
++ (instancetype)handlerWithHandlers:(NSArray *)handlers;
+- (void)addHandler:(id<TVDramaRequestHandler>)handler;
+- (void)removeHandler:(id<TVDramaRequestHandler>)hanlder;
+@end
+
+/**
+ * Use Chain of Responsibility Design Pattern for TVDramaRequestHandler
+ * Since there is priority for handler, so this pattern is needed to handle in order
+ **/
+@interface ResponsibilityChainTVDramaRequestHandler : NSObject<TVDramaRequestHandler>
+@property (nonatomic, strong) ResponsibilityChainTVDramaRequestHandler *nextHandler;
+@property (nonatomic, strong) id<TVDramaRequestHandler> actualHandler;
+
++ (instancetype)handlerWithActualHandler:(id<TVDramaRequestHandler>)actualHandler
+                             nextHandler:(ResponsibilityChainTVDramaRequestHandler *)nextHandler;
 @end
