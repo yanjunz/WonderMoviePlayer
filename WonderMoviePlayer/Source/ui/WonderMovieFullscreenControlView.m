@@ -2421,6 +2421,7 @@ static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanni
 - (void)wonderMovieDownloadView:(WonderMovieDownloadView *)downloadView didDownloadVideos:(NSArray *)videos
 {
     NSLog(@"Download Videos %@", videos);
+    [self showDownloadView:NO];
 }
 
 

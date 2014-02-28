@@ -37,6 +37,7 @@
         UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.width, kDramaHeaderViewHeight)];
         headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
         headerView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.1]; // FIXME
+        headerView.clipsToBounds = YES;
         
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, headerView.width, headerView.height)];
         label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -58,7 +59,7 @@
         [downloadButton setTitle:@"离线" forState:UIControlStateNormal];
         downloadButton.frame = CGRectMake(headerView.width - kNavButtonWidth, 0, kNavButtonWidth, headerView.height);
         downloadButton.titleLabel.font = [UIFont systemFontOfSize:13];
-        [downloadButton addTarget:self action:@selector(onClickCancel:) forControlEvents:UIControlEventTouchUpInside];
+        [downloadButton addTarget:self action:@selector(onClickDownload:) forControlEvents:UIControlEventTouchUpInside];
         [headerView addSubview:downloadButton];
         self.downloadButton = downloadButton;
         self.downloadButton.enabled = NO;
@@ -407,7 +408,7 @@
 #pragma mark WonderMovieDownloadGridCellDelegate
 - (void)wonderMovieDownloadGridCell:(WonderMovieDownloadGridCell *)cell didSelect:(BOOL)select withSetNum:(int)setNum
 {
-    if (select) {
+    if (!select) {
         [self.selectedSetNums removeObject:@(setNum)];
     }
     else {
@@ -432,7 +433,7 @@
 - (IBAction)onClickDownload:(id)sender
 {
     if ([self.delegate respondsToSelector:@selector(wonderMovieDownloadView:didDownloadVideos:)]) {
-        [self.delegate wonderMovieDownloadView:self didDownloadVideos:nil];
+        [self.delegate wonderMovieDownloadView:self didDownloadVideos:self.selectedSetNums];
     }
 }
 
