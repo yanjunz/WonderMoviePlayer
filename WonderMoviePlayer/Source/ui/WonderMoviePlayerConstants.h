@@ -51,5 +51,6 @@
 #define kActionButtonSize                           36
 #define kNextButtonRightPadding                     10
 #define kNextButtonSize                             36
+#define kDownloadButtonSize                         36
 
 #endif

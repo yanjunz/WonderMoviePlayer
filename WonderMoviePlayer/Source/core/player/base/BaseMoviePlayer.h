@@ -14,7 +14,10 @@
 
 @protocol BaseMoviePlayerDelegate;
 
-@protocol BaseMoviePlayer <MovieControlSourceDelegate, MoviePlayerHandler, MovieDownloaderDelegate, MovieDownloaderDataSource>
+@protocol BaseMoviePlayer <
+MovieControlSourceDelegate, MoviePlayerHandler
+, MovieDownloaderDelegate, MovieDownloaderDataSource
+>
 @property (nonatomic, retain) id<MovieControlSource> controlSource;
 @property (nonatomic, retain) id<MovieDownloader> movieDownloader;
 @property (nonatomic, weak) id<BaseMoviePlayerDelegate> delegate;

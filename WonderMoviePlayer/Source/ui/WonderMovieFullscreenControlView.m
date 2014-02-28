@@ -286,8 +286,7 @@ void wonderMovieVolumeListenerCallback (
     self.bottomBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [bottomBarContainer addSubview:self.bottomBar];
     
-    CGFloat resolutionButtonWidth = 32 + 20 * 2, resolutionButtonHeight = 18 + 20;
-//    CGFloat resolutionButtonPadding = 25 - 20;
+    CGFloat resolutionButtonWidth = 62, resolutionButtonHeight = 18 + 20;
     UIButton *resolutionButton = [UIButton buttonWithType:UIButtonTypeCustom];
     resolutionButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     resolutionButton.titleLabel.font = [UIFont systemFontOfSize:11];
@@ -336,10 +335,12 @@ void wonderMovieVolumeListenerCallback (
     [self.bottomBar addSubview:self.durationLabel];
     
     self.downloadButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.downloadButton.frame = CGRectOffset(self.resolutionButton.frame, -self.resolutionButton.width, 0);
+    self.downloadButton.frame = CGRectMake(self.resolutionButton.left - kDownloadButtonSize, bottomBarHeight - kDownloadButtonSize, kDownloadButtonSize, kDownloadButtonSize); //CGRectOffset(self.resolutionButton.frame, -self.resolutionButton.width, 0);
+    
 //    self.downloadButton.backgroundColor = [UIColor redColor];
     self.downloadButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-    [self.downloadButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 7.5, 0, 0)];
+//    [self.downloadButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 7.5, 0, 0)];
+//    [self.downloadButton setImageEdgeInsets:UIEdgeInsetsMake(0, self.downloadButton.width / 2, 0, 0)];
     [self.downloadButton setTitleColor:QQColor(videoplayer_downloaded_color) forState:UIControlStateDisabled];
     [self.downloadButton setImage:QQVideoPlayerImage(@"download") forState:UIControlStateNormal];
     self.downloadButton.titleLabel.font = buttonFont;
