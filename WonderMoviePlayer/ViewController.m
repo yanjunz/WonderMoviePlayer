@@ -102,11 +102,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    /* Return YES for supported orientations. */
-    return YES;
-}
 - (IBAction)onSliderChanged:(UISlider *)sender
 {
     NSLog(@"onSliderChanged %f", sender.value);
@@ -208,6 +203,13 @@
     
 #ifdef MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
     controller.movieDownloader = [[FakeMovieDownloader alloc] init];
+#else 
+//    DefineWeakVarBeforeBlock(controller);
+    [controller setDownloadBlock:^{
+        DefineStrongVarInBlock(controller);
+        ViewController *viewController = [[ViewController alloc] init];
+        [controller presentViewController:viewController animated:YES completion:nil];
+    }];
 #endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
     
     [controller setCrossScreenBlock:^{
@@ -291,6 +293,9 @@
 - (IBAction)onClickTable:(id)sender {
     [self.navigationController pushViewController:[[TestTableViewController alloc] init] animated:YES];
 }
+- (IBAction)onClickBack:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 
 - (void)viewDidUnload {
     [self setSlider:nil];
@@ -303,6 +308,31 @@
 - (IBAction)onClickTest2:(id)sender {
     Test2ViewController *controller = [[Test2ViewController alloc] init];
     [self presentViewController:controller animated:YES completion:nil];
+}
+
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    /* Return YES for supported orientations. */
+    return interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown;
+}
+
+- (BOOL)shouldAutorotate{
+    return YES;
+}
+
+-(NSUInteger)supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation{
+    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+    if (!UIInterfaceOrientationIsLandscape(orientation)) {
+        return orientation;
+    }
+    else {
+        return UIInterfaceOrientationPortrait;
+    }
 }
 
 

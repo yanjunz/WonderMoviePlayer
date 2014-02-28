@@ -132,7 +132,7 @@
 						<object class="NSPSMatrix" key="NSFrameMatrix"/>
 						<string key="NSFrame">{{235, 252}, {65, 60}}</string>
 						<reference key="NSSuperview" ref="122253373"/>
-						<reference key="NSNextKeyView" ref="652240133"/>
+						<reference key="NSNextKeyView" ref="720942804"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<int key="IBUIContentHorizontalAlignment">0</int>
@@ -180,6 +180,7 @@
 						<object class="NSPSMatrix" key="NSFrameMatrix"/>
 						<string key="NSFrame">{{53, 431}, {31, 12}}</string>
 						<reference key="NSSuperview" ref="122253373"/>
+						<reference key="NSNextKeyView" ref="652240133"/>
 						<int key="IBUIContentMode">7</int>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="IBUIContentStretch">{{1, 0.5}, {0, 0}}</string>
@@ -207,7 +208,6 @@
 						<object class="NSPSMatrix" key="NSFrameMatrix"/>
 						<string key="NSFrame">{{193, 320}, {127, 167}}</string>
 						<reference key="NSSuperview" ref="122253373"/>
-						<reference key="NSNextKeyView" ref="720942804"/>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MSAwLjMzAA</bytes>
@@ -220,7 +220,7 @@
 						<object class="NSPSMatrix" key="NSFrameMatrix"/>
 						<string key="NSFrame">{{235, 174}, {65, 60}}</string>
 						<reference key="NSSuperview" ref="122253373"/>
-						<reference key="NSNextKeyView" ref="541719340"/>
+						<reference key="NSNextKeyView" ref="110766027"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<int key="IBUIContentHorizontalAlignment">0</int>
@@ -271,6 +271,25 @@
 							<bytes key="NSWhite">MAA</bytes>
 						</object>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+					</object>
+					<object class="IBUIButton" id="110766027">
+						<reference key="NSNextResponder" ref="122253373"/>
+						<int key="NSvFlags">1316</int>
+						<string key="NSFrame">{{20, 247}, {70, 44}}</string>
+						<reference key="NSSuperview" ref="122253373"/>
+						<reference key="NSNextKeyView" ref="541719340"/>
+						<string key="NSReuseIdentifierKey">_NS:9</string>
+						<bool key="IBUIOpaque">NO</bool>
+						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+						<int key="IBUIContentHorizontalAlignment">0</int>
+						<int key="IBUIContentVerticalAlignment">0</int>
+						<int key="IBUIButtonType">1</int>
+						<reference key="IBUINormalTitleColor" ref="203201004"/>
+						<reference key="IBUIHighlightedTitleColor" ref="65972811"/>
+						<string key="IBUINormalTitle">Back</string>
+						<reference key="IBUINormalTitleShadowColor" ref="1016570727"/>
+						<reference key="IBUIFontDescription" ref="701404163"/>
+						<reference key="IBUIFont" ref="50011559"/>
 					</object>
 				</array>
 				<object class="NSPSMatrix" key="NSFrameMatrix"/>
@@ -437,6 +456,15 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">onClickBack:</string>
+						<reference key="source" ref="110766027"/>
+						<reference key="destination" ref="898633258"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<string key="id">3sC-py-ekE</string>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">changeSlider:</string>
 						<reference key="source" ref="54983306"/>
 						<reference key="destination" ref="898633258"/>
@@ -490,6 +518,7 @@
 							<reference ref="54983306"/>
 							<reference ref="368784938"/>
 							<reference ref="449436498"/>
+							<reference ref="110766027"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -571,6 +600,11 @@
 						<reference key="object" ref="449436498"/>
 						<reference key="parent" ref="122253373"/>
 					</object>
+					<object class="IBObjectRecord">
+						<string key="id">cUA-T5-Alt</string>
+						<reference key="object" ref="110766027"/>
+						<reference key="parent" ref="122253373"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -619,6 +653,7 @@
 				<reference key="SxV-hT-pLC.IBUserGuides" ref="0"/>
 				<boolean value="NO" key="SxV-hT-pLC.showNotes"/>
 				<string key="b8v-kC-mMe.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="cUA-T5-Alt.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="oWr-fD-Zh4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<reference key="oWr-fD-Zh4.IBUserGuides" ref="0"/>
 				<boolean value="NO" key="oWr-fD-Zh4.showNotes"/>
