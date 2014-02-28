@@ -140,7 +140,7 @@
         TVDramaManager *tvDramaManager = [[TVDramaManager alloc] init];
         tvDramaManager.webURL = @"http://www.iqiyi.com/dongman/20130414/8d6929ed7ac9a7b8.html";
         FakeTVDramaWebSource *fakeDramaWebSource = [[FakeTVDramaWebSource alloc] init];
-        [tvDramaManager addRequestHandler:fakeDramaWebSource];
+        tvDramaManager.requestHandler = [ResponsibilityChainTVDramaRequestHandler handlerWithActualHandler:fakeDramaWebSource nextHandler:nil];
         [controller.controlSource setTvDramaManager:tvDramaManager];
 
         
@@ -239,7 +239,7 @@
     TVDramaManager *tvDramaManager = [[TVDramaManager alloc] init];
     tvDramaManager.webURL = @"http://www.iqiyi.com/dongman/20130414/8d6929ed7ac9a7b8.html"; // the second one
     FakeTVDramaWebSource *fakeDramaWebSource = [[FakeTVDramaWebSource alloc] init];
-    [tvDramaManager addRequestHandler:fakeDramaWebSource];
+    tvDramaManager.requestHandler = [ResponsibilityChainTVDramaRequestHandler handlerWithActualHandler:fakeDramaWebSource nextHandler:nil];
     [controller.controlSource setTvDramaManager:tvDramaManager];
     
     static int alertCount = 0;
