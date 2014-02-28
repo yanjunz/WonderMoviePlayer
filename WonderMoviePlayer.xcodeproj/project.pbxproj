@@ -54,7 +54,6 @@
 		B54355C3186D26DF0090AFEE /* mute@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B543558B186D26DE0090AFEE /* mute@2x.png */; };
 		B54355C4186D26DF0090AFEE /* next_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B543558C186D26DE0090AFEE /* next_normal@2x.png */; };
 		B54355C5186D26DF0090AFEE /* pause_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B543558D186D26DE0090AFEE /* pause_normal@2x.png */; };
-		B54355C7186D26DF0090AFEE /* play@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B543558F186D26DE0090AFEE /* play@2x.png */; };
 		B54355C8186D26DF0090AFEE /* play_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5435590186D26DE0090AFEE /* play_normal@2x.png */; };
 		B54355CA186D26DF0090AFEE /* popup_menu_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5435592186D26DE0090AFEE /* popup_menu_bg@2x.png */; };
 		B54355CB186D26DF0090AFEE /* progress_prompt_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5435593186D26DE0090AFEE /* progress_prompt_bg@2x.png */; };
@@ -150,6 +149,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AE1D7C1A18C03CC9006A9196 /* WonderMoviePlayerConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WonderMoviePlayerConstants.h; sourceTree = "<group>"; };
 		AE4FA7C91872ADAA005B7BD6 /* toast_frame@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toast_frame@2x.png"; sourceTree = "<group>"; };
 		AE96680218B4395B00158788 /* VideoGroup+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "VideoGroup+Additions.h"; sourceTree = "<group>"; };
 		AE96680318B4395B00158788 /* VideoGroup+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "VideoGroup+Additions.m"; sourceTree = "<group>"; };
@@ -213,7 +213,6 @@
 		B543558B186D26DE0090AFEE /* mute@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mute@2x.png"; sourceTree = "<group>"; };
 		B543558C186D26DE0090AFEE /* next_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "next_normal@2x.png"; sourceTree = "<group>"; };
 		B543558D186D26DE0090AFEE /* pause_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pause_normal@2x.png"; sourceTree = "<group>"; };
-		B543558F186D26DE0090AFEE /* play@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play@2x.png"; sourceTree = "<group>"; };
 		B5435590186D26DE0090AFEE /* play_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play_normal@2x.png"; sourceTree = "<group>"; };
 		B5435592186D26DE0090AFEE /* popup_menu_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "popup_menu_bg@2x.png"; sourceTree = "<group>"; };
 		B5435593186D26DE0090AFEE /* progress_prompt_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "progress_prompt_bg@2x.png"; sourceTree = "<group>"; };
@@ -357,7 +356,6 @@
 		B5DC077C182CD4690046A7A5 /* BaseMoviePlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseMoviePlayer.h; sourceTree = "<group>"; };
 		B5DC077D182CD4690046A7A5 /* MovieControlSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovieControlSource.h; sourceTree = "<group>"; };
 		B5DC077E182CD4690046A7A5 /* MoviePlayerHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoviePlayerHandler.h; sourceTree = "<group>"; };
-		B5DC077F182CD4690046A7A5 /* WonderMoviePlayerConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMoviePlayerConstants.h; sourceTree = "<group>"; };
 		B5F96D4B1843603A006A73FB /* MovieDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovieDownloader.h; sourceTree = "<group>"; };
 		B5F96D4F18437748006A73FB /* FakeMovieDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FakeMovieDownloader.h; sourceTree = "<group>"; };
 		B5F96D5018437748006A73FB /* FakeMovieDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeMovieDownloader.m; sourceTree = "<group>"; };
@@ -526,7 +524,6 @@
 				B543558B186D26DE0090AFEE /* mute@2x.png */,
 				B543558C186D26DE0090AFEE /* next_normal@2x.png */,
 				B543558D186D26DE0090AFEE /* pause_normal@2x.png */,
-				B543558F186D26DE0090AFEE /* play@2x.png */,
 				B5435590186D26DE0090AFEE /* play_normal@2x.png */,
 				B5435592186D26DE0090AFEE /* popup_menu_bg@2x.png */,
 				B5435593186D26DE0090AFEE /* progress_prompt_bg@2x.png */,
@@ -702,6 +699,7 @@
 			isa = PBXGroup;
 			children = (
 				B5DC0754182CD2CA0046A7A5 /* drama */,
+				AE1D7C1A18C03CC9006A9196 /* WonderMoviePlayerConstants.h */,
 				B5D4C3591820F51A00BB0A53 /* WonderMovieFullscreenControlView.h */,
 				B5D4C35A1820F51A00BB0A53 /* WonderMovieFullscreenControlView.m */,
 				B52DCDA7183F4E890020485B /* WonderMovieFullscreenControlView+StateMachine.h */,
@@ -792,7 +790,6 @@
 				B5DC077C182CD4690046A7A5 /* BaseMoviePlayer.h */,
 				B5DC077D182CD4690046A7A5 /* MovieControlSource.h */,
 				B5DC077E182CD4690046A7A5 /* MoviePlayerHandler.h */,
-				B5DC077F182CD4690046A7A5 /* WonderMoviePlayerConstants.h */,
 				B5F96D4B1843603A006A73FB /* MovieDownloader.h */,
 			);
 			path = base;
@@ -915,7 +912,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B54355C7186D26DF0090AFEE /* play@2x.png in Resources */,
 				B54355CC186D26DF0090AFEE /* progress_prompt_circle@2x.png in Resources */,
 				B54355E6186D26DF0090AFEE /* m@2x.png in Resources */,
 				B5AD785317CDA5E800C08E51 /* video.js in Resources */,

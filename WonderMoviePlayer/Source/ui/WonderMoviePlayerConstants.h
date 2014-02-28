@@ -46,4 +46,10 @@
 
 #define kProgressIndicatorLeading                   3
 
+#define kActionButtonLeftPadding                    15
+#define kActionButtonRightPadding                   11
+#define kActionButtonSize                           36
+#define kNextButtonRightPadding                     10
+#define kNextButtonSize                             36
+
 #endif
