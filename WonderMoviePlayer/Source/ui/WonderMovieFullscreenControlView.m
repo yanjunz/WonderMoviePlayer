@@ -24,6 +24,7 @@
 #import "Video.h"
 #import "VideoHistoryOperator.h"
 #import "VideoBookmarkOperator.h"
+#import "WonderMovieDownloadView.h"
 
 #ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
 #import "AirPlayDetector.h"
@@ -95,6 +96,8 @@
 @property (nonatomic, strong) UIView *verticalPanningTipView;
 
 @property (nonatomic, strong) UIView *errorView;
+
+@property (nonatomic, strong) UIView *downloadView;
 
 - (void)tryToSetVolume:(NSNumber *)volume;
 @end
@@ -1222,9 +1225,11 @@ void wonderMovieVolumeListenerCallback (
             [self.infoView showDownloadToast:NSLocalizedString(@"由于版权问题，该网站视频暂不支持下载", nil) show:YES animated:YES];
         }
         else {
-            if ([self.delegate respondsToSelector:@selector(movieControlSourceOnDownload:)]) {
-                [self.delegate movieControlSourceOnDownload:self];
-            }
+//            if ([self.delegate respondsToSelector:@selector(movieControlSourceOnDownload:)]) {
+//                [self.delegate movieControlSourceOnDownload:self];
+//            }
+            [self showDownloadView:YES];
+            
         }
     }
     
@@ -1535,6 +1540,10 @@ void wonderMovieVolumeListenerCallback (
 #pragma mark Gesture handler
 - (IBAction)onSingleTapOverlayView:(UITapGestureRecognizer *)gr
 {
+    if ([self isDownloadViewShown]) {
+        return;
+    }
+    
     BOOL animationToHide = self.contentView.alpha > 0;
     if ([self isPopupMenuShown]) {
         [self showPopupMenu:NO];
@@ -1566,6 +1575,10 @@ void wonderMovieVolumeListenerCallback (
 
 - (IBAction)onDoubleTapOverlayView:(UITapGestureRecognizer *)gr
 {
+    if ([self isDownloadViewShown]) {
+        return;
+    }
+    
     if ([self.delegate respondsToSelector:@selector(movieControlSourceSwitchVideoGravity:)]) {
         [self.delegate movieControlSourceSwitchVideoGravity:self];
     }
@@ -1573,6 +1586,10 @@ void wonderMovieVolumeListenerCallback (
 
 - (IBAction)onPanOverlayView:(UIPanGestureRecognizer *)gr
 {
+    if ([self isDownloadViewShown]) {
+        return;
+    }
+    
     static enum WonderMoviePanAction {
         WonderMoviePanAction_No,
         WonderMoviePanAction_Progress,
@@ -1733,7 +1750,11 @@ void wonderMovieVolumeListenerCallback (
 
 - (void)dimControl
 {
-    if (self.contentView.alpha == 1 && self.controlState != MovieControlStatePaused && self.controlState != MovieControlStateEnded && !_isScrubbing) {
+    if (self.contentView.alpha == 1 &&
+        self.controlState != MovieControlStatePaused &&
+        self.controlState != MovieControlStateEnded &&
+        !_isScrubbing &&
+        ![self isDownloadViewShown]) {
         if ([self.delegate respondsToSelector:@selector(movieControlSource:showControlView:)]) {
             [self.delegate movieControlSource:self showControlView:NO];
         }
@@ -2084,6 +2105,43 @@ void wonderMovieVolumeListenerCallback (
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
     return !([touch.view isKindOfClass:[UIControl class]]) && !(self.dramaView && [touch.view isDescendantOfView:self.dramaView]);
+}
+
+#pragma mark Download View
+- (UIView *)downloadView
+{
+    if (_downloadView == nil) {
+        WonderMovieDownloadView *downloadView = [[WonderMovieDownloadView alloc] initWithFrame:CGRectMake(0, kStatusBarHeight, self.width, self.height - kStatusBarHeight)];
+        downloadView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//        downloadView.backgroundColor = [UIColor clearColor];
+        _downloadView = downloadView;
+    }
+    return _downloadView;
+}
+
+- (void)showDownloadView:(BOOL)show
+{
+    if (show) {
+        self.downloadView.top = self.bottom;
+        [self addSubview:self.downloadView];
+        [UIView animateWithDuration:0.5 animations:^{
+            self.downloadView.bottom = self.bottom;
+        } completion:^(BOOL finished) {
+
+        }];
+    }
+    else {
+        [UIView animateWithDuration:0.5 animations:^{
+            self.downloadView.top = self.bottom;
+        } completion:^(BOOL finished) {
+            [self.downloadView removeFromSuperview];
+        }];
+    }
+}
+
+- (BOOL)isDownloadViewShown
+{
+    return _downloadView.bottom == self.bottom;
 }
 
 @end

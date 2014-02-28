@@ -44,6 +44,8 @@
 #define kWonderMovieControlDimDuration              0.8f
 #define kWonderMovieControlShowDuration             0.2f
 
+#define kStatusBarHeight                            20
+
 #define kProgressIndicatorLeading                   3
 
 #define kActionButtonLeftPadding                    15
