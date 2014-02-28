@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AE1D7C1E18C08335006A9196 /* play@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AE1D7C1D18C08335006A9196 /* play@2x.png */; };
 		AE4FA7CA1872ADAA005B7BD6 /* toast_frame@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AE4FA7C91872ADAA005B7BD6 /* toast_frame@2x.png */; };
 		AE96680418B4395B00158788 /* VideoGroup+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = AE96680318B4395B00158788 /* VideoGroup+Additions.m */; };
 		AE96680718B4398D00158788 /* NSString+Hash.m in Sources */ = {isa = PBXBuildFile; fileRef = AE96680618B4398D00158788 /* NSString+Hash.m */; };
@@ -149,6 +150,7 @@
 
 /* Begin PBXFileReference section */
 		AE1D7C1A18C03CC9006A9196 /* WonderMoviePlayerConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WonderMoviePlayerConstants.h; sourceTree = "<group>"; };
+		AE1D7C1D18C08335006A9196 /* play@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play@2x.png"; sourceTree = "<group>"; };
 		AE4FA7C91872ADAA005B7BD6 /* toast_frame@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toast_frame@2x.png"; sourceTree = "<group>"; };
 		AE96680218B4395B00158788 /* VideoGroup+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "VideoGroup+Additions.h"; sourceTree = "<group>"; };
 		AE96680318B4395B00158788 /* VideoGroup+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "VideoGroup+Additions.m"; sourceTree = "<group>"; };
@@ -507,6 +509,7 @@
 		B5435578186D26DE0090AFEE /* videoplayer */ = {
 			isa = PBXGroup;
 			children = (
+				AE1D7C1D18C08335006A9196 /* play@2x.png */,
 				AE4FA7C91872ADAA005B7BD6 /* toast_frame@2x.png */,
 				B5435579186D26DE0090AFEE /* back@2x.png */,
 				B543557C186D26DE0090AFEE /* brightness@2x.png */,
@@ -923,6 +926,7 @@
 				B54355E1186D26DF0090AFEE /* volume_prompt_gesture@2x.png in Resources */,
 				B517774217B36D44006B948E /* InfoPlist.strings in Resources */,
 				B54355E3186D26DF0090AFEE /* color_b@2x.png in Resources */,
+				AE1D7C1E18C08335006A9196 /* play@2x.png in Resources */,
 				B517774A17B36D44006B948E /* Default.png in Resources */,
 				B54355D0186D26DF0090AFEE /* progressbar_indicator_normal@2x.png in Resources */,
 				B54355BA186D26DF0090AFEE /* download_prompt_bg@2x.png in Resources */,
