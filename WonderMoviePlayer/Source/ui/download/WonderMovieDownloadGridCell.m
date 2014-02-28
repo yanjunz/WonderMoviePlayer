@@ -62,7 +62,6 @@
         self.backgroundColor = [UIColor clearColor];
         self.contentView.backgroundColor = [UIColor clearColor];
         self.backgroundView = nil;
-
     }
     return self;
 }
@@ -145,5 +144,14 @@
     }
 }
 
+#pragma mark Action
+- (IBAction)onClickVideo:(UIButton *)sender
+{
+    sender.selected = !sender.selected;
+    
+    if ([self.delegate respondsToSelector:@selector(wonderMovieDownloadGridCell:didSelect:withSetNum:)]) {
+        [self.delegate wonderMovieDownloadGridCell:self didSelect:sender.selected withSetNum:sender.tag];
+    }
+}
 
 @end

@@ -10,10 +10,20 @@
 #import "TVDramaManager.h"
 #import "DramaTableView.h"
 
+@class WonderMovieDownloadView;
+@protocol WonderMovieDownloadViewDelegate <NSObject>
+
+- (void)wonderMovieDownloadViewDidCancel:(WonderMovieDownloadView *)downloadView;
+- (void)wonderMovieDownloadView:(WonderMovieDownloadView *)downloadView didDownloadVideos:(NSArray *)videos;
+
+@end
+
 @interface WonderMovieDownloadView : UIView<UITableViewDataSource, DramaTableViewDelegate>
+@property (nonatomic, weak) id<WonderMovieDownloadViewDelegate> delegate;
 @property (nonatomic, strong) TVDramaManager *tvDramaManager;
 @property (nonatomic, strong) DramaTableView *tableView;
 @property (nonatomic, strong) UIView *errorView;
 @property (nonatomic, strong) UIView *loadingView;
 @property (nonatomic) int playingSetNum;
+- (void)reloadData;
 @end

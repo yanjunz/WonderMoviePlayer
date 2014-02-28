@@ -16,10 +16,14 @@
 
 #define kDramaHeaderViewHeight      44
 #define kMaxVideoCountPerGridCell   9
+#define kNavButtonWidth             60
 
-@interface WonderMovieDownloadView ()
+@interface WonderMovieDownloadView () <WonderMovieDownloadGridCellDelegate>
 @property (nonatomic, strong) VideoGroup *videoGroup;
 @property (nonatomic, strong) NSArray *sortedVideos;
+@property (nonatomic, strong) UIButton *downloadButton;
+@property (nonatomic, strong) NSMutableArray *selectedSetNums;
+
 @end
 
 @implementation WonderMovieDownloadView
@@ -29,18 +33,35 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.85];
+        self.backgroundColor = [UIColor grayColor];
         UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.width, kDramaHeaderViewHeight)];
         headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
         headerView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.1]; // FIXME
         
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, headerView.width - 20, headerView.height)];
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, headerView.width, headerView.height)];
         label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         label.backgroundColor = [UIColor clearColor];
         label.textColor = [UIColor whiteColor];
-        label.font = [UIFont systemFontOfSize:13];
-        label.text = NSLocalizedString(@"剧集列表", nil);
+        label.textAlignment = UITextAlignmentCenter;
+        label.font = [UIFont boldSystemFontOfSize:13];
+        label.text = NSLocalizedString(@"选择视频", nil);
         [headerView addSubview:label];
+        
+        UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [cancelButton setTitle:@"取消" forState:UIControlStateNormal];
+        cancelButton.frame = CGRectMake(0, 0, kNavButtonWidth, headerView.height);
+        cancelButton.titleLabel.font = [UIFont systemFontOfSize:13];
+        [cancelButton addTarget:self action:@selector(onClickCancel:) forControlEvents:UIControlEventTouchUpInside];
+        [headerView addSubview:cancelButton];
+        
+        UIButton *downloadButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [downloadButton setTitle:@"离线" forState:UIControlStateNormal];
+        downloadButton.frame = CGRectMake(headerView.width - kNavButtonWidth, 0, kNavButtonWidth, headerView.height);
+        downloadButton.titleLabel.font = [UIFont systemFontOfSize:13];
+        [downloadButton addTarget:self action:@selector(onClickCancel:) forControlEvents:UIControlEventTouchUpInside];
+        [headerView addSubview:downloadButton];
+        self.downloadButton = downloadButton;
+        self.downloadButton.enabled = NO;
         
         UIImageView *separatorView = [[UIImageView alloc] initWithFrame:CGRectMake(0, label.bottom, headerView.width, 1)];
         separatorView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -61,9 +82,23 @@
             [tableView setSeparatorInset:UIEdgeInsetsZero];
         }
 
+        self.selectedSetNums = [NSMutableArray array];
     }
     return self;
 }
+
+- (void)reloadData
+{
+    if (self.videoGroup == nil) {
+        [self addSubview:self.loadingView];
+        [self bringSubviewToFront:self.loadingView];
+        [self loadCurrentSection];
+    }
+    else {
+        [self.tableView reloadData];
+    }
+}
+
 
 - (UIView *)loadingView
 {
@@ -275,7 +310,7 @@
         WonderMovieDownloadGridCell *cell = [tableView dequeueReusableCellWithIdentifier:kGridCellID];
         if (cell == nil) {
             cell = [[WonderMovieDownloadGridCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kGridCellID];
-//            cell.delegate = self;
+            cell.delegate = self;
         }
         Video *minVideo = self.sortedVideos[indexPath.row * kMaxVideoCountPerGridCell];
         int minVideoSetNum = minVideo.setNum.intValue;
@@ -367,6 +402,38 @@
 - (void)dramaTableViewDidTriggerLoadMoreFooter:(DramaTableView *)tableView
 {
     [self loadNextSection];
+}
+
+#pragma mark WonderMovieDownloadGridCellDelegate
+- (void)wonderMovieDownloadGridCell:(WonderMovieDownloadGridCell *)cell didSelect:(BOOL)select withSetNum:(int)setNum
+{
+    if (select) {
+        [self.selectedSetNums removeObject:@(setNum)];
+    }
+    else {
+        if (![self.selectedSetNums containsObject:@(setNum)]) {
+            [self.selectedSetNums addObject:@(setNum)];
+        }
+    }
+    
+    if (self.selectedSetNums.count > 0) {
+        self.downloadButton.enabled = YES;
+    }
+}
+
+#pragma mark Action
+- (IBAction)onClickCancel:(id)sender
+{
+    if ([self.delegate respondsToSelector:@selector(wonderMovieDownloadViewDidCancel:)]) {
+        [self.delegate wonderMovieDownloadViewDidCancel:self];
+    }
+}
+
+- (IBAction)onClickDownload:(id)sender
+{
+    if ([self.delegate respondsToSelector:@selector(wonderMovieDownloadView:didDownloadVideos:)]) {
+        [self.delegate wonderMovieDownloadView:self didDownloadVideos:nil];
+    }
 }
 
 @end

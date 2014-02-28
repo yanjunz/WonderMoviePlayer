@@ -97,7 +97,7 @@
 
 @property (nonatomic, strong) UIView *errorView;
 
-@property (nonatomic, strong) UIView *downloadView;
+@property (nonatomic, strong) WonderMovieDownloadView *downloadView;
 
 - (void)tryToSetVolume:(NSNumber *)volume;
 @end
@@ -110,6 +110,10 @@
 - (void)dramaDidSelectSetNum:(int)setNum;
 - (void)prepareToPlayNextDrama;
 - (void)playNextDrama;
+@end
+
+@interface WonderMovieFullscreenControlView (DownloadView) <WonderMovieDownloadViewDelegate>
+
 @end
 
 @interface WonderMovieFullscreenControlView (Utils)
@@ -2108,12 +2112,14 @@ void wonderMovieVolumeListenerCallback (
 }
 
 #pragma mark Download View
-- (UIView *)downloadView
+- (WonderMovieDownloadView *)downloadView
 {
     if (_downloadView == nil) {
         WonderMovieDownloadView *downloadView = [[WonderMovieDownloadView alloc] initWithFrame:CGRectMake(0, kStatusBarHeight, self.width, self.height - kStatusBarHeight)];
         downloadView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 //        downloadView.backgroundColor = [UIColor clearColor];
+        downloadView.tvDramaManager = self.tvDramaManager;
+        downloadView.delegate = self;
         _downloadView = downloadView;
     }
     return _downloadView;
@@ -2127,7 +2133,7 @@ void wonderMovieVolumeListenerCallback (
         [UIView animateWithDuration:0.5 animations:^{
             self.downloadView.bottom = self.bottom;
         } completion:^(BOOL finished) {
-
+            [self.downloadView reloadData];
         }];
     }
     else {
@@ -2402,6 +2408,21 @@ static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanni
     int curSetNum = self.tvDramaManager.curSetNum;
     [self dramaDidSelectSetNum:curSetNum+1];
 }
+
+@end
+
+@implementation WonderMovieFullscreenControlView (DownloadView)
+
+- (void)wonderMovieDownloadViewDidCancel:(WonderMovieDownloadView *)downloadView
+{
+    [self showDownloadView:NO];
+}
+
+- (void)wonderMovieDownloadView:(WonderMovieDownloadView *)downloadView didDownloadVideos:(NSArray *)videos
+{
+    NSLog(@"Download Videos %@", videos);
+}
+
 
 @end
 
