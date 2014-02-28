@@ -2422,6 +2422,16 @@ static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanni
 {
     NSLog(@"Download Videos %@", videos);
     [self showDownloadView:NO];
+    if ([self.delegate respondsToSelector:@selector(movieControlSource:didBatchDownload:)]) {
+        NSMutableArray *downloadURLs = [NSMutableArray array];
+        VideoGroup *videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
+        for (NSNumber *setNum in videos) {
+            Video *video = [videoGroup videoAtSetNum:setNum];
+            [downloadURLs addObject:video.url];
+        }
+        NSLog(@"DownloadURLs = %@", downloadURLs);
+        [self.delegate movieControlSource:self didBatchDownload:downloadURLs];
+    }
 }
 
 

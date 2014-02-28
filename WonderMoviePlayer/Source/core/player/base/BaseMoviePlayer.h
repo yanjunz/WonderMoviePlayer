@@ -11,6 +11,7 @@
 #import "MoviePlayerHandler.h"
 #import "MovieControlSource.h"
 #import "MovieDownloader.h"
+#import "BatMovieDownloader.h"
 
 @protocol BaseMoviePlayerDelegate;
 
@@ -21,9 +22,15 @@ MovieControlSourceDelegate, MoviePlayerHandler
 #endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
 >
 @property (nonatomic, retain) id<MovieControlSource> controlSource;
+
 #ifdef MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
 @property (nonatomic, retain) id<MovieDownloader> movieDownloader;
 #endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+
+#ifdef MTT_TWEAK_BAT_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+@property (nonatomic, retain) id<BatMovieDownloader> batMovieDownloader;
+#endif // MTT_TWEAK_BAT_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+
 @property (nonatomic, weak) id<BaseMoviePlayerDelegate> delegate;
 
 - (void)playMovieStream:(NSURL *)movieURL fromProgress:(CGFloat)progress;

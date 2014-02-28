@@ -343,7 +343,8 @@
             [cell addSubview:separatorView];
         }
         Video *video = self.sortedVideos[indexPath.row];
-        cell.isPlaying = video.setNum.intValue == self.playingSetNum;
+//        cell.isPlaying = video.setNum.intValue == self.playingSetNum;
+        cell.selectedForDownload = [self.selectedSetNums containsObject:video.setNum];
         cell.textLabel.text = video.brief;
         
         if (video.setNum.intValue == self.videoGroup.maxId.intValue) {
@@ -384,7 +385,18 @@
     if (showType != VideoGroupShowTypeGrid) {
         Video *video = self.sortedVideos[indexPath.row];
 //        [self playWithSetNum:video.setNum.intValue];
-        [self.tableView reloadData];
+//        [self.tableView reloadData];
+        
+        if ([self.selectedSetNums containsObject:video.setNum]) {
+            [self.selectedSetNums removeObject:video.setNum];
+        }
+        else {
+            [self.selectedSetNums addObject:video.setNum];
+        }
+        if (self.selectedSetNums.count > 0) {
+            self.downloadButton.enabled = YES;
+        }
+        [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
 }
 

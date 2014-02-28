@@ -36,10 +36,10 @@
     // Configure the view for the selected state
 }
 
-- (void)setIsPlaying:(BOOL)isPlaying
+- (void)setSelectedForDownload:(BOOL)selectedForDownload
 {
-    _isPlaying = isPlaying;
-    if (isPlaying) {
+    _selectedForDownload = selectedForDownload;
+    if (_selectedForDownload) {
         self.imageView.hidden = NO;
         self.textLabel.textColor = QQColor(videoplayer_drama_list_text_color);
     }

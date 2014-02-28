@@ -16,6 +16,7 @@
 #import "TestTableViewController.h"
 #import "FakeMovieDownloader.h"
 #import "Reachability.h"
+#import "FakeBatMovieDownloader.h"
 
 #ifdef MTT_FEATURE_WONDER_MPMOVIE_PLAYER
 #define WonderMovieViewController WonderMPMovieViewController
@@ -211,6 +212,11 @@
         [controller presentViewController:viewController animated:YES completion:nil];
     }];
 #endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+    
+#ifdef MTT_TWEAK_BAT_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+    controller.batMovieDownloader = [[FakeBatMovieDownloader alloc] init];
+    
+#endif // MTT_TWEAK_BAT_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
     [controller setMyVideoBlock:^{
         DefineStrongVarInBlock(controller);
         ViewController *viewController = [[ViewController alloc] init];

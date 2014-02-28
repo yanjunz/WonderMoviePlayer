@@ -106,6 +106,11 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 #else // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
 @synthesize downloadBlock;
 #endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+
+#ifdef MTT_TWEAK_BAT_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+@synthesize batMovieDownloader;
+#endif // MTT_TWEAK_BAT_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+
 @synthesize myVideoBlock;
 @synthesize controlSource;
 @synthesize isEnd = _isEnd;
@@ -1166,6 +1171,15 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
         self.downloadBlock();
     }
 #endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+}
+
+- (void)movieControlSource:(id<MovieControlSource>)source didBatchDownload:(NSArray *)downloadURLs
+{
+#ifdef MTT_TWEAK_BAT_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+    if ([self.batMovieDownloader respondsToSelector:@selector(batchDownloadURLs:)]) {
+        [self.batMovieDownloader batchDownloadURLs:downloadURLs];
+    }
+#endif // MTT_TWEAK_BAT_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
 }
 
 - (void)movieControlSourceOnMyVideo:(id<MovieControlSource>)source

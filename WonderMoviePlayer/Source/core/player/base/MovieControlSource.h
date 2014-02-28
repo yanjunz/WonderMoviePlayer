@@ -142,6 +142,8 @@ typedef enum {
 
 - (void)movieControlSourceOnDownload:(id<MovieControlSource>)source;
 
+- (void)movieControlSource:(id<MovieControlSource>)source didBatchDownload:(NSArray *)downloadURLs;
+
 - (void)movieControlSourceOnMyVideo:(id<MovieControlSource>)source;
 
 - (void)movieControlSourceSwitchVideoGravity:(id<MovieControlSource>)source;

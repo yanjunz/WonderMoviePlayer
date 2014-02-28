@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface WonderMovieDownloadListCell : UITableViewCell
-@property (nonatomic) BOOL isPlaying;
+@property (nonatomic) BOOL selectedForDownload;
 @end
