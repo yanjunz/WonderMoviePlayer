@@ -142,6 +142,8 @@ typedef enum {
 
 - (void)movieControlSourceOnDownload:(id<MovieControlSource>)source;
 
+- (void)movieControlSourceOnMyVideo:(id<MovieControlSource>)source;
+
 - (void)movieControlSourceSwitchVideoGravity:(id<MovieControlSource>)source;
 - (void)movieControlSource:(id<MovieControlSource>)source showControlView:(BOOL)show;
 - (void)movieControlSource:(id<MovieControlSource>)source didChangeResolution:(NSString *)resolution;

@@ -106,6 +106,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 #else // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
 @synthesize downloadBlock;
 #endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+@synthesize myVideoBlock;
 @synthesize controlSource;
 @synthesize isEnd = _isEnd;
 @synthesize delegate;
@@ -929,6 +930,23 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     [self.controlSource unbuffer];
 }
 
+- (void)pause
+{
+    _wasPlaying = NO;
+    [self.player pause];
+    
+#ifdef MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+    // Pause download if reachability is in 2G/3G
+    [self pauseDownloadIfWWAN];
+#endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+}
+
+- (void)play
+{
+    _wasPlaying = YES;
+    [self.player play];
+}
+
 #pragma mark Fake Buffer Progress
 #ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
 - (void)onLoadedTimeRangesChanged
@@ -1000,25 +1018,17 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 #pragma mark MovieControlSourceDelegate
 - (void)movieControlSourcePlay:(id<MovieControlSource>)source
 {
-    _wasPlaying = YES;
-    [self.player play];
+    [self play];
 }
 
 - (void)movieControlSourcePause:(id<MovieControlSource>)source
 {
-    _wasPlaying = NO;
-    [self.player pause];
-    
-#ifdef MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
-    // Pause download if reachability is in 2G/3G
-    [self pauseDownloadIfWWAN];
-#endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+    [self pause];
 }
 
 - (void)movieControlSourceResume:(id<MovieControlSource>)source
 {
-    _wasPlaying = YES;
-    [self.player play];
+    [self play];
 }
 
 - (void)movieControlSourceReplay:(id<MovieControlSource>)source
@@ -1151,10 +1161,19 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
         // Nothing
     }
 #else  // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+    [self pause];
     if (self.downloadBlock) {
         self.downloadBlock();
     }
 #endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+}
+
+- (void)movieControlSourceOnMyVideo:(id<MovieControlSource>)source
+{
+    [self pause];
+    if (self.myVideoBlock) {
+        self.myVideoBlock();
+    }
 }
 
 

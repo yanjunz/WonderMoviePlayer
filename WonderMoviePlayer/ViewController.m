@@ -211,6 +211,11 @@
         [controller presentViewController:viewController animated:YES completion:nil];
     }];
 #endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+    [controller setMyVideoBlock:^{
+        DefineStrongVarInBlock(controller);
+        ViewController *viewController = [[ViewController alloc] init];
+        [controller presentViewController:viewController animated:YES completion:nil];
+    }];
     
     [controller setCrossScreenBlock:^{
         NSLog(@"cross screen");

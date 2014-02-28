@@ -412,7 +412,7 @@ void wonderMovieVolumeListenerCallback (
     self.myVideoButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [self.myVideoButton setTitle:NSLocalizedString(@"我的视频", nil) forState:UIControlStateNormal];
     self.myVideoButton.titleLabel.font = buttonFont;
-    [self.myVideoButton addTarget:self action:@selector(onClickTVDrama:) forControlEvents:UIControlEventTouchUpInside];
+    [self.myVideoButton addTarget:self action:@selector(onClickMyVideo:) forControlEvents:UIControlEventTouchUpInside];
     [self.myVideoButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
     [self.headerBar addSubview:self.myVideoButton];
     btnRect = self.myVideoButton.frame;
@@ -1346,6 +1346,16 @@ void wonderMovieVolumeListenerCallback (
     [self showDramaView:YES];
     [self dismissAllPopupViews]; 
     [self cancelPreviousAndPrepareToDimControl];
+}
+
+- (IBAction)onClickMyVideo:(id)sender
+{
+    [self showOverlay:YES];
+    [self dismissAllPopupViews];
+    
+    if ([self.delegate respondsToSelector:@selector(movieControlSourceOnMyVideo:)]) {
+        [self.delegate movieControlSourceOnMyVideo:self];
+    }
 }
 
 - (IBAction)onClickResolution:(id)sender
