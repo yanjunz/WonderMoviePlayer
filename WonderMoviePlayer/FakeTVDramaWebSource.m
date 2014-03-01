@@ -102,7 +102,7 @@
             // save video group info
             videoGroup.videoId = @"1234567890";
             videoGroup.videoName = @"进击的巨人";
-            videoGroup.showType = @(2);
+            videoGroup.showType = @(1);
             videoGroup.src = @"爱奇艺";
             videoGroup.totalCount = @(0);
             videoGroup.maxId = @(_maxVideoSetNum);

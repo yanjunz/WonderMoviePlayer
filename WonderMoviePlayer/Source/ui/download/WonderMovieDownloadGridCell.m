@@ -8,11 +8,8 @@
 
 #import "WonderMovieDownloadGridCell.h"
 #import "WonderMoviePlayerConstants.h"
+#import "UIView+Sizes.h"
 
-#define kDramaGridCellButtonHeight      (52/2)
-#define kDramaGridCellButtonWidth       (180/2)
-#define kDramaGridCellButtonCountPerRow 3
-#define kDramaGridCellButtonMaxRow      3
 
 @interface WonderMovieDownloadGridCell ()
 @property (nonatomic, strong) NSMutableArray *buttons;
@@ -27,30 +24,6 @@
     if (self) {
         // Initialization code
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-        
-        self.buttons = [NSMutableArray arrayWithCapacity:kDramaGridCellButtonMaxRow * kDramaGridCellButtonCountPerRow];
-        CGFloat leftPadding = 20, topPadding = 15 + 11 + 8;
-        for (int i = 0; i < kDramaGridCellButtonCountPerRow * kDramaGridCellButtonMaxRow; ++i) {
-            UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-            [button setBackgroundImage:QQVideoPlayerImage(@"tv_drama_button_normal") forState:UIControlStateNormal];
-            [button setBackgroundImage:QQVideoPlayerImage(@"tv_drama_button_press") forState:UIControlStateHighlighted];
-            [button setBackgroundImage:QQVideoPlayerImage(@"tv_drama_button_press") forState:UIControlStateReserved];
-            [button setBackgroundImage:QQVideoPlayerImage(@"tv_drama_button_press") forState:UIControlStateSelected];
-            [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [button setTitleColor:QQColor(videoplayer_playing_text_color) forState:UIControlStateSelected];
-            button.hidden = YES;
-            button.frame = CGRectMake(leftPadding + (i % kDramaGridCellButtonCountPerRow) * (kDramaGridCellButtonWidth + 8),
-                                      topPadding + (i / kDramaGridCellButtonCountPerRow) * (kDramaGridCellButtonHeight + 19),
-                                      kDramaGridCellButtonWidth, kDramaGridCellButtonHeight);
-            [button addTarget:self action:@selector(onClickVideo:) forControlEvents:UIControlEventTouchUpInside];
-            button.titleLabel.font = [UIFont systemFontOfSize:15];
-            [self.contentView addSubview:button];
-            [self.buttons addObject:button];
-        }
-        
-        _minVideoSetNum = NSNotFound;
-        _maxVideoSetNum = NSNotFound;
-        _selectedButtonIndex = NSNotFound;
         
         UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 15, 200, 12)];
         headerLabel.backgroundColor = [UIColor clearColor];
@@ -73,41 +46,93 @@
     // Configure the view for the selected state
 }
 
-+ (CGFloat)cellHeightWithMinVideoSetNum:(int)minVideoSetNum maxVideoSetNum:(int)maxVideoSetNum
++ (void)getPreferredCountPerRow:(NSInteger *)countPerRow buttonWidth:(CGFloat *)buttonWidth forMaxWidth:(CGFloat)width
+{
+    CGFloat minButtonWidth = 160 /2;
+    
+    CGFloat preferredButtonWidth = minButtonWidth;
+    
+    int maxCount = (width - kDownloadViewGridCellLeftPadding * 2 + kDownloadViewGridCellHPadding) / (minButtonWidth + kDownloadViewGridCellHPadding);
+    int preferredCount = maxCount;
+    
+    if (countPerRow) {
+        *countPerRow = preferredCount;
+    }
+    if (preferredCount != 0) {
+        preferredButtonWidth = minButtonWidth;
+        if (buttonWidth) {
+            *buttonWidth = preferredButtonWidth;
+        }
+    }
+}
+
++ (CGFloat)cellHeightWithMinVideoSetNum:(int)minVideoSetNum maxVideoSetNum:(int)maxVideoSetNum countPerRow:(NSInteger)countPerRow
 {
     if (minVideoSetNum == NSNotFound || maxVideoSetNum == NSNotFound) {
         return 0;
     }
     
-    int lineCount = (maxVideoSetNum - minVideoSetNum + 1 + kDramaGridCellButtonCountPerRow - 1) / kDramaGridCellButtonCountPerRow;
-    lineCount = MIN(kDramaGridCellButtonMaxRow, MAX(0, lineCount));
+    int lineCount = (maxVideoSetNum - minVideoSetNum + 1 + countPerRow - 1) / countPerRow;
+    lineCount = MIN(countPerRow, MAX(0, lineCount));
     
-    CGFloat rowSeparatorHeight = 19;
+    CGFloat rowSeparatorHeight = kDownloadViewGridCellVPadding;
     if (lineCount == 0) {
         return 0;
     }
     else {
-        return (15+11+8) + kDramaGridCellButtonHeight * lineCount + rowSeparatorHeight * (lineCount - 1);
+        return kDownloadViewGridCellTopPadding + kDownloadViewGridCellButtonHeight * lineCount + rowSeparatorHeight * (lineCount - 1);
     }
 }
 
-- (void)configureCellWithMinVideoSetNum:(int)minVideoSetNum maxVideoSetNum:(int)maxVideoSetNum
+- (void)configureCellWithMinVideoSetNum:(int)minVideoSetNum maxVideoSetNum:(int)maxVideoSetNum forWidth:(CGFloat)width
 {
+    int countPerRow = 5, row = 3;
+    CGFloat buttonWidth = 0;
+    [[self class] getPreferredCountPerRow:&countPerRow buttonWidth:&buttonWidth forMaxWidth:width];
+    row = (maxVideoSetNum - minVideoSetNum + 1 + countPerRow - 1) / countPerRow;
+    _countPerRow = countPerRow;
+    _buttonWidth = buttonWidth;
+    
+    // remove old buttons
+    for (UIButton *btn in self.buttons) {
+        [btn removeFromSuperview];
+    }
+    
+    self.buttons = [NSMutableArray arrayWithCapacity:countPerRow * row];
+    CGFloat leftPadding = (width - (buttonWidth + kDownloadViewGridCellHPadding) * countPerRow + kDownloadViewGridCellHPadding) / 2, topPadding = kDownloadViewGridCellTopPadding;
+    
+    for (int i = 0; i < countPerRow * row; ++i) {
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        [button setBackgroundImage:QQVideoPlayerImage(@"tv_drama_button_normal") forState:UIControlStateNormal];
+        [button setBackgroundImage:QQVideoPlayerImage(@"tv_drama_button_press") forState:UIControlStateHighlighted];
+        [button setBackgroundImage:QQVideoPlayerImage(@"tv_drama_button_press") forState:UIControlStateReserved];
+        [button setBackgroundImage:QQVideoPlayerImage(@"tv_drama_button_press") forState:UIControlStateSelected];
+        [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [button setTitleColor:QQColor(videoplayer_playing_text_color) forState:UIControlStateSelected];
+        button.hidden = YES;
+        button.frame = CGRectMake(leftPadding + (i % countPerRow) * (buttonWidth + kDownloadViewGridCellHPadding),
+                                  topPadding + (i / countPerRow) * (kDownloadViewGridCellButtonHeight + kDownloadViewGridCellVPadding),
+                                  buttonWidth, kDownloadViewGridCellButtonHeight);
+        [button addTarget:self action:@selector(onClickVideo:) forControlEvents:UIControlEventTouchUpInside];
+        button.titleLabel.font = [UIFont systemFontOfSize:15];
+        [self.contentView addSubview:button];
+        [self.buttons addObject:button];
+    }
+    self.headerLabel.left = leftPadding;
+    
+    _minVideoSetNum = NSNotFound;
+    _maxVideoSetNum = NSNotFound;
+    _selectedButtonIndex = NSNotFound;
+    
     self.minVideoSetNum = minVideoSetNum;
     self.maxVideoSetNum = maxVideoSetNum;
     
     if (minVideoSetNum != NSNotFound && maxVideoSetNum != NSNotFound) {
         self.headerLabel.text = [NSString stringWithFormat:@"%d-%d", minVideoSetNum, maxVideoSetNum];
     }
-    [self setNeedsLayout];
-}
-
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    BOOL showPlayingFlag = NO;
+    
     if (_minVideoSetNum != NSNotFound && _maxVideoSetNum != NSNotFound) {
-        for (int i = 0; i < kDramaGridCellButtonCountPerRow * kDramaGridCellButtonMaxRow; ++i) {
+        for (int i = 0; i < self.buttons.count; ++i) {
             UIButton *button = self.buttons[i];
             int setNum = _minVideoSetNum + i;
             button.tag = setNum;
@@ -135,11 +160,22 @@
                 CGSize size = [button.titleLabel sizeThatFits:button.bounds.size];
                 CGPoint center = button.center;
                 center.x -= (size.width / 2 + 15.0);
-                showPlayingFlag = YES;
             }
             else {
                 button.selected = NO;
             }
+        }
+    }
+}
+
+- (void)selectSetNums:(NSArray *)setNums
+{
+    for (UIButton *btn in self.buttons) {
+        if ([setNums containsObject:@(btn.tag)]) {
+            btn.selected = YES;
+        }
+        else {
+            btn.selected = NO;
         }
     }
 }

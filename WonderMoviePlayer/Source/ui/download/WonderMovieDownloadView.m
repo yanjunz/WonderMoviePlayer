@@ -16,8 +16,8 @@
 #import "WonderMovieDownloadListCell.h"
 
 #define kDramaHeaderViewHeight      44
-#define kMaxVideoCountPerGridCell   9
 #define kNavButtonWidth             60
+#define kDownloadViewGridMaxRow     3
 
 @interface WonderMovieDownloadView () <WonderMovieDownloadGridCellDelegate>
 @property (nonatomic, strong) VideoGroup *videoGroup;
@@ -46,7 +46,7 @@
         label.textColor = [UIColor whiteColor];
         label.textAlignment = UITextAlignmentCenter;
         label.font = [UIFont boldSystemFontOfSize:13];
-        label.text = NSLocalizedString(@"选择视频", nil);
+        label.text = NSLocalizedString(@"离线", nil);
         [headerView addSubview:label];
         
         UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -162,8 +162,8 @@
     TVDramaRequestType requestType = self.videoGroup.showType.intValue == VideoGroupShowTypeList ? TVDramaRequestTypeNext : TVDramaRequestTypePrevious;
     [self.tvDramaManager getDramaInfo:requestType completionBlock:^(BOOL success) {
         [self performBlockInMainThread:^{
-            [self updateVideoGroupData];
             if (success) {
+                [self updateVideoGroupData];
                 [self finishPreviousSectionLoad];
             }
             else {
@@ -178,8 +178,8 @@
     TVDramaRequestType requestType = self.videoGroup.showType.intValue == VideoGroupShowTypeList ? TVDramaRequestTypeNext : TVDramaRequestTypePrevious;
     [self.tvDramaManager getDramaInfo:requestType completionBlock:^(BOOL success) {
         [self performBlockInMainThread:^{
-            [self updateVideoGroupData];
             if (success) {
+                [self updateVideoGroupData];
                 [self finishNextSectionLoad];
             }
             else {
@@ -294,7 +294,10 @@
     int showType = self.videoGroup.showType.intValue;
     int videoCount = self.sortedVideos.count;
     if (showType == VideoGroupShowTypeGrid) {
-        return (videoCount + kMaxVideoCountPerGridCell - 1) / kMaxVideoCountPerGridCell;
+        int countPerRow = 0;
+        [WonderMovieDownloadGridCell getPreferredCountPerRow:&countPerRow buttonWidth:NULL forMaxWidth:tableView.width];
+        int maxVideoCountPerCell = countPerRow * kDownloadViewGridMaxRow;
+        return (videoCount + maxVideoCountPerCell - 1) / maxVideoCountPerCell;
     }
     else {
         return videoCount;
@@ -314,11 +317,16 @@
             cell = [[WonderMovieDownloadGridCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kGridCellID];
             cell.delegate = self;
         }
-        Video *minVideo = self.sortedVideos[indexPath.row * kMaxVideoCountPerGridCell];
+        
+        int countPerRow = 0;
+        [WonderMovieDownloadGridCell getPreferredCountPerRow:&countPerRow buttonWidth:NULL forMaxWidth:tableView.width];
+        int maxVideoCountPerCell = countPerRow * kDownloadViewGridMaxRow;
+        
+        Video *minVideo = self.sortedVideos[indexPath.row * maxVideoCountPerCell];
         int minVideoSetNum = minVideo.setNum.intValue;
-        int maxVideoSetNum = (indexPath.row + 1) * kMaxVideoCountPerGridCell >= videoCount ?
-        (minVideoSetNum + videoCount - indexPath.row * kMaxVideoCountPerGridCell - 1) :
-        (minVideoSetNum + kMaxVideoCountPerGridCell - 1);
+        int maxVideoSetNum = (indexPath.row + 1) * maxVideoCountPerCell >= videoCount ?
+        (minVideoSetNum + videoCount - indexPath.row * maxVideoCountPerCell - 1) :
+        (minVideoSetNum + maxVideoCountPerCell - 1);
         
         if (maxVideoSetNum == self.videoGroup.maxId.intValue) {
             cell.cellType = self.videoGroup.totalCount.intValue == 0 ? WonderMovieDramaGridCellTypeNewest : WonderMovieDramaGridCellTypeEnded;
@@ -326,9 +334,9 @@
         else {
             cell.cellType = WonderMovieDramaGridCellTypeDefault;
         }
-        [cell configureCellWithMinVideoSetNum:minVideoSetNum maxVideoSetNum:maxVideoSetNum];
-//        [cell playWithSetNum:self.playingSetNum];
         
+        [cell configureCellWithMinVideoSetNum:minVideoSetNum maxVideoSetNum:maxVideoSetNum forWidth:tableView.width];
+        [cell selectSetNums:self.selectedSetNums];
         return cell;
     }
     else {
@@ -367,11 +375,15 @@
     int videoCount = self.sortedVideos.count;
     
     if (showType == VideoGroupShowTypeGrid) {
-        Video *minVideo = self.sortedVideos[indexPath.row * kMaxVideoCountPerGridCell];
+        int countPerRow = 0;
+        [WonderMovieDownloadGridCell getPreferredCountPerRow:&countPerRow buttonWidth:NULL forMaxWidth:tableView.width];
+        int maxVideoCountPerCell = countPerRow * kDownloadViewGridMaxRow;
+        
+        Video *minVideo = self.sortedVideos[indexPath.row * maxVideoCountPerCell];
         int minVideoSetNum = minVideo.setNum.intValue;
-        int maxVideoSetNum = (indexPath.row + 1) * kMaxVideoCountPerGridCell >= videoCount ?
-        (minVideoSetNum + videoCount - indexPath.row * kMaxVideoCountPerGridCell - 1) :
-        (minVideoSetNum + kMaxVideoCountPerGridCell - 1);
+        int maxVideoSetNum = (indexPath.row + 1) * maxVideoCountPerCell >= videoCount ?
+        (minVideoSetNum + videoCount - indexPath.row * maxVideoCountPerCell - 1) :
+        (minVideoSetNum + maxVideoCountPerCell - 1);
         
         return [WonderMovieDramaGridCell cellHeightWithMinVideoSetNum:minVideoSetNum maxVideoSetNum:maxVideoSetNum];
     }

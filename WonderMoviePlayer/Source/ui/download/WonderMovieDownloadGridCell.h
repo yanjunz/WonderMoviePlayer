@@ -17,13 +17,18 @@
 
 @end
 
-@interface WonderMovieDownloadGridCell : UITableViewCell
+@interface WonderMovieDownloadGridCell : UITableViewCell {
+    int _countPerRow;
+    CGFloat _buttonWidth;
+}
 @property (nonatomic, weak) id<WonderMovieDownloadGridCellDelegate> delegate;
 @property (nonatomic, assign) int minVideoSetNum;
 @property (nonatomic, assign) int maxVideoSetNum;
 @property (nonatomic, assign) int selectedButtonIndex; // NSNotFound for invalid value
 @property (nonatomic, assign) WonderMovieDramaGridCellType cellType;
 
-+ (CGFloat)cellHeightWithMinVideoSetNum:(int)minVideoSetNum maxVideoSetNum:(int)maxVideoSetNum;
-- (void)configureCellWithMinVideoSetNum:(int)minVideoSetNum maxVideoSetNum:(int)maxVideoSetNum;
++ (CGFloat)cellHeightWithMinVideoSetNum:(int)minVideoSetNum maxVideoSetNum:(int)maxVideoSetNum countPerRow:(NSInteger)countPerRow;
++ (void)getPreferredCountPerRow:(NSInteger *)countPerRow buttonWidth:(CGFloat *)buttonWidth forMaxWidth:(CGFloat)width;
+- (void)configureCellWithMinVideoSetNum:(int)minVideoSetNum maxVideoSetNum:(int)maxVideoSetNum forWidth:(CGFloat)width;
+- (void)selectSetNums:(NSArray *)setNums;
 @end

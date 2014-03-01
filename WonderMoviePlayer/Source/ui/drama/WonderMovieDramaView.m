@@ -181,8 +181,8 @@
     TVDramaRequestType requestType = self.videoGroup.showType.intValue == VideoGroupShowTypeList ? TVDramaRequestTypeNext : TVDramaRequestTypePrevious;
     [self.tvDramaManager getDramaInfo:requestType completionBlock:^(BOOL success) {
         [self performBlockInMainThread:^{
-            [self updateVideoGroupData];
             if (success) {
+                [self updateVideoGroupData];
                 [self finishPreviousSectionLoad];
             }
             else {
@@ -197,8 +197,8 @@
     TVDramaRequestType requestType = self.videoGroup.showType.intValue == VideoGroupShowTypeList ? TVDramaRequestTypeNext : TVDramaRequestTypePrevious;
     [self.tvDramaManager getDramaInfo:requestType completionBlock:^(BOOL success) {
         [self performBlockInMainThread:^{
-            [self updateVideoGroupData];
             if (success) {
+                [self updateVideoGroupData];
                 [self finishNextSectionLoad];
             }
             else {
