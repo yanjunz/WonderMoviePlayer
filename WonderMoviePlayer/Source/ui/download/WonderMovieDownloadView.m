@@ -15,7 +15,8 @@
 #import "WonderMovieDownloadGridCell.h"
 #import "WonderMovieDownloadListCell.h"
 
-#define kDramaHeaderViewHeight      44
+#define kDramaHeaderViewHeight      40
+#define kDramaFooterViewHeight      40
 #define kNavButtonWidth             60
 #define kDownloadViewGridMaxRow     3
 
@@ -72,7 +73,7 @@
         
         [self addSubview:headerView];
         
-        DramaTableView *tableView = [[DramaTableView alloc] initWithFrame:CGRectMake(0, kDramaHeaderViewHeight, self.width, self.height - kDramaHeaderViewHeight) style:UITableViewStylePlain];
+        DramaTableView *tableView = [[DramaTableView alloc] initWithFrame:CGRectMake(0, kDramaHeaderViewHeight, self.width, self.height - kDramaHeaderViewHeight - kDramaFooterViewHeight) style:UITableViewStylePlain];
         tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         tableView.delegate = self;
         tableView.dataSource = self;
@@ -84,6 +85,22 @@
             [tableView setSeparatorInset:UIEdgeInsetsZero];
         }
 
+        UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, tableView.bottom, self.width, kDramaFooterViewHeight)];
+        footerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
+        footerView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.1]; // FIXME
+        footerView.clipsToBounds = YES;
+        [self addSubview:footerView];
+        
+        label = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, footerView.width - 10, footerView.height)];
+        label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        label.backgroundColor = [UIColor clearColor];
+        label.textColor = [UIColor whiteColor];
+        label.textAlignment = UITextAlignmentLeft;
+        label.font = [UIFont systemFontOfSize:13];
+        label.text = @"可用空间0G";
+        self.availableSpaceLabel = label;
+        [footerView addSubview:label];
+        
         self.selectedSetNums = [NSMutableArray array];
     }
     return self;
@@ -99,6 +116,33 @@
     else {
         [self.tableView reloadData];
     }
+    
+    uint64_t space = [self getFreeDiskspace];
+    if (space < 1024 * 1024 * 1024) {
+        self.availableSpaceLabel.text = [NSString stringWithFormat:@"可用空间%.1fM", space / 1024. / 1024];
+    }
+    else {
+        self.availableSpaceLabel.text = [NSString stringWithFormat:@"可用空间%.1fG", space / 1024. / 1024 / 1024];
+    }
+}
+
+- (uint64_t)getFreeDiskspace {
+    uint64_t totalSpace = 0;
+    uint64_t totalFreeSpace = 0;
+    NSError *error = nil;
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSDictionary *dictionary = [[NSFileManager defaultManager] attributesOfFileSystemForPath:[paths lastObject] error: &error];
+    
+    if (dictionary) {
+        NSNumber *fileSystemSizeInBytes = [dictionary objectForKey: NSFileSystemSize];
+        NSNumber *freeFileSystemSizeInBytes = [dictionary objectForKey:NSFileSystemFreeSize];
+        totalSpace = [fileSystemSizeInBytes unsignedLongLongValue];
+        totalFreeSpace = [freeFileSystemSizeInBytes unsignedLongLongValue];
+        NSLog(@"Memory Capacity of %llu MiB with %llu MiB Free memory available.", ((totalSpace/1024ll)/1024ll), ((totalFreeSpace/1024ll)/1024ll));
+    } else {
+        NSLog(@"Error Obtaining System Memory Info: Domain = %@, Code = %d", [error domain], [error code]);
+    }
+    return totalFreeSpace;
 }
 
 
