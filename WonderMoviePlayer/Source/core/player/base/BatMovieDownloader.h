@@ -18,6 +18,7 @@
 @protocol BatMovieDownloaderDataSource <NSObject>
 @optional
 - (NSString *)titleForBatMovieDownloader:(id<BatMovieDownloader>)downloader downloadURL:(NSString *)downloadURL;
+- (NSString *)videoSourceForBatMovieDownloader:(id<BatMovieDownloader>)downloader downloadURL:(NSString *)downloadURL;
 @end
 
 @protocol BatMovieDownloader <NSObject>

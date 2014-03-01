@@ -1319,7 +1319,14 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     }
     return nil;
 }
-
+- (NSString *)videoSourceForBatMovieDownloader:(id<BatMovieDownloader>)downloader downloadURL:(NSString *)downloadURL
+{
+    TVDramaManager *tvDramaManager = self.controlSource.tvDramaManager;
+    if ([tvDramaManager.webURL isEqualToString:downloadURL]) {
+        return tvDramaManager.playingURL;
+    }
+    return nil;
+}
 #endif // MTT_TWEAK_BAT_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
 
 #pragma mark Notification
