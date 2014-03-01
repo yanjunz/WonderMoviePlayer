@@ -15,8 +15,13 @@
 
 @end
 
-@protocol BatMovieDownloader <NSObject>
+@protocol BatMovieDownloaderDataSource <NSObject>
+@optional
+- (NSString *)titleForBatMovieDownloader:(id<BatMovieDownloader>)downloader downloadURL:(NSString *)downloadURL;
+@end
 
+@protocol BatMovieDownloader <NSObject>
+@property (nonatomic, weak) id<BatMovieDownloaderDataSource> batMovieDownloaderDataSource;
 - (void)batchDownloadURLs:(NSArray *)downloadURLs;
 - (NSArray *)batchQueryDownloadStates:(NSArray *)downloadURLs;
 

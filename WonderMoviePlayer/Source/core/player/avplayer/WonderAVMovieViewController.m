@@ -1308,6 +1308,20 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 }
 #endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
 
+#ifdef MTT_TWEAK_BAT_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+#pragma mark BatMovieDownloaderDataSource
+- (NSString *)titleForBatMovieDownloader:(id<BatMovieDownloader>)downloader downloadURL:(NSString *)downloadURL
+{
+    VideoGroup *videoGroup = [self.controlSource.tvDramaManager videoGroupInCurrentThread];
+    if ([videoGroup.videoId length] != 0) {
+        Video *video = [videoGroup videoAtURL:downloadURL];
+        return [videoGroup displayNameForSetNum:video.setNum];
+    }
+    return nil;
+}
+
+#endif // MTT_TWEAK_BAT_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+
 #pragma mark Notification
 - (void)onEnterForeground:(NSNotification *)n
 {

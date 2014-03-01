@@ -7,6 +7,7 @@
 //
 
 #import "WonderMovieDownloadView.h"
+#import "WonderMoviePlayerConstants.h"
 #import "UIView+Sizes.h"
 #import "NSObject+Block.h"
 #import "Video.h"

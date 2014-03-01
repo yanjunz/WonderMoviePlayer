@@ -20,6 +20,10 @@ MovieControlSourceDelegate, MoviePlayerHandler
 #ifdef MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
 , MovieDownloaderDelegate, MovieDownloaderDataSource
 #endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+
+#ifdef MTT_TWEAK_BAT_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+, BatMovieDownloaderDataSource
+#endif // MTT_TWEAK_BAT_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
 >
 @property (nonatomic, retain) id<MovieControlSource> controlSource;
 
