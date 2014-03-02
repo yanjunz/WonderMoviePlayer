@@ -11,10 +11,6 @@
 
 @protocol BatMovieDownloader;
 
-@protocol BatMovieDownloaderDelegate <NSObject>
-
-@end
-
 @protocol BatMovieDownloaderDataSource <NSObject>
 @optional
 - (NSString *)titleForBatMovieDownloader:(id<BatMovieDownloader>)downloader downloadURL:(NSString *)downloadURL;

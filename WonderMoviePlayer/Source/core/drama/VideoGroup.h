@@ -2,7 +2,7 @@
 //  VideoGroup.h
 //  mtt
 //
-//  Created by Zhuang Yanjun on 26/2/14.
+//  Created by Zhuang Yanjun on 1/3/14.
 //  Copyright (c) 2014 Tencent. All rights reserved.
 //
 
@@ -14,12 +14,13 @@
 @interface VideoGroup : NSManagedObject
 
 @property (nonatomic, retain) NSNumber * maxId;
+@property (nonatomic, retain) NSString * picUrl;
 @property (nonatomic, retain) NSNumber * showType;
 @property (nonatomic, retain) NSString * src;
 @property (nonatomic, retain) NSNumber * totalCount;
 @property (nonatomic, retain) NSString * videoId;
 @property (nonatomic, retain) NSString * videoName;
-@property (nonatomic, retain) NSString * picUrl;
+@property (nonatomic, retain) NSNumber * setUpdateTime;
 @property (nonatomic, retain) NSSet *videos;
 @end
 

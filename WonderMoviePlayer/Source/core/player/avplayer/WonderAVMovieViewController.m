@@ -615,8 +615,9 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
                     if ([self.delegate respondsToSelector:@selector(baseMoviePlayerDidStart:)]) {
                         [self.delegate baseMoviePlayerDidStart:self];
                     }
+                    
+                    [self setStartPlayPoint];
                 }
-                
             }
                 break;
             case AVPlayerStatusFailed:
@@ -644,18 +645,6 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
             /* Specifies that the player should preserve the video’s aspect ratio and
              fit the video within the layer’s bounds. */
             [self.playerLayerView setVideoFillMode:AVLayerVideoGravityResizeAspect];
-            
-            // FIXME
-            if (_startProgress > 0 || _startTime > 0) {
-                CMTime playerDuration = [self playerItemDuration];
-                double totalTime = CMTimeGetSeconds(playerDuration);
-                CGFloat newTime = _startProgress > 0 ? totalTime * _startProgress : _startTime;
-                newTime = MAX(MIN(newTime, totalTime), 0);
-                [self.playerItem cancelPendingSeeks];
-                [self.player seekToTime:CMTimeMakeWithSeconds(newTime, 1)];
-                _startProgress = 0;
-                _startTime = 0;
-            }
             [self.player play];
         }
     }
@@ -705,6 +694,22 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 #endif // MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
     else {
         [super observeValueForKeyPath:path ofObject:object change:change context:context];
+    }
+}
+
+- (void)setStartPlayPoint
+{
+    if (_startProgress > 0 || _startTime > 0) {
+        CMTime playerDuration = [self playerItemDuration];
+        double totalTime = CMTimeGetSeconds(playerDuration);
+        if (isfinite(totalTime)) {
+            CGFloat newTime = _startProgress > 0 ? totalTime * _startProgress : _startTime;
+            newTime = MAX(MIN(newTime, totalTime), 0);
+            [self.playerItem cancelPendingSeeks];
+            [self.player seekToTime:CMTimeMakeWithSeconds(newTime, 1)];
+            _startProgress = 0;
+            _startTime = 0;
+        }
     }
 }
 
