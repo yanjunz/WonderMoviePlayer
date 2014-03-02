@@ -15,8 +15,8 @@
 #import "WonderMovieDownloadGridCell.h"
 #import "WonderMovieDownloadListCell.h"
 
-#define kDramaHeaderViewHeight      40
-#define kDramaFooterViewHeight      40
+#define kDramaHeaderViewHeight      0
+#define kDramaFooterViewHeight      0
 #define kNavButtonWidth             60
 #define kDownloadViewGridMaxRow     3
 
@@ -35,43 +35,45 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+
         self.backgroundColor = [UIColor grayColor];
-        UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.width, kDramaHeaderViewHeight)];
-        headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
-        headerView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.1]; // FIXME
-        headerView.clipsToBounds = YES;
-        
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, headerView.width, headerView.height)];
-        label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        label.backgroundColor = [UIColor clearColor];
-        label.textColor = [UIColor whiteColor];
-        label.textAlignment = UITextAlignmentCenter;
-        label.font = [UIFont boldSystemFontOfSize:13];
-        label.text = NSLocalizedString(@"离线", nil);
-        [headerView addSubview:label];
-        
-        UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [cancelButton setTitle:@"取消" forState:UIControlStateNormal];
-        cancelButton.frame = CGRectMake(0, 0, kNavButtonWidth, headerView.height);
-        cancelButton.titleLabel.font = [UIFont systemFontOfSize:13];
-        [cancelButton addTarget:self action:@selector(onClickCancel:) forControlEvents:UIControlEventTouchUpInside];
-        [headerView addSubview:cancelButton];
-        
-        UIButton *downloadButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [downloadButton setTitle:@"离线" forState:UIControlStateNormal];
-        downloadButton.frame = CGRectMake(headerView.width - kNavButtonWidth, 0, kNavButtonWidth, headerView.height);
-        downloadButton.titleLabel.font = [UIFont systemFontOfSize:13];
-        [downloadButton addTarget:self action:@selector(onClickDownload:) forControlEvents:UIControlEventTouchUpInside];
-        [headerView addSubview:downloadButton];
-        self.downloadButton = downloadButton;
-        self.downloadButton.enabled = NO;
-        
-        UIImageView *separatorView = [[UIImageView alloc] initWithFrame:CGRectMake(0, label.bottom, headerView.width, 1)];
-        separatorView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        separatorView.image = QQVideoPlayerImage(@"separator_line");
-        [headerView addSubview:separatorView];
-        
-        [self addSubview:headerView];
+//        UILabel *label;
+//        UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.width, kDramaHeaderViewHeight)];
+//        headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
+//        headerView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.1]; // FIXME
+//        headerView.clipsToBounds = YES;
+//        
+//        label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, headerView.width, headerView.height)];
+//        label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//        label.backgroundColor = [UIColor clearColor];
+//        label.textColor = [UIColor whiteColor];
+//        label.textAlignment = UITextAlignmentCenter;
+//        label.font = [UIFont boldSystemFontOfSize:13];
+//        label.text = NSLocalizedString(@"离线", nil);
+//        [headerView addSubview:label];
+//        
+//        UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//        [cancelButton setTitle:@"取消" forState:UIControlStateNormal];
+//        cancelButton.frame = CGRectMake(0, 0, kNavButtonWidth, headerView.height);
+//        cancelButton.titleLabel.font = [UIFont systemFontOfSize:13];
+//        [cancelButton addTarget:self action:@selector(onClickCancel:) forControlEvents:UIControlEventTouchUpInside];
+//        [headerView addSubview:cancelButton];
+//        
+//        UIButton *downloadButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//        [downloadButton setTitle:@"确定" forState:UIControlStateNormal];
+//        downloadButton.frame = CGRectMake(headerView.width - kNavButtonWidth, 0, kNavButtonWidth, headerView.height);
+//        downloadButton.titleLabel.font = [UIFont systemFontOfSize:13];
+//        [downloadButton addTarget:self action:@selector(onClickDownload:) forControlEvents:UIControlEventTouchUpInside];
+//        [headerView addSubview:downloadButton];
+//        self.downloadButton = downloadButton;
+//        self.downloadButton.enabled = NO;
+//        
+//        UIImageView *separatorView = [[UIImageView alloc] initWithFrame:CGRectMake(0, label.bottom, headerView.width, 1)];
+//        separatorView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+//        separatorView.image = QQVideoPlayerImage(@"separator_line");
+//        [headerView addSubview:separatorView];
+//        
+//        [self addSubview:headerView];
         
         DramaTableView *tableView = [[DramaTableView alloc] initWithFrame:CGRectMake(0, kDramaHeaderViewHeight, self.width, self.height - kDramaHeaderViewHeight - kDramaFooterViewHeight) style:UITableViewStylePlain];
         tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -85,21 +87,21 @@
             [tableView setSeparatorInset:UIEdgeInsetsZero];
         }
 
-        UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, tableView.bottom, self.width, kDramaFooterViewHeight)];
-        footerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
-        footerView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.1]; // FIXME
-        footerView.clipsToBounds = YES;
-        [self addSubview:footerView];
-        
-        label = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, footerView.width - 10, footerView.height)];
-        label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        label.backgroundColor = [UIColor clearColor];
-        label.textColor = [UIColor whiteColor];
-        label.textAlignment = UITextAlignmentLeft;
-        label.font = [UIFont systemFontOfSize:13];
-        label.text = @"可用空间0G";
-        self.availableSpaceLabel = label;
-        [footerView addSubview:label];
+//        UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, tableView.bottom, self.width, kDramaFooterViewHeight)];
+//        footerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
+//        footerView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.1]; // FIXME
+//        footerView.clipsToBounds = YES;
+//        [self addSubview:footerView];
+//        
+//        label = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, footerView.width - 10, footerView.height)];
+//        label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//        label.backgroundColor = [UIColor clearColor];
+//        label.textColor = [UIColor whiteColor];
+//        label.textAlignment = UITextAlignmentLeft;
+//        label.font = [UIFont systemFontOfSize:13];
+//        label.text = @"可用空间0G";
+//        self.availableSpaceLabel = label;
+//        [footerView addSubview:label];
         
         self.selectedSetNums = [NSMutableArray array];
     }
@@ -109,6 +111,7 @@
 - (void)reloadData
 {
     if (self.videoGroup == nil) {
+        self.loadingView.frame = CGRectMake(0, kDramaHeaderViewHeight, self.width, self.height - kDramaHeaderViewHeight);
         [self addSubview:self.loadingView];
         [self bringSubviewToFront:self.loadingView];
         [self loadCurrentSection];
@@ -117,16 +120,17 @@
         [self.tableView reloadData];
     }
     
-    uint64_t space = [self getFreeDiskspace];
-    if (space < 1024 * 1024 * 1024) {
-        self.availableSpaceLabel.text = [NSString stringWithFormat:@"可用空间%.1fM", space / 1024. / 1024];
-    }
-    else {
-        self.availableSpaceLabel.text = [NSString stringWithFormat:@"可用空间%.1fG", space / 1024. / 1024 / 1024];
-    }
+//    uint64_t space = [self getFreeDiskspace];
+//    if (space < 1024 * 1024 * 1024) {
+//        self.availableSpaceLabel.text = [NSString stringWithFormat:@"可用空间%.1fM", space / 1024. / 1024];
+//    }
+//    else {
+//        self.availableSpaceLabel.text = [NSString stringWithFormat:@"可用空间%.1fG", space / 1024. / 1024 / 1024];
+//    }
 }
 
-- (uint64_t)getFreeDiskspace {
+- (uint64_t)getFreeDiskspace
+{
     uint64_t totalSpace = 0;
     uint64_t totalFreeSpace = 0;
     NSError *error = nil;
@@ -155,6 +159,7 @@
         UIActivityIndicatorView *loadingIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
         loadingIndicator.hidesWhenStopped = YES;
         loadingIndicator.center = CGPointMake(CGRectGetMidX(loadingView.bounds), CGRectGetMidY(loadingView.bounds));
+        loadingIndicator.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         [loadingView addSubview:loadingIndicator];
         [loadingIndicator startAnimating];
         _loadingView = loadingView;
@@ -243,6 +248,7 @@
 {
     _playingSetNum = self.tvDramaManager.curSetNum;
     
+    _loadingView.frame = CGRectMake(0, kDramaHeaderViewHeight, self.width, self.height - kDramaHeaderViewHeight);
     [_loadingView removeFromSuperview];
     [self bringSubviewToFront:self.tableView];
     
@@ -319,6 +325,7 @@
 - (void)showErrorView
 {
     [_loadingView removeFromSuperview];
+    self.errorView.frame = CGRectMake(0, kDramaHeaderViewHeight, self.width, self.height - kDramaHeaderViewHeight);
     [self addSubview:self.errorView];
     [self bringSubviewToFront:self.errorView];
 }
@@ -327,6 +334,7 @@
 - (IBAction)onClickRetry:(id)sender
 {
     [_errorView removeFromSuperview];
+    self.loadingView.frame = CGRectMake(0, kDramaHeaderViewHeight, self.width, self.height - kDramaHeaderViewHeight);
     [self addSubview:self.loadingView];
     [self bringSubviewToFront:self.loadingView];
     [self loadCurrentSection];

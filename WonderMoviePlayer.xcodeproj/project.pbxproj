@@ -15,6 +15,7 @@
 		AE4FA7CA1872ADAA005B7BD6 /* toast_frame@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AE4FA7C91872ADAA005B7BD6 /* toast_frame@2x.png */; };
 		AE96680418B4395B00158788 /* VideoGroup+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = AE96680318B4395B00158788 /* VideoGroup+Additions.m */; };
 		AE96680718B4398D00158788 /* NSString+Hash.m in Sources */ = {isa = PBXBuildFile; fileRef = AE96680618B4398D00158788 /* NSString+Hash.m */; };
+		AED9C38618C32C0900C41142 /* WonderMovieDownloadController.m in Sources */ = {isa = PBXBuildFile; fileRef = AED9C38518C32C0900C41142 /* WonderMovieDownloadController.m */; };
 		B516CA0F17DD6AA100D8E3A2 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B516CA0E17DD6AA100D8E3A2 /* CFNetwork.framework */; };
 		B517773817B36D44006B948E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517773717B36D44006B948E /* UIKit.framework */; };
 		B517773A17B36D44006B948E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517773917B36D44006B948E /* Foundation.framework */; };
@@ -171,6 +172,8 @@
 		AE96680618B4398D00158788 /* NSString+Hash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Hash.m"; sourceTree = "<group>"; };
 		AE96680818B439F100158788 /* VideoBookmarkOperator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoBookmarkOperator.h; sourceTree = "<group>"; };
 		AE96680918B439F100158788 /* VideoHistoryOperator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoHistoryOperator.h; sourceTree = "<group>"; };
+		AED9C38418C32C0900C41142 /* WonderMovieDownloadController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMovieDownloadController.h; sourceTree = "<group>"; };
+		AED9C38518C32C0900C41142 /* WonderMovieDownloadController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderMovieDownloadController.m; sourceTree = "<group>"; };
 		B516CA0E17DD6AA100D8E3A2 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		B517773417B36D44006B948E /* WonderMoviePlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WonderMoviePlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B517773717B36D44006B948E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -414,6 +417,8 @@
 				AE2572FB18C0AC8A00F71429 /* WonderMovieDownloadGridCell.m */,
 				AE2572FD18C0AC9D00F71429 /* WonderMovieDownloadListCell.h */,
 				AE2572FE18C0AC9D00F71429 /* WonderMovieDownloadListCell.m */,
+				AED9C38418C32C0900C41142 /* WonderMovieDownloadController.h */,
+				AED9C38518C32C0900C41142 /* WonderMovieDownloadController.m */,
 			);
 			path = download;
 			sourceTree = "<group>";
@@ -1018,6 +1023,7 @@
 				B58B573A18347F250096801E /* NSManagedObject+MagicalRequests.m in Sources */,
 				B517774817B36D44006B948E /* AppDelegate.m in Sources */,
 				B58B573518347F250096801E /* NSString+MagicalDataImport.m in Sources */,
+				AED9C38618C32C0900C41142 /* WonderMovieDownloadController.m in Sources */,
 				B58F110918376EDB00D6A9B2 /* TestTableViewController.m in Sources */,
 				B58B574618347F250096801E /* MagicalRecord+Setup.m in Sources */,
 				B58B56F218347E8E0096801E /* WonderMoviePlayer.xcdatamodeld in Sources */,

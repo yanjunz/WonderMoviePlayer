@@ -17,6 +17,7 @@
 #import "FakeMovieDownloader.h"
 #import "Reachability.h"
 #import "FakeBatMovieDownloader.h"
+#import "WonderMovieDownloadController.h"
 
 #ifdef MTT_FEATURE_WONDER_MPMOVIE_PLAYER
 #define WonderMovieViewController WonderMPMovieViewController
@@ -114,8 +115,6 @@
 
 - (IBAction)onClickPlay:(id)sender {
     @autoreleasepool {
-#ifdef MTT_FEATURE_WONDER_AVMOVIE_PLAYER
-//        DefineBlockVar(WonderAVMovieViewController *, controller, [[WonderAVMovieViewController alloc] init]);
         WonderAVMovieViewController *controller = [[WonderAVMovieViewController alloc] init];
         DefineWeakVarBeforeBlock(controller);
 //        self.player = controller;
@@ -160,63 +159,41 @@
         
         NSLog(@"start to play av");
         [controller playMovieStream:[[NSBundle mainBundle] URLForResource:@"Movie" withExtension:@"m4v"] fromProgress:0];
-//        NSLog(@"retain count1= %d", [controller retainCount]);
-#else
-        DefineBlockVar(WonderMovieViewController *, controller, [[WonderMovieViewController alloc] init]);
-        self.player = controller;
-        [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeRight animated:YES];
-        [UIApplication sharedApplication].statusBarHidden = YES;
-        
-        if ([self respondsToSelector:@selector(presentViewController:animated:completion:)]) {
-            [self presentViewController:controller animated:YES completion:nil];
-        }
-        else {
-            [self presentModalViewController:controller animated:YES];
-        }
-        
-        [controller setExitBlock:^{
-            _testString = @"Hello";
-            self.testString = @"YEs";
-            self.player = nil;
-            [UIApplication sharedApplication].statusBarHidden = NO;
-            if ([controller respondsToSelector:@selector(dismissViewControllerAnimated:completion:)]) {
-                [controller dismissViewControllerAnimated:YES completion:nil];
-            }
-            else {
-                [controller dismissModalViewControllerAnimated:YES];
-            }
-        }];
-        NSLog(@"start to play mp");
-//        [controller playMovieStream:[[NSBundle mainBundle] URLForResource:@"Movie" withExtension:@"m4v"]];
-        [controller playMovieFile:[[NSBundle mainBundle] URLForResource:@"Movie" withExtension:@"m4v"]];
-        [controller release];
-#endif
     }
 }
 
 - (IBAction)onClickPlayRemote:(id)sender {
-#ifdef MTT_FEATURE_WONDER_AVMOVIE_PLAYER
+
 //    DefineBlockVar(WonderAVMovieViewController *, controller, [[[WonderAVMovieViewController alloc] init] autorelease]);
     WonderAVMovieViewController *controller = [[WonderAVMovieViewController alloc] init];
     DefineWeakVarBeforeBlock(controller);
     [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeRight animated:YES];
     [UIApplication sharedApplication].statusBarHidden = YES;
     
+    TVDramaManager *tvDramaManager = [[TVDramaManager alloc] init];
+    tvDramaManager.webURL = @"http://www.iqiyi.com/dongman/20130414/8d6929ed7ac9a7b8.html"; // the second one
+    FakeTVDramaWebSource *fakeDramaWebSource = [[FakeTVDramaWebSource alloc] init];
+    tvDramaManager.requestHandler = [ResponsibilityChainTVDramaRequestHandler handlerWithActualHandler:fakeDramaWebSource nextHandler:nil];
+    
 #ifdef MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
     controller.movieDownloader = [[FakeMovieDownloader alloc] init];
-#else 
-//    DefineWeakVarBeforeBlock(controller);
+#else
     [controller setDownloadBlock:^{
         DefineStrongVarInBlock(controller);
-        ViewController *viewController = [[ViewController alloc] init];
-        [controller presentViewController:viewController animated:YES completion:nil];
+        WonderMovieDownloadController *viewController = [[WonderMovieDownloadController alloc]
+//                                                         initWithURL:@"http://v.qq.com/cover/i/ihubkoevort5cp3.html?vid=g0013vc3y2m"];
+                                                         initWithTVDramaManager:tvDramaManager];
+//        viewController.downloadViewDelegate = controller;
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
+        [controller presentViewController:navController animated:YES completion:nil];
+        
     }];
 #endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
     
 #ifdef MTT_TWEAK_BAT_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
     controller.batMovieDownloader = [[FakeBatMovieDownloader alloc] init];
-    
 #endif // MTT_TWEAK_BAT_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+    
     [controller setMyVideoBlock:^{
         DefineStrongVarInBlock(controller);
         ViewController *viewController = [[ViewController alloc] init];
@@ -233,19 +210,10 @@
     else {
         [self presentModalViewController:controller animated:YES];
     }
-    
-    
-//    [controller setDownloadBlock:^(NSURL *url) {
-////        [controller performSelector:@selector(finishDownload) withObject:nil afterDelay:3];
-//    }];
 
     
     [controller.controlSource setTitle:@"我叫MTMTMTMMTMTMTMTMMTMTMTMMTMTMMTMTMMTMMTMTMTMMTTMMTMTMMT" subtitle:@""];
     
-    TVDramaManager *tvDramaManager = [[TVDramaManager alloc] init];
-    tvDramaManager.webURL = @"http://www.iqiyi.com/dongman/20130414/8d6929ed7ac9a7b8.html"; // the second one
-    FakeTVDramaWebSource *fakeDramaWebSource = [[FakeTVDramaWebSource alloc] init];
-    tvDramaManager.requestHandler = [ResponsibilityChainTVDramaRequestHandler handlerWithActualHandler:fakeDramaWebSource nextHandler:nil];
     [controller.controlSource setTvDramaManager:tvDramaManager];
     
 //    static int alertCount = 0;
@@ -277,25 +245,6 @@
                                      ] fromProgress:0];
     
 
-#else
-    WonderMPMovieViewController *controller = [[WonderMPMovieViewController alloc] init];
-    [controller setExitBlock:^{
-        [controller dismissViewControllerAnimated:YES completion:nil];
-    }];
-    [self presentViewController:controller animated:YES completion:^{
-        NSLog(@"start to play");
-//        NSString *path = [[NSBundle mainBundle] pathForResource:@"Movie" ofType:@"m4v"];
-        [controller playMovieStream:[NSURL URLWithString:
-//                                     @"http://hot.vrs.sohu.com/ipad1259067_4587696266952_4460388.m3u8?plat=null"
-                                     @"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"
-//                                     @"http://v.youku.com/player/getM3U8/vid/148104913/type/flv/ts/1376293704/useKeyFrame/0/v.m3u8"
-//                                     @"http://v.youku.com/player/getM3U8/vid/148703242/type/flv/ts/1376296533/useKeyFrame/0/v.m3u8"
-//                                     @"http://v.youku.com/player/getRealM3U8/vid/XNDUwNjc4MzA4/type/video.m3u8"
-//                                     @"http://jq.v.ismartv.tv/cdn/1/81/95e68bbdce46b5b8963b504bf73d1b/normal/slice/index.m3u8"
-//                                     @"http://att.livem3u8.na.itv.cn/live/97acb1b2cbed4a4281a68356f8c2bd00.m3u8"
-                                     ]];
-    }];
-#endif
 }
 
 - (IBAction)onClickWebView:(id)sender {
@@ -306,6 +255,10 @@
 }
 - (IBAction)onClickBack:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+- (IBAction)onClickDownload:(id)sender {
+    WonderMovieDownloadController *controller = [[WonderMovieDownloadController alloc] initWithURL:[NSURL URLWithString:@"http://v.qq.com/cover/i/ihubkoevort5cp3.html?vid=g0013vc3y2m"]];
+    
 }
 
 - (void)viewDidUnload {

@@ -1229,10 +1229,10 @@ void wonderMovieVolumeListenerCallback (
             [self.infoView showDownloadToast:NSLocalizedString(@"由于版权问题，该网站视频暂不支持下载", nil) show:YES animated:YES];
         }
         else {
-//            if ([self.delegate respondsToSelector:@selector(movieControlSourceOnDownload:)]) {
-//                [self.delegate movieControlSourceOnDownload:self];
-//            }
-            [self showDownloadView:YES];
+            if ([self.delegate respondsToSelector:@selector(movieControlSourceOnDownload:)]) {
+                [self.delegate movieControlSourceOnDownload:self];
+            }
+//            [self showDownloadView:YES];
             
         }
     }
@@ -2127,22 +2127,22 @@ void wonderMovieVolumeListenerCallback (
 
 - (void)showDownloadView:(BOOL)show
 {
-    if (show) {
-        self.downloadView.top = self.bottom;
-        [self addSubview:self.downloadView];
-        [UIView animateWithDuration:0.5 animations:^{
-            self.downloadView.bottom = self.bottom;
-        } completion:^(BOOL finished) {
-            [self.downloadView reloadData];
-        }];
-    }
-    else {
-        [UIView animateWithDuration:0.5 animations:^{
-            self.downloadView.top = self.bottom;
-        } completion:^(BOOL finished) {
-            [self.downloadView removeFromSuperview];
-        }];
-    }
+//    if (show) {
+//        self.downloadView.top = self.bottom;
+//        [self addSubview:self.downloadView];
+//        [UIView animateWithDuration:0.5 animations:^{
+//            self.downloadView.bottom = self.bottom;
+//        } completion:^(BOOL finished) {
+//            [self.downloadView reloadData];
+//        }];
+//    }
+//    else {
+//        [UIView animateWithDuration:0.5 animations:^{
+//            self.downloadView.top = self.bottom;
+//        } completion:^(BOOL finished) {
+//            [self.downloadView removeFromSuperview];
+//        }];
+//    }
 }
 
 - (BOOL)isDownloadViewShown

@@ -24,7 +24,10 @@
 @property (nonatomic, strong) DramaTableView *tableView;
 @property (nonatomic, strong) UIView *errorView;
 @property (nonatomic, strong) UIView *loadingView;
-@property (nonatomic, strong) UILabel *availableSpaceLabel;
+//@property (nonatomic, strong) UILabel *availableSpaceLabel;
 @property (nonatomic) int playingSetNum;
 - (void)reloadData;
+
+- (IBAction)onClickCancel:(id)sender;
+- (IBAction)onClickDownload:(id)sender;
 @end
