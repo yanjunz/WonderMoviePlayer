@@ -8,10 +8,11 @@
 
 #import "WonderMovieDownloadController.h"
 #import "TVDramaManager.h"
+#import "Video.h"
+#import "VideoGroup+Additions.h"
+#import "UIView+Sizes.h"
 
 @interface WonderMovieDownloadController ()
-@property (nonatomic, strong) TVDramaManager *tvDramaManager;
-
 @end
 
 @implementation WonderMovieDownloadController
@@ -45,7 +46,12 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    WonderMovieDownloadView *downloadView = [[WonderMovieDownloadView alloc] initWithFrame:self.view.bounds];
+    self.title = @"离线";
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(onClickCancel:)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"确定" style:UIBarButtonItemStylePlain target:self action:@selector(onClickDownload:)];
+    
+    CGFloat footerHeight = 44;
+    WonderMovieDownloadView *downloadView = [[WonderMovieDownloadView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, self.view.height - footerHeight)];
     downloadView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     downloadView.tvDramaManager = self.tvDramaManager;
     downloadView.delegate = self;
@@ -53,10 +59,25 @@
     [self.view addSubview:downloadView];
     self.view.backgroundColor = [UIColor whiteColor];
     
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(onClickCancel:)];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"确定" style:UIBarButtonItemStylePlain target:self action:@selector(onClickDownload:)];
+    
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, downloadView.bottom, self.view.width, footerHeight)];
+    footerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    footerView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.1]; // FIXME
+    footerView.clipsToBounds = YES;
+    [self.view addSubview:footerView];
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, footerView.width - 10, footerView.height)];
+    label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    label.backgroundColor = [UIColor clearColor];
+    label.textColor = [UIColor grayColor];
+    label.textAlignment = UITextAlignmentLeft;
+    label.font = [UIFont systemFontOfSize:13];
+    label.text = @"可用空间0G";
+    self.availableSpaceLabel = label;
+    [footerView addSubview:label];
     
     [self.downloadView reloadData];
+    [self updateAvailableSpace];
 }
 
 - (void)didReceiveMemoryWarning
@@ -78,6 +99,7 @@
     if ([self.downloadViewDelegate respondsToSelector:@selector(wonderMovieDownloadView:didDownloadVideos:)]) {
         [self.downloadViewDelegate wonderMovieDownloadView:downloadView didDownloadVideos:videos];
     }
+    [self startBatDownload:videos];
 }
 
 #pragma mark Action
@@ -91,6 +113,50 @@
 {
     [self.downloadView onClickDownload:nil];
     [self dismissViewControllerAnimated:YES completion:nil];    
+}
+
+- (void)startBatDownload:(NSArray *)videos
+{
+    NSMutableArray *downloadURLs = [NSMutableArray array];
+    VideoGroup *videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
+    for (NSNumber *setNum in videos) {
+        Video *video = [videoGroup videoAtSetNum:setNum];
+        [downloadURLs addObject:video.url];
+    }
+
+    [self.batMovieDownloader batchDownloadURLs:downloadURLs];
+}
+
+#pragma mark Utils
+- (void)updateAvailableSpace
+{
+    uint64_t space = [self getFreeDiskspace];
+    if (space < 1024 * 1024 * 1024) {
+        self.availableSpaceLabel.text = [NSString stringWithFormat:@"可用空间%.1fM", space / 1024. / 1024];
+    }
+    else {
+        self.availableSpaceLabel.text = [NSString stringWithFormat:@"可用空间%.1fG", space / 1024. / 1024 / 1024];
+    }
+}
+
+- (uint64_t)getFreeDiskspace
+{
+    uint64_t totalSpace = 0;
+    uint64_t totalFreeSpace = 0;
+    NSError *error = nil;
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSDictionary *dictionary = [[NSFileManager defaultManager] attributesOfFileSystemForPath:[paths lastObject] error: &error];
+    
+    if (dictionary) {
+        NSNumber *fileSystemSizeInBytes = [dictionary objectForKey: NSFileSystemSize];
+        NSNumber *freeFileSystemSizeInBytes = [dictionary objectForKey:NSFileSystemFreeSize];
+        totalSpace = [fileSystemSizeInBytes unsignedLongLongValue];
+        totalFreeSpace = [freeFileSystemSizeInBytes unsignedLongLongValue];
+        NSLog(@"Memory Capacity of %llu MiB with %llu MiB Free memory available.", ((totalSpace/1024ll)/1024ll), ((totalFreeSpace/1024ll)/1024ll));
+    } else {
+        NSLog(@"Error Obtaining System Memory Info: Domain = %@, Code = %d", [error domain], [error code]);
+    }
+    return totalFreeSpace;
 }
 
 @end
