@@ -10,4 +10,5 @@
 
 @interface WonderMovieDownloadListCell : UITableViewCell
 @property (nonatomic) BOOL selectedForDownload;
+@property (nonatomic) BOOL disableForDownload;
 @end

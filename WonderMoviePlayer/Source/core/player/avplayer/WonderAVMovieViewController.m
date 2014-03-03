@@ -1327,7 +1327,14 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 - (NSString *)videoSourceForBatMovieDownloader:(id<BatMovieDownloader>)downloader downloadURL:(NSString *)downloadURL
 {
     TVDramaManager *tvDramaManager = self.controlSource.tvDramaManager;
-    if ([tvDramaManager.webURL isEqualToString:downloadURL]) {
+    /**
+     * downloadURL is provided by server side drama info
+     * webURL is the current playing web page url, it might contains some subfix
+     * example:
+     * downloadURL: http://m.v.qq.com/cover/3/3b9b76xc1vdwide.html?vid=d0013jdh2nm
+     * webURL:      http://m.v.qq.com/cover/3/3b9b76xc1vdwide.html?vid=d0013jdh2nm&ptag=qqbrowser.tv%23v.play.adaptor%231&mreferrer=http%3A%2F%2Fv.html5.qq.com%2F
+     **/
+    if ([tvDramaManager.webURL hasPrefix:downloadURL]) {
         return tvDramaManager.playingURL;
     }
     return nil;

@@ -25,6 +25,7 @@
 @property (nonatomic, strong) NSArray *sortedVideos;
 @property (nonatomic, strong) UIButton *downloadButton;
 @property (nonatomic, strong) NSMutableArray *selectedSetNums;
+@property (nonatomic, strong) NSMutableArray *downloadedSetNums; // include downloading & downloaded
 
 @end
 
@@ -36,6 +37,9 @@
     if (self) {
         // Initialization code
         self.backgroundColor = [UIColor grayColor];
+        self.selectedSetNums = [NSMutableArray array];
+        self.downloadedSetNums = [NSMutableArray array];
+        
         DramaTableView *tableView = [[DramaTableView alloc] initWithFrame:CGRectMake(0, kDramaHeaderViewHeight, self.width, self.height - kDramaHeaderViewHeight - kDramaFooterViewHeight) style:UITableViewStylePlain];
         tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         tableView.delegate = self;
@@ -47,7 +51,6 @@
         if ([tableView respondsToSelector:@selector(setSeparatorInset:)]) {
             [tableView setSeparatorInset:UIEdgeInsetsZero];
         }
-        self.selectedSetNums = [NSMutableArray array];
     }
     return self;
 }
@@ -61,11 +64,16 @@
         [self loadCurrentSection];
     }
     else {
+        if (self.videoGroup.showType.intValue != VideoGroupShowTypeGrid) {
+            if (self.tableView.tableHeaderView == nil) {
+                self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 12)];
+            }
+        }
         NSArray *downloadedVideos = [self.videoGroup downloadedVideos];
         [downloadedVideos enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             Video *video = obj;
-            if (![self.selectedSetNums containsObject:video.setNum]) {
-                [self.selectedSetNums addObject:video.setNum];
+            if (![self.downloadedSetNums containsObject:video.setNum]) {
+                [self.downloadedSetNums addObject:video.setNum];
             }
         }];
         [self.tableView reloadData];
@@ -312,21 +320,17 @@
         
         [cell configureCellWithMinVideoSetNum:minVideoSetNum maxVideoSetNum:maxVideoSetNum forWidth:tableView.width];
         [cell selectSetNums:self.selectedSetNums];
+        [cell disbaleSetNums:self.downloadedSetNums];
         return cell;
     }
     else {
         WonderMovieDownloadListCell *cell = [tableView dequeueReusableCellWithIdentifier:kListCellID];
         if (cell == nil) {
             cell = [[WonderMovieDownloadListCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kListCellID];
-            cell.imageView.image = QQVideoPlayerImage(@"list_play");
-            cell.textLabel.font = [UIFont systemFontOfSize:13];
-            
-            UIImageView *separatorView = [[UIImageView alloc] initWithFrame:CGRectMake(0, cell.bottom - 1, cell.width, 1)];
-            separatorView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-            separatorView.image = QQVideoPlayerImage(@"separator_line");
-            [cell addSubview:separatorView];
         }
-        Video *video = self.sortedVideos[indexPath.row];
+        int index = indexPath.row;
+        Video *video = self.sortedVideos[index];
+        cell.disableForDownload = [self.downloadedSetNums containsObject:video.setNum];
         cell.selectedForDownload = [self.selectedSetNums containsObject:video.setNum];
         cell.textLabel.text = video.brief;
         
@@ -362,7 +366,7 @@
         return [WonderMovieDownloadGridCell cellHeightWithMinVideoSetNum:minVideoSetNum maxVideoSetNum:maxVideoSetNum countPerRow:countPerRow];
     }
     else {
-        return 42;
+        return 44 + 10;
     }
 }
 
@@ -371,8 +375,10 @@
     int showType = self.videoGroup.showType.intValue;
     if (showType != VideoGroupShowTypeGrid) {
         Video *video = self.sortedVideos[indexPath.row];
-//        [self playWithSetNum:video.setNum.intValue];
-//        [self.tableView reloadData];
+        
+        if ([self.downloadedSetNums containsObject:video.setNum]) {
+            return;
+        }
         
         if ([self.selectedSetNums containsObject:video.setNum]) {
             [self.selectedSetNums removeObject:video.setNum];
@@ -380,9 +386,8 @@
         else {
             [self.selectedSetNums addObject:video.setNum];
         }
-        if (self.selectedSetNums.count > 0) {
-            self.downloadButton.enabled = YES;
-        }
+        
+        [self notifySelectSetNumsChanged];
         [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
 }
@@ -416,9 +421,12 @@
         }
     }
     
-    if (self.selectedSetNums.count > 0) {
-        self.downloadButton.enabled = YES;
-    }
+    [self notifySelectSetNumsChanged];
+}
+
+- (void)notifySelectSetNumsChanged
+{
+    self.downloadButton.enabled = self.selectedSetNums.count > 0;
     
     if ([self.delegate respondsToSelector:@selector(wonderMovieDownloadView:didChangeSelectedVideos:)]) {
         [self.delegate wonderMovieDownloadView:self didChangeSelectedVideos:self.selectedSetNums];

@@ -61,7 +61,7 @@
 
 // Download View Grid Cell
 #define kDownloadViewGridCellLeftPadding            10
-#define kDownloadViewGridCellTopPadding             12
+#define kDownloadViewGridCellTopPadding             15 + 11 + 8
 #define kDownloadViewGridCellHPadding               8
 #define kDownloadViewGridCellVPadding               19
 #define kDownloadViewGridCellButtonMinWidth         94
