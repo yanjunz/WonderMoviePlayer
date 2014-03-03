@@ -16,6 +16,10 @@
 @property (nonatomic, strong) UILabel *headerLabel;
 @end
 
+@interface WonderMovieDownloadGridButton : UIButton
+
+@end
+
 @implementation WonderMovieDownloadGridCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -48,7 +52,7 @@
 
 + (void)getPreferredCountPerRow:(NSInteger *)countPerRow buttonWidth:(CGFloat *)buttonWidth forMaxWidth:(CGFloat)width
 {
-    CGFloat minButtonWidth = 160 /2;
+    CGFloat minButtonWidth = kDownloadViewGridCellButtonMinWidth;
     
     CGFloat preferredButtonWidth = minButtonWidth;
     
@@ -102,13 +106,19 @@
     CGFloat leftPadding = (width - (buttonWidth + kDownloadViewGridCellHPadding) * countPerRow + kDownloadViewGridCellHPadding) / 2, topPadding = kDownloadViewGridCellTopPadding;
     
     for (int i = 0; i < countPerRow * row; ++i) {
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        [button setBackgroundImage:QQVideoPlayerImage(@"tv_drama_button_normal") forState:UIControlStateNormal];
-        [button setBackgroundImage:QQVideoPlayerImage(@"tv_drama_button_press") forState:UIControlStateHighlighted];
-        [button setBackgroundImage:QQVideoPlayerImage(@"tv_drama_button_press") forState:UIControlStateReserved];
-        [button setBackgroundImage:QQVideoPlayerImage(@"tv_drama_button_press") forState:UIControlStateSelected];
+        UIButton *button = [WonderMovieDownloadGridButton buttonWithType:UIButtonTypeCustom];
+        [button setBackgroundImage:[QQVideoPlayerImage(@"download_cell_normal_single") stretchableImageWithLeftCapWidth:10 topCapHeight:10] forState:UIControlStateNormal];
+        [button setBackgroundImage:[QQVideoPlayerImage(@"download_cell_sel_single") stretchableImageWithLeftCapWidth:10 topCapHeight:10] forState:UIControlStateHighlighted];
+        [button setBackgroundImage:[QQVideoPlayerImage(@"download_cell_sel_single") stretchableImageWithLeftCapWidth:10 topCapHeight:10] forState:UIControlStateReserved];
+        [button setBackgroundImage:[QQVideoPlayerImage(@"download_cell_sel_single") stretchableImageWithLeftCapWidth:10 topCapHeight:10] forState:UIControlStateSelected];
+        UIImage *image = QQVideoPlayerImage(@"download_check");
+        [button setImage:image forState:UIControlStateSelected];
         [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [button setTitleColor:QQColor(videoplayer_playing_text_color) forState:UIControlStateSelected];
+        [button setTitleColor:QQColor(videoplayer_download_normal_text_color) forState:UIControlStateNormal];
+        [button setTitleColor:QQColor(videoplayer_download_disable_text_color) forState:UIControlStateDisabled];
+        button.titleLabel.textAlignment = UITextAlignmentCenter;
+        button.imageEdgeInsets = UIEdgeInsetsMake(0., 0, 0., 10.);
+        
         button.hidden = YES;
         button.frame = CGRectMake(leftPadding + (i % countPerRow) * (buttonWidth + kDownloadViewGridCellHPadding),
                                   topPadding + (i / countPerRow) * (kDownloadViewGridCellButtonHeight + kDownloadViewGridCellVPadding),
@@ -134,6 +144,7 @@
     if (_minVideoSetNum != NSNotFound && _maxVideoSetNum != NSNotFound) {
         for (int i = 0; i < self.buttons.count; ++i) {
             UIButton *button = self.buttons[i];
+            button.enabled = YES;
             int setNum = _minVideoSetNum + i;
             button.tag = setNum;
             
@@ -180,6 +191,18 @@
     }
 }
 
+- (void)disbaleSetNums:(NSArray *)setNums
+{
+    for (UIButton *btn in self.buttons) {
+        if ([setNums containsObject:@(btn.tag)]) {
+            btn.enabled = NO;
+        }
+        else {
+            btn.enabled = YES;
+        }
+    }
+}
+
 #pragma mark Action
 - (IBAction)onClickVideo:(UIButton *)sender
 {
@@ -188,6 +211,23 @@
     if ([self.delegate respondsToSelector:@selector(wonderMovieDownloadGridCell:didSelect:withSetNum:)]) {
         [self.delegate wonderMovieDownloadGridCell:self didSelect:sender.selected withSetNum:sender.tag];
     }
+}
+
+@end
+
+
+@implementation WonderMovieDownloadGridButton
+
+- (CGRect)imageRectForContentRect:(CGRect)contentRect
+{
+    CGRect frame = [super imageRectForContentRect:contentRect];
+    frame.origin.x = CGRectGetMaxX(contentRect) - CGRectGetWidth(frame) -  self.imageEdgeInsets.right + self.imageEdgeInsets.left;
+    return frame;
+}
+
+- (CGRect)titleRectForContentRect:(CGRect)contentRect
+{
+    return contentRect;
 }
 
 @end

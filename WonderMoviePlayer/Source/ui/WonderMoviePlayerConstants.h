@@ -40,6 +40,10 @@
 #define videoplayer_bg_color                RGBAColor(0x17, 0x17, 0x17, 0xff)
 #define videoplayer_playing_text_color      RGBAColor(0x14, 0x83, 0xff, 0xff)
 
+#define videoplayer_download_normal_text_color  RGBAColor(0x1e, 0x1e, 0x1e, 0xff)
+#define videoplayer_download_disable_text_color RGBAColor(0xb2, 0xb2, 0xb2, 0xff)
+#define videoplayer_download_tableview_bg_color RGBAColor(0xea, 0xec, 0xee, 0xff)
+
 #define kProgressViewPadding 16
 #define kWonderMovieControlDimDuration              0.8f
 #define kWonderMovieControlShowDuration             0.2f
@@ -56,11 +60,12 @@
 #define kDownloadButtonSize                         36
 
 // Download View Grid Cell
-#define kDownloadViewGridCellLeftPadding               20
-#define kDownloadViewGridCellTopPadding             (15+11+8)
+#define kDownloadViewGridCellLeftPadding            10
+#define kDownloadViewGridCellTopPadding             12
 #define kDownloadViewGridCellHPadding               8
 #define kDownloadViewGridCellVPadding               19
-#define kDownloadViewGridCellButtonHeight           (52/2)
+#define kDownloadViewGridCellButtonMinWidth         94
+#define kDownloadViewGridCellButtonHeight           (98/2)
 
 
 #endif

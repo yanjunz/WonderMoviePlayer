@@ -40,7 +40,7 @@
         tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         tableView.delegate = self;
         tableView.dataSource = self;
-        tableView.backgroundColor = [UIColor clearColor];
+        tableView.backgroundColor = QQColor(videoplayer_download_tableview_bg_color);
         tableView.separatorColor = [UIColor clearColor];
         [self addSubview:tableView];
         self.tableView = tableView;
@@ -61,6 +61,13 @@
         [self loadCurrentSection];
     }
     else {
+        NSArray *downloadedVideos = [self.videoGroup downloadedVideos];
+        [downloadedVideos enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            Video *video = obj;
+            if (![self.selectedSetNums containsObject:video.setNum]) {
+                [self.selectedSetNums addObject:video.setNum];
+            }
+        }];
         [self.tableView reloadData];
     }
 }
@@ -72,7 +79,7 @@
         UIView *loadingView = [[UIView alloc] initWithFrame:CGRectMake(0, kDramaHeaderViewHeight, self.width, self.height - kDramaHeaderViewHeight)];
         loadingView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         loadingView.backgroundColor = [UIColor clearColor];
-        UIActivityIndicatorView *loadingIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+        UIActivityIndicatorView *loadingIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         loadingIndicator.hidesWhenStopped = YES;
         loadingIndicator.center = CGPointMake(CGRectGetMidX(loadingView.bounds), CGRectGetMidY(loadingView.bounds));
         loadingIndicator.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
@@ -168,7 +175,7 @@
     [_loadingView removeFromSuperview];
     [self bringSubviewToFront:self.tableView];
     
-    [self.tableView reloadData];
+    [self reloadData];
     [self updateTableState];
 }
 
@@ -177,7 +184,7 @@
     _playingSetNum = self.tvDramaManager.curSetNum;
     
     [self.tableView finishLoadMoreHeader];
-    [self.tableView reloadData];
+    [self reloadData];
     [self updateTableState];
 }
 
@@ -186,7 +193,7 @@
     _playingSetNum = self.tvDramaManager.curSetNum;
     
     [self.tableView finishLoadMoreFooter];
-    [self.tableView reloadData];
+    [self reloadData];
     [self updateTableState];
 }
 
@@ -320,7 +327,6 @@
             [cell addSubview:separatorView];
         }
         Video *video = self.sortedVideos[indexPath.row];
-//        cell.isPlaying = video.setNum.intValue == self.playingSetNum;
         cell.selectedForDownload = [self.selectedSetNums containsObject:video.setNum];
         cell.textLabel.text = video.brief;
         
@@ -353,7 +359,7 @@
         (minVideoSetNum + videoCount - indexPath.row * maxVideoCountPerCell - 1) :
         (minVideoSetNum + maxVideoCountPerCell - 1);
         
-        return [WonderMovieDramaGridCell cellHeightWithMinVideoSetNum:minVideoSetNum maxVideoSetNum:maxVideoSetNum];
+        return [WonderMovieDownloadGridCell cellHeightWithMinVideoSetNum:minVideoSetNum maxVideoSetNum:maxVideoSetNum countPerRow:countPerRow];
     }
     else {
         return 42;
@@ -413,17 +419,21 @@
     if (self.selectedSetNums.count > 0) {
         self.downloadButton.enabled = YES;
     }
+    
+    if ([self.delegate respondsToSelector:@selector(wonderMovieDownloadView:didChangeSelectedVideos:)]) {
+        [self.delegate wonderMovieDownloadView:self didChangeSelectedVideos:self.selectedSetNums];
+    }
 }
 
 #pragma mark Action
-- (IBAction)onClickCancel:(id)sender
+- (void)cancel
 {
     if ([self.delegate respondsToSelector:@selector(wonderMovieDownloadViewDidCancel:)]) {
         [self.delegate wonderMovieDownloadViewDidCancel:self];
     }
 }
 
-- (IBAction)onClickDownload:(id)sender
+- (void)confirm
 {
     if ([self.delegate respondsToSelector:@selector(wonderMovieDownloadView:didDownloadVideos:)]) {
         [self.delegate wonderMovieDownloadView:self didDownloadVideos:self.selectedSetNums];

@@ -49,6 +49,7 @@
     self.title = @"离线";
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(onClickCancel:)];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"确定" style:UIBarButtonItemStylePlain target:self action:@selector(onClickDownload:)];
+    self.navigationItem.rightBarButtonItem.enabled = NO;
     
     CGFloat footerHeight = 44;
     WonderMovieDownloadView *downloadView = [[WonderMovieDownloadView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, self.view.height - footerHeight)];
@@ -86,32 +87,39 @@
     // Dispose of any resources that can be recreated.
 }
 
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    [self.downloadView.tableView beginUpdates];
+    [self.downloadView.tableView reloadRowsAtIndexPaths:self.downloadView.tableView.indexPathsForVisibleRows withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self.downloadView.tableView endUpdates];
+}
+
 #pragma mark WonderMovieDownloadViewDelegate
 - (void)wonderMovieDownloadViewDidCancel:(WonderMovieDownloadView *)downloadView
 {
-    if ([self.downloadViewDelegate respondsToSelector:@selector(wonderMovieDownloadViewDidCancel:)]) {
-        [self.downloadViewDelegate wonderMovieDownloadViewDidCancel:downloadView];
-    }
+		
 }
 
 - (void)wonderMovieDownloadView:(WonderMovieDownloadView *)downloadView didDownloadVideos:(NSArray *)videos
 {
-    if ([self.downloadViewDelegate respondsToSelector:@selector(wonderMovieDownloadView:didDownloadVideos:)]) {
-        [self.downloadViewDelegate wonderMovieDownloadView:downloadView didDownloadVideos:videos];
-    }
     [self startBatDownload:videos];
+}
+
+- (void)wonderMovieDownloadView:(WonderMovieDownloadView *)downloadView didChangeSelectedVideos:(NSArray *)videos
+{
+    self.navigationItem.rightBarButtonItem.enabled = videos.count > 0;
 }
 
 #pragma mark Action
 - (IBAction)onClickCancel:(id)sender
 {
-    [self.downloadView onClickCancel:nil];
+    [self.downloadView cancel];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)onClickDownload:(id)sender
 {
-    [self.downloadView onClickDownload:nil];
+    [self.downloadView confirm];
     [self dismissViewControllerAnimated:YES completion:nil];    
 }
 

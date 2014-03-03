@@ -31,4 +31,5 @@
 + (void)getPreferredCountPerRow:(NSInteger *)countPerRow buttonWidth:(CGFloat *)buttonWidth forMaxWidth:(CGFloat)width;
 - (void)configureCellWithMinVideoSetNum:(int)minVideoSetNum maxVideoSetNum:(int)maxVideoSetNum forWidth:(CGFloat)width;
 - (void)selectSetNums:(NSArray *)setNums;
+- (void)disbaleSetNums:(NSArray *)setNums;
 @end

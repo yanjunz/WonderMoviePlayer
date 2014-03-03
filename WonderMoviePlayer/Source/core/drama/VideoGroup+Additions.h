@@ -21,4 +21,5 @@ typedef enum {
 - (NSArray *)sortedVideos:(BOOL)ascending;
 - (BOOL)isValidDrama;
 - (NSString *)displayNameForSetNum:(NSNumber *)setNum;
+- (NSArray *)downloadedVideos;
 @end

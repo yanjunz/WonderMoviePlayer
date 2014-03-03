@@ -16,6 +16,9 @@
 		AE96680418B4395B00158788 /* VideoGroup+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = AE96680318B4395B00158788 /* VideoGroup+Additions.m */; };
 		AE96680718B4398D00158788 /* NSString+Hash.m in Sources */ = {isa = PBXBuildFile; fileRef = AE96680618B4398D00158788 /* NSString+Hash.m */; };
 		AED9C38618C32C0900C41142 /* WonderMovieDownloadController.m in Sources */ = {isa = PBXBuildFile; fileRef = AED9C38518C32C0900C41142 /* WonderMovieDownloadController.m */; };
+		AED9C38E18C40F3700C41142 /* download_cell_normal_single@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AED9C38C18C40F3700C41142 /* download_cell_normal_single@2x.png */; };
+		AED9C38F18C40F3700C41142 /* download_cell_sel_single@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AED9C38D18C40F3700C41142 /* download_cell_sel_single@2x.png */; };
+		AED9C39118C427F900C41142 /* download_check@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AED9C39018C427F900C41142 /* download_check@2x.png */; };
 		B516CA0F17DD6AA100D8E3A2 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B516CA0E17DD6AA100D8E3A2 /* CFNetwork.framework */; };
 		B517773817B36D44006B948E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517773717B36D44006B948E /* UIKit.framework */; };
 		B517773A17B36D44006B948E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517773917B36D44006B948E /* Foundation.framework */; };
@@ -174,6 +177,9 @@
 		AE96680918B439F100158788 /* VideoHistoryOperator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoHistoryOperator.h; sourceTree = "<group>"; };
 		AED9C38418C32C0900C41142 /* WonderMovieDownloadController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMovieDownloadController.h; sourceTree = "<group>"; };
 		AED9C38518C32C0900C41142 /* WonderMovieDownloadController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderMovieDownloadController.m; sourceTree = "<group>"; };
+		AED9C38C18C40F3700C41142 /* download_cell_normal_single@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "download_cell_normal_single@2x.png"; sourceTree = "<group>"; };
+		AED9C38D18C40F3700C41142 /* download_cell_sel_single@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "download_cell_sel_single@2x.png"; sourceTree = "<group>"; };
+		AED9C39018C427F900C41142 /* download_check@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "download_check@2x.png"; sourceTree = "<group>"; };
 		B516CA0E17DD6AA100D8E3A2 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		B517773417B36D44006B948E /* WonderMoviePlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WonderMoviePlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B517773717B36D44006B948E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -540,6 +546,9 @@
 		B5435578186D26DE0090AFEE /* videoplayer */ = {
 			isa = PBXGroup;
 			children = (
+				AED9C39018C427F900C41142 /* download_check@2x.png */,
+				AED9C38C18C40F3700C41142 /* download_cell_normal_single@2x.png */,
+				AED9C38D18C40F3700C41142 /* download_cell_sel_single@2x.png */,
 				AE1D7C1D18C08335006A9196 /* play@2x.png */,
 				AE4FA7C91872ADAA005B7BD6 /* toast_frame@2x.png */,
 				B5435579186D26DE0090AFEE /* back@2x.png */,
@@ -965,6 +974,7 @@
 				B517774A17B36D44006B948E /* Default.png in Resources */,
 				B54355D0186D26DF0090AFEE /* progressbar_indicator_normal@2x.png in Resources */,
 				B54355BA186D26DF0090AFEE /* download_prompt_bg@2x.png in Resources */,
+				AED9C38E18C40F3700C41142 /* download_cell_normal_single@2x.png in Resources */,
 				B54355C0186D26DF0090AFEE /* loading@2x.png in Resources */,
 				B517774C17B36D44006B948E /* Default@2x.png in Resources */,
 				B54355E4186D26DF0090AFEE /* color_m@2x.png in Resources */,
@@ -988,9 +998,11 @@
 				B54355D2186D26DF0090AFEE /* progressbar_top@2x.png in Resources */,
 				B54355C4186D26DF0090AFEE /* next_normal@2x.png in Resources */,
 				B517777117B3960E006B948E /* Movie.m4v in Resources */,
+				AED9C39118C427F900C41142 /* download_check@2x.png in Resources */,
 				B54355D3186D26DF0090AFEE /* replay@2x.png in Resources */,
 				B54355B1186D26DF0090AFEE /* back@2x.png in Resources */,
 				B54355DD186D26DF0090AFEE /* unlock@2x.png in Resources */,
+				AED9C38F18C40F3700C41142 /* download_cell_sel_single@2x.png in Resources */,
 				B54355C3186D26DF0090AFEE /* mute@2x.png in Resources */,
 				B517777317B3961C006B948E /* Settings.bundle in Resources */,
 				B54355C8186D26DF0090AFEE /* play_normal@2x.png in Resources */,

@@ -77,4 +77,11 @@
     }
 }
 
+- (NSArray *)downloadedVideos
+{
+    NSArray *videos = [[self.videos filteredSetUsingPredicate:[NSPredicate predicateWithFormat:@"path.length > 0"]]
+                       sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"setNum" ascending:YES]]];
+    return videos;
+}
+
 @end

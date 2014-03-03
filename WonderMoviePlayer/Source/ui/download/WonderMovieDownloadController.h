@@ -14,8 +14,6 @@
 
 @interface WonderMovieDownloadController : UIViewController<WonderMovieDownloadViewDelegate>
 @property (nonatomic, strong) TVDramaManager *tvDramaManager;
-
-@property (nonatomic, weak) id<WonderMovieDownloadViewDelegate> downloadViewDelegate;
 @property (nonatomic, strong) id<BatMovieDownloader> batMovieDownloader;
 
 @property (nonatomic, strong) WonderMovieDownloadView *downloadView;
