@@ -110,7 +110,7 @@
         [button setBackgroundImage:[QQVideoPlayerImage(@"download_cell_normal_single") stretchableImageWithLeftCapWidth:10 topCapHeight:10] forState:UIControlStateNormal];
         [button setBackgroundImage:[QQVideoPlayerImage(@"download_cell_sel_single") stretchableImageWithLeftCapWidth:10 topCapHeight:10] forState:UIControlStateHighlighted];
         [button setBackgroundImage:[QQVideoPlayerImage(@"download_cell_sel_single") stretchableImageWithLeftCapWidth:10 topCapHeight:10] forState:UIControlStateReserved];
-        [button setBackgroundImage:[QQVideoPlayerImage(@"download_cell_sel_single") stretchableImageWithLeftCapWidth:10 topCapHeight:10] forState:UIControlStateSelected];
+        [button setBackgroundImage:[QQVideoPlayerImage(@"download_cell_normal_single") stretchableImageWithLeftCapWidth:10 topCapHeight:10] forState:UIControlStateSelected];
         UIImage *image = QQVideoPlayerImage(@"download_check");
         [button setImage:image forState:UIControlStateSelected];
         [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
