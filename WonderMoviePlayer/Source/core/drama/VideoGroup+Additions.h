@@ -15,6 +15,7 @@ typedef enum {
 } VideoGroupShowType;
 
 @interface VideoGroup (Additions)
++ (VideoGroup *)videoGroupWithVideoId:(NSString *)videoId;
 - (Video *)videoAtURL:(NSString *)URL;
 - (Video *)videoAtSetNum:(NSNumber *)setNum;
 - (void)setVideo:(Video *)video atSetNum:(NSNumber *)setNum inContext:(NSManagedObjectContext *)context;
@@ -22,4 +23,5 @@ typedef enum {
 - (BOOL)isValidDrama;
 - (NSString *)displayNameForSetNum:(NSNumber *)setNum;
 - (NSArray *)downloadedVideos;
+- (void)checkDownloadedVideosExist;
 @end

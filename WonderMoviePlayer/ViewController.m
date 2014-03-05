@@ -188,9 +188,8 @@
         DefineStrongVarInBlock(controller);
         WonderMovieDownloadController *viewController = [[WonderMovieDownloadController alloc]
                                                          //                                                         initWithURL:@"http://v.qq.com/cover/i/ihubkoevort5cp3.html?vid=g0013vc3y2m"];
-                                                         initWithTVDramaManager:tvDramaManager];
+                                                         initWithTVDramaManager:tvDramaManager batMovieDownloader:controller.batMovieDownloader];
 //        viewController.downloadViewDelegate = controller;
-        viewController.batMovieDownloader = controller.batMovieDownloader;
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
         [controller presentViewController:navController animated:YES completion:nil];
         
@@ -260,12 +259,12 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 - (IBAction)onClickDownload:(id)sender {
-    WonderMovieDownloadController *controller = [[WonderMovieDownloadController alloc] initWithURL:@"http://v.qq.com/cover/i/ihubkoevort5cp3.html?vid=g0013vc3y2m"];
-    
-    FakeTVDramaWebSource *fakeDramaWebSource = [[FakeTVDramaWebSource alloc] init];
-    controller.tvDramaManager.requestHandler = [ResponsibilityChainTVDramaRequestHandler handlerWithActualHandler:fakeDramaWebSource nextHandler:nil];
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
-    [self presentViewController:navController animated:YES completion:nil];
+//    WonderMovieDownloadController *controller = [[WonderMovieDownloadController alloc] initWithURL:@"http://v.qq.com/cover/i/ihubkoevort5cp3.html?vid=g0013vc3y2m"];
+//    
+//    FakeTVDramaWebSource *fakeDramaWebSource = [[FakeTVDramaWebSource alloc] init];
+//    controller.tvDramaManager.requestHandler = [ResponsibilityChainTVDramaRequestHandler handlerWithActualHandler:fakeDramaWebSource nextHandler:nil];
+//    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
+//    [self presentViewController:navController animated:YES completion:nil];
 }
 
 - (void)viewDidUnload {

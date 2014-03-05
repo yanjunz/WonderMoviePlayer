@@ -32,4 +32,5 @@
 - (void)configureCellWithMinVideoSetNum:(int)minVideoSetNum maxVideoSetNum:(int)maxVideoSetNum forWidth:(CGFloat)width;
 - (void)selectSetNums:(NSArray *)setNums;
 - (void)disbaleSetNums:(NSArray *)setNums;
+- (void)enableSetNums:(NSArray *)setNums;
 @end

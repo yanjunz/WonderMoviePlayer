@@ -28,7 +28,8 @@ typedef enum {
 @property (nonatomic, copy) NSString *webURL;
 @property (nonatomic, copy) NSString *playingURL;
 @property (nonatomic, strong) VideoGroup *videoGroup;
-@property (nonatomic) int curSetNum;
+@property (nonatomic, assign) int curSetNum;
+@property (nonatomic, assign) NSInteger clarityCount;
 
 @property (nonatomic, strong) ResponsibilityChainTVDramaRequestHandler *requestHandler;
 
@@ -44,7 +45,7 @@ typedef enum {
 @optional
 - (void)tvDramaManager:(TVDramaManager *)manager requestDramaInfoWithURL:(NSString *)URL requestType:(TVDramaRequestType)requestType completionBlock:(void (^)(VideoGroup *videoGroup, int curSetNum))completionBlock;
 
-- (void)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURL:(NSString *)URL src:(NSString *)src completionBlock:(void (^)(NSString *videoSrc))completionBlock;
+- (void)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURL:(NSString *)URL src:(NSString *)src completionBlock:(void (^)(NSString *videoSrc, NSInteger clarityCount))completionBlock;
 @end
 
 /**

@@ -24,6 +24,13 @@
     return self;
 }
 
+- (void)dealloc
+{
+    self.videoGroup = nil;
+    self.requestHandler = nil;
+//    NSLog(@"TVDramaManager dealloc");
+}
+
 - (VideoGroup *)videoGroupInCurrentThread
 {
     return [self.videoGroup MR_inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
@@ -76,12 +83,16 @@
         return;
     }
     
+    DefineWeakSelfBeforeBlock();
     VideoGroup *videoGroup = [self videoGroupInCurrentThread];
-    [self.requestHandler tvDramaManager:self sniffVideoSrcWithURL:self.webURL src:videoGroup.src completionBlock:^(NSString *videoSrc) {
+    [self.requestHandler tvDramaManager:self sniffVideoSrcWithURL:self.webURL src:videoGroup.src completionBlock:^(NSString *videoSrc, NSInteger clarityCount) {
+        DefineStrongSelfInBlock(sself);
         if (videoSrc.length > 0) {
             Video *video = [videoGroup videoAtURL:self.webURL];
             video.videoSrc = videoSrc;
             [[NSManagedObjectContext MR_contextForCurrentThread] save:NULL];
+            
+            sself.clarityCount = clarityCount;
             
             if (completionBlock) {
                 completionBlock(YES);
@@ -213,14 +224,14 @@
     }
 }
 
-- (void)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURL:(NSString *)URL src:(NSString *)src completionBlock:(void (^)(NSString *videoSrc))completionBlock
+- (void)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURL:(NSString *)URL src:(NSString *)src completionBlock:(void (^)(NSString *videoSrc, NSInteger clarityCount))completionBlock
 {
     __block BOOL hasSuccessed = NO;
     __block int remainingCallbackCount = self.handlers.count;
 
     for (id<TVDramaRequestHandler> handler in self.handlers) {
         if ([handler respondsToSelector:@selector(tvDramaManager:sniffVideoSrcWithURL:src:completionBlock:)]) {
-            [handler tvDramaManager:manager sniffVideoSrcWithURL:URL src:src completionBlock:^(NSString *videoSrc) {
+            [handler tvDramaManager:manager sniffVideoSrcWithURL:URL src:src completionBlock:^(NSString *videoSrc, NSInteger clarityCount) {
                 BOOL success = videoSrc.length > 0;
 //                NSLog(@"[P2] sniffVideoSource %@, %d, handler = %@", videoSrc, remainingCallbackCount, handler);
                 
@@ -231,12 +242,12 @@
                 if (success && !hasSuccessed) { // no success before yet, but success this time, should be callback with success
                     hasSuccessed = YES;
                     if (completionBlock) {
-                        completionBlock(videoSrc);
+                        completionBlock(videoSrc, clarityCount);
                     }
                 }
                 else if (remainingCallbackCount == 1 && !hasSuccessed) { // the last handler callback and on success before yet
                     if (completionBlock) {
-                        completionBlock(nil);
+                        completionBlock(nil, 0);
                     }
                 }
                 remainingCallbackCount --;
@@ -293,16 +304,16 @@
     }
 }
 
-- (void)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURL:(NSString *)URL src:(NSString *)src completionBlock:(void (^)(NSString *videoSrc))completionBlock
+- (void)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURL:(NSString *)URL src:(NSString *)src completionBlock:(void (^)(NSString *videoSrc, NSInteger clarityCount))completionBlock
 {
     DefineWeakSelfBeforeBlock();
     if ([self.actualHandler respondsToSelector:@selector(tvDramaManager:sniffVideoSrcWithURL:src:completionBlock:)]) {
-        [self.actualHandler tvDramaManager:manager sniffVideoSrcWithURL:URL src:src completionBlock:^(NSString *videoSrc) {
+        [self.actualHandler tvDramaManager:manager sniffVideoSrcWithURL:URL src:src completionBlock:^(NSString *videoSrc, NSInteger clarityCount) {
 //            NSLog(@"[P1] sniffVideoSource %@, handler = %@", videoSrc, self.actualHandler);
             DefineStrongSelfInBlock(sself);
             if (videoSrc.length > 0) {
                 if (completionBlock) {
-                    completionBlock(videoSrc);
+                    completionBlock(videoSrc, clarityCount);
                 }
             }
             else if (sself.nextHandler) {
@@ -310,7 +321,7 @@
             }
             else {
                 if (completionBlock) {
-                    completionBlock(nil);
+                    completionBlock(nil, 0);
                 }
             }
         }];
@@ -320,7 +331,7 @@
     }
     else {
         if (completionBlock) {
-            completionBlock(nil);
+            completionBlock(nil, 0);
         }
     }
 }

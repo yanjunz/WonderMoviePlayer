@@ -19,6 +19,6 @@
 @property (nonatomic, strong) WonderMovieDownloadView *downloadView;
 @property (nonatomic, strong) UILabel *availableSpaceLabel;
 
-- (id)initWithURL:(NSString *)URL;
-- (id)initWithTVDramaManager:(TVDramaManager *)tvDramaManager;
+- (id)initWithTVDramaManager:(TVDramaManager *)tvDramaManager batMovieDownloader:(id<BatMovieDownloader>)batMovieDownloader;
+- (void)setSupportBatchDownload:(BOOL)supportBatchDownload;
 @end

@@ -51,6 +51,8 @@
         if ([tableView respondsToSelector:@selector(setSeparatorInset:)]) {
             [tableView setSeparatorInset:UIEdgeInsetsZero];
         }
+        
+        self.supportBatchDownload = YES;
     }
     return self;
 }
@@ -69,6 +71,8 @@
                 self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 12)];
             }
         }
+        
+        [self.videoGroup checkDownloadedVideosExist];
         NSArray *downloadedVideos = [self.videoGroup downloadedVideos];
         [downloadedVideos enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             Video *video = obj;
@@ -319,8 +323,16 @@
         }
         
         [cell configureCellWithMinVideoSetNum:minVideoSetNum maxVideoSetNum:maxVideoSetNum forWidth:tableView.width];
+        
         [cell selectSetNums:self.selectedSetNums];
-        [cell disbaleSetNums:self.downloadedSetNums];
+        if (self.supportBatchDownload) {
+            // If support batch download, only disable the downloaded video
+            [cell disbaleSetNums:self.downloadedSetNums];
+        }
+        else {
+            // Otherwise only enable the current playing one
+            [cell enableSetNums:@[@(self.playingSetNum)]];
+        }
         return cell;
     }
     else {
@@ -330,7 +342,14 @@
         }
         int index = indexPath.row;
         Video *video = self.sortedVideos[index];
-        cell.disableForDownload = [self.downloadedSetNums containsObject:video.setNum];
+        
+        if (self.supportBatchDownload) {
+            cell.disableForDownload = [self.downloadedSetNums containsObject:video.setNum];
+        }
+        else {
+            cell.disableForDownload = video.setNum.intValue != self.playingSetNum;
+        }
+        
         cell.selectedForDownload = [self.selectedSetNums containsObject:video.setNum];
         cell.textLabel.text = video.brief;
         

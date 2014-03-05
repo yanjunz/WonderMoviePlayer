@@ -12,7 +12,11 @@
 #import "VideoGroup+Additions.h"
 #import "UIView+Sizes.h"
 
-@interface WonderMovieDownloadController ()
+@interface WonderMovieDownloadController () {
+    BOOL _supportBatchDownload;
+    
+    BOOL _closeAfterSniffing;
+}
 @end
 
 @implementation WonderMovieDownloadController
@@ -26,17 +30,12 @@
     return self;
 }
 
-- (id)initWithURL:(NSString *)URL
-{
-    TVDramaManager *tvDramaManager = [[TVDramaManager alloc] init];
-    tvDramaManager.webURL = URL;
-    return [self initWithTVDramaManager:tvDramaManager];
-}
-
-- (id)initWithTVDramaManager:(TVDramaManager *)tvDramaManager
+- (id)initWithTVDramaManager:(TVDramaManager *)tvDramaManager batMovieDownloader:(id<BatMovieDownloader>)batMovieDownloader
 {
     if (self = [super init]) {
         self.tvDramaManager = tvDramaManager;
+        self.batMovieDownloader = batMovieDownloader;
+        _supportBatchDownload = YES;
     }
     return self;
 }
@@ -57,6 +56,7 @@
     downloadView.tvDramaManager = self.tvDramaManager;
     downloadView.delegate = self;
     self.downloadView = downloadView;
+    self.downloadView.supportBatchDownload = _supportBatchDownload;
     [self.view addSubview:downloadView];
     self.view.backgroundColor = [UIColor whiteColor];
     
@@ -115,24 +115,53 @@
 {
     [self.downloadView cancel];
     [self dismissViewControllerAnimated:YES completion:nil];
+    _closeAfterSniffing = NO;
 }
 
 - (IBAction)onClickDownload:(id)sender
 {
     [self.downloadView confirm];
-    [self dismissViewControllerAnimated:YES completion:nil];    
+    [self dismissViewControllerAnimated:YES completion:nil];
+    _closeAfterSniffing = YES;
 }
 
 - (void)startBatDownload:(NSArray *)videos
 {
-    NSMutableArray *downloadURLs = [NSMutableArray array];
     VideoGroup *videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
+    if (videoGroup == nil) {
+        return;
+    }
+    
+    NSMutableArray *downloadURLs = [NSMutableArray array];
+    NSMutableDictionary *titleDict = [NSMutableDictionary dictionaryWithCapacity:downloadURLs.count];
+    NSMutableDictionary *knownVideoSourceDict = [NSMutableDictionary dictionaryWithCapacity:1];
+
     for (NSNumber *setNum in videos) {
         Video *video = [videoGroup videoAtSetNum:setNum];
-        [downloadURLs addObject:video.url];
+        NSString *downloadURL = video.url;
+        
+        [downloadURLs addObject:downloadURL];
+        titleDict[downloadURL] = [videoGroup displayNameForSetNum:video.setNum];
+        
+        /**
+         * downloadURL is provided by server side drama info
+         * webURL is the current playing web page url, it might contains some subfix
+         * example:
+         * downloadURL: http://m.v.qq.com/cover/3/3b9b76xc1vdwide.html?vid=d0013jdh2nm
+         * webURL:      http://m.v.qq.com/cover/3/3b9b76xc1vdwide.html?vid=d0013jdh2nm&ptag=qqbrowser.tv%23v.play.adaptor%231&mreferrer=http%3A%2F%2Fv.html5.qq.com%2F
+         **/
+        if ([self.tvDramaManager.webURL hasPrefix:downloadURL] && self.tvDramaManager.playingURL.length > 0) {
+            knownVideoSourceDict[downloadURL] = self.tvDramaManager.playingURL;
+        }
     }
 
-    [self.batMovieDownloader batchDownloadURLs:downloadURLs];
+    [self.batMovieDownloader batchDownloadURLs:downloadURLs titles:titleDict knownVideoSources:knownVideoSourceDict];
+}
+
+#pragma mark Public
+- (void)setSupportBatchDownload:(BOOL)supportBatchDownload
+{
+    _supportBatchDownload = supportBatchDownload;
 }
 
 #pragma mark Utils

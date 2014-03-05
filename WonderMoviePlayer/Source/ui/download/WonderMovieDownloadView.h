@@ -26,6 +26,7 @@
 @property (nonatomic, strong) UIView *errorView;
 @property (nonatomic, strong) UIView *loadingView;
 @property (nonatomic) int playingSetNum;
+@property (nonatomic) BOOL supportBatchDownload; // unable to batch download if the website is not supported by sniffer
 - (void)reloadData;
 
 - (void)cancel;

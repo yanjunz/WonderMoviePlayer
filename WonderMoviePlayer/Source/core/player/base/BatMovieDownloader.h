@@ -11,15 +11,13 @@
 
 @protocol BatMovieDownloader;
 
-@protocol BatMovieDownloaderDataSource <NSObject>
+@protocol BatMovieDownloaderDelegate <NSObject>
 @optional
-- (NSString *)titleForBatMovieDownloader:(id<BatMovieDownloader>)downloader downloadURL:(NSString *)downloadURL;
-- (NSString *)videoSourceForBatMovieDownloader:(id<BatMovieDownloader>)downloader downloadURL:(NSString *)downloadURL;
+- (void)batMovieDownloaderDidAddAllTasks:(id<BatMovieDownloader>)downloader;
 @end
 
-@protocol BatMovieDownloader <NSObject>
-@property (nonatomic, weak) id<BatMovieDownloaderDataSource> batMovieDownloaderDataSource;
-- (void)batchDownloadURLs:(NSArray *)downloadURLs;
-- (NSArray *)batchQueryDownloadStates:(NSArray *)downloadURLs;
 
+@protocol BatMovieDownloader <NSObject>
+@property (nonatomic, weak) id<BatMovieDownloaderDelegate> batMovieDownloaderDelegate;
+- (void)batchDownloadURLs:(NSArray *)downloadURLs titles:(NSDictionary *)titles knownVideoSources:(NSDictionary *)knownVideoSources;
 @end

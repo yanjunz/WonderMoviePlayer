@@ -11,6 +11,11 @@
 
 @implementation VideoGroup (Additions)
 
++ (VideoGroup *)videoGroupWithVideoId:(NSString *)videoId
+{
+    return [VideoGroup MR_findFirstByAttribute:@"videoId" withValue:videoId];
+}
+
 - (Video *)videoAtURL:(NSString *)URL
 {
     __block Video *video = nil;
@@ -82,6 +87,20 @@
     NSArray *videos = [[self.videos filteredSetUsingPredicate:[NSPredicate predicateWithFormat:@"path.length > 0"]]
                        sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"setNum" ascending:YES]]];
     return videos;
+}
+
+- (void)checkDownloadedVideosExist
+{
+    [MagicalRecord saveUsingCurrentThreadContextWithBlockAndWait:^(NSManagedObjectContext *localContext) {
+        NSSet *downloadVideos = [self.videos filteredSetUsingPredicate:[NSPredicate predicateWithFormat:@"path.length > 0"]];
+        for (Video *video in downloadVideos) {
+            NSString *downloadingPath = [NSString stringWithFormat:@"%@/.%@", [video.path stringByDeletingLastPathComponent], [video.path lastPathComponent]];
+            if (![[NSFileManager defaultManager] fileExistsAtPath:video.path] &&
+                ![[NSFileManager defaultManager] fileExistsAtPath:downloadingPath]) {
+                video.path = nil;
+            }
+        }
+    }];
 }
 
 @end

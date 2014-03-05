@@ -1178,15 +1178,6 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 #endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
 }
 
-- (void)movieControlSource:(id<MovieControlSource>)source didBatchDownload:(NSArray *)downloadURLs
-{
-#ifdef MTT_TWEAK_BAT_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
-    if ([self.batMovieDownloader respondsToSelector:@selector(batchDownloadURLs:)]) {
-        [self.batMovieDownloader batchDownloadURLs:downloadURLs];
-    }
-#endif // MTT_TWEAK_BAT_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
-}
-
 - (void)movieControlSourceOnMyVideo:(id<MovieControlSource>)source
 {
     [self pause];
@@ -1312,34 +1303,6 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     return nil;
 }
 #endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
-
-#ifdef MTT_TWEAK_BAT_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
-#pragma mark BatMovieDownloaderDataSource
-- (NSString *)titleForBatMovieDownloader:(id<BatMovieDownloader>)downloader downloadURL:(NSString *)downloadURL
-{
-    VideoGroup *videoGroup = [self.controlSource.tvDramaManager videoGroupInCurrentThread];
-    if ([videoGroup.videoId length] != 0) {
-        Video *video = [videoGroup videoAtURL:downloadURL];
-        return [videoGroup displayNameForSetNum:video.setNum];
-    }
-    return nil;
-}
-- (NSString *)videoSourceForBatMovieDownloader:(id<BatMovieDownloader>)downloader downloadURL:(NSString *)downloadURL
-{
-    TVDramaManager *tvDramaManager = self.controlSource.tvDramaManager;
-    /**
-     * downloadURL is provided by server side drama info
-     * webURL is the current playing web page url, it might contains some subfix
-     * example:
-     * downloadURL: http://m.v.qq.com/cover/3/3b9b76xc1vdwide.html?vid=d0013jdh2nm
-     * webURL:      http://m.v.qq.com/cover/3/3b9b76xc1vdwide.html?vid=d0013jdh2nm&ptag=qqbrowser.tv%23v.play.adaptor%231&mreferrer=http%3A%2F%2Fv.html5.qq.com%2F
-     **/
-    if ([tvDramaManager.webURL hasPrefix:downloadURL]) {
-        return tvDramaManager.playingURL;
-    }
-    return nil;
-}
-#endif // MTT_TWEAK_BAT_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
 
 #pragma mark Notification
 - (void)onEnterForeground:(NSNotification *)n

@@ -203,6 +203,18 @@
     }
 }
 
+- (void)enableSetNums:(NSArray *)setNums
+{
+    for (UIButton *btn in self.buttons) {
+        if ([setNums containsObject:@(btn.tag)]) {
+            btn.enabled = YES;
+        }
+        else {
+            btn.enabled = NO;
+        }
+    }
+}
+
 #pragma mark Action
 - (IBAction)onClickVideo:(UIButton *)sender
 {
