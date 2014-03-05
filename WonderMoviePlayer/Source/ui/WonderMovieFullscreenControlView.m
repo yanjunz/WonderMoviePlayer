@@ -1302,6 +1302,12 @@ void wonderMovieVolumeListenerCallback (
 
 - (void)showPopupMenu:(BOOL)show
 {
+    // Hide tip
+    if (show) {
+        [self showVerticalPanningTip:NO];
+        [self showHorizontalPanningTip:NO];
+    }
+    
     self.menuButton.selected = show;
     BOOL isShowed = self.popupMenu.bottom > 0;
     if (isShowed == show) {
