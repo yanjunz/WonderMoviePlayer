@@ -270,6 +270,7 @@ void wonderMovieVolumeListenerCallback (
         UIToolbar *bottomBarWithBlur = [[UIToolbar alloc] initWithFrame:CGRectMake(0, bottomBarContainerHeight - bottomBarHeight, self.width, bottomBarHeight)];
         bottomBarWithBlur.barStyle = UIBarStyleBlack;
         bottomBarWithBlur.translucent = YES;
+//        bottomBarWithBlur.barTintColor = [[UIColor blackColor] colorWithAlphaComponent:0.6];
         bottomBar = bottomBarWithBlur;
     }
     else {
@@ -350,9 +351,20 @@ void wonderMovieVolumeListenerCallback (
     [self.bottomBar addSubview:self.downloadButton];
     
     // Setup headerBar
-    UIView *headerBar = [[UIView alloc] initWithFrame:CGRectMake(0, statusBarHeight, self.width, headerBarHeight)];
+    UIView *headerBar;
+    if (hasBlurSupport) {
+        UIToolbar *headerBarWithBlur = [[UIToolbar alloc] initWithFrame:CGRectMake(0, statusBarHeight, self.width, headerBarHeight)];
+        headerBarWithBlur.barStyle = UIBarStyleBlack;
+        headerBarWithBlur.translucent = YES;
+//        headerBarWithBlur.barTintColor = [[UIColor blackColor] colorWithAlphaComponent:0.6];
+        headerBar = headerBarWithBlur;
+    }
+    else {
+        headerBar = [[UIView alloc] initWithFrame:CGRectMake(0, statusBarHeight, self.width, headerBarHeight)];
+        self.headerBar.backgroundColor = [UIColor colorWithPatternImage:QQVideoPlayerImage(@"headerbar")];
+    }
+    
     self.headerBar = headerBar;
-    self.headerBar.backgroundColor = [UIColor colorWithPatternImage:QQVideoPlayerImage(@"headerbar")];
     self.headerBar.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
     [contentView addSubview:self.headerBar];
     
@@ -463,9 +475,9 @@ void wonderMovieVolumeListenerCallback (
     [self showResolutionButton:NO];
     
     // for debug
-    self.resolutions = @[@"高清", @"流畅", @"标清"];
-    [self rebuildResolutionsView];
-    [self updateResolutions];
+//    self.resolutions = @[@"高清", @"流畅", @"标清"];
+//    [self rebuildResolutionsView];
+//    [self updateResolutions];
     
     
 
@@ -1557,6 +1569,7 @@ void wonderMovieVolumeListenerCallback (
     if ([self.delegate respondsToSelector:@selector(movieControlSource:showControlView:)]) {
         [self.delegate movieControlSource:self showControlView:!animationToHide];
     }
+//    BOOL hasBlurSupport = NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_6_1;
     [UIView animateWithDuration:animationToHide ? kWonderMovieControlDimDuration : kWonderMovieControlShowDuration animations:^{
         if (animationToHide) {
             self.contentView.alpha = 0;
@@ -1743,13 +1756,14 @@ void wonderMovieVolumeListenerCallback (
         self.controlState != MovieControlStatePaused &&
         self.controlState != MovieControlStateEnded &&
         !_isScrubbing) {
-        if ([self.delegate respondsToSelector:@selector(movieControlSource:showControlView:)]) {
-            [self.delegate movieControlSource:self showControlView:NO];
-        }
-        [UIView animateWithDuration:kWonderMovieControlDimDuration animations:^{
-            self.contentView.alpha = 0;
-        }];
-        [self dismissAllPopupViews];
+//        if ([self.delegate respondsToSelector:@selector(movieControlSource:showControlView:)]) {
+//            [self.delegate movieControlSource:self showControlView:NO];
+//        }
+//        [UIView animateWithDuration:kWonderMovieControlDimDuration animations:^{
+//            self.contentView.alpha = 0;
+//        }];
+//        [self dismissAllPopupViews];
+        [self showOverlay:NO];
     }
 }
 

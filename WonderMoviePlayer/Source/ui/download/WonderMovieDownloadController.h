@@ -21,4 +21,7 @@
 
 - (id)initWithTVDramaManager:(TVDramaManager *)tvDramaManager batMovieDownloader:(id<BatMovieDownloader>)batMovieDownloader;
 - (void)setSupportBatchDownload:(BOOL)supportBatchDownload;
+
+- (IBAction)onClickCancel:(id)sender;
+- (IBAction)onClickDownload:(id)sender;
 @end

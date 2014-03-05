@@ -45,8 +45,10 @@
 #define videoplayer_download_tableview_bg_color RGBAColor(0xea, 0xec, 0xee, 0xff)
 
 #define kProgressViewPadding 16
-#define kWonderMovieControlDimDuration              0.8f
-#define kWonderMovieControlShowDuration             0.2f
+//#define kWonderMovieControlDimDuration              0.8f
+#define kWonderMovieControlDimDuration              0.f
+//#define kWonderMovieControlShowDuration             0.2f
+#define kWonderMovieControlShowDuration             0.f
 
 #define kStatusBarHeight                            20
 
