@@ -744,8 +744,8 @@ void wonderMovieVolumeListenerCallback (
     CGFloat menuSeparatorHeight = 1;
     CGFloat menuWidth = 67;
     CGFloat topOffset = 1;
-    CGFloat buttonWidth = 32, buttonHeight = 18;
-    int count = self.resolutions.count - 1;
+    CGFloat buttonWidth = 32+32, buttonHeight = 18;
+    int count = self.resolutions.count;
     count = MAX(count, 0);
     
     if (_resolutionsView) {
@@ -764,7 +764,7 @@ void wonderMovieVolumeListenerCallback (
     popupMenuBgImageView.frame = popupMenu.bounds;
     [popupMenu addSubview:popupMenuBgImageView];
     
-    CGFloat x = 17;
+    CGFloat x = 0;//17;
     for (int i = 0; i < count; ++i) {
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         CGFloat y = i * (menuButtonHeight + menuSeparatorHeight);
@@ -772,7 +772,8 @@ void wonderMovieVolumeListenerCallback (
         button.frame = CGRectMake(x, y + 12 , buttonWidth, buttonHeight);
         button.tag = kWonderMovieResolutionButtonTagBase + i;
         button.titleLabel.font = [UIFont systemFontOfSize:11];
-        [button setBackgroundImage:QQVideoPlayerImage(@"resolution_button_normal") forState:UIControlStateNormal];
+        [button setImage:QQVideoPlayerImage(@"ok") forState:UIControlStateNormal];
+//        [button setBackgroundImage:QQVideoPlayerImage(@"resolution_button_normal") forState:UIControlStateNormal];
         [button addTarget:self action:@selector(onClickResolutionItem:) forControlEvents:UIControlEventTouchUpInside];
         [popupMenu addSubview:button];
         
@@ -786,16 +787,16 @@ void wonderMovieVolumeListenerCallback (
 
 - (void)updateResolutions
 {
-    int tagIndex = 0;
     for (int i = 0; i < self.resolutions.count; ++i) {
-        if (i == self.selectedResolutionIndex) {
-            continue;
-        }
-        
-        int tag = kWonderMovieResolutionButtonTagBase + tagIndex;
+        int tag = kWonderMovieResolutionButtonTagBase + i;
         UIButton *button = (UIButton *)[_resolutionsView viewWithTag:tag];
         [button setTitle:self.resolutions[i] forState:UIControlStateNormal];
-        tagIndex ++;
+        if (i == self.selectedResolutionIndex) {
+            button.imageView.alpha = 1;
+        }
+        else {
+            button.imageView.alpha = 0;
+        }
     }
     if (self.resolutions.count > 0 && self.selectedResolutionIndex >= 0 && self.selectedResolutionIndex < self.resolutions.count) {
         [self.resolutionButton setTitle:self.resolutions[self.selectedResolutionIndex] forState:UIControlStateNormal];
@@ -1410,7 +1411,8 @@ void wonderMovieVolumeListenerCallback (
         [self.infoView addSubview:self.resolutionsView];
     }
     CGPoint pt = [self.infoView convertPoint:self.resolutionButton.center fromView:self.resolutionButton.superview];
-    self.resolutionsView.left = pt.x - self.resolutionsView.width / 2;
+//    self.resolutionsView.left = pt.x - self.resolutionsView.width / 2;
+    self.resolutionsView.right = pt.x + self.resolutionButton.width / 2 - 10;
     if (show) {
         self.resolutionsView.top = self.infoView.height;
         self.resolutionsView.hidden = NO;

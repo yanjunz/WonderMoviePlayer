@@ -13,6 +13,7 @@
 		AE2572FF18C0AC9D00F71429 /* WonderMovieDownloadListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2572FE18C0AC9D00F71429 /* WonderMovieDownloadListCell.m */; };
 		AE25730318C0C73D00F71429 /* FakeBatMovieDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = AE25730218C0C73D00F71429 /* FakeBatMovieDownloader.m */; };
 		AE4FA7CA1872ADAA005B7BD6 /* toast_frame@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AE4FA7C91872ADAA005B7BD6 /* toast_frame@2x.png */; };
+		AE7EED9E18C8540E00EF7947 /* ok@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AE7EED9D18C8540E00EF7947 /* ok@2x.png */; };
 		AE96680418B4395B00158788 /* VideoGroup+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = AE96680318B4395B00158788 /* VideoGroup+Additions.m */; };
 		AE96680718B4398D00158788 /* NSString+Hash.m in Sources */ = {isa = PBXBuildFile; fileRef = AE96680618B4398D00158788 /* NSString+Hash.m */; };
 		AED9C38618C32C0900C41142 /* WonderMovieDownloadController.m in Sources */ = {isa = PBXBuildFile; fileRef = AED9C38518C32C0900C41142 /* WonderMovieDownloadController.m */; };
@@ -161,6 +162,7 @@
 		AE25730118C0C73D00F71429 /* FakeBatMovieDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FakeBatMovieDownloader.h; sourceTree = "<group>"; };
 		AE25730218C0C73D00F71429 /* FakeBatMovieDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeBatMovieDownloader.m; sourceTree = "<group>"; };
 		AE4FA7C91872ADAA005B7BD6 /* toast_frame@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toast_frame@2x.png"; sourceTree = "<group>"; };
+		AE7EED9D18C8540E00EF7947 /* ok@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ok@2x.png"; sourceTree = "<group>"; };
 		AE96680218B4395B00158788 /* VideoGroup+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "VideoGroup+Additions.h"; sourceTree = "<group>"; };
 		AE96680318B4395B00158788 /* VideoGroup+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "VideoGroup+Additions.m"; sourceTree = "<group>"; };
 		AE96680518B4398D00158788 /* NSString+Hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Hash.h"; sourceTree = "<group>"; };
@@ -511,6 +513,7 @@
 		B5435578186D26DE0090AFEE /* videoplayer */ = {
 			isa = PBXGroup;
 			children = (
+				AE7EED9D18C8540E00EF7947 /* ok@2x.png */,
 				AED9C39018C427F900C41142 /* download_check@2x.png */,
 				AED9C38C18C40F3700C41142 /* download_cell_normal_single@2x.png */,
 				AED9C38D18C40F3700C41142 /* download_cell_sel_single@2x.png */,
@@ -952,6 +955,7 @@
 				B54355C8186D26DF0090AFEE /* play_normal@2x.png in Resources */,
 				B51778B017B9DE32006B948E /* TestWebViewController.xib in Resources */,
 				B51F619717E9ADC200344122 /* Test2ViewController.xib in Resources */,
+				AE7EED9E18C8540E00EF7947 /* ok@2x.png in Resources */,
 				B54355CE186D26DF0090AFEE /* progressbar_bottom@2x.png in Resources */,
 				B54355BF186D26DF0090AFEE /* list_play@2x.png in Resources */,
 				B54355DF186D26DF0090AFEE /* volume_prompt_bg@2x.png in Resources */,
