@@ -85,7 +85,7 @@
     
     DefineWeakSelfBeforeBlock();
     VideoGroup *videoGroup = [self videoGroupInCurrentThread];
-    [self.requestHandler tvDramaManager:self sniffVideoSrcWithURL:self.webURL src:videoGroup.src completionBlock:^(NSString *videoSrc, NSInteger clarityCount) {
+    [self.requestHandler tvDramaManager:self sniffVideoSrcWithURL:self.webURL clarity:self.currentClarity src:videoGroup.src completionBlock:^(NSString *videoSrc, NSInteger clarityCount) {
         DefineStrongSelfInBlock(sself);
         if (videoSrc.length > 0) {
             Video *video = [videoGroup videoAtURL:self.webURL];
@@ -224,14 +224,14 @@
     }
 }
 
-- (void)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURL:(NSString *)URL src:(NSString *)src completionBlock:(void (^)(NSString *videoSrc, NSInteger clarityCount))completionBlock
+- (void)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURL:(NSString *)URL clarity:(NSInteger)clarity src:(NSString *)src completionBlock:(void (^)(NSString *videoSrc, NSInteger clarityCount))completionBlock
 {
     __block BOOL hasSuccessed = NO;
     __block int remainingCallbackCount = self.handlers.count;
 
     for (id<TVDramaRequestHandler> handler in self.handlers) {
-        if ([handler respondsToSelector:@selector(tvDramaManager:sniffVideoSrcWithURL:src:completionBlock:)]) {
-            [handler tvDramaManager:manager sniffVideoSrcWithURL:URL src:src completionBlock:^(NSString *videoSrc, NSInteger clarityCount) {
+        if ([handler respondsToSelector:@selector(tvDramaManager:sniffVideoSrcWithURL:clarity:src:completionBlock:)]) {
+            [handler tvDramaManager:manager sniffVideoSrcWithURL:URL clarity:clarity src:src completionBlock:^(NSString *videoSrc, NSInteger clarityCount) {
                 BOOL success = videoSrc.length > 0;
 //                NSLog(@"[P2] sniffVideoSource %@, %d, handler = %@", videoSrc, remainingCallbackCount, handler);
                 
@@ -304,11 +304,11 @@
     }
 }
 
-- (void)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURL:(NSString *)URL src:(NSString *)src completionBlock:(void (^)(NSString *videoSrc, NSInteger clarityCount))completionBlock
+- (void)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURL:(NSString *)URL clarity:(NSInteger)clarity src:(NSString *)src completionBlock:(void (^)(NSString *videoSrc, NSInteger clarityCount))completionBlock
 {
     DefineWeakSelfBeforeBlock();
-    if ([self.actualHandler respondsToSelector:@selector(tvDramaManager:sniffVideoSrcWithURL:src:completionBlock:)]) {
-        [self.actualHandler tvDramaManager:manager sniffVideoSrcWithURL:URL src:src completionBlock:^(NSString *videoSrc, NSInteger clarityCount) {
+    if ([self.actualHandler respondsToSelector:@selector(tvDramaManager:sniffVideoSrcWithURL:clarity:src:completionBlock:)]) {
+        [self.actualHandler tvDramaManager:manager sniffVideoSrcWithURL:URL clarity:clarity src:src completionBlock:^(NSString *videoSrc, NSInteger clarityCount) {
 //            NSLog(@"[P1] sniffVideoSource %@, handler = %@", videoSrc, self.actualHandler);
             DefineStrongSelfInBlock(sself);
             if (videoSrc.length > 0) {
@@ -317,7 +317,7 @@
                 }
             }
             else if (sself.nextHandler) {
-                [sself.nextHandler tvDramaManager:manager sniffVideoSrcWithURL:URL src:src completionBlock:completionBlock];
+                [sself.nextHandler tvDramaManager:manager sniffVideoSrcWithURL:URL clarity:clarity src:src completionBlock:completionBlock];
             }
             else {
                 if (completionBlock) {
@@ -327,7 +327,7 @@
         }];
     }
     else if (self.nextHandler) {
-        [self.nextHandler tvDramaManager:manager sniffVideoSrcWithURL:URL src:src completionBlock:completionBlock];
+        [self.nextHandler tvDramaManager:manager sniffVideoSrcWithURL:URL clarity:clarity src:src completionBlock:completionBlock];
     }
     else {
         if (completionBlock) {

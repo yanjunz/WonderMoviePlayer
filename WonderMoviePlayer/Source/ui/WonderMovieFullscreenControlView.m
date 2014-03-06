@@ -773,7 +773,7 @@ void wonderMovieVolumeListenerCallback (
         button.tag = kWonderMovieResolutionButtonTagBase + i;
         button.titleLabel.font = [UIFont systemFontOfSize:11];
         [button setBackgroundImage:QQVideoPlayerImage(@"resolution_button_normal") forState:UIControlStateNormal];
-        [button addTarget:self action:@selector(onClickResolution:) forControlEvents:UIControlEventTouchUpInside];
+        [button addTarget:self action:@selector(onClickResolutionItem:) forControlEvents:UIControlEventTouchUpInside];
         [popupMenu addSubview:button];
         
         UIImageView *menuSeparatorView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"separator_line")];
@@ -1381,6 +1381,26 @@ void wonderMovieVolumeListenerCallback (
     BOOL animateToShow = self.resolutionsView.hidden;
     [self showResolutionView:animateToShow];
     [self cancelPreviousAndPrepareToDimControl];
+}
+
+- (IBAction)onClickResolutionItem:(UIButton *)sender
+{
+    [self showResolutionView:NO];
+    [self cancelPreviousAndPrepareToDimControl];
+    
+    
+    int resolutionIndex = [self.resolutions indexOfObject:sender.currentTitle];
+    if (resolutionIndex >= 0 && resolutionIndex < self.resolutions.count) {
+        self.tvDramaManager.currentClarity = resolutionIndex;
+        self.selectedResolutionIndex = resolutionIndex;
+        [self updateResolutions];
+        
+        if ([self.delegate respondsToSelector:@selector(movieControlSource:didChangeResolution:)]) {
+            [self.delegate movieControlSource:self didChangeResolution:self.resolutions[resolutionIndex]];
+        }
+        
+        [self dramaDidSelectSetNum:self.tvDramaManager.curSetNum];
+    }
 }
 
 - (void)showResolutionView:(BOOL)show
@@ -2310,22 +2330,9 @@ static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanni
     self.tvDramaManager.curSetNum = setNum;
     self.tvDramaManager.webURL = [[self.tvDramaManager videoGroupInCurrentThread] videoAtSetNum:@(setNum)].url;
     
-//    [self performBlockInBackground:^{
-//        BOOL ret = [self.tvDramaManager sniffVideoSource];
-//        [self performBlockInMainThread:^{
-//            if (ret) {
-//                [self dramaDidFinishSniff:setNum];
-//            }
-//            else {
-//                [self dramaDidFailToSniff];
-//            }
-//        } afterDelay:0];
-//    }];
-    
     [self.tvDramaManager sniffVideoSource:^(BOOL success) {
         // make sure to invoke UI related code in main thread
         [self performBlockInMainThread:^{
-//            NSLog(@"fullscreen sniffVideoSource %d", success);
             if (success) {
                 [self dramaDidFinishSniff:setNum];
             }

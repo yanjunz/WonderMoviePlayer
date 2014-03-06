@@ -236,7 +236,7 @@
     }];
 }
 
-- (void)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURL:(NSString *)URL src:(NSString *)src completionBlock:(void (^)(NSString *videoSrc, NSInteger clarityCount))completionBlock
+- (void)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURL:(NSString *)URL clarity:(NSInteger)clarity src:(NSString *)src completionBlock:(void (^)(NSString *videoSrc, NSInteger clarityCount))completionBlock
 {
     [self performBlockInBackground:^{
         NSString *videoSrc = [self tvDramaManager:manager sniffVideoSrcWithURL:URL src:src];

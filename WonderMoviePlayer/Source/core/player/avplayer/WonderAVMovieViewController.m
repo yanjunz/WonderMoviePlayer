@@ -1211,6 +1211,21 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     [[UIApplication sharedApplication] setStatusBarHidden:!show withAnimation:UIStatusBarAnimationFade];
 }
 
+- (void)movieControlSource:(id<MovieControlSource>)source didChangeResolution:(NSString *)resolution
+{
+    CMTime playerDuration = [self playerItemDuration];
+    if (CMTIME_IS_INVALID(playerDuration)) {
+        return;
+    }
+    
+    double duration = CMTimeGetSeconds(playerDuration);
+    if (isfinite(duration) && duration > 0) {
+        double time = CMTimeGetSeconds([self.player currentTime]);
+        CGFloat progress = time / duration;
+        _startProgress = progress;
+    }
+}
+
 // Drama
 - (void)movieControlSourceDramaLoadFinished:(id<MovieControlSource>)source
 {
@@ -1242,7 +1257,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 #endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
     
     [self.controlSource resetState];
-    [self playMovieStream:url fromProgress:0];
+    [self playMovieStream:url fromProgress:_startProgress];
 }
 
 - (void)movieControlSourceFailToPlayNext:(id<MovieControlSource>)source

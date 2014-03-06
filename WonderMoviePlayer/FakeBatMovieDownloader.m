@@ -9,7 +9,7 @@
 #import "FakeBatMovieDownloader.h"
 
 @implementation FakeBatMovieDownloader
-- (void)batchDownloadURLs:(NSArray *)downloadURLs
+- (void)batchDownloadURLs:(NSArray *)downloadURLs titles:(NSDictionary *)titles knownVideoSources:(NSDictionary *)knownVideoSources;
 {
     NSLog(@"batchDownloadURL %@", downloadURLs);
 }

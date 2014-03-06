@@ -217,6 +217,7 @@
     [controller.controlSource setTitle:@"我叫MTMTMTMMTMTMTMTMMTMTMTMMTMTMMTMTMMTMMTMTMTMMTTMMTMTMMT" subtitle:@""];
     
     [controller.controlSource setTvDramaManager:tvDramaManager];
+    [controller.controlSource setResolutions:@[@"高清", @"流畅", @"标清"]];
     
 //    static int alertCount = 0;
 //    [controller.controlSource setAlertCopyrightInsteadOfDownload:++alertCount % 2];
