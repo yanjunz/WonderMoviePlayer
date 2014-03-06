@@ -47,7 +47,6 @@
 		B51F619617E9ADC200344122 /* Test2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B51F619417E9ADC200344122 /* Test2ViewController.m */; };
 		B51F619717E9ADC200344122 /* Test2ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B51F619517E9ADC200344122 /* Test2ViewController.xib */; };
 		B52DCDA9183F4E890020485B /* WonderMovieFullscreenControlView+StateMachine.m in Sources */ = {isa = PBXBuildFile; fileRef = B52DCDA8183F4E890020485B /* WonderMovieFullscreenControlView+StateMachine.m */; };
-		B5435570186AE7230090AFEE /* WonderMovieURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = B543556F186AE7230090AFEE /* WonderMovieURLProtocol.m */; };
 		B5435577186D250C0090AFEE /* MttActivityIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = B5435576186D250C0090AFEE /* MttActivityIndicator.m */; };
 		B54355B1186D26DF0090AFEE /* back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5435579186D26DE0090AFEE /* back@2x.png */; };
 		B54355B4186D26DF0090AFEE /* brightness@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B543557C186D26DE0090AFEE /* brightness@2x.png */; };
@@ -132,13 +131,6 @@
 		B58F110918376EDB00D6A9B2 /* TestTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B58F110818376EDB00D6A9B2 /* TestTableViewController.m */; };
 		B5AD785217CDA50E00C08E51 /* video.js in Sources */ = {isa = PBXBuildFile; fileRef = B5AD785117CDA50E00C08E51 /* video.js */; };
 		B5AD785317CDA5E800C08E51 /* video.js in Resources */ = {isa = PBXBuildFile; fileRef = B5AD785117CDA50E00C08E51 /* video.js */; };
-		B5AD78A817CDD30600C08E51 /* JSURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = B5AD78A717CDD30600C08E51 /* JSURLProtocol.m */; };
-		B5AD78AB17CDD35700C08E51 /* JSPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B5AD78AA17CDD35700C08E51 /* JSPlugin.m */; };
-		B5AD78AE17CDD4C400C08E51 /* JSPluginEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = B5AD78AD17CDD4C400C08E51 /* JSPluginEngine.m */; };
-		B5AD78B117CDEB4600C08E51 /* JSVideoPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B5AD78B017CDEB4500C08E51 /* JSVideoPlugin.m */; };
-		B5AD78B517CDF01700C08E51 /* JSInvokedUrlCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = B5AD78B417CDF01700C08E51 /* JSInvokedUrlCommand.m */; };
-		B5AD78B817CDF06100C08E51 /* JSJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = B5AD78B717CDF06100C08E51 /* JSJSON.m */; };
-		B5AD78BE17CE043B00C08E51 /* JSCommandQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = B5AD78BD17CE043A00C08E51 /* JSCommandQueue.m */; };
 		B5D4C3641820F51A00BB0A53 /* WonderMovieFullscreenControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D4C35A1820F51A00BB0A53 /* WonderMovieFullscreenControlView.m */; };
 		B5D4C3651820F51A00BB0A53 /* WonderMovieInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D4C35C1820F51A00BB0A53 /* WonderMovieInfoView.m */; };
 		B5D4C3661820F51A00BB0A53 /* WonderMovieProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D4C35E1820F51A00BB0A53 /* WonderMovieProgressView.m */; };
@@ -218,8 +210,6 @@
 		B51F619517E9ADC200344122 /* Test2ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Test2ViewController.xib; sourceTree = "<group>"; };
 		B52DCDA7183F4E890020485B /* WonderMovieFullscreenControlView+StateMachine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WonderMovieFullscreenControlView+StateMachine.h"; sourceTree = "<group>"; };
 		B52DCDA8183F4E890020485B /* WonderMovieFullscreenControlView+StateMachine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WonderMovieFullscreenControlView+StateMachine.m"; sourceTree = "<group>"; };
-		B543556E186AE7230090AFEE /* WonderMovieURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMovieURLProtocol.h; sourceTree = "<group>"; };
-		B543556F186AE7230090AFEE /* WonderMovieURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderMovieURLProtocol.m; sourceTree = "<group>"; };
 		B5435575186D250C0090AFEE /* MttActivityIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MttActivityIndicator.h; sourceTree = "<group>"; };
 		B5435576186D250C0090AFEE /* MttActivityIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MttActivityIndicator.m; sourceTree = "<group>"; };
 		B5435579186D26DE0090AFEE /* back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back@2x.png"; sourceTree = "<group>"; };
@@ -341,20 +331,6 @@
 		B58F110718376EDB00D6A9B2 /* TestTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestTableViewController.h; sourceTree = "<group>"; };
 		B58F110818376EDB00D6A9B2 /* TestTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestTableViewController.m; sourceTree = "<group>"; };
 		B5AD785117CDA50E00C08E51 /* video.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = video.js; sourceTree = "<group>"; };
-		B5AD78A617CDD30600C08E51 /* JSURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSURLProtocol.h; sourceTree = "<group>"; };
-		B5AD78A717CDD30600C08E51 /* JSURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSURLProtocol.m; sourceTree = "<group>"; };
-		B5AD78A917CDD35700C08E51 /* JSPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSPlugin.h; sourceTree = "<group>"; };
-		B5AD78AA17CDD35700C08E51 /* JSPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSPlugin.m; sourceTree = "<group>"; };
-		B5AD78AC17CDD4C400C08E51 /* JSPluginEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSPluginEngine.h; sourceTree = "<group>"; };
-		B5AD78AD17CDD4C400C08E51 /* JSPluginEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSPluginEngine.m; sourceTree = "<group>"; };
-		B5AD78AF17CDEB4500C08E51 /* JSVideoPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSVideoPlugin.h; sourceTree = "<group>"; };
-		B5AD78B017CDEB4500C08E51 /* JSVideoPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSVideoPlugin.m; sourceTree = "<group>"; };
-		B5AD78B317CDF01700C08E51 /* JSInvokedUrlCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSInvokedUrlCommand.h; sourceTree = "<group>"; };
-		B5AD78B417CDF01700C08E51 /* JSInvokedUrlCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSInvokedUrlCommand.m; sourceTree = "<group>"; };
-		B5AD78B617CDF06100C08E51 /* JSJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSJSON.h; sourceTree = "<group>"; };
-		B5AD78B717CDF06100C08E51 /* JSJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSJSON.m; sourceTree = "<group>"; };
-		B5AD78BC17CE043900C08E51 /* JSCommandQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSCommandQueue.h; sourceTree = "<group>"; };
-		B5AD78BD17CE043A00C08E51 /* JSCommandQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSCommandQueue.m; sourceTree = "<group>"; };
 		B5D4C3591820F51A00BB0A53 /* WonderMovieFullscreenControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMovieFullscreenControlView.h; sourceTree = "<group>"; };
 		B5D4C35A1820F51A00BB0A53 /* WonderMovieFullscreenControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderMovieFullscreenControlView.m; sourceTree = "<group>"; };
 		B5D4C35B1820F51A00BB0A53 /* WonderMovieInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMovieInfoView.h; sourceTree = "<group>"; };
@@ -471,9 +447,7 @@
 		B517773D17B36D44006B948E /* WonderMoviePlayer */ = {
 			isa = PBXGroup;
 			children = (
-				B543556D186AE1940090AFEE /* Integration */,
 				B5D4C3731822636E00BB0A53 /* Libs */,
-				B5AD78A217CDCFBB00C08E51 /* JSPlugin */,
 				B517775A17B36E04006B948E /* Source */,
 				B517774617B36D44006B948E /* AppDelegate.h */,
 				B517774717B36D44006B948E /* AppDelegate.m */,
@@ -523,15 +497,6 @@
 				B54355AA186D26DF0090AFEE /* activityindicator */,
 			);
 			path = images;
-			sourceTree = "<group>";
-		};
-		B543556D186AE1940090AFEE /* Integration */ = {
-			isa = PBXGroup;
-			children = (
-				B543556E186AE7230090AFEE /* WonderMovieURLProtocol.h */,
-				B543556F186AE7230090AFEE /* WonderMovieURLProtocol.m */,
-			);
-			path = Integration;
 			sourceTree = "<group>";
 		};
 		B5435574186D250C0090AFEE /* MttActivityIndicator */ = {
@@ -712,27 +677,6 @@
 				B58B572D18347F240096801E /* MagicalRecordShorthand.h */,
 			);
 			path = Core;
-			sourceTree = "<group>";
-		};
-		B5AD78A217CDCFBB00C08E51 /* JSPlugin */ = {
-			isa = PBXGroup;
-			children = (
-				B5AD78A617CDD30600C08E51 /* JSURLProtocol.h */,
-				B5AD78A717CDD30600C08E51 /* JSURLProtocol.m */,
-				B5AD78A917CDD35700C08E51 /* JSPlugin.h */,
-				B5AD78AA17CDD35700C08E51 /* JSPlugin.m */,
-				B5AD78AC17CDD4C400C08E51 /* JSPluginEngine.h */,
-				B5AD78AD17CDD4C400C08E51 /* JSPluginEngine.m */,
-				B5AD78AF17CDEB4500C08E51 /* JSVideoPlugin.h */,
-				B5AD78B017CDEB4500C08E51 /* JSVideoPlugin.m */,
-				B5AD78B317CDF01700C08E51 /* JSInvokedUrlCommand.h */,
-				B5AD78B417CDF01700C08E51 /* JSInvokedUrlCommand.m */,
-				B5AD78B617CDF06100C08E51 /* JSJSON.h */,
-				B5AD78B717CDF06100C08E51 /* JSJSON.m */,
-				B5AD78BC17CE043900C08E51 /* JSCommandQueue.h */,
-				B5AD78BD17CE043A00C08E51 /* JSCommandQueue.m */,
-			);
-			path = JSPlugin;
 			sourceTree = "<group>";
 		};
 		B5D4C3561820F51A00BB0A53 /* ui */ = {
@@ -1067,19 +1011,14 @@
 				B5DC0783182CD4690046A7A5 /* WonderAVPlayerView.m in Sources */,
 				B5AD785217CDA50E00C08E51 /* video.js in Sources */,
 				B58B57601834D2AD0096801E /* Video.m in Sources */,
-				B5AD78A817CDD30600C08E51 /* JSURLProtocol.m in Sources */,
 				B58B573418347F250096801E /* NSRelationshipDescription+MagicalDataImport.m in Sources */,
 				B5F96D681846267C006A73FB /* Reachability.m in Sources */,
 				B58B573C18347F250096801E /* NSManagedObjectContext+MagicalRecord.m in Sources */,
 				B58B573318347F240096801E /* NSObject+MagicalDataImport.m in Sources */,
 				B58B573918347F250096801E /* NSManagedObject+MagicalRecord.m in Sources */,
 				B58B573F18347F250096801E /* NSManagedObjectModel+MagicalRecord.m in Sources */,
-				B5AD78AB17CDD35700C08E51 /* JSPlugin.m in Sources */,
-				B5AD78AE17CDD4C400C08E51 /* JSPluginEngine.m in Sources */,
 				B58B573618347F250096801E /* NSManagedObject+MagicalAggregation.m in Sources */,
 				B58B573B18347F250096801E /* NSManagedObjectContext+MagicalObserving.m in Sources */,
-				B5AD78B117CDEB4600C08E51 /* JSVideoPlugin.m in Sources */,
-				B5AD78B517CDF01700C08E51 /* JSInvokedUrlCommand.m in Sources */,
 				B58B573018347F240096801E /* NSAttributeDescription+MagicalDataImport.m in Sources */,
 				AE2572FF18C0AC9D00F71429 /* WonderMovieDownloadListCell.m in Sources */,
 				AE25730318C0C73D00F71429 /* FakeBatMovieDownloader.m in Sources */,
@@ -1089,12 +1028,9 @@
 				B58B573D18347F250096801E /* NSManagedObjectContext+MagicalSaves.m in Sources */,
 				AE96680718B4398D00158788 /* NSString+Hash.m in Sources */,
 				B5F96D5118437748006A73FB /* FakeMovieDownloader.m in Sources */,
-				B5AD78B817CDF06100C08E51 /* JSJSON.m in Sources */,
 				B58B574018347F250096801E /* NSPersistentStore+MagicalRecord.m in Sources */,
 				B58B574218347F250096801E /* MagicalRecord+Actions.m in Sources */,
 				B5D4C37E1822636E00BB0A53 /* RegexKitLite.m in Sources */,
-				B5435570186AE7230090AFEE /* WonderMovieURLProtocol.m in Sources */,
-				B5AD78BE17CE043B00C08E51 /* JSCommandQueue.m in Sources */,
 				B58B573818347F250096801E /* NSManagedObject+MagicalFinders.m in Sources */,
 				B51F619617E9ADC200344122 /* Test2ViewController.m in Sources */,
 				B58B574818347F250096801E /* MagicalRecord.m in Sources */,

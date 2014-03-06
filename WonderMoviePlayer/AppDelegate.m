@@ -10,10 +10,6 @@
 
 #import "ViewController.h"
 #import "NSNotificationCenter+SwizzleMethod.h"
-#import "JSURLProtocol.h"
-#import "JSVideoPlugin.h"
-#import "JSPluginEngine.h"
-#import "WonderMovieURLProtocol.h"
 
 void uncaughtExceptionHandler(NSException *exception)
 {
