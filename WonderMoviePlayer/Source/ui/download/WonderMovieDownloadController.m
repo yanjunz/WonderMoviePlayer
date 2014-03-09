@@ -11,6 +11,7 @@
 #import "Video.h"
 #import "VideoGroup+Additions.h"
 #import "UIView+Sizes.h"
+#import "WonderMoviePlayerConstants.h"
 
 @interface WonderMovieDownloadController () {
     BOOL _supportBatchDownload;
@@ -120,6 +121,7 @@
 
 - (IBAction)onClickDownload:(id)sender
 {
+    AddStatWithKey(VideoStatKeyDownloadInBatch);
     [self.downloadView confirm];
     [self dismissViewControllerAnimated:YES completion:nil];
     _closeAfterSniffing = YES;

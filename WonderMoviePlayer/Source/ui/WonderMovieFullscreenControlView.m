@@ -1229,6 +1229,7 @@ void wonderMovieVolumeListenerCallback (
 
 - (IBAction)onClickDownload:(id)sender
 {
+    AddStatWithKey(VideoPlayerStatKeyDownload);
     [self dismissAllPopupViews];
     if (_liveCastState == LiveCastStateYes) {
         [self.infoView showDownloadToast:NSLocalizedString(@"直播视频不支持下载", nil) show:YES animated:YES];
@@ -1249,6 +1250,7 @@ void wonderMovieVolumeListenerCallback (
 
 - (IBAction)onClickCrossScreen:(id)sender
 {
+    AddStatWithKey(VideoPlayerStatKeyCrossScreen);
     [self dismissAllPopupViews];
     if ([self.delegate respondsToSelector:@selector(movieControlSourceOnCrossScreen:)]) {
         [self.delegate movieControlSourceOnCrossScreen:self];
@@ -1258,6 +1260,13 @@ void wonderMovieVolumeListenerCallback (
 
 - (IBAction)onClickLock:(id)sender
 {
+    if (_isLocked) {
+        AddStatWithKey(VideoPlayerStatKeyUnlock);
+    }
+    else {
+        AddStatWithKey(VideoPlayerStatKeyLock);
+    }
+    
     _isLocked = !_isLocked;
     BOOL isLocked = _isLocked;
     self.panGestureRecognizer.enabled = !isLocked;
@@ -1283,11 +1292,18 @@ void wonderMovieVolumeListenerCallback (
 
 - (IBAction)onClickBookmark:(id)sender
 {
+    AddStatWithKey(VideoPlayerStatKeyBookmark);
+    
     VideoGroup *videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
     if (videoGroup) {
         BOOL hasBookmarked = [self.bookmarkOperator isVideoGroupBookmarked:videoGroup];
         [self.bookmarkOperator bookmarkVideoGroup:videoGroup bookmark:!hasBookmarked];
         [self updateBookmarkTitle];
+        
+        if ([videoGroup isValidDrama]) {
+                NSString * infoText = (!hasBookmarked) ? NSLocalizedString(@"已添加到我的视频追剧", nil) : NSLocalizedString(@"已取消追剧", nil);
+            [self.infoView showCommonToast:infoText show:YES animated:YES];
+        }
     }
 }
 
@@ -1312,6 +1328,8 @@ void wonderMovieVolumeListenerCallback (
 
 - (IBAction)onClickMenu:(UIButton *)sender
 {
+    AddStatWithKey(VideoPlayerStatKeyMenu);
+    
     [self showPopupMenu:!self.menuButton.selected];
     [self cancelPreviousAndPrepareToDimControl];
 }
@@ -1364,6 +1382,7 @@ void wonderMovieVolumeListenerCallback (
 
 - (IBAction)onClickTVDrama:(id)sender
 {
+    AddStatWithKey(VideoPlayerStatKeyDrama);
     [self showOverlay:NO];
     [self showDramaView:YES];
     [self dismissAllPopupViews]; 
@@ -1372,6 +1391,7 @@ void wonderMovieVolumeListenerCallback (
 
 - (IBAction)onClickMyVideo:(id)sender
 {
+    AddStatWithKey(VideoPlayerStatKeyMyVideo);
     [self showOverlay:YES];
     [self dismissAllPopupViews];
     
@@ -1382,6 +1402,7 @@ void wonderMovieVolumeListenerCallback (
 
 - (IBAction)onClickResolution:(id)sender
 {
+    AddStatWithKey(VideoPlayerStatKeyClarity);
     BOOL animateToShow = self.resolutionsView.hidden;
     [self showResolutionView:animateToShow];
     [self cancelPreviousAndPrepareToDimControl];
@@ -1816,7 +1837,19 @@ void wonderMovieVolumeListenerCallback (
         _airPlayButton = volumeView;
 //        CGFloat delta = volumeView.width + kWonderMovieAirplayLeftPadding;
         [self setNeedsLayout];
+        
+        for (UIView *view in volumeView.subviews) {
+            if ([view isKindOfClass:[UIButton class]] && view.hidden == NO) {
+                UIButton *airplayButton = (UIButton *)view;
+                [airplayButton addTarget:self action:@selector(onClickAirPlay:) forControlEvents:UIControlEventTouchUpInside];
+            }
+        }
     }
+}
+
+- (IBAction)onClickAirPlay:(id)sender
+{
+    AddStatWithKey(VideoPlayerStatKeyAirPlay);
 }
 #endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
 

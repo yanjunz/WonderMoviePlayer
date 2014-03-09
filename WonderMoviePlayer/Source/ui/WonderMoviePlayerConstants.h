@@ -30,6 +30,30 @@
 #define QQColor(colorName) Color(#colorName)
 #endif
 
+
+// For statistics
+
+#ifndef AddStatWithKey
+#import "WupCustomStatisticsManager.h"
+#define AddStatWithKey(key) [[WupCustomStatisticsManager sharedInstance] increaseSTValueForKey:key]
+#endif // AddStatWithKey
+
+#define VideoPlayerStatKeyMyVideo     @"I208"
+#define VideoPlayerStatKeyDrama       @"I221"
+#define VideoPlayerStatKeyMenu        @"I222"
+#define VideoPlayerStatKeyDownload    @"I223"
+#define VideoPlayerStatKeyLock        @"I224"
+#define VideoPlayerStatKeyUnlock      @"I225"
+#define VideoPlayerStatKeyBookmark    @"I226"
+#define VideoPlayerStatKeyCrossScreen @"I227"
+#define VideoPlayerStatKeyClarity     @"I228"
+#define VideoPlayerStatKeyAirPlay     @"I229"
+
+#define VideoStatKeyDownloadInBatch   @"I230"
+#define VideoStatKeyClarityInBatch    @"I231"
+
+////
+
 //#define videoplayer_title_color             RGBAColor(0xb2, 0xb2, 0xb2, 0xff)
 //#define videoplayer_subtitle_color          RGBAColor(0x8d, 0x8d, 0x8d, 0xff)
 #define videoplayer_title_color             [[UIColor whiteColor] colorWithAlphaComponent:0.6]
