@@ -43,6 +43,10 @@
 
 #define kWonderMovieResolutionButtonTagBase         100
 
+@interface WonderMovieResolutionButton : UIButton
+
+@end
+
 @interface WonderMovieFullscreenControlView () <UIGestureRecognizerDelegate>{
 #ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
     MPVolumeView *_airPlayButton; // assign
@@ -288,11 +292,10 @@ void wonderMovieVolumeListenerCallback (
     [bottomBarContainer addSubview:self.bottomBar];
     
     CGFloat resolutionButtonWidth = 62, resolutionButtonHeight = 18 + 20;
-    UIButton *resolutionButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIButton *resolutionButton = [WonderMovieResolutionButton buttonWithType:UIButtonTypeCustom];
     resolutionButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     resolutionButton.titleLabel.font = [UIFont systemFontOfSize:11];
-    UIImage *bgImage = [self backgroundImageWithSize:CGSizeMake(resolutionButtonWidth, resolutionButtonHeight) content:QQVideoPlayerImage(@"resolution_button_selected")];
-    [resolutionButton setBackgroundImage:bgImage forState:UIControlStateNormal];
+    [resolutionButton setImage:QQVideoPlayerImage(@"arrow") forState:UIControlStateNormal];
     [resolutionButton addTarget:self action:@selector(onClickResolution:) forControlEvents:UIControlEventTouchUpInside];
     self.resolutionButton = resolutionButton;
     resolutionButton.frame = CGRectMake(self.width - resolutionButtonWidth, (bottomBarHeight - resolutionButtonHeight) / 2, resolutionButtonWidth, resolutionButtonHeight);
@@ -2379,5 +2382,19 @@ static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanni
 
 @end
 
+
+@implementation WonderMovieResolutionButton
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    CGFloat padding = 0;
+    CGFloat width = self.titleLabel.width + self.imageView.width + padding;
+    
+    self.titleLabel.frame = CGRectMake((self.width - width) / 2, (self.height - self.titleLabel.height) / 2, self.titleLabel.width, self.titleLabel.height);
+    self.imageView.frame = CGRectMake(self.titleLabel.right + padding, (self.height - self.imageView.height) / 2, self.imageView.width, self.imageView.height);
+}
+
+@end
 
 #endif // MTT_FEATURE_WONDER_MOVIE_PLAYER
