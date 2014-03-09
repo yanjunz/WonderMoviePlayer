@@ -13,11 +13,13 @@
 #import "UIView+Sizes.h"
 #import "WonderMoviePlayerConstants.h"
 
-@interface WonderMovieDownloadController () {
+@interface WonderMovieDownloadController ()<UIActionSheetDelegate> {
     BOOL _supportBatchDownload;
     
-    BOOL _closeAfterSniffing;
+    int _currentClarity;
 }
+@property (nonatomic, strong) UIButton *clarityButton;
+@property (nonatomic, copy) NSArray *resolutions;
 @end
 
 @implementation WonderMovieDownloadController
@@ -78,6 +80,25 @@
     self.availableSpaceLabel = label;
     [footerView addSubview:label];
     
+    if (self.tvDramaManager.clarityCount > 0) {
+        NSArray *resoultions = @[@"流畅", @"标清", @"高清"];
+        if (self.tvDramaManager.clarityCount > resoultions.count) {
+            resoultions = [resoultions subarrayWithRange:NSMakeRange(0, self.tvDramaManager.clarityCount)];
+        }
+        self.resolutions = resoultions;
+        
+        UIButton *clarityButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [clarityButton setTitle:resoultions[0] forState:UIControlStateNormal];
+        [clarityButton addTarget:self action:@selector(onClickClarity:) forControlEvents:UIControlEventTouchUpInside];
+        clarityButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+        clarityButton.frame = CGRectMake(footerView.width - 60, 0, 60, footerHeight);
+        [clarityButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        clarityButton.titleLabel.font = [UIFont systemFontOfSize:13];
+        self.clarityButton = clarityButton;
+        
+        [footerView addSubview:clarityButton];
+    }
+    
     [self.downloadView reloadData];
     [self updateAvailableSpace];
 }
@@ -116,7 +137,6 @@
 {
     [self.downloadView cancel];
     [self dismissViewControllerAnimated:YES completion:nil];
-    _closeAfterSniffing = NO;
 }
 
 - (IBAction)onClickDownload:(id)sender
@@ -124,7 +144,17 @@
     AddStatWithKey(VideoStatKeyDownloadInBatch);
     [self.downloadView confirm];
     [self dismissViewControllerAnimated:YES completion:nil];
-    _closeAfterSniffing = YES;
+}
+
+- (IBAction)onClickClarity:(id)sender
+{
+    UIActionSheet *sheet = [[UIActionSheet alloc] init];
+    for (NSString *res in self.resolutions) {
+        [sheet addButtonWithTitle:res];
+    }
+    [sheet addButtonWithTitle:@"取消"];
+    sheet.delegate = self;
+    [sheet showInView:self.view];
 }
 
 - (void)startBatDownload:(NSArray *)videos
@@ -157,7 +187,7 @@
         }
     }
 
-    [self.batMovieDownloader batchDownloadURLs:downloadURLs titles:titleDict knownVideoSources:knownVideoSourceDict];
+    [self.batMovieDownloader batchDownloadURLs:downloadURLs titles:titleDict knownVideoSources:knownVideoSourceDict clarity:_currentClarity];
 }
 
 #pragma mark Public
@@ -196,6 +226,14 @@
         NSLog(@"Error Obtaining System Memory Info: Domain = %@, Code = %d", [error domain], [error code]);
     }
     return totalFreeSpace;
+}
+
+#pragma mark UIActionSheetDelegate
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+//    NSLog(@"%d", buttonIndex);
+    _currentClarity = MAX(0, MIN(self.resolutions.count, buttonIndex));
+    [self.clarityButton setTitle:self.resolutions[_currentClarity] forState:UIControlStateNormal];
 }
 
 @end

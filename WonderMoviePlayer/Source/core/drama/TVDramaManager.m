@@ -92,7 +92,7 @@
             video.videoSrc = videoSrc;
             [[NSManagedObjectContext MR_contextForCurrentThread] save:NULL];
             
-            sself.clarityCount = clarityCount;
+//            sself.clarityCount = clarityCount;// No need to set here, it will get clarity count ASAP
             
             if (completionBlock) {
                 completionBlock(YES);

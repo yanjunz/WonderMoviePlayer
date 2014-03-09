@@ -187,8 +187,10 @@
     [_loadingView removeFromSuperview];
     [self bringSubviewToFront:self.tableView];
     
-    [self reloadData];
-    [self updateTableState];
+    if (self.videoGroup) { // FIXME: Sometime it will unable to get videoGroup for this thread
+        [self reloadData];
+        [self updateTableState];
+    }
 }
 
 - (void)finishPreviousSectionLoad

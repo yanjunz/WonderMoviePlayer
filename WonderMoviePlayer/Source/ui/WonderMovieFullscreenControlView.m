@@ -812,6 +812,7 @@ void wonderMovieVolumeListenerCallback (
         
         _resolutions = [resolutions copy];
         _resolutionsChanged = YES;
+        self.tvDramaManager.clarityCount = _resolutions.count;
         [self setNeedsLayout];
     }
 }

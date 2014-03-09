@@ -19,5 +19,5 @@
 
 @protocol BatMovieDownloader <NSObject>
 @property (nonatomic, weak) id<BatMovieDownloaderDelegate> batMovieDownloaderDelegate;
-- (void)batchDownloadURLs:(NSArray *)downloadURLs titles:(NSDictionary *)titles knownVideoSources:(NSDictionary *)knownVideoSources;
+- (void)batchDownloadURLs:(NSArray *)downloadURLs titles:(NSDictionary *)titles knownVideoSources:(NSDictionary *)knownVideoSources clarity:(NSInteger)clarity;
 @end
