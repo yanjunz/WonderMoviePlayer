@@ -1302,7 +1302,7 @@ void wonderMovieVolumeListenerCallback (
         [self updateBookmarkTitle];
         
         if ([videoGroup isValidDrama]) {
-                NSString * infoText = (!hasBookmarked) ? NSLocalizedString(@"已添加到我的视频追剧", nil) : NSLocalizedString(@"已取消追剧", nil);
+            NSString * infoText = (!hasBookmarked) ? NSLocalizedString(@"已添加到我的视频追剧", nil) : NSLocalizedString(@"已取消追剧", nil);
             [self.infoView showCommonToast:infoText show:YES animated:YES];
         }
     }

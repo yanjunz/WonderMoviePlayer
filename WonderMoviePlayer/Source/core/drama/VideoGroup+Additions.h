@@ -15,7 +15,7 @@ typedef enum {
 } VideoGroupShowType;
 
 @interface VideoGroup (Additions)
-+ (VideoGroup *)videoGroupWithVideoId:(NSString *)videoId;
++ (VideoGroup *)videoGroupWithVideoId:(NSString *)videoId inContext:(NSManagedObjectContext *)context;
 - (Video *)videoAtURL:(NSString *)URL;
 - (Video *)videoAtSetNum:(NSNumber *)setNum;
 - (void)setVideo:(Video *)video atSetNum:(NSNumber *)setNum inContext:(NSManagedObjectContext *)context;

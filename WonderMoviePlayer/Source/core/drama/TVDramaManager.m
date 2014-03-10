@@ -31,6 +31,7 @@
 //    NSLog(@"TVDramaManager dealloc");
 }
 
+// read property with videoGroupInCurrentThread
 - (VideoGroup *)videoGroupInCurrentThread
 {
     return [self.videoGroup MR_inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
@@ -41,7 +42,11 @@
     VideoGroup *videoGroup = [self videoGroupInCurrentThread];
     Video* ret = [videoGroup isValidDrama] ? [videoGroup videoAtSetNum:@(self.curSetNum)] : [videoGroup.videos anyObject];
     
-    ret.videoSrc = self.playingURL;
+    // FIXME: should place update in a better place
+    [MagicalRecord saveWithBlockAndWait:^(NSManagedObjectContext *localContext) {
+        Video *video = [ret MR_inContext:localContext];
+        video.videoSrc = self.playingURL;
+    }];
     
     return ret;
 }
@@ -88,9 +93,11 @@
     [self.requestHandler tvDramaManager:self sniffVideoSrcWithURL:self.webURL clarity:self.currentClarity src:videoGroup.src completionBlock:^(NSString *videoSrc, NSInteger clarityCount) {
         DefineStrongSelfInBlock(sself);
         if (videoSrc.length > 0) {
-            Video *video = [videoGroup videoAtURL:self.webURL];
-            video.videoSrc = videoSrc;
-            [[NSManagedObjectContext MR_contextForCurrentThread] save:NULL];
+            [MagicalRecord saveWithBlockAndWait:^(NSManagedObjectContext *localContext) {
+                VideoGroup *videoGroup = [sself.videoGroup MR_inContext:localContext];
+                Video *video = [videoGroup videoAtURL:self.webURL];
+                video.videoSrc = videoSrc;
+            }];
             
 //            sself.clarityCount = clarityCount;// No need to set here, it will get clarity count ASAP
             
@@ -115,14 +122,14 @@
 #pragma mark Private
 - (void)fullFillVideoGroup:(BOOL)hasVideoGroup
 {
-    __block VideoGroup *videoGroup = hasVideoGroup ? [self videoGroupInCurrentThread] : nil;
     DefineWeakSelfBeforeBlock();
-    
-    // Add one video object for non-drama video group
-    if (![videoGroup isValidDrama]) {
-        [MagicalRecord saveUsingCurrentThreadContextWithBlockAndWait:^(NSManagedObjectContext *localContext) {
-            DefineStrongSelfInBlock(sself);
-            
+    [MagicalRecord saveWithBlockAndWait:^(NSManagedObjectContext *localContext) {
+        DefineStrongSelfInBlock(sself);
+        
+        VideoGroup *videoGroup = [self.videoGroup MR_inContext:localContext];
+        
+        // Add one video object for non-drama video group
+        if (![videoGroup isValidDrama]) {
             NSString *title = [videoGroup displayNameForSetNum:nil];
             
             if (videoGroup == nil) {
@@ -150,10 +157,11 @@
             updatedVideo.brief = title;
             updatedVideo.url = sself.webURL;
             sself.curSetNum = 0;
-            sself.videoGroup = videoGroup;            
+            sself.videoGroup = videoGroup;
             [videoGroup setVideo:updatedVideo atSetNum:0 inContext:localContext];
-        }];
-    }
+        }
+    }];
+
 }
 
 - (NSString *)generateVideoIdWithKey:(NSString *)key

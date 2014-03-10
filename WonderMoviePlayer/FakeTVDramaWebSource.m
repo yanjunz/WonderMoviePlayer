@@ -33,10 +33,10 @@
 - (void)setupDatabase
 {
     [MagicalRecord saveWithBlockAndWait:^(NSManagedObjectContext *localContext) {
-        [VideoGroup MR_truncateAll];
-        NSArray *videoGroups = [VideoGroup MR_findAll];
+        [VideoGroup MR_truncateAllInContext:localContext];
+        NSArray *videoGroups = [VideoGroup MR_findAllInContext:localContext];
         if (videoGroups.count == 0) {
-            VideoGroup *videoGroup = [VideoGroup MR_createEntity];
+            VideoGroup *videoGroup = [VideoGroup MR_createInContext:localContext];
             
             NSMutableArray *urls = [NSMutableArray arrayWithArray:@[
                                                                     @"http://www.iqiyi.com/dongman/20130407/1.html",
@@ -117,7 +117,7 @@
 
             
             for (int i = 1; i <= urls.count; ++i) {
-                Video *video = [Video MR_createEntity];
+                Video *video = [Video MR_createInContext:localContext];
                 video.setNum = @(_minVideoSetNum + i - 1);
                 video.url = urls[i-1];
                 video.brief = [NSString stringWithFormat:@"悠长的历史之中悠长的历史之中悠长的历史之中悠长的历史之中悠长的历史之中悠长的历史之中 %d", i];
@@ -132,38 +132,42 @@
 
 - (VideoGroup *)extendDramaURLs:(TVDramaRequestType)requestType
 {
-    int min = _minVideoSetNum, max = _maxVideoSetNum;
-    int delta = 15;
-    VideoGroup *videoGroup = [VideoGroup MR_findFirst];
-    if (requestType == TVDramaRequestTypeCurrent) {
-        return videoGroup;
-    }
-    else  if (requestType == TVDramaRequestTypePrevious) {
-        min -= delta;
-        min = MAX(1, min);
-    }
-    else {
-        max += delta;
-    }
-    NSLog(@"extendDramaURLs %d, count=%d, %d", requestType, max - min + 1, videoGroup.videos.count);
-    for (int i = min; i <= max; ++i) {
-        if (i >= _minVideoSetNum && i <= _maxVideoSetNum) {
-            continue;
+    __block VideoGroup *videoGroup = nil;
+    
+    [MagicalRecord saveWithBlockAndWait:^(NSManagedObjectContext *localContext) {
+        int min = _minVideoSetNum, max = _maxVideoSetNum;
+        int delta = 15;
+        videoGroup = [VideoGroup MR_findFirstInContext:localContext];
+        if (requestType == TVDramaRequestTypeCurrent) {
+            return ;
+        }
+        else  if (requestType == TVDramaRequestTypePrevious) {
+            min -= delta;
+            min = MAX(1, min);
         }
         else {
-            Video *video = [Video MR_createEntity];
-            video.setNum = @(i);
-            video.url = [NSString stringWithFormat:@"http://www.iqiyi.com/dongman/20130505/%d.html", i];
-            video.brief =  [NSString stringWithFormat:@"悠长的历史之中 %d", i];
-            //@"悠长的历史之中,人类曾一度因被巨人捕食而崩溃。幸存下来的人们建造了一面巨大的墙壁,防止了巨人的入侵。不过,作为“和平”的代价,人类失去了到墙壁的外面去这一“自由”主人公艾伦·耶格尔对还没见过的外面的世界抱有兴趣。在他正做着到墙壁的外面去这个梦的时候,毁坏墙壁的大巨人出现了！";
-            [videoGroup addVideosObject:video];
+            max += delta;
         }
-    }
-    _minVideoSetNum = min;
-    _maxVideoSetNum = max;
-    videoGroup.maxId = @(_maxVideoSetNum + 100);
-    [[NSManagedObjectContext MR_contextForCurrentThread] save:nil];
-    NSLog(@"videos = %d", videoGroup.videos.count);
+        NSLog(@"extendDramaURLs %d, count=%d, %d", requestType, max - min + 1, videoGroup.videos.count);
+        for (int i = min; i <= max; ++i) {
+            if (i >= _minVideoSetNum && i <= _maxVideoSetNum) {
+                continue;
+            }
+            else {
+                Video *video = [Video MR_createInContext:localContext];
+                video.setNum = @(i);
+                video.url = [NSString stringWithFormat:@"http://www.iqiyi.com/dongman/20130505/%d.html", i];
+                video.brief =  [NSString stringWithFormat:@"悠长的历史之中 %d", i];
+                //@"悠长的历史之中,人类曾一度因被巨人捕食而崩溃。幸存下来的人们建造了一面巨大的墙壁,防止了巨人的入侵。不过,作为“和平”的代价,人类失去了到墙壁的外面去这一“自由”主人公艾伦·耶格尔对还没见过的外面的世界抱有兴趣。在他正做着到墙壁的外面去这个梦的时候,毁坏墙壁的大巨人出现了！";
+                [videoGroup addVideosObject:video];
+            }
+        }
+        _minVideoSetNum = min;
+        _maxVideoSetNum = max;
+        videoGroup.maxId = @(_maxVideoSetNum + 100);
+        NSLog(@"videos = %d", videoGroup.videos.count);
+    }];
+    
     return videoGroup;
 }
 
