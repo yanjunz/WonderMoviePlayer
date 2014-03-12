@@ -7,6 +7,7 @@
 //
 
 #import "Video+Additions.h"
+#import "VideoGroup+Additions.h"
 
 @implementation Video (Additions)
 
@@ -18,6 +19,11 @@
 + (Video *)videoWithVideoId:(NSString *)videoId srcIndex:(NSInteger)srcIndex setNum:(NSInteger)setNum inContext:(NSManagedObjectContext *)context
 {
     return [Video MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"videoId == %@ AND srcIndex == %d AND setNum == %d", videoId, srcIndex, setNum] inContext:context];
+}
+
+- (NSString *)displayName
+{
+    return [self.videoGroup displayNameForSetNum:self.setNum];
 }
 
 @end

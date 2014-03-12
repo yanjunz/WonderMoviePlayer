@@ -1190,6 +1190,10 @@ void wonderMovieVolumeListenerCallback (
     if (isShowed == show) {
         return;
     }
+    if (show) {
+        [self.popupMenu removeFromSuperview];
+        [self.infoView addSubview:self.popupMenu];
+    }
 
     [UIView animateWithDuration:0.3f animations:^{
         if (show) {
