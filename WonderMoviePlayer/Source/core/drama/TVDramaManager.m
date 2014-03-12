@@ -126,7 +126,7 @@
     [MagicalRecord saveWithBlockAndWait:^(NSManagedObjectContext *localContext) {
         DefineStrongSelfInBlock(sself);
         
-        VideoGroup *videoGroup = [self.videoGroup MR_inContext:localContext];
+        VideoGroup *videoGroup = [sself.videoGroup MR_inContext:localContext];
         
         // Add one video object for non-drama video group
         if (![videoGroup isValidDrama]) {
@@ -134,12 +134,13 @@
             
             if (videoGroup == nil) {
                 NSString *videoId = [sself generateVideoIdWithKey:sself.webURL];
-                videoGroup = [VideoGroup MR_findFirstByAttribute:@"videoId" withValue:videoId inContext:localContext];
+                videoGroup = [VideoGroup videoGroupWithVideoId:videoId srcIndex:0 inContext:localContext];
                 if (videoGroup == nil) {
                     // Need create a videoGroup for it
                     videoGroup = [VideoGroup MR_createInContext:localContext];
-                    videoGroup.videoName = [videoGroup displayNameForSetNum:nil];
+                    videoGroup.videoName = title;
                     videoGroup.videoId = videoId;
+                    videoGroup.srcIndex = @(0);
                 }
             }
             

@@ -9,7 +9,8 @@
 #import <Foundation/Foundation.h>
 
 @protocol VideoBookmarkOperator <NSObject>
-- (void)bookmarkVideoGroup:(VideoGroup *)videoGroup bookmark:(BOOL)bookmark;
+- (void)bookmarkVideoGroup:(VideoGroup *)videoGroup bookmark:(BOOL)bookmark inWebScene:(BOOL)isWebScene;
+- (BOOL)bookmarkVideoGroup:(VideoGroup *)videoGroup bookmark:(BOOL)bookmark;
 - (void)removeAllVideoBookmarks;
 - (BOOL)isVideoGroupBookmarked:(VideoGroup *)videoGroup;
 @end

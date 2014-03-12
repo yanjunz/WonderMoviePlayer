@@ -364,7 +364,7 @@ void wonderMovieVolumeListenerCallback (
     }
     else {
         headerBar = [[UIView alloc] initWithFrame:CGRectMake(0, statusBarHeight, self.width, headerBarHeight)];
-        self.headerBar.backgroundColor = [UIColor colorWithPatternImage:QQVideoPlayerImage(@"headerbar")];
+        headerBar.backgroundColor = [UIColor colorWithPatternImage:QQVideoPlayerImage(@"headerbar")];
     }
     
     self.headerBar = headerBar;
@@ -649,7 +649,11 @@ void wonderMovieVolumeListenerCallback (
         CGFloat buttonFontSize = 13;
         UIFont *buttonFont = [UIFont systemFontOfSize:buttonFontSize];
         UIImage *highlightedImage = [self imageWithColor:[[UIColor whiteColor] colorWithAlphaComponent:0.15]];
-        CGFloat menuHeight = self.crossScreenEnabled ? menuButtonHeight * 3 + menuSeparatorHeight : menuButtonHeight * 2 + menuSeparatorHeight;
+        BOOL hasBookmark = [[self.tvDramaManager videoGroupInCurrentThread] isRecognized];
+        CGFloat menuHeight = self.crossScreenEnabled ? menuButtonHeight * 2 + menuSeparatorHeight : menuButtonHeight * 1;
+        if (hasBookmark) {
+            menuHeight += menuButtonHeight + menuSeparatorHeight;
+        }
         UIView *popupMenu = [[UIView alloc] initWithFrame:CGRectMake(self.width - menuWidth, -menuHeight, menuWidth, menuHeight)];
         
         popupMenu.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
@@ -686,32 +690,34 @@ void wonderMovieVolumeListenerCallback (
         UIButton *lastButton = lockButton;
         
         ///// Bookmark //////
-        UIImageView *menuSeparatorView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"separator_line")];
-        menuSeparatorView.frame = CGRectMake(0, lastButton.bottom, menuWidth, menuSeparatorHeight);
-        [popupMenu addSubview:menuSeparatorView];
-        
-        topOffset += lastButton.height;
-        UIButton *bookmarkButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        bookmarkButton.frame = CGRectMake(0, topOffset, menuWidth, menuButtonHeight);
-        bookmarkButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        bookmarkButton.titleLabel.font = buttonFont;
-        [bookmarkButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
-        [bookmarkButton addTarget:self action:@selector(onClickBookmark:) forControlEvents:UIControlEventTouchUpInside];
-        [popupMenu addSubview:bookmarkButton];
-        
-        label = [[UILabel alloc] initWithFrame:CGRectMake(0, topOffset, menuWidth - delta, menuButtonHeight)];
-        label.text = NSLocalizedString(@"收藏", nil);
-        label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        label.textAlignment = UITextAlignmentRight;
-        label.font = buttonFont;
-        label.backgroundColor = [UIColor clearColor];
-        label.textColor = [UIColor whiteColor];
-        self.bookmarkLabel = label;
-        [popupMenu addSubview:label];
-        [self updateBookmarkTitle];
-        
-        ///// Bookmark /////
-        lastButton = bookmarkButton;
+        if (hasBookmark) {
+            UIImageView *menuSeparatorView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"separator_line")];
+            menuSeparatorView.frame = CGRectMake(0, lastButton.bottom, menuWidth, menuSeparatorHeight);
+            [popupMenu addSubview:menuSeparatorView];
+            
+            topOffset += lastButton.height;
+            UIButton *bookmarkButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            bookmarkButton.frame = CGRectMake(0, topOffset, menuWidth, menuButtonHeight);
+            bookmarkButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+            bookmarkButton.titleLabel.font = buttonFont;
+            [bookmarkButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
+            [bookmarkButton addTarget:self action:@selector(onClickBookmark:) forControlEvents:UIControlEventTouchUpInside];
+            [popupMenu addSubview:bookmarkButton];
+            
+            label = [[UILabel alloc] initWithFrame:CGRectMake(0, topOffset, menuWidth - delta, menuButtonHeight)];
+            label.text = NSLocalizedString(@"收藏", nil);
+            label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+            label.textAlignment = UITextAlignmentRight;
+            label.font = buttonFont;
+            label.backgroundColor = [UIColor clearColor];
+            label.textColor = [UIColor whiteColor];
+            self.bookmarkLabel = label;
+            [popupMenu addSubview:label];
+            [self updateBookmarkTitle];
+            
+            ///// Bookmark /////
+            lastButton = bookmarkButton;
+        }
         
         if (self.crossScreenEnabled) {
             UIImageView *menuSeparatorView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"separator_line")];
@@ -1298,7 +1304,7 @@ void wonderMovieVolumeListenerCallback (
     VideoGroup *videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
     if (videoGroup) {
         BOOL hasBookmarked = [self.bookmarkOperator isVideoGroupBookmarked:videoGroup];
-        [self.bookmarkOperator bookmarkVideoGroup:videoGroup bookmark:!hasBookmarked];
+        [self.bookmarkOperator bookmarkVideoGroup:videoGroup bookmark:!hasBookmarked inWebScene:FALSE];
         [self updateBookmarkTitle];
         
         if ([videoGroup isValidDrama]) {
@@ -1357,6 +1363,10 @@ void wonderMovieVolumeListenerCallback (
         else {
             self.popupMenu.bottom = 0;
             self.popupMenu.alpha = 0;
+        }
+    } completion:^(BOOL finished) {
+        if (!show) {
+            self.popupMenu = nil;
         }
     }];
 }

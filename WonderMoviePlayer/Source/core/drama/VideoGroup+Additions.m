@@ -11,9 +11,91 @@
 
 @implementation VideoGroup (Additions)
 
-+ (VideoGroup *)videoGroupWithVideoId:(NSString *)videoId inContext:(NSManagedObjectContext *)context
++ (VideoGroup *)videoGroupWithVideoId:(NSString *)videoId srcIndex:(NSInteger)srcIndex
 {
-    return [VideoGroup MR_findFirstByAttribute:@"videoId" withValue:videoId inContext:context];
+    return [self videoGroupWithVideoId:videoId srcIndex:srcIndex inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+}
+
++ (VideoGroup *)videoGroupWithVideoId:(NSString *)videoId srcIndex:(NSInteger)srcIndex inContext:(NSManagedObjectContext *)context
+{
+    return [VideoGroup MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"videoId == %@ AND srcIndex == %d", videoId, srcIndex] inContext:context];
+}
+
++ (NSString *)srcDescription:(NSInteger)srcIndex
+{
+    /*
+     1 = 搜狐
+     2 = 爱奇艺
+     3 = 腾讯视频
+     4 = 乐视
+     5 = 优酷
+     6 = 土豆
+     7 = 风行网
+     8 = 电影网
+     9 = PPTV
+     10 = 迅雷看看
+     11 = PPS
+     12 = 酷6
+     13 = 新浪
+     14 = 快播
+     15 = CNTV
+     16 = 56
+     */
+    
+    NSDictionary *dict = @{
+                           @(1) : @"搜狐",
+                           @(2) : @"爱奇艺",
+                           @(3) : @"腾讯视频",
+                           @(4) : @"乐视",
+                           @(5) : @"优酷",
+                           @(6) : @"土豆",
+                           @(7) : @"风行网",
+                           @(8) : @"电影网",
+                           @(9) : @"PPTV",
+                           @(10) : @"迅雷看看",
+                           @(11) : @"PPS",
+                           @(12) : @"酷6",
+                           @(13) : @"新浪",
+                           @(14) : @"快播",
+                           @(15) : @"CNTV",
+                           @(16) : @"56",
+                           };
+    NSString *desc = dict[@(srcIndex)];
+    if (desc == nil) {
+        return [NSString stringWithFormat:@"%d", srcIndex];
+    }
+    else {
+        return desc;
+    }
+}
+
++ (NSInteger)srcIndex:(NSString *)srcDescription
+{
+    NSDictionary *dict = @{
+                           @(1) : @"搜狐",
+                           @(2) : @"爱奇艺",
+                           @(3) : @"腾讯视频",
+                           @(4) : @"乐视",
+                           @(5) : @"优酷",
+                           @(6) : @"土豆",
+                           @(7) : @"风行网",
+                           @(8) : @"电影网",
+                           @(9) : @"PPTV",
+                           @(10) : @"迅雷看看",
+                           @(11) : @"PPS",
+                           @(12) : @"酷6",
+                           @(13) : @"新浪",
+                           @(14) : @"快播",
+                           @(15) : @"CNTV",
+                           @(16) : @"56",
+                           };
+
+    for (NSNumber *key in dict.allKeys) {
+        if ([dict[key] isEqualToString:srcDescription]) {
+            return [key intValue];
+        }
+    }
+    return 0;
 }
 
 - (Video *)videoAtURL:(NSString *)URL
@@ -67,6 +149,11 @@
     return !(self.totalCount.intValue == 0 && self.maxId.intValue == 0 && self.showType.intValue == VideoGroupShowTypeNone);
 }
 
+- (BOOL)isRecognized
+{
+    return [self.srcIndex intValue] != 0 || self.src.length > 0 || [self isValidDrama];
+}
+
 - (NSString *)displayNameForSetNum:(NSNumber *)setNum
 {
     if ([self isValidDrama]) {
@@ -92,7 +179,8 @@
 - (void)checkDownloadedVideosExist
 {
     [MagicalRecord saveWithBlockAndWait:^(NSManagedObjectContext *localContext) {
-        NSSet *downloadVideos = [self.videos filteredSetUsingPredicate:[NSPredicate predicateWithFormat:@"path.length > 0"]];
+        VideoGroup *videoGroupInContext = [self MR_inContext:localContext];
+        NSSet *downloadVideos = [videoGroupInContext.videos filteredSetUsingPredicate:[NSPredicate predicateWithFormat:@"path.length > 0"]];
         for (Video *video in downloadVideos) {
             NSString *downloadingPath = [NSString stringWithFormat:@"%@/.%@", [video.path stringByDeletingLastPathComponent], [video.path lastPathComponent]];
             if (![[NSFileManager defaultManager] fileExistsAtPath:video.path] &&

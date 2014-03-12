@@ -112,6 +112,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 #endif // MTT_TWEAK_BAT_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
 
 @synthesize myVideoBlock;
+@synthesize errorBlock;
 @synthesize controlSource;
 @synthesize isEnd = _isEnd;
 @synthesize delegate;
@@ -1267,7 +1268,9 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 
 - (void)movieControlSourceHandleError:(id<MovieControlSource>)source
 {
-    [self movieControlSourceExit:source];
+    if (self.errorBlock) {
+        self.errorBlock();
+    }
 }
 
 #ifdef MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER

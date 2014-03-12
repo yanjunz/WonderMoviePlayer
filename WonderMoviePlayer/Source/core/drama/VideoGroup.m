@@ -2,7 +2,7 @@
 //  VideoGroup.m
 //  mtt
 //
-//  Created by Zhuang Yanjun on 1/3/14.
+//  Created by Zhuang Yanjun on 12/3/14.
 //  Copyright (c) 2014 Tencent. All rights reserved.
 //
 
@@ -14,12 +14,13 @@
 
 @dynamic maxId;
 @dynamic picUrl;
+@dynamic setUpdateTime;
 @dynamic showType;
 @dynamic src;
+@dynamic srcIndex;
 @dynamic totalCount;
 @dynamic videoId;
 @dynamic videoName;
-@dynamic setUpdateTime;
 @dynamic videos;
 
 @end

@@ -21,6 +21,9 @@
 		AED9C38E18C40F3700C41142 /* download_cell_normal_single@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AED9C38C18C40F3700C41142 /* download_cell_normal_single@2x.png */; };
 		AED9C38F18C40F3700C41142 /* download_cell_sel_single@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AED9C38D18C40F3700C41142 /* download_cell_sel_single@2x.png */; };
 		AED9C39118C427F900C41142 /* download_check@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AED9C39018C427F900C41142 /* download_check@2x.png */; };
+		AEE42D1D18D0653400A72B2E /* bookmark_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AEE42D1B18D0653400A72B2E /* bookmark_normal@2x.png */; };
+		AEE42D1E18D0653400A72B2E /* bookmark_press@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AEE42D1C18D0653400A72B2E /* bookmark_press@2x.png */; };
+		AEE42D2118D0657900A72B2E /* Video+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE42D2018D0657900A72B2E /* Video+Additions.m */; };
 		B516CA0F17DD6AA100D8E3A2 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B516CA0E17DD6AA100D8E3A2 /* CFNetwork.framework */; };
 		B517773817B36D44006B948E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517773717B36D44006B948E /* UIKit.framework */; };
 		B517773A17B36D44006B948E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517773917B36D44006B948E /* Foundation.framework */; };
@@ -176,6 +179,10 @@
 		AED9C38C18C40F3700C41142 /* download_cell_normal_single@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "download_cell_normal_single@2x.png"; sourceTree = "<group>"; };
 		AED9C38D18C40F3700C41142 /* download_cell_sel_single@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "download_cell_sel_single@2x.png"; sourceTree = "<group>"; };
 		AED9C39018C427F900C41142 /* download_check@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "download_check@2x.png"; sourceTree = "<group>"; };
+		AEE42D1B18D0653400A72B2E /* bookmark_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bookmark_normal@2x.png"; sourceTree = "<group>"; };
+		AEE42D1C18D0653400A72B2E /* bookmark_press@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bookmark_press@2x.png"; sourceTree = "<group>"; };
+		AEE42D1F18D0657900A72B2E /* Video+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Video+Additions.h"; sourceTree = "<group>"; };
+		AEE42D2018D0657900A72B2E /* Video+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Video+Additions.m"; sourceTree = "<group>"; };
 		B516CA0E17DD6AA100D8E3A2 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		B517773417B36D44006B948E /* WonderMoviePlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WonderMoviePlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B517773717B36D44006B948E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -515,6 +522,8 @@
 		B5435578186D26DE0090AFEE /* videoplayer */ = {
 			isa = PBXGroup;
 			children = (
+				AEE42D1B18D0653400A72B2E /* bookmark_normal@2x.png */,
+				AEE42D1C18D0653400A72B2E /* bookmark_press@2x.png */,
 				AE7EEDC418CC50ED00EF7947 /* arrow@2x.png */,
 				AE7EED9D18C8540E00EF7947 /* ok@2x.png */,
 				AED9C39018C427F900C41142 /* download_check@2x.png */,
@@ -790,6 +799,8 @@
 		B5DC0780182CD4690046A7A5 /* drama */ = {
 			isa = PBXGroup;
 			children = (
+				AEE42D1F18D0657900A72B2E /* Video+Additions.h */,
+				AEE42D2018D0657900A72B2E /* Video+Additions.m */,
 				AE96680218B4395B00158788 /* VideoGroup+Additions.h */,
 				AE96680318B4395B00158788 /* VideoGroup+Additions.m */,
 				B58B56D818338E910096801E /* TVDramaManager.m */,
@@ -933,6 +944,7 @@
 				B54355B7186D26DF0090AFEE /* download@2x.png in Resources */,
 				B517774E17B36D44006B948E /* Default-568h@2x.png in Resources */,
 				B54355C2186D26DF0090AFEE /* locked@2x.png in Resources */,
+				AEE42D1D18D0653400A72B2E /* bookmark_normal@2x.png in Resources */,
 				B517775417B36D44006B948E /* ViewController.xib in Resources */,
 				B5D4C384182263A700BB0A53 /* README.md in Resources */,
 				B54355E0186D26DF0090AFEE /* volume_prompt_circle@2x.png in Resources */,
@@ -943,6 +955,7 @@
 				B54355D9186D26DF0090AFEE /* toolbar@2x.png in Resources */,
 				B54355E7186D26DF0090AFEE /* s@2x.png in Resources */,
 				B54355CD186D26DF0090AFEE /* progress_prompt_gesture@2x.png in Resources */,
+				AEE42D1E18D0653400A72B2E /* bookmark_press@2x.png in Resources */,
 				B54355DA186D26DF0090AFEE /* tv_drama_button_normal@2x.png in Resources */,
 				B54355B4186D26DF0090AFEE /* brightness@2x.png in Resources */,
 				B54355CF186D26DF0090AFEE /* progressbar_cache@2x.png in Resources */,
@@ -1000,6 +1013,7 @@
 				B5D4C3661820F51A00BB0A53 /* WonderMovieProgressView.m in Sources */,
 				B5DC0782182CD4690046A7A5 /* WonderAVMovieViewController.m in Sources */,
 				B5D4C3641820F51A00BB0A53 /* WonderMovieFullscreenControlView.m in Sources */,
+				AEE42D2118D0657900A72B2E /* Video+Additions.m in Sources */,
 				B58B574318347F250096801E /* MagicalRecord+ErrorHandling.m in Sources */,
 				B58B573718347F250096801E /* NSManagedObject+MagicalDataImport.m in Sources */,
 				B517776A17B37FEB006B948E /* UIView+Sizes.m in Sources */,

@@ -353,15 +353,22 @@
         }
         
         cell.selectedForDownload = [self.selectedSetNums containsObject:video.setNum];
-        cell.textLabel.text = video.brief;
-        
-        if (video.setNum.intValue == self.videoGroup.maxId.intValue) {
-            cell.textLabel.text = [NSString stringWithFormat:@"%@(%@)", video.brief,
-                                   self.videoGroup.totalCount.intValue == 0 ? @"新" : @"终"];
+
+        if ([video.videoGroup isValidDrama]) {
+            cell.textLabel.text = video.brief;
+            
+            if (video.setNum.intValue == self.videoGroup.maxId.intValue) {
+                cell.textLabel.text = [NSString stringWithFormat:@"%@(%@)", video.brief,
+                                       self.videoGroup.totalCount.intValue == 0 ? @"新" : @"终"];
+            }
+            else {
+                cell.textLabel.text = video.brief;
+            }
         }
         else {
-            cell.textLabel.text = video.brief;
+            cell.textLabel.text = [video.videoGroup displayNameForSetNum:video.setNum];
         }
+        
         
         return cell;
     }

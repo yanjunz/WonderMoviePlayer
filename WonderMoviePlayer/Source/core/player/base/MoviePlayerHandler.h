@@ -16,4 +16,5 @@
 #endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
 
 @property (nonatomic, copy) void(^myVideoBlock)();
+@property (nonatomic, copy) void(^errorBlock)();
 @end
