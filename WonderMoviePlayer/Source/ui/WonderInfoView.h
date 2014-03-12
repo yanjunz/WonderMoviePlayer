@@ -1,5 +1,5 @@
 //
-//  WonderMovieInfoView.h
+//  WonderInfoView.h
 //  WonderMoviePlayer
 //
 //  Created by Zhuang Yanjun on 13-8-26.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface WonderMovieInfoView : UIView
+@interface WonderInfoView : UIView
 // Only show when setting progress
 @property (nonatomic, strong) UILabel *progressTimeLabel;
 

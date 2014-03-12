@@ -1,5 +1,5 @@
 //
-//  WonderMovieFullscreenControlView.h
+//  WonderFullscreenControlView.h
 //  WonderMoviePlayer
 //
 //  Created by Zhuang Yanjun on 13-8-8.
@@ -10,9 +10,9 @@
 
 #import <UIKit/UIKit.h>
 #import "MovieControlSource.h"
-#import "WonderMovieInfoView.h"
+#import "WonderInfoView.h"
 
-@interface WonderMovieFullscreenControlView : UIView<MovieControlSource> {
+@interface WonderFullscreenControlView : UIView<MovieControlSource> {
     NSTimeInterval _playbackTime;
     NSTimeInterval _playableDuration;
     NSTimeInterval _duration;
@@ -47,7 +47,7 @@
 @property (nonatomic, assign) BOOL autoPlayWhenStarted;
 @property (nonatomic, assign) BOOL downloadEnabled;
 @property (nonatomic, assign) BOOL crossScreenEnabled;
-@property (nonatomic, strong) WonderMovieInfoView *infoView;
+@property (nonatomic, strong) WonderInfoView *infoView;
 
 - (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted downloadEnabled:(BOOL)downloadEnabled crossScreenEnabled:(BOOL)crossScreenEnabled;
 

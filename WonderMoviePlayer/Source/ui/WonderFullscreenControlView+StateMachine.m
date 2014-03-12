@@ -1,14 +1,14 @@
 //
-//  WonderMovieFullscreenControlView+StateMachine.m
+//  WonderFullscreenControlView+StateMachine.m
 //  WonderMoviePlayer
 //
 //  Created by Zhuang Yanjun on 11/22/13.
 //  Copyright (c) 2013 Tencent. All rights reserved.
 //
 
-#import "WonderMovieFullscreenControlView+StateMachine.h"
+#import "WonderFullscreenControlView+StateMachine.h"
 
-@implementation WonderMovieFullscreenControlView (StateMachine)
+@implementation WonderFullscreenControlView (StateMachine)
 
 #pragma mark State Manchine
 - (void)handleCommand:(MovieControlCommand)cmd param:(id)param notify:(BOOL)notify

@@ -1,5 +1,5 @@
 //
-//  WonderMovieInfoView.m
+//  WonderInfoView.m
 //  WonderMoviePlayer
 //
 //  Created by Zhuang Yanjun on 13-8-26.
@@ -7,13 +7,13 @@
 //
 #import <QuartzCore/QuartzCore.h>
 #import "WonderMoviePlayerConstants.h"
-#import "WonderMovieInfoView.h"
+#import "WonderInfoView.h"
 #import "UIView+Sizes.h"
 
 #define kAutoNextToastWidth (180 * (27. / 40))
 #define kAutoNextToastHeight 27
 
-@interface WonderMovieInfoView ()
+@interface WonderInfoView ()
 @property (nonatomic, strong) UILabel *volumeLabel;
 @property (nonatomic, strong) UIImageView *volumeImageView;
 @property (nonatomic, strong) UILabel *brightnessLabel;
@@ -22,7 +22,7 @@
 @property (nonatomic, strong) UIView *errorView;
 @end
 
-@implementation WonderMovieInfoView
+@implementation WonderInfoView
 
 - (id)initWithFrame:(CGRect)frame
 {

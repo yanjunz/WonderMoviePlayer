@@ -1,5 +1,5 @@
 //
-//  WonderMovieFullscreenControlView.m
+//  WonderFullscreenControlView.m
 //  WonderMoviePlayer
 //
 //  Created by Zhuang Yanjun on 13-8-8.
@@ -10,9 +10,9 @@
 
 #import <QuartzCore/QuartzCore.h>
 #import "WonderMoviePlayerConstants.h"
-#import "WonderMovieFullscreenControlView.h"
-#import "WonderMovieFullscreenControlView+StateMachine.h"
-#import "WonderMovieProgressView.h"
+#import "WonderFullscreenControlView.h"
+#import "WonderFullscreenControlView+StateMachine.h"
+#import "WonderProgressView.h"
 #import "UIView+Sizes.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import <AudioToolbox/AudioToolbox.h>
@@ -45,12 +45,12 @@
 
 @end
 
-@interface WonderMovieFullscreenControlView () <UIGestureRecognizerDelegate>{
+@interface WonderFullscreenControlView () <UIGestureRecognizerDelegate>{
     
     CGFloat _downloadProgress;
 }
 @property (nonatomic, strong) NSTimer *timer;
-@property (nonatomic, strong) WonderMovieProgressView *progressView;
+@property (nonatomic, strong) WonderProgressView *progressView;
 
 @property (nonatomic, strong) UIView *contentView;
 
@@ -73,8 +73,6 @@
 // popup menu
 @property (nonatomic, strong) UIView *popupMenu;
 @property (nonatomic, strong) UIView *resolutionsView;
-//@property (nonatomic, strong) UIButton *resolutionButton;
-@property (nonatomic, strong) UILabel *bookmarkLabel;
 
 // utils
 @property (nonatomic, strong) NSArray *viewsToBeLocked;
@@ -93,11 +91,11 @@
 - (void)tryToSetVolume:(NSNumber *)volume;
 @end
 
-@interface WonderMovieFullscreenControlView (ProgressView) <WonderMovieProgressViewDelegate>
+@interface WonderFullscreenControlView (ProgressView) <WonderProgressViewDelegate>
 
 @end
 
-@interface WonderMovieFullscreenControlView (DramaView) <WonderMovieDramaViewDelegate>
+@interface WonderFullscreenControlView (DramaView) <WonderMovieDramaViewDelegate>
 - (void)dramaDidSelectSetNum:(int)setNum;
 - (void)prepareToPlayNextDrama;
 - (void)playNextDrama;
@@ -106,7 +104,7 @@
 
 #pragma mark Tip
 
-@interface WonderMovieFullscreenControlView (Tip)
+@interface WonderFullscreenControlView (Tip)
 - (void)loadTipStatus;
 - (void)showHorizontalPanningTip:(BOOL)show;
 - (void)showVerticalPanningTip:(BOOL)show;
@@ -131,7 +129,7 @@ void wonderMovieVolumeListenerCallback (
         return;
     }
     
-    WonderMovieFullscreenControlView *bself = (__bridge WonderMovieFullscreenControlView *)inClientData;
+    WonderFullscreenControlView *bself = (__bridge WonderFullscreenControlView *)inClientData;
     [bself performSelectorOnMainThread:@selector(tryToShowVerticalPanningTip) withObject:nil waitUntilDone:NO];
     
     const float *volumePointer = inData;
@@ -140,7 +138,7 @@ void wonderMovieVolumeListenerCallback (
     [bself performSelectorOnMainThread:@selector(tryToSetVolume:) withObject:@(volume) waitUntilDone:NO];
 }
 
-@implementation WonderMovieFullscreenControlView
+@implementation WonderFullscreenControlView
 @synthesize delegate;
 @synthesize controlState;
 @synthesize liveCastState = _liveCastState;
@@ -267,7 +265,7 @@ void wonderMovieVolumeListenerCallback (
     [self.bottomView.resolutionButton addTarget:self action:@selector(onClickResolution:) forControlEvents:UIControlEventTouchUpInside];
     [bottomBarContainer addSubview:self.bottomView];
     
-    WonderMovieProgressView *progressView = [[WonderMovieProgressView alloc] initWithFrame:CGRectMake(0, 0, self.width, progressIndicatorHeight)];
+    WonderProgressView *progressView = [[WonderProgressView alloc] initWithFrame:CGRectMake(0, 0, self.width, progressIndicatorHeight)];
     self.progressView = progressView;
     [bottomBarContainer addSubview:progressView];
     
@@ -429,7 +427,7 @@ void wonderMovieVolumeListenerCallback (
     [self addSubview:[[MPVolumeView alloc] initWithFrame:CGRectMake(-10000, -10000, 0, 0)]];
 #endif // MTT_TWEAK_WONDER_MOVIE_HIDE_SYSTEM_VOLUME_VIEW
     
-    WonderMovieInfoView *infoView = [[WonderMovieInfoView alloc] initWithFrame:[self suggestedInfoViewFrame]];
+    WonderInfoView *infoView = [[WonderInfoView alloc] initWithFrame:[self suggestedInfoViewFrame]];
     infoView.backgroundColor = [UIColor clearColor];
     infoView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
@@ -491,7 +489,7 @@ void wonderMovieVolumeListenerCallback (
     [self addGestureRecognizer:self.panGestureRecognizer];
 }
 
-- (void)setInfoView:(WonderMovieInfoView *)infoView
+- (void)setInfoView:(WonderInfoView *)infoView
 {
     if (_infoView != infoView) {
         [_infoView.replayButton removeTarget:self action:@selector(onClickReplay:) forControlEvents:UIControlEventTouchUpInside];
@@ -1963,9 +1961,9 @@ void wonderMovieVolumeListenerCallback (
 @end
 
 
-@implementation WonderMovieFullscreenControlView (ProgressView)
+@implementation WonderFullscreenControlView (ProgressView)
 
-- (void)wonderMovieProgressViewBeginChangeProgress:(WonderMovieProgressView *)progressView
+- (void)wonderMovieProgressViewBeginChangeProgress:(WonderProgressView *)progressView
 {
 //    NSLog(@"wonderMovieProgressViewBeginChangeProgress");
     if (_hasStarted) {
@@ -1973,14 +1971,14 @@ void wonderMovieVolumeListenerCallback (
     }
 }
 
-- (void)wonderMovieProgressView:(WonderMovieProgressView *)progressView didChangeProgress:(CGFloat)progress
+- (void)wonderMovieProgressView:(WonderProgressView *)progressView didChangeProgress:(CGFloat)progress
 {
 //    NSLog(@"didChangeProgress %f", progress);
 //    [self scrub:progress];
     [self updateInfoViewProgress:progress];
 }
 
-- (void)wonderMovieProgressViewEndChangeProgress:(WonderMovieProgressView *)progressView;
+- (void)wonderMovieProgressViewEndChangeProgress:(WonderProgressView *)progressView;
 {
 //    NSLog(@"wonderMovieProgressViewEndChangeProgress");
     [self endScrubbing:progressView.progress];
@@ -1995,7 +1993,7 @@ void wonderMovieVolumeListenerCallback (
 
 static NSString *kWonderMovieHorizontalPanningTipKey = @"kWonderMovieHorizontalPanningTipKey";
 static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanningTipKey";
-@implementation WonderMovieFullscreenControlView (Tip)
+@implementation WonderFullscreenControlView (Tip)
 
 - (void)loadTipStatus
 {
@@ -2107,7 +2105,7 @@ static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanni
 
 @end
 
-@implementation WonderMovieFullscreenControlView (DramaView)
+@implementation WonderFullscreenControlView (DramaView)
 
 - (void)wonderMovieDramaView:(WonderMovieDramaView *)dramaView didSelectSetNum:(int)setNum
 {

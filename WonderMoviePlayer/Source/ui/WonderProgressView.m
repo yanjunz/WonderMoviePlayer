@@ -1,5 +1,5 @@
 //
-//  WonderMovieProgressView.m
+//  WonderProgressView.m
 //  WonderMoviePlayer
 //
 //  Created by Zhuang Yanjun on 13-8-8.
@@ -8,17 +8,17 @@
 
 #ifdef MTT_FEATURE_WONDER_MOVIE_PLAYER
 #import "WonderMoviePlayerConstants.h"
-#import "WonderMovieProgressView.h"
+#import "WonderProgressView.h"
 #import "UIView+Sizes.h"
 
-@interface WonderMovieProgressView ()
+@interface WonderProgressView ()
 @property (nonatomic, strong) UIImageView *progressBottomView;
 @property (nonatomic, strong) UIImageView *progressCacheView;
 @property (nonatomic, strong) UIImageView *progressTopView;
 @property (nonatomic, strong) UIButton *progressIndicator;
 @end
 
-@implementation WonderMovieProgressView
+@implementation WonderProgressView
 
 - (id)initWithFrame:(CGRect)frame
 {

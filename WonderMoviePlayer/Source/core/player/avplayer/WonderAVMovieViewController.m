@@ -10,7 +10,7 @@
 #import "WonderMoviePlayerConstants.h"
 #import "WonderAVMovieViewController.h"
 #import "WonderAVPlayerView.h"
-#import "WonderMovieFullscreenControlView.h"
+#import "WonderFullscreenControlView.h"
 #import "UIView+Sizes.h"
 #import "VideoGroup+Additions.h"
 #import "Video.h"
@@ -780,7 +780,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
         BOOL downloadEnabled = !!self.downloadBlock;
 #endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
         BOOL crossScreenEnabled = !!self.crossScreenBlock;
-        WonderMovieFullscreenControlView *fullscreenControlView = [[WonderMovieFullscreenControlView alloc] initWithFrame:self.overlayView.bounds
+        WonderFullscreenControlView *fullscreenControlView = [[WonderFullscreenControlView alloc] initWithFrame:self.overlayView.bounds
                                                                                                        autoPlayWhenStarted:YES
                                                                                                            downloadEnabled:downloadEnabled
                                                                                                         crossScreenEnabled:crossScreenEnabled];
