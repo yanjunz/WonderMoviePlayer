@@ -124,13 +124,6 @@
 - (void)dealloc
 {
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismissToastView) object:nil];
-    
-    
-    
-
-    
-    
-    
 }
 
 #pragma mark Loading View

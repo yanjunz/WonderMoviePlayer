@@ -24,6 +24,8 @@
 		AEE42D1D18D0653400A72B2E /* bookmark_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AEE42D1B18D0653400A72B2E /* bookmark_normal@2x.png */; };
 		AEE42D1E18D0653400A72B2E /* bookmark_press@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AEE42D1C18D0653400A72B2E /* bookmark_press@2x.png */; };
 		AEE42D2118D0657900A72B2E /* Video+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE42D2018D0657900A72B2E /* Video+Additions.m */; };
+		AEE42D2418D0687F00A72B2E /* WonderFullScreenBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE42D2318D0687F00A72B2E /* WonderFullScreenBottomView.m */; };
+		AEE42D2718D06C7F00A72B2E /* UIImage+FillColor.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE42D2618D06C7F00A72B2E /* UIImage+FillColor.m */; };
 		B516CA0F17DD6AA100D8E3A2 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B516CA0E17DD6AA100D8E3A2 /* CFNetwork.framework */; };
 		B517773817B36D44006B948E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517773717B36D44006B948E /* UIKit.framework */; };
 		B517773A17B36D44006B948E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517773917B36D44006B948E /* Foundation.framework */; };
@@ -183,6 +185,10 @@
 		AEE42D1C18D0653400A72B2E /* bookmark_press@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bookmark_press@2x.png"; sourceTree = "<group>"; };
 		AEE42D1F18D0657900A72B2E /* Video+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Video+Additions.h"; sourceTree = "<group>"; };
 		AEE42D2018D0657900A72B2E /* Video+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Video+Additions.m"; sourceTree = "<group>"; };
+		AEE42D2218D0687F00A72B2E /* WonderFullScreenBottomView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderFullScreenBottomView.h; sourceTree = "<group>"; };
+		AEE42D2318D0687F00A72B2E /* WonderFullScreenBottomView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderFullScreenBottomView.m; sourceTree = "<group>"; };
+		AEE42D2518D06C7F00A72B2E /* UIImage+FillColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+FillColor.h"; sourceTree = "<group>"; };
+		AEE42D2618D06C7F00A72B2E /* UIImage+FillColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+FillColor.m"; sourceTree = "<group>"; };
 		B516CA0E17DD6AA100D8E3A2 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		B517773417B36D44006B948E /* WonderMoviePlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WonderMoviePlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B517773717B36D44006B948E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -708,6 +714,10 @@
 				B5D4C35C1820F51A00BB0A53 /* WonderMovieInfoView.m */,
 				B5D4C35D1820F51A00BB0A53 /* WonderMovieProgressView.h */,
 				B5D4C35E1820F51A00BB0A53 /* WonderMovieProgressView.m */,
+				AEE42D2218D0687F00A72B2E /* WonderFullScreenBottomView.h */,
+				AEE42D2318D0687F00A72B2E /* WonderFullScreenBottomView.m */,
+				AEE42D2518D06C7F00A72B2E /* UIImage+FillColor.h */,
+				AEE42D2618D06C7F00A72B2E /* UIImage+FillColor.m */,
 			);
 			path = ui;
 			sourceTree = "<group>";
@@ -1021,6 +1031,7 @@
 				B5435577186D250C0090AFEE /* MttActivityIndicator.m in Sources */,
 				B58B56E018338E910096801E /* TVDramaManager.m in Sources */,
 				B58B56E918346F8D0096801E /* EGORefreshTableHeaderView.m in Sources */,
+				AEE42D2418D0687F00A72B2E /* WonderFullScreenBottomView.m in Sources */,
 				B51778AF17B9DE32006B948E /* TestWebViewController.m in Sources */,
 				B58B574B1834B0F40096801E /* FakeTVDramaWebSource.m in Sources */,
 				B58B56EF18347A990096801E /* NSObject+Block.m in Sources */,
@@ -1053,6 +1064,7 @@
 				B58B574018347F250096801E /* NSPersistentStore+MagicalRecord.m in Sources */,
 				B58B574218347F250096801E /* MagicalRecord+Actions.m in Sources */,
 				B5D4C37E1822636E00BB0A53 /* RegexKitLite.m in Sources */,
+				AEE42D2718D06C7F00A72B2E /* UIImage+FillColor.m in Sources */,
 				B58B573818347F250096801E /* NSManagedObject+MagicalFinders.m in Sources */,
 				B51F619617E9ADC200344122 /* Test2ViewController.m in Sources */,
 				B58B574818347F250096801E /* MagicalRecord.m in Sources */,
