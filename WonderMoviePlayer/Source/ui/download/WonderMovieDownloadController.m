@@ -8,10 +8,9 @@
 
 #import "WonderMovieDownloadController.h"
 #import "TVDramaManager.h"
-#import "Video.h"
-#import "VideoGroup+Additions.h"
 #import "UIView+Sizes.h"
 #import "WonderMoviePlayerConstants.h"
+#import "VideoModels.h"
 
 @interface WonderMovieDownloadController ()<UIActionSheetDelegate> {
     BOOL _supportBatchDownload;
@@ -170,10 +169,10 @@
 
     for (NSNumber *setNum in videos) {
         Video *video = [videoGroup videoAtSetNum:setNum];
-        NSString *downloadURL = video.url;
+        NSString *downloadURL = [video webURLAtSrcIndex:self.tvDramaManager.srcIndex];
         
         [downloadURLs addObject:downloadURL];
-        titleDict[downloadURL] = [videoGroup displayNameForSetNum:video.setNum];
+        titleDict[downloadURL] = [video displayName];
         
         /**
          * downloadURL is provided by server side drama info
@@ -231,9 +230,11 @@
 #pragma mark UIActionSheetDelegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    if (buttonIndex < self.resolutions.count && buttonIndex >= 0) {
+        _currentClarity = buttonIndex;
+        [self.clarityButton setTitle:self.resolutions[_currentClarity] forState:UIControlStateNormal];        
+    }
 //    NSLog(@"%d", buttonIndex);
-    _currentClarity = MAX(0, MIN(self.resolutions.count, buttonIndex));
-    [self.clarityButton setTitle:self.resolutions[_currentClarity] forState:UIControlStateNormal];
 }
 
 @end

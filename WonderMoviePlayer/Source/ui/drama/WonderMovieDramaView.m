@@ -10,11 +10,10 @@
 #import "WonderMovieDramaView.h"
 #import "UIView+Sizes.h"
 #import "NSObject+Block.h"
-#import "Video.h"
-#import "VideoGroup+Additions.h"
 #import "WonderMovieDramaGridCell.h"
 #import "WonderMovieDramaListCell.h"
 #import "WonderMoviePlayerConstants.h"
+#import "VideoModels.h"
 
 #define kDramaHeaderViewHeight      44
 #define kMaxVideoCountPerGridCell   9

@@ -7,18 +7,36 @@
 //
 
 #import "VideoGroup+Additions.h"
-#import "Video.h"
+#import "VideoChannelInfo.h"
+#import "Video+Additions.h"
+#import "VideoChannelInfo+Additions.h"
+#import "NSString+Hash.h"
 
 @implementation VideoGroup (Additions)
 
-+ (VideoGroup *)videoGroupWithVideoId:(NSString *)videoId srcIndex:(NSInteger)srcIndex
++ (instancetype)videoGroupWithVideoId:(NSString *)videoId
 {
-    return [self videoGroupWithVideoId:videoId srcIndex:srcIndex inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    return [self videoGroupWithVideoId:videoId inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
 
-+ (VideoGroup *)videoGroupWithVideoId:(NSString *)videoId srcIndex:(NSInteger)srcIndex inContext:(NSManagedObjectContext *)context
++ (instancetype)videoGroupWithVideoId:(NSString *)videoId inContext:(NSManagedObjectContext *)context
 {
-    return [VideoGroup MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"videoId == %@ AND srcIndex == %d", videoId, srcIndex] inContext:context];
+    return [VideoGroup MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"videoId == %@", videoId] inContext:context];
+}
+
++ (NSString *)unRecognizedVideoIdPrefix
+{
+    return @"_P_O_";
+}
+
++ (NSString *)generateVideoIdForUnRecognizedWebURL:(NSString *)webURL
+{
+    return [[self unRecognizedVideoIdPrefix] stringByAppendingString:[webURL MD5]];
+}
+
++ (BOOL)isVideoIdRecognized:(NSString *)videoId
+{
+    return ![videoId hasPrefix:[self unRecognizedVideoIdPrefix]];
 }
 
 + (NSString *)srcDescription:(NSInteger)srcIndex
@@ -41,7 +59,6 @@
      15 = CNTV
      16 = 56
      */
-    
     NSDictionary *dict = @{
                            @(1) : @"搜狐",
                            @(2) : @"爱奇艺",
@@ -100,43 +117,13 @@
 
 - (Video *)videoAtURL:(NSString *)URL
 {
-    __block Video *video = nil;
-    [self.videos enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
-        Video *t = obj;
-        if ([t.url isEqualToString:URL]) {
-            video = t;
-            *stop = YES;
-        }
-    }];
-    return video;
+    VideoChannelInfo *videoChannelInfo = [VideoChannelInfo MR_findFirstByAttribute:@"url" withValue:URL];
+    return videoChannelInfo.video;
 }
 
 - (Video *)videoAtSetNum:(NSNumber *)setNum
 {
-    __block Video *video = nil;
-    [self.videos enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
-        Video *t = obj;
-        if (t.setNum.intValue == setNum.intValue) {
-            video = t;
-            *stop = YES;
-        }
-    }];
-    return video;
-}
-
-- (void)setVideo:(Video *)video atSetNum:(NSNumber *)setNum inContext:(NSManagedObjectContext *)context
-{
-    Video *existedVideo = [self videoAtSetNum:setNum];
-    if (existedVideo) {
-        if (existedVideo != video) {
-            NSLog(@"Warning: video detail data corrupted");
-            [self removeVideosObject:existedVideo];
-            [existedVideo MR_deleteInContext:context];
-        }
-    }
-    else {
-        [self addVideosObject:video];
-    }
+    return [Video MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"videoGroup == %@ AND setNum == %d", self, [setNum intValue]]];
 }
 
 - (NSArray *)sortedVideos:(BOOL)ascending
@@ -151,7 +138,14 @@
 
 - (BOOL)isRecognized
 {
-    return [self.srcIndex intValue] != 0 || self.src.length > 0 || [self isValidDrama];
+    return ![self.videoId hasPrefix:[VideoGroup unRecognizedVideoIdPrefix]] && (self.totalCount.intValue != 0 || self.maxId.intValue != 0);
+}
+
++ (NSString *)temporaryDisplayName
+{
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    df.dateFormat = @"yyyyMMddhhmmss";
+    return [NSString stringWithFormat:@"视频 %@",  [df stringFromDate:[NSDate date]]];
 }
 
 - (NSString *)displayNameForSetNum:(NSNumber *)setNum
@@ -163,24 +157,20 @@
         return self.videoName;
     }
     else {
-        NSDateFormatter *df = [[NSDateFormatter alloc] init];
-        df.dateFormat = @"yyyyMMddhhmmss";
-        return [NSString stringWithFormat:@"视频 %@",  [df stringFromDate:[NSDate date]]];
+        return [VideoGroup temporaryDisplayName];
     }
 }
 
 - (NSArray *)downloadedVideos
 {
-    NSArray *videos = [[self.videos filteredSetUsingPredicate:[NSPredicate predicateWithFormat:@"path.length > 0"]]
-                       sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"setNum" ascending:YES]]];
-    return videos;
+    return [Video MR_findAllSortedBy:@"setNum" ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"path.length > 0 AND videoGroup == %@", self]];
 }
 
 - (void)checkDownloadedVideosExist
 {
     [MagicalRecord saveWithBlockAndWait:^(NSManagedObjectContext *localContext) {
         VideoGroup *videoGroupInContext = [self MR_inContext:localContext];
-        NSSet *downloadVideos = [videoGroupInContext.videos filteredSetUsingPredicate:[NSPredicate predicateWithFormat:@"path.length > 0"]];
+        NSArray *downloadVideos = [videoGroupInContext downloadedVideos];
         for (Video *video in downloadVideos) {
             NSString *downloadingPath = [NSString stringWithFormat:@"%@/.%@", [video.path stringByDeletingLastPathComponent], [video.path lastPathComponent]];
             if (![[NSFileManager defaultManager] fileExistsAtPath:video.path] &&
@@ -189,6 +179,12 @@
             }
         }
     }];
+}
+
+- (void)saveVideoSrc:(NSString *)videoSrc forSrcIndex:(NSInteger)srcIndex setNum:(NSInteger)setNum
+{
+    Video *video = [self videoAtSetNum:@(setNum)];
+    [video saveVideoSrc:videoSrc forSrcIndex:srcIndex];
 }
 
 @end

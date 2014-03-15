@@ -13,12 +13,17 @@
 
 - (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style
 {
+    return [self initWithFrame:frame style:style indicatorStyle:UIActivityIndicatorViewStyleWhite loadingTextColor:[UIColor whiteColor] errorTextColor:[UIColor whiteColor]];
+}
+
+- (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style indicatorStyle:(UIActivityIndicatorViewStyle)indicatorStyle loadingTextColor:(UIColor *)loadingTextColor errorTextColor:(UIColor *)errorTextColor
+{
     if (self = [super initWithFrame:frame style:style]) {
         UIView *loadingHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, 35)];
         loadingHeaderView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.loadingHeaderView = loadingHeaderView;
         
-        UIActivityIndicatorView *loadingIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+        UIActivityIndicatorView *loadingIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:indicatorStyle];
         [loadingHeaderView addSubview:loadingIndicator];
         loadingIndicator.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         loadingIndicator.hidesWhenStopped = YES;
@@ -28,7 +33,7 @@
         UILabel *loadingLabel = [[UILabel alloc] initWithFrame:loadingHeaderView.bounds];
         loadingLabel.text = NSLocalizedString(@"正在加载", nil);
         loadingLabel.font = [UIFont systemFontOfSize:13];
-        loadingLabel.textColor = [UIColor whiteColor];
+        loadingLabel.textColor = loadingTextColor;
         loadingLabel.textAlignment = UITextAlignmentCenter;
         loadingLabel.backgroundColor = [UIColor clearColor];
         loadingLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
@@ -46,19 +51,21 @@
         self.retryHeaderView = retryHeaderView;
         
         UIButton *retryButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        retryButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [retryButton setTitle:NSLocalizedString(@"加载失败，点击重试", nil) forState:UIControlStateNormal];
         retryButton.frame = retryHeaderView.bounds;
         [retryButton addTarget:self action:@selector(onClickRetryHeader:) forControlEvents:UIControlEventTouchUpInside];
         retryButton.backgroundColor = [UIColor clearColor];
-        [retryButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [retryButton setTitleColor:errorTextColor forState:UIControlStateNormal];
         retryButton.titleLabel.font = [UIFont systemFontOfSize:13];
         [retryHeaderView addSubview:retryButton];
+        retryButton.frame = retryHeaderView.bounds;
         
         UIView *loadingFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, 35)];
         loadingFooterView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.loadingFooterView = loadingFooterView;
         
-        loadingIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+        loadingIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:indicatorStyle];
         [loadingFooterView addSubview:loadingIndicator];
         loadingIndicator.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         loadingIndicator.hidesWhenStopped = YES;
@@ -68,7 +75,7 @@
         loadingLabel = [[UILabel alloc] initWithFrame:loadingFooterView.bounds];
         loadingLabel.text = NSLocalizedString(@"正在加载", nil);
         loadingLabel.font = [UIFont systemFontOfSize:13];
-        loadingLabel.textColor = [UIColor whiteColor];
+        loadingLabel.textColor = loadingTextColor;
         loadingLabel.textAlignment = UITextAlignmentCenter;
         loadingLabel.backgroundColor = [UIColor clearColor];
         loadingLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
@@ -83,15 +90,17 @@
         UIView *retryFooterView = [[UIView alloc] initWithFrame:loadingFooterView.frame];
         retryFooterView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.retryFooterView = retryFooterView;
-        
+
         retryButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        retryButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [retryButton setTitle:NSLocalizedString(@"加载失败，点击重试", nil) forState:UIControlStateNormal];
         retryButton.frame = retryFooterView.bounds;
         [retryButton addTarget:self action:@selector(onClickRetryFooter:) forControlEvents:UIControlEventTouchUpInside];
         retryButton.backgroundColor = [UIColor clearColor];
-        [retryButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [retryButton setTitleColor:errorTextColor forState:UIControlStateNormal];
         retryButton.titleLabel.font = [UIFont systemFontOfSize:13];
         [retryFooterView addSubview:retryButton];
+        retryButton.frame = retryFooterView.bounds;
     }
     return self;
 }
@@ -141,6 +150,7 @@
 - (void)setTableHeaderViewAnimated:(UIView *)tableHeaderView
 {
 //    NSLog(@"setTableHeaderViewAnimated %@, %@", tableHeaderView, self.tableHeaderView);
+    tableHeaderView.width = self.width;
     if (tableHeaderView == nil) {
         if (self.tableHeaderView != nil) {
             CGFloat orgHeight = self.tableHeaderView.height;
@@ -172,6 +182,7 @@
 
 - (void)setTableFooterViewAnimated:(UIView *)tableFooterView
 {
+    tableFooterView.width = self.width;
     tableFooterView.top = MAX(self.contentSize.height, self.height);
     if (tableFooterView == nil) {
         if (self.tableFooterView != nil) {

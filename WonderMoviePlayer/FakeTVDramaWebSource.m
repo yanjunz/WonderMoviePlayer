@@ -10,6 +10,7 @@
 #import "Video.h"
 #import "VideoGroup+Additions.h"
 #import "NSObject+Block.h"
+#import "VideoModels.h"
 
 @interface FakeTVDramaWebSource () <UIWebViewDelegate> {
     int _minVideoSetNum;
@@ -103,7 +104,6 @@
             videoGroup.videoId = @"1234567890";
             videoGroup.videoName = @"进击的巨人";
             videoGroup.showType = @(1);
-            videoGroup.src = @"爱奇艺";
             videoGroup.totalCount = @(0);
             videoGroup.maxId = @(_maxVideoSetNum);
             
@@ -119,10 +119,14 @@
             for (int i = 1; i <= urls.count; ++i) {
                 Video *video = [Video MR_createInContext:localContext];
                 video.setNum = @(_minVideoSetNum + i - 1);
-                video.url = urls[i-1];
+                
+                VideoChannelInfo *videoChannelInfo = [VideoChannelInfo MR_createInContext:localContext];
+                videoChannelInfo.srcIndex = @(1);
+                videoChannelInfo.url = urls[i-1];
                 video.brief = [NSString stringWithFormat:@"悠长的历史之中悠长的历史之中悠长的历史之中悠长的历史之中悠长的历史之中悠长的历史之中 %d", i];
                 //,人类曾一度因被巨人捕食而崩溃。幸存下来的人们建造了一面巨大的墙壁,防止了巨人的入侵。不过,作为“和平”的代价,人类失去了到墙壁的外面去这一“自由”主人公艾伦·耶格尔对还没见过的外面的世界抱有兴趣。在他正做着到墙壁的外面去这个梦的时候,毁坏墙壁的大巨人出现了！";
 //                video.videoGroup = videoGroup;
+                [video addVideoChannelInfosObject:videoChannelInfo];
                 [videoGroup addVideosObject:video];
             }
         }
@@ -156,9 +160,12 @@
             else {
                 Video *video = [Video MR_createInContext:localContext];
                 video.setNum = @(i);
-                video.url = [NSString stringWithFormat:@"http://www.iqiyi.com/dongman/20130505/%d.html", i];
+                VideoChannelInfo *videoChannelInfo = [VideoChannelInfo MR_createInContext:localContext];
+                videoChannelInfo.srcIndex = @(1);
+                videoChannelInfo.url = [NSString stringWithFormat:@"http://www.iqiyi.com/dongman/20130505/%d.html", i];
                 video.brief =  [NSString stringWithFormat:@"悠长的历史之中 %d", i];
                 //@"悠长的历史之中,人类曾一度因被巨人捕食而崩溃。幸存下来的人们建造了一面巨大的墙壁,防止了巨人的入侵。不过,作为“和平”的代价,人类失去了到墙壁的外面去这一“自由”主人公艾伦·耶格尔对还没见过的外面的世界抱有兴趣。在他正做着到墙壁的外面去这个梦的时候,毁坏墙壁的大巨人出现了！";
+                [video addVideoChannelInfosObject:videoChannelInfo];
                 [videoGroup addVideosObject:video];
             }
         }
@@ -229,13 +236,13 @@
 //    return dict;
 }
 
-- (void)tvDramaManager:(TVDramaManager *)manager requestDramaInfoWithURL:(NSString *)URL requestType:(TVDramaRequestType)requestType completionBlock:(void (^)(VideoGroup *videoGroup, int curSetNum))completionBlock
+- (void)tvDramaManager:(TVDramaManager *)manager requestDramaInfoWithURL:(NSString *)URL requestType:(TVDramaRequestType)requestType completionBlock:(void (^)(VideoGroup *videoGroup, int srcIndex, int curSetNum))completionBlock
 {
     [self performBlockInBackground:^{
         int curSetNum = 0;
         VideoGroup *videoGroup = [self tvDramaManager:manager requestDramaInfoWithURL:URL curSetNum:&curSetNum requestType:requestType];
         if (completionBlock) {
-            completionBlock(videoGroup, curSetNum);
+            completionBlock(videoGroup, 1, curSetNum);
         }
     }];
 }

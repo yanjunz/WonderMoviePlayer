@@ -4,32 +4,50 @@
         <attribute name="brief" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="completedTime" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="createTime" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="fileSize" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="duration" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="fileSize" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="path" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="progress" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
-        <attribute name="resolution" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="setNum" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="status" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="statusCode" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="storageType" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="videoChannelInfos" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="VideoChannelInfo" inverseName="video" inverseEntity="VideoChannelInfo" syncable="YES"/>
+        <relationship name="videoGroup" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="VideoGroup" inverseName="videos" inverseEntity="VideoGroup" syncable="YES"/>
+        <relationship name="videoHistoryEntry" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="VideoHistoryEntry" inverseName="video" inverseEntity="VideoHistoryEntry" syncable="YES"/>
+    </entity>
+    <entity name="VideoBookmarkEntry" representedClassName="VideoBookmarkEntry" syncable="YES">
+        <attribute name="hasUpdate" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="playingSetNum" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="time" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <relationship name="videoGroup" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="VideoGroup" inverseName="videoBookmarkEntry" inverseEntity="VideoGroup" syncable="YES"/>
+    </entity>
+    <entity name="VideoChannelInfo" representedClassName="VideoChannelInfo" syncable="YES">
+        <attribute name="srcIndex" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="videoSrc" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="videoGroup" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="VideoGroup" inverseName="videos" inverseEntity="VideoGroup" syncable="YES"/>
+        <relationship name="video" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Video" inverseName="videoChannelInfos" inverseEntity="Video" syncable="YES"/>
     </entity>
     <entity name="VideoGroup" representedClassName="VideoGroup" syncable="YES">
         <attribute name="maxId" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="picUrl" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="setUpdateTime" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="showType" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="src" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="srcIndex" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="totalCount" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="videoId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="videoName" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="videos" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="Video" inverseName="videoGroup" inverseEntity="Video" syncable="YES"/>
+        <relationship name="videoBookmarkEntry" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="VideoBookmarkEntry" inverseName="videoGroup" inverseEntity="VideoBookmarkEntry" syncable="YES"/>
+        <relationship name="videos" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Video" inverseName="videoGroup" inverseEntity="Video" syncable="YES"/>
+    </entity>
+    <entity name="VideoHistoryEntry" representedClassName="VideoHistoryEntry" syncable="YES">
+        <attribute name="playedProgress" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="srcIndex" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="time" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <relationship name="video" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Video" inverseName="videoHistoryEntry" inverseEntity="Video" syncable="YES"/>
     </entity>
     <elements>
         <element name="Video" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="VideoBookmarkEntry" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="VideoChannelInfo" positionX="0" positionY="0" width="0" height="0"/>
         <element name="VideoGroup" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="VideoHistoryEntry" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

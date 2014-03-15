@@ -47,6 +47,7 @@ typedef enum {
 @property (nonatomic, assign) BOOL isHeaderLoading;
 @property (nonatomic, assign) BOOL isFooterLoading;
 
+- (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style indicatorStyle:(UIActivityIndicatorViewStyle)indicatorStyle loadingTextColor:(UIColor *)loadingTextColor errorTextColor:(UIColor *)errorTextColor;
 - (void)failLoadMoreHeader;
 - (void)finishLoadMoreHeader;
 - (void)failLoadMoreFooter;

@@ -9,6 +9,7 @@
 #import "FakeBatMovieDownloader.h"
 
 @implementation FakeBatMovieDownloader
+@synthesize batMovieDownloaderDelegate;
 - (void)batchDownloadURLs:(NSArray *)downloadURLs titles:(NSDictionary *)titles knownVideoSources:(NSDictionary *)knownVideoSources clarity:(NSInteger)clarity
 {
     NSLog(@"batchDownloadURL %@, %d", downloadURLs, clarity);

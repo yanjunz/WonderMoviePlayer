@@ -26,6 +26,12 @@
 		AEE42D2118D0657900A72B2E /* Video+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE42D2018D0657900A72B2E /* Video+Additions.m */; };
 		AEE42D2418D0687F00A72B2E /* WonderFullScreenBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE42D2318D0687F00A72B2E /* WonderFullScreenBottomView.m */; };
 		AEE42D2718D06C7F00A72B2E /* UIImage+FillColor.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE42D2618D06C7F00A72B2E /* UIImage+FillColor.m */; };
+		AEE42DF018D4182800A72B2E /* VideoBookmarkEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE42DE418D4182800A72B2E /* VideoBookmarkEntry.m */; };
+		AEE42DF118D4182800A72B2E /* VideoChannelInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE42DE618D4182800A72B2E /* VideoChannelInfo.m */; };
+		AEE42DF218D4182800A72B2E /* VideoChannelInfo+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE42DE818D4182800A72B2E /* VideoChannelInfo+Additions.m */; };
+		AEE42DF318D4182800A72B2E /* VideoGroup+Bookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE42DEA18D4182800A72B2E /* VideoGroup+Bookmark.m */; };
+		AEE42DF418D4182800A72B2E /* VideoGroup+History.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE42DEC18D4182800A72B2E /* VideoGroup+History.m */; };
+		AEE42DF518D4182800A72B2E /* VideoHistoryEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE42DEE18D4182800A72B2E /* VideoHistoryEntry.m */; };
 		B516CA0F17DD6AA100D8E3A2 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B516CA0E17DD6AA100D8E3A2 /* CFNetwork.framework */; };
 		B517773817B36D44006B948E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517773717B36D44006B948E /* UIKit.framework */; };
 		B517773A17B36D44006B948E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517773917B36D44006B948E /* Foundation.framework */; };
@@ -189,6 +195,19 @@
 		AEE42D2318D0687F00A72B2E /* WonderFullScreenBottomView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderFullScreenBottomView.m; sourceTree = "<group>"; };
 		AEE42D2518D06C7F00A72B2E /* UIImage+FillColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+FillColor.h"; sourceTree = "<group>"; };
 		AEE42D2618D06C7F00A72B2E /* UIImage+FillColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+FillColor.m"; sourceTree = "<group>"; };
+		AEE42DE318D4182800A72B2E /* VideoBookmarkEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoBookmarkEntry.h; sourceTree = "<group>"; };
+		AEE42DE418D4182800A72B2E /* VideoBookmarkEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoBookmarkEntry.m; sourceTree = "<group>"; };
+		AEE42DE518D4182800A72B2E /* VideoChannelInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoChannelInfo.h; sourceTree = "<group>"; };
+		AEE42DE618D4182800A72B2E /* VideoChannelInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoChannelInfo.m; sourceTree = "<group>"; };
+		AEE42DE718D4182800A72B2E /* VideoChannelInfo+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "VideoChannelInfo+Additions.h"; sourceTree = "<group>"; };
+		AEE42DE818D4182800A72B2E /* VideoChannelInfo+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "VideoChannelInfo+Additions.m"; sourceTree = "<group>"; };
+		AEE42DE918D4182800A72B2E /* VideoGroup+Bookmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "VideoGroup+Bookmark.h"; sourceTree = "<group>"; };
+		AEE42DEA18D4182800A72B2E /* VideoGroup+Bookmark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "VideoGroup+Bookmark.m"; sourceTree = "<group>"; };
+		AEE42DEB18D4182800A72B2E /* VideoGroup+History.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "VideoGroup+History.h"; sourceTree = "<group>"; };
+		AEE42DEC18D4182800A72B2E /* VideoGroup+History.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "VideoGroup+History.m"; sourceTree = "<group>"; };
+		AEE42DED18D4182800A72B2E /* VideoHistoryEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoHistoryEntry.h; sourceTree = "<group>"; };
+		AEE42DEE18D4182800A72B2E /* VideoHistoryEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoHistoryEntry.m; sourceTree = "<group>"; };
+		AEE42DEF18D4182800A72B2E /* VideoModels.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoModels.h; sourceTree = "<group>"; };
 		B516CA0E17DD6AA100D8E3A2 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		B517773417B36D44006B948E /* WonderMoviePlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WonderMoviePlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B517773717B36D44006B948E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -809,6 +828,19 @@
 		B5DC0780182CD4690046A7A5 /* drama */ = {
 			isa = PBXGroup;
 			children = (
+				AEE42DE318D4182800A72B2E /* VideoBookmarkEntry.h */,
+				AEE42DE418D4182800A72B2E /* VideoBookmarkEntry.m */,
+				AEE42DE518D4182800A72B2E /* VideoChannelInfo.h */,
+				AEE42DE618D4182800A72B2E /* VideoChannelInfo.m */,
+				AEE42DE718D4182800A72B2E /* VideoChannelInfo+Additions.h */,
+				AEE42DE818D4182800A72B2E /* VideoChannelInfo+Additions.m */,
+				AEE42DE918D4182800A72B2E /* VideoGroup+Bookmark.h */,
+				AEE42DEA18D4182800A72B2E /* VideoGroup+Bookmark.m */,
+				AEE42DEB18D4182800A72B2E /* VideoGroup+History.h */,
+				AEE42DEC18D4182800A72B2E /* VideoGroup+History.m */,
+				AEE42DED18D4182800A72B2E /* VideoHistoryEntry.h */,
+				AEE42DEE18D4182800A72B2E /* VideoHistoryEntry.m */,
+				AEE42DEF18D4182800A72B2E /* VideoModels.h */,
 				AEE42D1F18D0657900A72B2E /* Video+Additions.h */,
 				AEE42D2018D0657900A72B2E /* Video+Additions.m */,
 				AE96680218B4395B00158788 /* VideoGroup+Additions.h */,
@@ -1004,6 +1036,7 @@
 				B58B574418347F250096801E /* MagicalRecord+iCloud.m in Sources */,
 				B5D4C383182263A700BB0A53 /* AirPlayDetector.m in Sources */,
 				B58B573218347F240096801E /* NSNumber+MagicalDataImport.m in Sources */,
+				AEE42DF418D4182800A72B2E /* VideoGroup+History.m in Sources */,
 				B517774417B36D44006B948E /* main.m in Sources */,
 				B5F96D6E18476A65006A73FB /* DramaTableView.m in Sources */,
 				B58B574118347F250096801E /* NSPersistentStoreCoordinator+MagicalRecord.m in Sources */,
@@ -1016,17 +1049,21 @@
 				B58B56F218347E8E0096801E /* WonderMoviePlayer.xcdatamodeld in Sources */,
 				B5DC0784182CD4690046A7A5 /* WonderMPMovieViewController.m in Sources */,
 				AE2572F918C0AB2E00F71429 /* WonderMovieDownloadView.m in Sources */,
+				AEE42DF218D4182800A72B2E /* VideoChannelInfo+Additions.m in Sources */,
 				B517775117B36D44006B948E /* ViewController.m in Sources */,
 				B58B574718347F250096801E /* MagicalRecord+ShorthandSupport.m in Sources */,
 				AE2572FC18C0AC8A00F71429 /* WonderMovieDownloadGridCell.m in Sources */,
 				B58B576A1836300B0096801E /* WonderMovieDramaListCell.m in Sources */,
+				AEE42DF318D4182800A72B2E /* VideoGroup+Bookmark.m in Sources */,
 				B5D4C3661820F51A00BB0A53 /* WonderProgressView.m in Sources */,
 				B5DC0782182CD4690046A7A5 /* WonderAVMovieViewController.m in Sources */,
 				B5D4C3641820F51A00BB0A53 /* WonderFullscreenControlView.m in Sources */,
 				AEE42D2118D0657900A72B2E /* Video+Additions.m in Sources */,
 				B58B574318347F250096801E /* MagicalRecord+ErrorHandling.m in Sources */,
 				B58B573718347F250096801E /* NSManagedObject+MagicalDataImport.m in Sources */,
+				AEE42DF518D4182800A72B2E /* VideoHistoryEntry.m in Sources */,
 				B517776A17B37FEB006B948E /* UIView+Sizes.m in Sources */,
+				AEE42DF118D4182800A72B2E /* VideoChannelInfo.m in Sources */,
 				B58B56EC183470F50096801E /* WonderMovieDramaView.m in Sources */,
 				B5435577186D250C0090AFEE /* MttActivityIndicator.m in Sources */,
 				B58B56E018338E910096801E /* TVDramaManager.m in Sources */,
@@ -1058,6 +1095,7 @@
 				B58B574518347F250096801E /* MagicalRecord+Options.m in Sources */,
 				B52DCDA9183F4E890020485B /* WonderFullscreenControlView+StateMachine.m in Sources */,
 				B58B57661835F6190096801E /* VideoGroup.m in Sources */,
+				AEE42DF018D4182800A72B2E /* VideoBookmarkEntry.m in Sources */,
 				B58B573D18347F250096801E /* NSManagedObjectContext+MagicalSaves.m in Sources */,
 				AE96680718B4398D00158788 /* NSString+Hash.m in Sources */,
 				B5F96D5118437748006A73FB /* FakeMovieDownloader.m in Sources */,

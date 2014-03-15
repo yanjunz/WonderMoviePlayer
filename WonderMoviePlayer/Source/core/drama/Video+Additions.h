@@ -10,10 +10,19 @@
 
 @interface Video (Additions)
 
-+ (Video *)videoWithVideoId:(NSString *)videoId srcIndex:(NSInteger)srcIndex setNum:(NSInteger)setNum;
++ (instancetype)videoWithVideoId:(NSString *)videoId setNum:(NSInteger)setNum;
 
-+ (Video *)videoWithVideoId:(NSString *)videoId srcIndex:(NSInteger)srcIndex setNum:(NSInteger)setNum inContext:(NSManagedObjectContext *)context;
++ (instancetype)videoWithVideoId:(NSString *)videoId setNum:(NSInteger)setNum inContext:(NSManagedObjectContext *)context;
+
++ (instancetype)videoWithWebURL:(NSString *)URL;
+
+- (VideoChannelInfo *)videoChannelInfoAtSrcIndex:(NSInteger)srcIndex;
+- (VideoChannelInfo *)videoChannelInfoAtWebURL:(NSString *)webURL;
+- (VideoChannelInfo *)bestVideoChannelInfo;
 
 - (NSString *)displayName;
 
+- (BOOL)hasLocalFile;
+- (void)saveVideoSrc:(NSString *)videoSrc forSrcIndex:(NSInteger)srcIndex;
+- (NSString *)webURLAtSrcIndex:(NSInteger)srcIndex;
 @end

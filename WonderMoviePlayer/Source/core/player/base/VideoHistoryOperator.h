@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @protocol VideoHistoryOperator <NSObject>
-- (void)visitVideo:(Video *)video playedProgress:(CGFloat)playedProgress visit:(BOOL)visit;
+// FIXME: Ugly, should be removed
+- (void)visitVideo:(Video *)video webURL:(NSString *)webURL playedProgress:(CGFloat)playedProgress visit:(BOOL)visit;
 - (void)removeAllVideoHistories;
 @end

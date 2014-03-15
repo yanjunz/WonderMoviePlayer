@@ -10,10 +10,9 @@
 #import "WonderMoviePlayerConstants.h"
 #import "UIView+Sizes.h"
 #import "NSObject+Block.h"
-#import "Video.h"
-#import "VideoGroup+Additions.h"
 #import "WonderMovieDownloadGridCell.h"
 #import "WonderMovieDownloadListCell.h"
+#import "VideoModels.h"
 
 #define kDramaHeaderViewHeight      0
 #define kDramaFooterViewHeight      0
@@ -40,7 +39,7 @@
         self.selectedSetNums = [NSMutableArray array];
         self.downloadedSetNums = [NSMutableArray array];
         
-        DramaTableView *tableView = [[DramaTableView alloc] initWithFrame:CGRectMake(0, kDramaHeaderViewHeight, self.width, self.height - kDramaHeaderViewHeight - kDramaFooterViewHeight) style:UITableViewStylePlain];
+        DramaTableView *tableView = [[DramaTableView alloc] initWithFrame:CGRectMake(0, kDramaHeaderViewHeight, self.width, self.height - kDramaHeaderViewHeight - kDramaFooterViewHeight) style:UITableViewStylePlain indicatorStyle:UIActivityIndicatorViewStyleGray loadingTextColor:[UIColor grayColor] errorTextColor:[UIColor grayColor]];
         tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         tableView.delegate = self;
         tableView.dataSource = self;
@@ -366,7 +365,7 @@
             }
         }
         else {
-            cell.textLabel.text = [video.videoGroup displayNameForSetNum:video.setNum];
+            cell.textLabel.text = [video displayName];
         }
         
         

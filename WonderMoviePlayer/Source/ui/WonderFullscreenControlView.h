@@ -45,11 +45,10 @@
     BOOL _autoNextShown;
 }
 @property (nonatomic, assign) BOOL autoPlayWhenStarted;
-@property (nonatomic, assign) BOOL downloadEnabled;
 @property (nonatomic, assign) BOOL crossScreenEnabled;
 @property (nonatomic, strong) WonderInfoView *infoView;
 
-- (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted downloadEnabled:(BOOL)downloadEnabled crossScreenEnabled:(BOOL)crossScreenEnabled;
+- (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted crossScreenEnabled:(BOOL)crossScreenEnabled;
 
 - (void)afterStateMachine;
 @end

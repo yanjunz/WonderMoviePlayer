@@ -102,14 +102,13 @@
     
     
     self.bookmarkButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.bookmarkButton.frame = CGRectMake(self.downloadButton.left - kDownloadButtonSize, (bottomBarHeight - kDownloadButtonSize) / 2, kDownloadButtonSize, kDownloadButtonSize);
+    self.bookmarkButton.frame = CGRectMake(self.downloadButton.left - kDownloadButtonSize, bottomBarHeight - kDownloadButtonSize, kDownloadButtonSize, kDownloadButtonSize);
     self.bookmarkButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [self.bookmarkButton setTitleColor:QQColor(videoplayer_downloaded_color) forState:UIControlStateDisabled];
     [self.bookmarkButton setImage:QQVideoPlayerImage(@"bookmark_normal") forState:UIControlStateNormal];
     [self.bookmarkButton setImage:QQVideoPlayerImage(@"bookmark_press") forState:UIControlStateSelected];
     self.bookmarkButton.titleLabel.font = buttonFont;
     [self.bookmarkButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
-    self.bookmarkButton.hidden = YES;
     [self addSubview:self.bookmarkButton];
     
     

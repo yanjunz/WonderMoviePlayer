@@ -571,9 +571,8 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 //    NSLog(@"[WonderAVMovieViewController] observe 0x%0x %@, %d", self.hash, path, self.parentViewController!=nil);
     if ([@"parentViewController" isEqualToString:path] && object == self) {
         if (!self.parentViewController) {
-            _isExited = YES;
-            // dismiss this viewcontroller
-            [self removeAllObservers];
+            // if it is dismissed without press back button, movieControlSourceExit will not be called, so call exit here to double confirm resource is released correctly
+            [self exit];
         }
         return;
     }
@@ -775,14 +774,13 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 {
     if (fullscreen) {
 #ifdef MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
-        BOOL downloadEnabled = !!self.movieDownloader;
+//        BOOL downloadEnabled = !!self.movieDownloader;
 #else // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
-        BOOL downloadEnabled = !!self.downloadBlock;
+//        BOOL downloadEnabled = !!self.downloadBlock;
 #endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
         BOOL crossScreenEnabled = !!self.crossScreenBlock;
         WonderFullscreenControlView *fullscreenControlView = [[WonderFullscreenControlView alloc] initWithFrame:self.overlayView.bounds
                                                                                                        autoPlayWhenStarted:YES
-                                                                                                           downloadEnabled:downloadEnabled
                                                                                                         crossScreenEnabled:crossScreenEnabled];
         fullscreenControlView.delegate = self;
         fullscreenControlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -958,6 +956,33 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     [self.player play];
 }
 
+- (void)exit
+{
+    // must make sure exitBlock is called one time!
+    if (!_isExited) {
+        _isExited = YES;
+        
+        if (_hasStarted) {
+            _hasStarted = NO;
+            if ([self.delegate respondsToSelector:@selector(baseMoviePlayerDidEnd:)]) {
+                [self.delegate baseMoviePlayerDidEnd:self];
+            }
+        }
+        
+        [self.player pause];
+        if([self.player respondsToSelector:@selector(cancelPendingPrerolls)]){
+            [self.player cancelPendingPrerolls];
+        }
+        if ([self.playerItem respondsToSelector:@selector(cancelPendingSeeks)]) {
+            [self.playerItem cancelPendingSeeks];
+        }
+        if (self.exitBlock) {
+            self.exitBlock();
+        }
+        [self removeAllObservers];
+    }
+}
+
 #pragma mark Fake Buffer Progress
 #ifdef MTT_TWEAK_WONDER_MOVIE_PLAYER_FAKE_BUFFER_PROGRESS
 - (void)onLoadedTimeRangesChanged
@@ -1072,29 +1097,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 
 - (void)movieControlSourceExit:(id<MovieControlSource>)source
 {
-    // must make sure exitBlock is called one time!
-    if (!_isExited) {
-        _isExited = YES;
-        
-        if (_hasStarted) {
-            _hasStarted = NO;
-            if ([self.delegate respondsToSelector:@selector(baseMoviePlayerDidEnd:)]) {
-                [self.delegate baseMoviePlayerDidEnd:self];
-            }
-        }
-        
-        [self.player pause];
-        if([self.player respondsToSelector:@selector(cancelPendingPrerolls)]){
-            [self.player cancelPendingPrerolls];
-        }
-        if ([self.playerItem respondsToSelector:@selector(cancelPendingSeeks)]) {
-            [self.playerItem cancelPendingSeeks];
-        }
-        if (self.exitBlock) {
-            self.exitBlock();
-        }
-        [self removeAllObservers];
-    }
+    [self exit];
 }
 
 - (void)movieControlSourceBeginChangeProgress:(id<MovieControlSource>)source

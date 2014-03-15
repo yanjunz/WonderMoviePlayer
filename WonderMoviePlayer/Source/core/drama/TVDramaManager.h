@@ -13,7 +13,7 @@
 @class Video;
 @class ResponsibilityChainTVDramaRequestHandler;
 
-typedef void (^GetDramaInfoBlock)(VideoGroup *videoGroup, int setNum);
+typedef void (^GetDramaInfoBlock)(VideoGroup *videoGroup, int srcIndex, int setNum);
 typedef void (^FailedBlock)();
 
 typedef enum {
@@ -28,6 +28,7 @@ typedef enum {
 @property (nonatomic, copy) NSString *webURL;
 @property (nonatomic, copy) NSString *playingURL;
 @property (nonatomic, strong) VideoGroup *videoGroup;
+@property (nonatomic, assign) int srcIndex;
 @property (nonatomic, assign) int curSetNum;
 @property (nonatomic, assign) NSInteger clarityCount;
 @property (nonatomic, assign) NSInteger currentClarity;
@@ -44,7 +45,7 @@ typedef enum {
 
 @protocol TVDramaRequestHandler <NSObject>
 @optional
-- (void)tvDramaManager:(TVDramaManager *)manager requestDramaInfoWithURL:(NSString *)URL requestType:(TVDramaRequestType)requestType completionBlock:(void (^)(VideoGroup *videoGroup, int curSetNum))completionBlock;
+- (void)tvDramaManager:(TVDramaManager *)manager requestDramaInfoWithURL:(NSString *)URL requestType:(TVDramaRequestType)requestType completionBlock:(GetDramaInfoBlock)completionBlock;
 
 - (void)tvDramaManager:(TVDramaManager *)manager sniffVideoSrcWithURL:(NSString *)URL clarity:(NSInteger)clarity src:(NSString *)src completionBlock:(void (^)(NSString *videoSrc, NSInteger clarityCount))completionBlock;
 @end
