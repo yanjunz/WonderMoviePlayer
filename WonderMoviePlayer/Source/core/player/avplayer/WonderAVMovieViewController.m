@@ -97,6 +97,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 }
 @property (nonatomic, strong) UIView *controlView;
 @property (nonatomic, assign) BOOL isEnd;
+@property (nonatomic, strong) id<MovieInfoObtainer> movieInfoObtainer;
 @end
 
 @implementation WonderAVMovieViewController
@@ -330,6 +331,13 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 //    }
 //}
 
+- (void)playWithMovieObtainer:(id<MovieInfoObtainer>)movieInfoObtainer
+{
+    self.movieInfoObtainer = movieInfoObtainer;
+    [self.movieInfoObtainer setDelegate:self];
+    [movieInfoObtainer startObtainMovieInfo]; // start ASAP
+}
+
 - (void)playMovieStream:(NSURL *)movieURL fromTime:(CGFloat)time
 {
     if ([movieURL scheme]) {
@@ -377,7 +385,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     }];
     
     // show buffer immediately
-    [self buffer];
+//    [self buffer];
 }
 
 #pragma mark Prepare to play asset
@@ -535,7 +543,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
         // FIXME
     }
     
-    [self.controlSource prepareToPlay];
+//    [self.controlSource prepareToPlay];
 #ifdef MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
     [self.movieDownloader mdBindDownloadURL:self.movieURL delegate:self dataSource:self];
 #endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
@@ -1052,6 +1060,12 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 }
 
 #pragma mark MovieControlSourceDelegate
+- (void)movieControlSourceLoaded:(id<MovieControlSourceDelegate>)source
+{
+    [self buffer]; // on load just show buffer
+    [self.controlSource prepareToPlay];
+}
+
 - (void)movieControlSourcePlay:(id<MovieControlSource>)source
 {
     [self play];
@@ -1324,6 +1338,27 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     return nil;
 }
 #endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
+
+#pragma mark MovieInfoObtainerDelegate
+- (void)movieInfoObtainerBeginObtainMovieInfo:(id<MovieInfoObtainer>)movieInfoObtainer
+{
+    [self buffer];
+}
+
+- (void)movieInfoObtainer:(id<MovieInfoObtainer>)movieInfoObtainer successObtainMovieInfoWithMovieURL:(NSURL *)movieURL withProgress:(CGFloat)progrss
+{
+    [self playMovieStream:movieURL fromProgress:progrss];
+}
+
+- (void)movieInfoObtainer:(id<MovieInfoObtainer>)movieInfoObtainer successObtainMovieInfoWithMovieURL:(NSURL *)movieURL withTime:(CGFloat)time
+{
+    [self playMovieStream:movieURL fromTime:time];
+}
+
+- (void)movieInfoObtainerFailObtainMovieInfo:(id<MovieInfoObtainer>)movieInfoObtainer
+{
+    [self.controlSource error:@""];
+}
 
 #pragma mark Notification
 - (void)onEnterForeground:(NSNotification *)n

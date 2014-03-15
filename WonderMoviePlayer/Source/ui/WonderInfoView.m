@@ -96,15 +96,19 @@
         UILabel *label = [[UILabel alloc] initWithFrame:self.bounds];
         label.textColor = [UIColor whiteColor];
         label.backgroundColor = [UIColor clearColor];
-        label.text = NSLocalizedString(@"播放地址失效，请尝试", nil);
+//        label.text = NSLocalizedString(@"播放地址失效，请尝试", nil);
+        label.text = @"播放地址失效，正在为您跳转对应网页...";
         [label sizeToFit];
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.frame = self.bounds;
-        [button setTitle:NSLocalizedString(@"网页播放", nil) forState:UIControlStateNormal];
+//        [button setTitle:NSLocalizedString(@"网页播放", nil) forState:UIControlStateNormal];
+//        [button setTitle:NSLocalizedString(@"播放地址失效，正在为您跳转对应网页...", nil) forState:UIControlStateNormal];
         [button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
         self.openSourceButton = button;
         [button.titleLabel sizeToFit];
         button.bounds = button.titleLabel.bounds;
+        button.enabled = NO;
+        
         CGFloat width = label.width + button.width;
         UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, width, label.height)];
         titleView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;

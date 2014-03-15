@@ -18,6 +18,7 @@
 #import "Reachability.h"
 #import "FakeBatMovieDownloader.h"
 #import "WonderMovieDownloadController.h"
+#import "FakeMovieInfoObtainer.h"
 
 #ifdef MTT_FEATURE_WONDER_MPMOVIE_PLAYER
 #define WonderMovieViewController WonderMPMovieViewController
@@ -158,7 +159,8 @@
         }];
         
         NSLog(@"start to play av");
-        [controller playMovieStream:[[NSBundle mainBundle] URLForResource:@"Movie" withExtension:@"m4v"] fromProgress:0];
+//        [controller playMovieStream:[[NSBundle mainBundle] URLForResource:@"Movie" withExtension:@"m4v"] fromProgress:0];
+        [controller playWithMovieObtainer:[[FakeMovieInfoObtainer alloc] initWithURL:[[NSBundle mainBundle] URLForResource:@"Movie" withExtension:@"m4v"]]];
     }
 }
 
@@ -225,17 +227,16 @@
     [controller setExitBlock:^{
         DefineStrongVarInBlock(controller);
         [UIApplication sharedApplication].statusBarHidden = NO;
-        if ([controller respondsToSelector:@selector(dismissViewControllerAnimated:completion:)]) {
-            [controller dismissViewControllerAnimated:YES completion:nil];
-        }
-        else {
-            [controller dismissModalViewControllerAnimated:YES];
-        }
+        [controller dismissViewControllerAnimated:YES completion:nil];
+    }];
+    [controller setErrorBlock:^{
+        DefineStrongVarInBlock(controller);
+        [UIApplication sharedApplication].statusBarHidden = NO;
+        [controller dismissViewControllerAnimated:YES completion:nil];
     }];
     
-    
         NSLog(@"start to play av");
-        [controller playMovieStream:[NSURL URLWithString:
+        [controller playWithMovieObtainer:[[FakeMovieInfoObtainer alloc] initWithURL:[NSURL URLWithString:
 //                                     @"http://hot.vrs.sohu.com/ipad1259067_4587696266952_4460388.m3u8?plat=null"
 //                                     @"http://hot.vrs.sohu.com/ipad1319252_4580514014865_4520573.m3u8"
                                      @"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"
@@ -245,7 +246,7 @@
 //                                     @"http://v.youku.com/player/getRealM3U8/vid/XNDUwNjc4MzA4/type/video.m3u8"
 //                                     @"http://jq.v.ismartv.tv/cdn/1/81/95e68bbdce46b5b8963b504bf73d1b/normal/slice/index.m3u8"
 //                                     @"http://att.livem3u8.na.itv.cn/live/97acb1b2cbed4a4281a68356f8c2bd00.m3u8"
-                                     ] fromProgress:0];
+                                                                                      ]]];
     
 
 }

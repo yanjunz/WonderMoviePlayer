@@ -752,6 +752,14 @@ void wonderMovieVolumeListenerCallback (
 {
     self.errorView.hidden = !show;
     [self.infoView showError:show];
+
+    if (show) {
+        [self performBlockInMainThread:^{
+            if ([self.delegate respondsToSelector:@selector(movieControlSourceHandleError:)]) {
+                [self.delegate movieControlSourceHandleError:self];
+            }
+        } afterDelay:1];
+    }
 }
 
 

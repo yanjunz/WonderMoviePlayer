@@ -32,6 +32,7 @@
 		AEE42DF318D4182800A72B2E /* VideoGroup+Bookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE42DEA18D4182800A72B2E /* VideoGroup+Bookmark.m */; };
 		AEE42DF418D4182800A72B2E /* VideoGroup+History.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE42DEC18D4182800A72B2E /* VideoGroup+History.m */; };
 		AEE42DF518D4182800A72B2E /* VideoHistoryEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE42DEE18D4182800A72B2E /* VideoHistoryEntry.m */; };
+		AEE42DF918D4284F00A72B2E /* FakeMovieInfoObtainer.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE42DF818D4284F00A72B2E /* FakeMovieInfoObtainer.m */; };
 		B516CA0F17DD6AA100D8E3A2 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B516CA0E17DD6AA100D8E3A2 /* CFNetwork.framework */; };
 		B517773817B36D44006B948E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517773717B36D44006B948E /* UIKit.framework */; };
 		B517773A17B36D44006B948E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B517773917B36D44006B948E /* Foundation.framework */; };
@@ -208,6 +209,9 @@
 		AEE42DED18D4182800A72B2E /* VideoHistoryEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoHistoryEntry.h; sourceTree = "<group>"; };
 		AEE42DEE18D4182800A72B2E /* VideoHistoryEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoHistoryEntry.m; sourceTree = "<group>"; };
 		AEE42DEF18D4182800A72B2E /* VideoModels.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoModels.h; sourceTree = "<group>"; };
+		AEE42DF618D41D9700A72B2E /* MovieInfoObtainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MovieInfoObtainer.h; sourceTree = "<group>"; };
+		AEE42DF718D4284F00A72B2E /* FakeMovieInfoObtainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FakeMovieInfoObtainer.h; sourceTree = "<group>"; };
+		AEE42DF818D4284F00A72B2E /* FakeMovieInfoObtainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeMovieInfoObtainer.m; sourceTree = "<group>"; };
 		B516CA0E17DD6AA100D8E3A2 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		B517773417B36D44006B948E /* WonderMoviePlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WonderMoviePlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B517773717B36D44006B948E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -821,6 +825,7 @@
 				B5DC077E182CD4690046A7A5 /* MoviePlayerHandler.h */,
 				B5F96D4B1843603A006A73FB /* MovieDownloader.h */,
 				AE25730018C0C21300F71429 /* BatMovieDownloader.h */,
+				AEE42DF618D41D9700A72B2E /* MovieInfoObtainer.h */,
 			);
 			path = base;
 			sourceTree = "<group>";
@@ -864,6 +869,8 @@
 				B5F96D5018437748006A73FB /* FakeMovieDownloader.m */,
 				AE25730118C0C73D00F71429 /* FakeBatMovieDownloader.h */,
 				AE25730218C0C73D00F71429 /* FakeBatMovieDownloader.m */,
+				AEE42DF718D4284F00A72B2E /* FakeMovieInfoObtainer.h */,
+				AEE42DF818D4284F00A72B2E /* FakeMovieInfoObtainer.m */,
 			);
 			name = SimulatedClass;
 			sourceTree = "<group>";
@@ -1040,6 +1047,7 @@
 				B517774417B36D44006B948E /* main.m in Sources */,
 				B5F96D6E18476A65006A73FB /* DramaTableView.m in Sources */,
 				B58B574118347F250096801E /* NSPersistentStoreCoordinator+MagicalRecord.m in Sources */,
+				AEE42DF918D4284F00A72B2E /* FakeMovieInfoObtainer.m in Sources */,
 				B58B573A18347F250096801E /* NSManagedObject+MagicalRequests.m in Sources */,
 				B517774817B36D44006B948E /* AppDelegate.m in Sources */,
 				B58B573518347F250096801E /* NSString+MagicalDataImport.m in Sources */,
