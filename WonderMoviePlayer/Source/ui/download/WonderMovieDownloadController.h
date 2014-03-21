@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "WonderMovieDownloadView.h"
 #import "BatMovieDownloader.h"
+#import "WonderMoviePlayerConstants.h"
 
 @class TVDramaManager;
 

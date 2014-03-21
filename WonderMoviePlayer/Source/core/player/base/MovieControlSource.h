@@ -158,6 +158,8 @@ typedef enum {
 
 - (void)movieControlSourceDidError:(id<MovieControlSource>)source;
 
+- (void)movieControlSourceOpenExternalBookmark:(id<MovieControlSource>)source;
+
 - (void)movieControlSourceHandleError:(id<MovieControlSource>)source;
 @end
 

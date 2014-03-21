@@ -57,11 +57,6 @@ __weak type var = __real_##var
 
 #define CustomBaseViewController UIViewController
 
-#ifndef CustomBaseViewController
-#import "MttBaseViewController.h"
-#define CustomBaseViewController MttBaseViewController
-#endif
-
 //////////////////////////////////////////////////////////
 /**
  Macro For Weak-Strong Dance for ARC

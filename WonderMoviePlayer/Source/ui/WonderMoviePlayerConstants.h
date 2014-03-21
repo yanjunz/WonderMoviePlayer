@@ -88,6 +88,11 @@
 
 #endif
 
+#ifndef CustomBaseViewController
+#import "MttBaseViewController.h"
+#define CustomBaseViewController MttBaseViewController
+#endif
+
 
 #define kProgressViewPadding 16
 //#define kWonderMovieControlDimDuration              0.8f

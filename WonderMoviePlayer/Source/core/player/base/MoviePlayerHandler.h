@@ -17,4 +17,6 @@
 
 @property (nonatomic, copy) void(^myVideoBlock)();
 @property (nonatomic, copy) void(^errorBlock)();
+
+@property (nonatomic, copy) void(^openBookmarkBlock)();
 @end

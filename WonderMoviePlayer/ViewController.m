@@ -234,6 +234,12 @@
         [UIApplication sharedApplication].statusBarHidden = NO;
         [controller dismissViewControllerAnimated:YES completion:nil];
     }];
+
+    [controller setOpenBookmarkBlock:^{
+        DefineStrongVarInBlock(controller);
+        [UIApplication sharedApplication].statusBarHidden = NO;
+        [controller dismissViewControllerAnimated:YES completion:nil];
+    }];
     
         NSLog(@"start to play av");
         [controller playWithMovieObtainer:[[FakeMovieInfoObtainer alloc] initWithURL:[NSURL URLWithString:

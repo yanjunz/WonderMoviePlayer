@@ -100,8 +100,6 @@
         [label sizeToFit];
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.frame = self.bounds;
-//        [button setTitle:NSLocalizedString(@"网页播放", nil) forState:UIControlStateNormal];
-//        [button setTitle:NSLocalizedString(@"播放地址失效，正在为您跳转对应网页...", nil) forState:UIControlStateNormal];
         [button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
         self.openSourceButton = button;
         [button.titleLabel sizeToFit];
@@ -120,6 +118,10 @@
 
         self.errorView = errorView;
         [self addSubview:errorView];
+        
+        UIColor *colorOfLink = RGBAColor(0x24, 0x8b, 0xf2, 0xff);
+        UIColor *colorOfActiveLink = RGBAColor(0x24, 0x8b, 0xf2, 0xff);
+        [self setActiveLinkColor:colorOfLink andUnActiveLinkColor:colorOfActiveLink];
     }
     return self;
 }
@@ -404,6 +406,43 @@
 - (void)showError:(BOOL)show
 {
     self.errorView.hidden = !show;
+}
+
+#pragma mark TTTAttributedLabel
+- (void)setActiveLinkColor:(UIColor*)activeLinkColor andUnActiveLinkColor:(UIColor*)unActiveLinkColor
+{
+    CGColorRef colorRefOfLink = [activeLinkColor CGColor];
+    CGColorRef colorRefOfActiveLink = [unActiveLinkColor CGColor];
+    
+    NSMutableDictionary *mutableLinkAttributes = [NSMutableDictionary dictionary];
+    NSMutableDictionary *mutableActiveLinkAttributes = [NSMutableDictionary dictionary];
+    
+    if ([NSMutableParagraphStyle class]) {
+        [mutableLinkAttributes setObject:(__bridge id)colorRefOfLink forKey:(NSString *)kCTForegroundColorAttributeName];
+        [mutableActiveLinkAttributes setObject:(__bridge id)colorRefOfActiveLink forKey:(NSString *)kCTForegroundColorAttributeName];
+        
+        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+        paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+        
+        [mutableLinkAttributes setObject:paragraphStyle forKey:(NSString *)kCTParagraphStyleAttributeName];
+        [mutableActiveLinkAttributes setObject:paragraphStyle forKey:(NSString *)kCTParagraphStyleAttributeName];
+    } else {
+        [mutableLinkAttributes setObject:(__bridge id)colorRefOfLink forKey:(NSString *)kCTForegroundColorAttributeName];
+        [mutableActiveLinkAttributes setObject:(__bridge id)colorRefOfActiveLink forKey:(NSString *)kCTForegroundColorAttributeName];
+        CTLineBreakMode lineBreakMode = kCTLineBreakByWordWrapping;
+        CTParagraphStyleSetting paragraphStyles[1] = {
+            {.spec = kCTParagraphStyleSpecifierLineBreakMode, .valueSize = sizeof(CTLineBreakMode), .value = (const void *)&lineBreakMode}
+        };
+        CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(paragraphStyles, 1);
+        
+        [mutableLinkAttributes setObject:(__bridge id)paragraphStyle forKey:(NSString *)kCTParagraphStyleAttributeName];
+        [mutableActiveLinkAttributes setObject:(__bridge id)paragraphStyle forKey:(NSString *)kCTParagraphStyleAttributeName];
+        
+        CFRelease(paragraphStyle);
+    }
+    
+    [self.toastLabel setLinkAttributes:mutableLinkAttributes];
+    [self.toastLabel setActiveLinkAttributes:mutableActiveLinkAttributes];
 }
 
 @end

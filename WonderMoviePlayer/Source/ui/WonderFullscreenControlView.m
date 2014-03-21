@@ -1178,10 +1178,10 @@ void wonderMovieVolumeListenerCallback (
         
         if ([videoGroup isValidDrama]) {
             if (!hasBookmarked) {
-                NSString *infoText = @"已添加到我的视频收藏";
+                NSString *infoText = @"已添加到我的视频 > 我的收藏";
                 [self.infoView showCommonToast:infoText show:YES animated:YES];
-                NSRange range = [infoText rangeOfString:@"我的视频收藏"];
-                [self.infoView.toastLabel addLinkToURL:[NSURL URLWithString:@"http://www.baidu.com"] withRange:range];
+                NSRange range = [infoText rangeOfString:@"我的收藏"];
+                [self.infoView.toastLabel addLinkToURL:[NSURL URLWithString:@"http://v.html5.qq.com"] withRange:range];
             }
             else {
                 [self.infoView showCommonToast:@"已取消收藏" show:YES animated:YES];
@@ -2066,14 +2066,16 @@ void wonderMovieVolumeListenerCallback (
 // http://stackoverflow.com/questions/13515539/uibutton-not-works-in-ios-5-x-everything-is-fine-in-ios-6-x
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
-    return !([touch.view isKindOfClass:[UIControl class]]) && !(self.dramaView && [touch.view isDescendantOfView:self.dramaView]);
+    return !([touch.view isKindOfClass:[UIControl class]]) && !([touch.view isKindOfClass:[TTTAttributedLabel class]]) && !(self.dramaView && [touch.view isDescendantOfView:self.dramaView]);
 }
 
 #pragma mark TTTAttributedLabel
 - (void)attributedLabel:(TTTAttributedLabel *)label
    didSelectLinkWithURL:(NSURL *)url
 {
-    NSLog(@"%@", url);
+    if ([self.delegate respondsToSelector:@selector(movieControlSourceOpenExternalBookmark:)]) {
+        [self.delegate movieControlSourceOpenExternalBookmark:self];
+    }
 }
 @end
 

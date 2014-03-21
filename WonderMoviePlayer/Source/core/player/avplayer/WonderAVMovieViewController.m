@@ -115,6 +115,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 
 @synthesize myVideoBlock;
 @synthesize errorBlock;
+@synthesize openBookmarkBlock;
 @synthesize controlSource;
 @synthesize isEnd = _isEnd;
 @synthesize delegate;
@@ -1301,6 +1302,13 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 {
     if (self.errorBlock) {
         self.errorBlock();
+    }
+}
+
+- (void)movieControlSourceOpenExternalBookmark:(id<MovieControlSource>)source
+{
+    if (self.openBookmarkBlock) {
+        self.openBookmarkBlock();
     }
 }
 
