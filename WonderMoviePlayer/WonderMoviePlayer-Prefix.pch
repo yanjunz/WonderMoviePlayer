@@ -28,6 +28,8 @@
 #define QQImage(src)        [UIImageEx loadAndCacheImageFromApp:src]
 #endif
 
+#define QQColor(colorName) colorName
+
 #define AddStatWithKey(key) NSLog(key)
 
 #define LogFrame(f)     NSLog(@"(%f,%f,%f,%f)", X(f), Y(f), W(f), H(f))
@@ -51,6 +53,13 @@ type __real_##var = assignment; \
 __weak type var = __real_##var
 #else
 #define DefineBlockVar(type, var, assignment)    __block type var = assignment
+#endif
+
+#define CustomBaseViewController UIViewController
+
+#ifndef CustomBaseViewController
+#import "MttBaseViewController.h"
+#define CustomBaseViewController MttBaseViewController
 #endif
 
 //////////////////////////////////////////////////////////

@@ -12,6 +12,7 @@
 		AE2572FC18C0AC8A00F71429 /* WonderMovieDownloadGridCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2572FB18C0AC8A00F71429 /* WonderMovieDownloadGridCell.m */; };
 		AE2572FF18C0AC9D00F71429 /* WonderMovieDownloadListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2572FE18C0AC9D00F71429 /* WonderMovieDownloadListCell.m */; };
 		AE25730318C0C73D00F71429 /* FakeBatMovieDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = AE25730218C0C73D00F71429 /* FakeBatMovieDownloader.m */; };
+		AE35E6F618DC50F0004F0C62 /* MovieInfoObtainer.m in Sources */ = {isa = PBXBuildFile; fileRef = AE35E6F518DC50F0004F0C62 /* MovieInfoObtainer.m */; };
 		AE4FA7CA1872ADAA005B7BD6 /* toast_frame@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AE4FA7C91872ADAA005B7BD6 /* toast_frame@2x.png */; };
 		AE7EED9E18C8540E00EF7947 /* ok@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AE7EED9D18C8540E00EF7947 /* ok@2x.png */; };
 		AE7EEDC518CC50ED00EF7947 /* arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AE7EEDC418CC50ED00EF7947 /* arrow@2x.png */; };
@@ -174,6 +175,7 @@
 		AE25730018C0C21300F71429 /* BatMovieDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BatMovieDownloader.h; sourceTree = "<group>"; };
 		AE25730118C0C73D00F71429 /* FakeBatMovieDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FakeBatMovieDownloader.h; sourceTree = "<group>"; };
 		AE25730218C0C73D00F71429 /* FakeBatMovieDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeBatMovieDownloader.m; sourceTree = "<group>"; };
+		AE35E6F518DC50F0004F0C62 /* MovieInfoObtainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MovieInfoObtainer.m; sourceTree = "<group>"; };
 		AE4FA7C91872ADAA005B7BD6 /* toast_frame@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toast_frame@2x.png"; sourceTree = "<group>"; };
 		AE7EED9D18C8540E00EF7947 /* ok@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ok@2x.png"; sourceTree = "<group>"; };
 		AE7EEDC418CC50ED00EF7947 /* arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow@2x.png"; sourceTree = "<group>"; };
@@ -818,6 +820,7 @@
 		B5DC077B182CD4690046A7A5 /* base */ = {
 			isa = PBXGroup;
 			children = (
+				AE35E6F518DC50F0004F0C62 /* MovieInfoObtainer.m */,
 				AE96680818B439F100158788 /* VideoBookmarkOperator.h */,
 				AE96680918B439F100158788 /* VideoHistoryOperator.h */,
 				B5DC077C182CD4690046A7A5 /* BaseMoviePlayer.h */,
@@ -1053,6 +1056,7 @@
 				B58B573518347F250096801E /* NSString+MagicalDataImport.m in Sources */,
 				AED9C38618C32C0900C41142 /* WonderMovieDownloadController.m in Sources */,
 				B58F110918376EDB00D6A9B2 /* TestTableViewController.m in Sources */,
+				AE35E6F618DC50F0004F0C62 /* MovieInfoObtainer.m in Sources */,
 				B58B574618347F250096801E /* MagicalRecord+Setup.m in Sources */,
 				B58B56F218347E8E0096801E /* WonderMoviePlayer.xcdatamodeld in Sources */,
 				B5DC0784182CD4690046A7A5 /* WonderMPMovieViewController.m in Sources */,

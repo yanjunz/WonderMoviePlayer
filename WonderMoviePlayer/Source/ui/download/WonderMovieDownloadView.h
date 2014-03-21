@@ -29,6 +29,7 @@
 @property (nonatomic) BOOL supportBatchDownload; // unable to batch download if the website is not supported by sniffer
 - (void)reloadData;
 
+- (void)scrollToThePlayingOne;
 - (void)cancel;
 - (void)confirm;
 @end

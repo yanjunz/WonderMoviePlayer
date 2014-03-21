@@ -39,5 +39,6 @@ typedef enum {
 - (NSArray *)downloadedVideos;
 - (void)checkDownloadedVideosExist;
 - (void)saveVideoSrc:(NSString *)videoSrc forSrcIndex:(NSInteger)srcIndex setNum:(NSInteger)setNum;
+- (Video *)firstVideo;
 
 @end

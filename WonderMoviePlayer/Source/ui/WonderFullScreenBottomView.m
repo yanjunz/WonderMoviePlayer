@@ -131,9 +131,10 @@
     CGFloat right = self.width;
 #ifdef MTT_TWEAK_WONDER_MOVIE_AIRPLAY
     if (_airPlayButton) {
-        _airPlayButton.right = right;
-        _airPlayButton.center = CGPointMake(_airPlayButton.center.x, self.height / 2);
+        _airPlayButton.right = right - 30; // fix bug 49313859 （airplay 点击位置是固定的）
+        _airPlayButton.center = CGPointMake(_airPlayButton.center.x, (self.height / 2)+2);
         right = _airPlayButton.left;
+        right -= 30;
     }
 #endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
     
@@ -181,6 +182,7 @@
         [volumeView setShowsVolumeSlider:NO];
         [volumeView sizeToFit];
         [self addSubview:volumeView];
+        [self sendSubviewToBack:volumeView];
         _airPlayButton = volumeView;
 //        CGFloat delta = volumeView.width + kWonderMovieAirplayLeftPadding;
         [self setNeedsLayout];

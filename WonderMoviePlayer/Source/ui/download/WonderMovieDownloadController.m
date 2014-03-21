@@ -14,11 +14,7 @@
 
 @interface WonderMovieDownloadController ()<UIActionSheetDelegate> {
     BOOL _supportBatchDownload;
-    
-    int _currentClarity;
 }
-@property (nonatomic, strong) UIButton *clarityButton;
-@property (nonatomic, copy) NSArray *resolutions;
 @end
 
 @implementation WonderMovieDownloadController
@@ -59,8 +55,9 @@
     downloadView.delegate = self;
     self.downloadView = downloadView;
     self.downloadView.supportBatchDownload = _supportBatchDownload;
+    self.downloadView.backgroundColor = [UIColor clearColor];
+    self.downloadView.tableView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:downloadView];
-    self.view.backgroundColor = [UIColor whiteColor];
     
     
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, downloadView.bottom, self.view.width, footerHeight)];
@@ -80,8 +77,8 @@
     [footerView addSubview:label];
     
     if (self.tvDramaManager.clarityCount > 0) {
-        NSArray *resoultions = @[@"流畅", @"标清", @"高清"];
-        if (self.tvDramaManager.clarityCount > resoultions.count) {
+        NSArray *resoultions = @[@"流畅", @"标清", @"高清", @"蓝光"];
+        if (self.tvDramaManager.clarityCount < resoultions.count) {
             resoultions = [resoultions subarrayWithRange:NSMakeRange(0, self.tvDramaManager.clarityCount)];
         }
         self.resolutions = resoultions;
@@ -99,6 +96,7 @@
     }
     
     [self.downloadView reloadData];
+    [self.downloadView scrollToThePlayingOne];
     [self updateAvailableSpace];
 }
 
@@ -151,40 +149,45 @@
     for (NSString *res in self.resolutions) {
         [sheet addButtonWithTitle:res];
     }
-    [sheet addButtonWithTitle:@"取消"];
+    [sheet addButtonWithTitle:@"ÂèñÊ∂à"];
     sheet.delegate = self;
     [sheet showInView:self.view];
 }
 
 - (void)startBatDownload:(NSArray *)videos
 {
-    VideoGroup *videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
-    if (videoGroup == nil) {
+    if (self.tvDramaManager.videoGroup == nil) {
         return;
     }
     
-    NSMutableArray *downloadURLs = [NSMutableArray array];
-    NSMutableDictionary *titleDict = [NSMutableDictionary dictionaryWithCapacity:downloadURLs.count];
-    NSMutableDictionary *knownVideoSourceDict = [NSMutableDictionary dictionaryWithCapacity:1];
+    __block NSMutableArray *downloadURLs = [NSMutableArray array];
+    __block NSMutableDictionary *titleDict = [NSMutableDictionary dictionaryWithCapacity:downloadURLs.count];
+    __block NSMutableDictionary *knownVideoSourceDict = [NSMutableDictionary dictionaryWithCapacity:1];
 
-    for (NSNumber *setNum in videos) {
-        Video *video = [videoGroup videoAtSetNum:setNum];
-        NSString *downloadURL = [video webURLAtSrcIndex:self.tvDramaManager.srcIndex];
+    [MagicalRecord saveWithBlockAndWait:^(NSManagedObjectContext *localContext) {
+        VideoGroup *videoGroup = [self.tvDramaManager.videoGroup MR_inContext:localContext];
         
-        [downloadURLs addObject:downloadURL];
-        titleDict[downloadURL] = [video displayName];
-        
-        /**
-         * downloadURL is provided by server side drama info
-         * webURL is the current playing web page url, it might contains some subfix
-         * example:
-         * downloadURL: http://m.v.qq.com/cover/3/3b9b76xc1vdwide.html?vid=d0013jdh2nm
-         * webURL:      http://m.v.qq.com/cover/3/3b9b76xc1vdwide.html?vid=d0013jdh2nm&ptag=qqbrowser.tv%23v.play.adaptor%231&mreferrer=http%3A%2F%2Fv.html5.qq.com%2F
-         **/
-        if ([self.tvDramaManager.webURL hasPrefix:downloadURL] && self.tvDramaManager.playingURL.length > 0) {
-            knownVideoSourceDict[downloadURL] = self.tvDramaManager.playingURL;
+        for (NSNumber *setNum in videos) {
+            Video *video = [videoGroup videoAtSetNum:setNum];
+            NSString *downloadURL = [video webURLAtSrcIndex:self.tvDramaManager.srcIndex];
+            
+            [downloadURLs addObject:downloadURL];
+            titleDict[downloadURL] = [video displayName];
+            
+            [video saveCreateTimeInContext:localContext];
+            
+            /**
+             * downloadURL is provided by server side drama info
+             * webURL is the current playing web page url, it might contains some subfix
+             * example:
+             * downloadURL: http://m.v.qq.com/cover/3/3b9b76xc1vdwide.html?vid=d0013jdh2nm
+             * webURL:      http://m.v.qq.com/cover/3/3b9b76xc1vdwide.html?vid=d0013jdh2nm&ptag=qqbrowser.tv%23v.play.adaptor%231&mreferrer=http%3A%2F%2Fv.html5.qq.com%2F
+             **/
+            if ([self.tvDramaManager.webURL hasPrefix:downloadURL] && self.tvDramaManager.playingURL.length > 0) {
+                knownVideoSourceDict[downloadURL] = self.tvDramaManager.playingURL;
+            }
         }
-    }
+    }];
 
     [self.batMovieDownloader batchDownloadURLs:downloadURLs titles:titleDict knownVideoSources:knownVideoSourceDict clarity:_currentClarity];
 }
@@ -227,14 +230,18 @@
     return totalFreeSpace;
 }
 
+- (void)selectClarity:(NSInteger)clarity
+{
+    if (clarity < self.resolutions.count && clarity >= 0) {
+        _currentClarity = clarity;
+        [self.clarityButton setTitle:self.resolutions[_currentClarity] forState:UIControlStateNormal];
+    }
+}
+
 #pragma mark UIActionSheetDelegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (buttonIndex < self.resolutions.count && buttonIndex >= 0) {
-        _currentClarity = buttonIndex;
-        [self.clarityButton setTitle:self.resolutions[_currentClarity] forState:UIControlStateNormal];        
-    }
-//    NSLog(@"%d", buttonIndex);
+    [self selectClarity:buttonIndex];
 }
 
 @end

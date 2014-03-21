@@ -35,7 +35,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        self.backgroundColor = [UIColor grayColor];
+        self.backgroundColor = [UIColor clearColor];
         self.selectedSetNums = [NSMutableArray array];
         self.downloadedSetNums = [NSMutableArray array];
         
@@ -118,6 +118,30 @@
     return _errorView;
 }
 
+- (void)scrollToThePlayingOne
+{
+    if (self.sortedVideos.count == 0) {
+        return;
+    }
+    
+    int showType = self.videoGroup.showType.intValue;
+    int index = 0;
+    
+    if (showType == VideoGroupShowTypeGrid) {
+        Video *minVideo = self.sortedVideos[0];
+        int countPerRow = 0;
+        [WonderMovieDownloadGridCell getPreferredCountPerRow:&countPerRow buttonWidth:NULL forMaxWidth:self.tableView.width];
+        int maxVideoCountPerCell = countPerRow * kDownloadViewGridMaxRow;
+        index = (self.playingSetNum - minVideo.setNum.intValue) / maxVideoCountPerCell;
+    }
+    else if (showType == VideoGroupShowTypeList) {
+        Video *maxVideo = self.sortedVideos[0];
+        index = maxVideo.setNum.intValue - self.playingSetNum;
+    }
+    index = MAX(0, MIN(index, ([self tableView:self.tableView numberOfRowsInSection:0] - 1)));
+    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+}
+
 - (void)loadCurrentSection
 {
     if (self.tvDramaManager.videoGroup != nil) {
@@ -189,6 +213,7 @@
     if (self.videoGroup) { // FIXME: Sometime it will unable to get videoGroup for this thread
         [self reloadData];
         [self updateTableState];
+
     }
 }
 

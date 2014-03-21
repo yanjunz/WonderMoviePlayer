@@ -2,7 +2,7 @@
 //  Video.m
 //  mtt
 //
-//  Created by Zhuang Yanjun on 14/3/14.
+//  Created by Zhuang Yanjun on 20/3/14.
 //  Copyright (c) 2014 Tencent. All rights reserved.
 //
 
@@ -17,14 +17,14 @@
 @dynamic brief;
 @dynamic completedTime;
 @dynamic createTime;
+@dynamic duration;
 @dynamic fileSize;
 @dynamic path;
 @dynamic progress;
 @dynamic setNum;
 @dynamic storageType;
-@dynamic duration;
-@dynamic videoHistoryEntry;
 @dynamic videoChannelInfos;
 @dynamic videoGroup;
+@dynamic videoHistoryEntry;
 
 @end

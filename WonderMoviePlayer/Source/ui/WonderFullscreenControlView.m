@@ -26,6 +26,7 @@
 #import "VideoBookmarkOperator.h"
 #import "UIImage+FillColor.h"
 #import "WonderFullScreenBottomView.h"
+#import "NSObject+Block.h"
 #import "VideoModels.h"
 
 #define kWonderMovieAirplayLeftPadding                  5
@@ -47,8 +48,8 @@
 @end
 
 @interface WonderFullscreenControlView () <UIGestureRecognizerDelegate>{
-    
     CGFloat _downloadProgress;
+    BOOL _prepareToPlayForNewClarity;   // YES for clarity changed, NO for setNum changed
 }
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) WonderProgressView *progressView;
@@ -168,11 +169,10 @@ void wonderMovieVolumeListenerCallback (
 
 
 #pragma mark UIView LifeCycle
-- (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted crossScreenEnabled:(BOOL)crossScreenEnabled
+- (id)initWithFrame:(CGRect)frame autoPlayWhenStarted:(BOOL)autoPlayWhenStarted
 {
     if (self = [super initWithFrame:frame]) {
         _autoPlayWhenStarted = autoPlayWhenStarted;
-        _crossScreenEnabled = crossScreenEnabled;
         self.autoresizesSubviews = YES;
         
         [self loadTipStatus];
@@ -182,11 +182,12 @@ void wonderMovieVolumeListenerCallback (
 
 - (void)dealloc
 {
-    //NSLog(@"dealloc WonderMovieFullScreenControlView");
+    NSLog(@"WonderFullScreenControlView dealloc");
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dimControl) object:nil];
     
     // 1. remove timer resource, actually it should be released already
     [self removeTimer];
+    self.tvDramaManager = nil;
 }
 
 #pragma mark UIView Layout
@@ -370,8 +371,6 @@ void wonderMovieVolumeListenerCallback (
     separatorView.tag = kWonderMovieTagSeparatorBeforeMyVideo;
     [self.headerBar addSubview:separatorView];
     
-    self.bottomView.downloadButton.enabled = YES;
-    
     
     // title label
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(backButton.right + 1 + 9, 0, 100, headerBarHeight)];
@@ -433,6 +432,8 @@ void wonderMovieVolumeListenerCallback (
     [self showNextButton:NO animated:NO];
     self.bottomView.downloadButton.enabled = NO;
     self.bottomView.actionButton.enabled = NO;
+    self.bottomView.bookmarkButton.enabled = NO;
+    
     self.progressView.enabled = NO;
     self.bottomView.nextButton.enabled = NO;
     
@@ -463,6 +464,7 @@ void wonderMovieVolumeListenerCallback (
             [self rebuildResolutionsView];
             [self updateResolutions];
         }
+        _resolutionsChanged = NO;
     }
 }
 
@@ -525,9 +527,14 @@ void wonderMovieVolumeListenerCallback (
 {
     // only update download button enable state when liveCast is checked
     if (_liveCastState != LiveCastStateNotCheckYet) {
-        self.bottomView.downloadButton.enabled = (_liveCastState == LiveCastStateNo);
+        self.bottomView.downloadButton.enabled = (_liveCastState == LiveCastStateNo) && !!self.tvDramaManager.videoGroup;
         [self.bottomView setNeedsLayout];
     }
+}
+
+- (BOOL)crossScreenEnabled
+{
+    return self.tvDramaManager != nil && ![[self.tvDramaManager playingVideo] isPureLocalFile];
 }
 
 #pragma mark PopupMenu
@@ -758,7 +765,7 @@ void wonderMovieVolumeListenerCallback (
             if ([self.delegate respondsToSelector:@selector(movieControlSourceHandleError:)]) {
                 [self.delegate movieControlSourceHandleError:self];
             }
-        } afterDelay:1];
+        } afterDelay:3];
     }
 }
 
@@ -803,6 +810,13 @@ void wonderMovieVolumeListenerCallback (
     [self setupView];
     
     [self.bottomView addObservers];
+    
+    // Tell delegate it is load after a while
+    [self performBlockInMainThread:^{
+        if ([self.delegate respondsToSelector:@selector(movieControlSourceLoaded:)]) {
+            [self.delegate movieControlSourceLoaded:self];
+        }
+    } afterDelay:0];
 }
 
 - (void)uninstallControlSource
@@ -811,6 +825,10 @@ void wonderMovieVolumeListenerCallback (
     [self removeTimer];
     
     [self.bottomView removeObservers];
+    // Need to break the retain cycle manually
+    [self.tvDramaManager releaseHandlers];
+    
+    [self saveInfoPeriodically];
     
     AudioSessionRemovePropertyListenerWithUserData(kAudioSessionProperty_CurrentHardwareOutputVolume, wonderMovieVolumeListenerCallback, (__bridge void *)(self));
     //NSLog(@"uninstallControlSource");
@@ -1068,16 +1086,20 @@ void wonderMovieVolumeListenerCallback (
     [self cancelPreviousAndPrepareToDimControl];
 }
 
-- (IBAction)onClickBack:(id)sender
+- (IBAction)onClickBack:(UIButton *)sender
 {
     if ([self.delegate respondsToSelector:@selector(movieControlSourceExit:)]) {
         [self.delegate movieControlSourceExit:self];
     }
+    
+    // WORKAOURND: double confirm on back call twice
+    sender.enabled = NO;
 }
 
 - (IBAction)onClickDownload:(id)sender
 {
     AddStatWithKey(VideoPlayerStatKeyDownload);
+    [self saveInfoPeriodically];
     [self dismissAllPopupViews];
     if (_liveCastState == LiveCastStateYes) {
         [self.infoView showDownloadToast:NSLocalizedString(@"直播视频不支持下载", nil) show:YES animated:YES];
@@ -1141,6 +1163,7 @@ void wonderMovieVolumeListenerCallback (
 - (IBAction)onClickBookmark:(id)sender
 {
     AddStatWithKey(VideoPlayerStatKeyBookmark);
+    [self saveInfoPeriodically];
     
     VideoGroup *videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
     if (videoGroup) {
@@ -1169,6 +1192,8 @@ void wonderMovieVolumeListenerCallback (
 
 - (IBAction)onClickHandleError:(id)sender
 {
+    [self saveInfoPeriodically];
+    
     if ([self.delegate respondsToSelector:@selector(movieControlSourceHandleError:)]) {
         [self.delegate movieControlSourceHandleError:self];
     }
@@ -1240,6 +1265,7 @@ void wonderMovieVolumeListenerCallback (
 - (IBAction)onClickTVDrama:(id)sender
 {
     AddStatWithKey(VideoPlayerStatKeyDrama);
+    [self saveInfoPeriodically];
     [self showOverlay:NO];
     [self showDramaView:YES];
     [self dismissAllPopupViews]; 
@@ -1249,9 +1275,9 @@ void wonderMovieVolumeListenerCallback (
 - (IBAction)onClickMyVideo:(id)sender
 {
     AddStatWithKey(VideoPlayerStatKeyMyVideo);
+    [self saveInfoPeriodically];
     [self showOverlay:YES];
     [self dismissAllPopupViews];
-    [self visitVideo:YES];
     
     if ([self.delegate respondsToSelector:@selector(movieControlSourceOnMyVideo:)]) {
         [self.delegate movieControlSourceOnMyVideo:self];
@@ -1261,6 +1287,7 @@ void wonderMovieVolumeListenerCallback (
 - (IBAction)onClickResolution:(id)sender
 {
     AddStatWithKey(VideoPlayerStatKeyClarity);
+    [self saveInfoPeriodically];
     BOOL animateToShow = self.resolutionsView.hidden;
     [self showResolutionView:animateToShow];
     [self cancelPreviousAndPrepareToDimControl];
@@ -1281,7 +1308,7 @@ void wonderMovieVolumeListenerCallback (
         if ([self.delegate respondsToSelector:@selector(movieControlSource:didChangeResolution:)]) {
             [self.delegate movieControlSource:self didChangeResolution:self.resolutions[resolutionIndex]];
         }
-        
+        _prepareToPlayForNewClarity = YES;
         [self dramaDidSelectSetNum:self.tvDramaManager.curSetNum];
     }
 }
@@ -1339,6 +1366,7 @@ void wonderMovieVolumeListenerCallback (
             [self resetBufferTitle];
             if (self.controlState == MovieControlStatePlaying) {
                 _isLoading = NO;
+                _prepareToPlayForNewClarity = NO;
             }
         }
         else if (self.controlState == MovieControlStatePaused ||
@@ -1380,19 +1408,44 @@ void wonderMovieVolumeListenerCallback (
     if (videoGroup) {
         int setNum = self.tvDramaManager.curSetNum;
         NSString *src = [VideoGroup srcDescription:[self.tvDramaManager.playingVideo bestVideoChannelInfo].srcIndex.integerValue];
+        NSString *clarity = nil;
+        if (self.resolutions.count > 1 &&
+            self.tvDramaManager.currentClarity >= 0 &&
+            self.tvDramaManager.currentClarity < self.resolutions.count) {
+            clarity = self.resolutions[self.tvDramaManager.currentClarity];
+        }
+        
         if (videoGroup.showType.intValue == VideoGroupShowTypeGrid) {
-            [self setBufferTitle:[NSString stringWithFormat:@"即将播放%@第%d集", videoGroup.videoName, setNum]];
+            if (_prepareToPlayForNewClarity) {
+                [self setBufferTitle:[NSString stringWithFormat:@"正在切换%@播放", clarity]];
+            }
+            else {
+                [self setBufferTitle:[NSString stringWithFormat:@"即将播放%@第%d集", videoGroup.videoName, setNum]];
+            }
+            
             [self setTitle:[NSString stringWithFormat:@"%@ 第%d集", videoGroup.videoName, setNum]
                   subtitle:(src.length > 0 ? [NSString stringWithFormat:@"来源：%@", src] : @"")];
         }
         else if (videoGroup.showType.intValue == VideoGroupShowTypeList) {
             Video *video = [videoGroup videoAtSetNum:@(setNum)];
-            [self setBufferTitle:video.brief];
+            if (_prepareToPlayForNewClarity) {
+                [self setBufferTitle:[NSString stringWithFormat:@"正在切换%@播放", clarity]];
+            }
+            else {
+                [self setBufferTitle:[NSString stringWithFormat:@"即将播放%@", video.brief]];
+            }
+            
             [self setTitle:video.brief
                   subtitle:(src.length > 0 ? [NSString stringWithFormat:@"来源：%@", src] : @"")];
         }
         else {
-            [self setBufferTitle:videoGroup.videoName];
+            if (_prepareToPlayForNewClarity) {
+                [self setBufferTitle:[NSString stringWithFormat:@"正在切换%@播放", clarity]];
+            }
+            else {
+                [self setBufferTitle:[NSString stringWithFormat:@"即将播放%@", videoGroup.videoName]];
+            }
+            
             [self setTitle:videoGroup.videoName
                   subtitle:(src.length > 0 ? [NSString stringWithFormat:@"来源：%@", src] : @"")];
         }
@@ -1416,8 +1469,11 @@ void wonderMovieVolumeListenerCallback (
 - (void)updateBookmarkTitle
 {
     VideoGroup *videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
-    BOOL hasBookmarked = [self.bookmarkOperator isVideoGroupBookmarked:videoGroup];
-    self.bottomView.bookmarkButton.selected = hasBookmarked;
+    self.bottomView.bookmarkButton.enabled = !!videoGroup;
+    if (videoGroup) {
+        BOOL hasBookmarked = [self.bookmarkOperator isVideoGroupBookmarked:videoGroup];
+        self.bottomView.bookmarkButton.selected = hasBookmarked;
+    }
 }
 
 - (void)tryToSetVolume:(NSNumber *)volume
@@ -1825,13 +1881,25 @@ void wonderMovieVolumeListenerCallback (
 
 - (void)loadDramaInfo
 {
+    NSLog(@"loadDramaInfo");
     if (self.tvDramaManager) {
+        if ([self.tvDramaManager loadLocalDramaInfo]) {
+            NSLog(@"loadLocalDramaInfo");
+            [self finishLoadDramaInfo];
+            
+            if ([[self.tvDramaManager videoGroupInCurrentThread] isRecognized]) {
+                return; // No need to load remote drama info if it is recognized
+            }
+        }
+        
+        DefineWeakSelfBeforeBlock();
         [self.tvDramaManager getDramaInfo:TVDramaRequestTypeCurrent completionBlock:^(BOOL success) {
+            DefineStrongSelfInBlock(sself);
             if (success) {
-                [self performSelectorOnMainThread:@selector(finishLoadDramaInfo) withObject:nil waitUntilDone:NO];
+                [sself performSelectorOnMainThread:@selector(finishLoadDramaInfo) withObject:nil waitUntilDone:NO];
             }
             else {
-                [self performSelectorOnMainThread:@selector(failLoadDramaInfo) withObject:nil waitUntilDone:NO];
+                [sself performSelectorOnMainThread:@selector(failLoadDramaInfo) withObject:nil waitUntilDone:NO];
             }
         }];
     }
@@ -1843,6 +1911,7 @@ void wonderMovieVolumeListenerCallback (
 - (void)finishLoadDramaInfo
 {
     VideoGroup *videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
+    NSLog(@"finishLoadDramaInfo %@", videoGroup.videoId);
     if ([videoGroup isValidDrama]) {
         [self showDramaButton:YES animated:YES];
     }
@@ -1850,12 +1919,10 @@ void wonderMovieVolumeListenerCallback (
         [self showDramaButton:NO animated:NO];
     }
     
-//    [self showBookmarkButton:[videoGroup isRecognized]];
-    
     [self updateNextButtonState];
     [self updateTitleAndSubtitle];
     [self updateDownloadState];
-    [self visitVideo:YES];
+    [self saveInfoPeriodically];
     [self updateBookmarkTitle];
     
     if ([self.delegate respondsToSelector:@selector(movieControlSourceDramaLoadFinished:)]) {
@@ -1865,10 +1932,11 @@ void wonderMovieVolumeListenerCallback (
 
 - (void)failLoadDramaInfo
 {
+    NSLog(@"failLoadDramaInfo");
     [self showDramaButton:NO animated:YES];
     [self showNextButton:NO animated:YES];
     [self updateDownloadState];
-    [self visitVideo:YES];
+    [self saveInfoPeriodically];
     [self updateBookmarkTitle];
     
     if ([self.delegate respondsToSelector:@selector(movieControlSourceDramaLoadFinished:)]) {
@@ -1940,9 +2008,9 @@ void wonderMovieVolumeListenerCallback (
 //        [self reCalcDurationLabelOffset];
 //    } completion:nil];
     self.bottomView.nextButton.hidden = !show;
-    [UIView animateWithDuration:animated ? 0.5f : 0 animations:^{
-        [self.bottomView layoutIfNeeded];
-    }];
+//    [UIView animateWithDuration:animated ? 0.5f : 0 animations:^{
+    [self.bottomView layoutIfNeeded];
+//    }];
 }
 
 - (void)updateNextButtonState
@@ -1961,6 +2029,15 @@ void wonderMovieVolumeListenerCallback (
     if (_duration > 0 && _playbackTime > 0) {
         CGFloat progress = _playbackTime / _duration;
         [self.historyOperator visitVideo:[self.tvDramaManager playingVideo] webURL:self.tvDramaManager.webURL playedProgress:progress visit:visit];
+        //NSLog(@"VisitVideo [%@] %f, %f", self.tvDramaManager.videoGroupInCurrentThread.videoId, progress, _duration);
+    }
+}
+
+- (void)saveInfoPeriodically
+{
+    if (_duration > 0) {
+        [self visitVideo:YES];
+        [self.tvDramaManager saveVideoInfoWithDuration:_duration];
     }
 }
 
@@ -2099,24 +2176,6 @@ static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanni
     }
 }
 
-#pragma mark History
-- (void)addVideoHistory
-{
-    VideoGroup *videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
-    if (videoGroup) {
-        Video *video = nil;
-        if ([videoGroup isValidDrama]) {
-            video = [videoGroup videoAtSetNum:@(self.tvDramaManager.curSetNum)];
-        }
-        else {
-            video = [videoGroup.videos anyObject];
-        }
-        if (video) {
-            [self visitVideo:YES];
-        }
-    }
-}
-
 @end
 
 @implementation WonderFullscreenControlView (DramaView)
@@ -2137,14 +2196,16 @@ static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanni
     VideoGroup *videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
     self.tvDramaManager.webURL = [VideoChannelInfo videoChannelInfoWithVideoId:videoGroup.videoId setNum:setNum srcIndex:self.tvDramaManager.srcIndex].url;
     
+    DefineWeakSelfBeforeBlock();
     [self.tvDramaManager sniffVideoSource:^(BOOL success) {
+        DefineStrongSelfInBlock(sself);
         // make sure to invoke UI related code in main thread
-        [self performBlockInMainThread:^{
+        [sself performBlockInMainThread:^{
             if (success) {
-                [self dramaDidFinishSniff:setNum];
+                [sself dramaDidFinishSniff:setNum];
             }
             else {
-                [self dramaDidFailToSniff];
+                [sself dramaDidFailToSniff];
             }
         } afterDelay:0];
     }];

@@ -12,11 +12,10 @@
 #import "WonderAVPlayerView.h"
 #import "WonderFullscreenControlView.h"
 #import "UIView+Sizes.h"
-#import "VideoGroup+Additions.h"
-#import "Video.h"
 #import "Reachability.h"
 #import "NSObject+Block.h"
 #import "TVDramaManager.h"
+#import "VideoModels.h"
 
 #ifdef MTT_TWEAK_DEBUG_AVPLAYER_LEFTCYCLE
 @interface WonderMovieAVPlayer : AVPlayer
@@ -94,10 +93,12 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     BOOL _prefersStatusBarHidden;
     
     BOOL _inForeground;
+    
+    MovieControlState _initControlSourceState;
 }
 @property (nonatomic, strong) UIView *controlView;
 @property (nonatomic, assign) BOOL isEnd;
-@property (nonatomic, strong) id<MovieInfoObtainer> movieInfoObtainer;
+@property (nonatomic, weak) id<MovieInfoObtainer> movieInfoObtainer;
 @end
 
 @implementation WonderAVMovieViewController
@@ -149,7 +150,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 
 - (void)dealloc
 {
-//    NSLog(@"[WonderAVMovieViewController] dealloc 0x%0x <--", self.hash);
+    NSLog(@"[WonderAVMovieViewController] dealloc 0x%0x <--", self.hash);
 #ifdef MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
     [self.movieDownloader mdUnBind];
 #endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
@@ -334,12 +335,13 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 - (void)playWithMovieObtainer:(id<MovieInfoObtainer>)movieInfoObtainer
 {
     self.movieInfoObtainer = movieInfoObtainer;
-    [self.movieInfoObtainer setDelegate:self];
-    [movieInfoObtainer startObtainMovieInfo]; // start ASAP
+    [self.movieInfoObtainer setMovieInfoObtainerDelegate:self];
+    [self.movieInfoObtainer startObtainMovieInfo];
 }
 
 - (void)playMovieStream:(NSURL *)movieURL fromTime:(CGFloat)time
 {
+    NSLog(@"playMovieStream %@ time = %f", movieURL, time);
     if ([movieURL scheme]) {
         _startTime = time;
         self.movieURL = movieURL;
@@ -353,6 +355,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 
 - (void)playMovieStream:(NSURL *)movieURL fromProgress:(CGFloat)progress
 {
+    NSLog(@"playMovieStream %@ progress = %f", movieURL, progress);
     if ([movieURL scheme]) {
         _startProgress = MAX(0, MIN(progress, 1));
         self.movieURL = movieURL;
@@ -396,6 +399,17 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
  */
 - (void)prepareToPlayAsset:(AVURLAsset *)asset withKeys:(NSArray *)requestedKeys
 {
+    // Workaround for #49316280
+    // 【我的视频 剧集】爱奇艺切换剧集后提示出错原网页播放或一直加载中
+    // Just recreate a new player for replacePlayItem, But it seems to consume more memory even if the old player is released
+    if (self.player) {
+        [self removeAllObservers];
+        self.player = nil;
+        self.playerItem = nil;
+    }
+    
+    
+    
 //    NSLog(@"[WonderAVMovieViewController] prepareToPlayAsset %0x", self.hash);
     UInt32 sessionCategory = kAudioSessionCategory_MediaPlayback;
     AudioSessionSetProperty(kAudioSessionProperty_AudioCategory,
@@ -539,15 +553,17 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
          asynchronously; observe the currentItem property to find out when the
          replacement will/did occur*/
         [[self player] replaceCurrentItemWithPlayerItem:self.playerItem];
-        
+
         // FIXME
     }
     
-//    [self.controlSource prepareToPlay];
+    [self.controlSource prepareToPlay];
 #ifdef MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
     [self.movieDownloader mdBindDownloadURL:self.movieURL delegate:self dataSource:self];
 #endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
     _seekingCount = 0; // actually no need but for safe
+    
+    _observersHasBeenRemoved = NO;
 }
 
 #pragma mark -
@@ -781,15 +797,8 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 - (void)setupControlSource:(BOOL)fullscreen
 {
     if (fullscreen) {
-#ifdef MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
-//        BOOL downloadEnabled = !!self.movieDownloader;
-#else // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
-//        BOOL downloadEnabled = !!self.downloadBlock;
-#endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
-        BOOL crossScreenEnabled = !!self.crossScreenBlock;
         WonderFullscreenControlView *fullscreenControlView = [[WonderFullscreenControlView alloc] initWithFrame:self.overlayView.bounds
-                                                                                                       autoPlayWhenStarted:YES
-                                                                                                        crossScreenEnabled:crossScreenEnabled];
+                                                                                            autoPlayWhenStarted:YES];
         fullscreenControlView.delegate = self;
         fullscreenControlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [fullscreenControlView installControlSource];
@@ -1060,10 +1069,14 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 }
 
 #pragma mark MovieControlSourceDelegate
-- (void)movieControlSourceLoaded:(id<MovieControlSourceDelegate>)source
+- (void)movieControlSourceLoaded:(id<MovieControlSource>)source
 {
-    [self buffer]; // on load just show buffer
-    [self.controlSource prepareToPlay];
+    if (_initControlSourceState == MovieControlStateErrored) {
+        [self.controlSource error:@""];
+    }
+    else if (_initControlSourceState == MovieControlStateBuffering) {
+        [self buffer];
+    }
 }
 
 - (void)movieControlSourcePlay:(id<MovieControlSource>)source
@@ -1250,6 +1263,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
     if ([self.delegate respondsToSelector:@selector(baseMoviePlayer:didGetVideoGroup:)]) {
         [self.delegate baseMoviePlayer:self didGetVideoGroup:[self.controlSource.tvDramaManager videoGroupInCurrentThread]];
     }
+    self.controlSource.tvDramaManager.playingURL = [self.movieURL absoluteString];
 }
 
 - (void)movieControlSourceWillPlayNext:(id<MovieControlSource>)source
@@ -1342,22 +1356,41 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 #pragma mark MovieInfoObtainerDelegate
 - (void)movieInfoObtainerBeginObtainMovieInfo:(id<MovieInfoObtainer>)movieInfoObtainer
 {
-    [self buffer];
+    if (self.controlSource) {
+        [self buffer];
+    }
+    else {
+        _initControlSourceState = MovieControlStateBuffering;
+    }
 }
 
-- (void)movieInfoObtainer:(id<MovieInfoObtainer>)movieInfoObtainer successObtainMovieInfoWithMovieURL:(NSURL *)movieURL withProgress:(CGFloat)progrss
+- (void)movieInfoObtainer:(id<MovieInfoObtainer>)movieInfoObtainer successObtainMovieInfoWithMovieURL:(NSURL *)movieURL withProgressInfo:(MovieProgressInfo)progrssInfo
 {
-    [self playMovieStream:movieURL fromProgress:progrss];
-}
-
-- (void)movieInfoObtainer:(id<MovieInfoObtainer>)movieInfoObtainer successObtainMovieInfoWithMovieURL:(NSURL *)movieURL withTime:(CGFloat)time
-{
-    [self playMovieStream:movieURL fromTime:time];
+    if (progrssInfo.useProgress) {
+        if (MovieProgressInfoIsEqual(progrssInfo, MovieProgressInfoInvalid)) {
+            VideoChannelInfo *videoChannelInfo = [VideoChannelInfo videoChannelInfoWithVideoSrc:[movieURL absoluteString]]; // FIXME: should conside File
+            if (videoChannelInfo) {
+                progrssInfo.progress = videoChannelInfo.video.videoHistoryEntry.playedProgress.floatValue;
+            }
+            else {
+                progrssInfo.progress = 0;
+            }
+        }
+        [self playMovieStream:movieURL fromProgress:progrssInfo.progress];
+    }
+    else {
+        [self playMovieStream:movieURL fromTime:progrssInfo.time];
+    }
 }
 
 - (void)movieInfoObtainerFailObtainMovieInfo:(id<MovieInfoObtainer>)movieInfoObtainer
 {
-    [self.controlSource error:@""];
+    if (self.controlSource) {
+        [self.controlSource error:@""];
+    }
+    else {
+        _initControlSourceState = MovieControlStateErrored;
+    }
 }
 
 #pragma mark Notification

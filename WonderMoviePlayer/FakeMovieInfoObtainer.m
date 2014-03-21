@@ -10,7 +10,7 @@
 #import "NSObject+Block.h"
 
 @implementation FakeMovieInfoObtainer
-@synthesize delegate;
+@synthesize hasObtained, obtainedMovieURL, obtainedProgressInfo, movieInfoObtainerDelegate;
 
 - (id)initWithURL:(NSURL *)movieURL
 {
@@ -24,13 +24,13 @@
 {
     static int i = 0;
     
-    [self.delegate movieInfoObtainerBeginObtainMovieInfo:self];
+    [self.movieInfoObtainerDelegate movieInfoObtainerBeginObtainMovieInfo:self];
     [self performBlockInMainThread:^{
         if (i % 2 == 0) {
-            [self.delegate movieInfoObtainer:self successObtainMovieInfoWithMovieURL:self.movieURL withProgress:0.5];
+            [self.movieInfoObtainerDelegate movieInfoObtainer:self successObtainMovieInfoWithMovieURL:self.movieURL withProgressInfo:MakeMovieProgressInfoWithProgress(0.5)];
         }
         else {
-            [self.delegate movieInfoObtainerFailObtainMovieInfo:self];
+            [self.movieInfoObtainerDelegate movieInfoObtainerFailObtainMovieInfo:self];
         }
     } afterDelay:5];
     

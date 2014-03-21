@@ -32,11 +32,17 @@ typedef enum {
 @property (nonatomic, assign) int curSetNum;
 @property (nonatomic, assign) NSInteger clarityCount;
 @property (nonatomic, assign) NSInteger currentClarity;
+@property (nonatomic, copy) NSString *suggestedTitle;
 
 @property (nonatomic, strong) ResponsibilityChainTVDramaRequestHandler *requestHandler;
 
+- (void)releaseHandlers;
+
 - (VideoGroup *)videoGroupInCurrentThread;
 - (Video *)playingVideo;
+- (void)saveVideoInfoWithDuration:(CGFloat)duration;
+
+- (BOOL)loadLocalDramaInfo;
 - (void)getDramaInfo:(TVDramaRequestType)requestType completionBlock:(void (^)(BOOL success))completionBlock;
 - (void)sniffVideoSource:(void (^)(BOOL success))completionBlock;
 - (BOOL)hasNext;

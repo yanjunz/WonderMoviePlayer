@@ -9,6 +9,7 @@
 #import "TVDramaManager.h"
 #import "NSString+Hash.h"
 #import "VideoModels.h"
+#import "NSObject+Block.h"
 
 @interface TVDramaManager ()
 @end
@@ -24,7 +25,12 @@
 
 - (void)dealloc
 {
-//    NSLog(@"TVDramaManager dealloc");
+    NSLog(@"TVDramaManager dealloc");
+}
+
+- (void)releaseHandlers
+{
+    self.requestHandler = nil;
 }
 
 // read property with videoGroupInCurrentThread
@@ -36,19 +42,41 @@
 - (Video *)playingVideo
 {
     VideoGroup *videoGroup = [self videoGroupInCurrentThread];
-//    Video* ret = [videoGroup isValidDrama] ? [videoGroup videoAtSetNum:@(self.curSetNum)] : [videoGroup.videos anyObject];
-    
-//    // FIXME: should place update in a better place
-//    [MagicalRecord saveWithBlockAndWait:^(NSManagedObjectContext *localContext) {
-//        Video *video = [ret MR_inContext:localContext];
-//        video.videoSrc = self.playingURL;
-//    }];
-    
-//    return ret;
     return [videoGroup videoAtSetNum:@(self.curSetNum)];
 }
 
-- (void)getDramaInfo:(TVDramaRequestType)requestType completionBlock:(void (^)(BOOL success))completionBlock
+- (void)saveVideoInfoWithDuration:(CGFloat)duration
+{
+    if (duration == 0) {
+        return;
+    }
+    
+    Video *video = [self playingVideo];
+    [MagicalRecord saveWithBlockAndWait:^(NSManagedObjectContext *localContext) {
+        Video *videoInContext = [video MR_inContext:localContext];
+        videoInContext.duration = @(duration);
+        
+        if (self.playingURL.length > 0) {
+            VideoChannelInfo *videoChannelInfo = [videoInContext videoChannelInfoAtWebURL:self.webURL];
+            videoChannelInfo.videoSrc = self.playingURL;
+        }
+    }];
+    
+}
+
+- (BOOL)loadLocalDramaInfo
+{
+    Video *video = [Video videoWithWebURL:self.webURL];
+    if (video) {
+        self.curSetNum = [video.setNum intValue];
+        self.videoGroup = video.videoGroup;
+        self.srcIndex = [video videoChannelInfoAtWebURL:self.webURL].srcIndex.integerValue;
+        return YES;
+    }
+    return NO;
+}
+
+- (void)getDramaInfo:(TVDramaRequestType)requestType completionBlock:(void (^)(BOOL))completionBlock
 {
     if (self.webURL.length == 0) {
         if (completionBlock)
@@ -56,41 +84,27 @@
         return;
     }
     
-    // First check if there local storage
-    if (requestType == TVDramaRequestTypeCurrent) {
-        Video *video = [Video videoWithWebURL:self.webURL];
-        if (video &&
-            [VideoGroup isVideoIdRecognized:video.videoGroup.videoId]) { // YES only videoGroup is recognized by server, otherwise need refetch from server
-            self.curSetNum = [video.setNum intValue];
-            self.videoGroup = video.videoGroup;
-            self.srcIndex = [video videoChannelInfoAtWebURL:self.webURL].srcIndex.integerValue;
-            
-            if (completionBlock) {
-                completionBlock(YES);
-            }
-            return;
-        }
-    }
-    
     DefineWeakSelfBeforeBlock();
     [self.requestHandler tvDramaManager:self requestDramaInfoWithURL:self.webURL requestType:requestType completionBlock:^(VideoGroup *videoGroup, int srcIndex, int curSetNum) {
-        DefineStrongSelfInBlock(sself);
-        if (videoGroup) {
-            sself.curSetNum = curSetNum;
-            sself.srcIndex = srcIndex;
-            sself.videoGroup = videoGroup;
-            
-            [sself fullFillVideoGroup:YES];
-            if (completionBlock) {
-                completionBlock(YES);
+        [self performBlockInMainThread:^{
+            DefineStrongSelfInBlock(sself);
+            if (videoGroup) {
+                sself.curSetNum = curSetNum;
+                sself.srcIndex = srcIndex;
+                sself.videoGroup = [videoGroup MR_inThreadContext];
+                
+                [sself fullFillVideoGroup:YES];
+                if (completionBlock) {
+                    completionBlock(YES);
+                }
             }
-        }
-        else {
-            [sself fullFillVideoGroup:NO];
-            if (completionBlock) {
-                completionBlock(NO);
+            else {
+                [sself fullFillVideoGroup:NO];
+                if (completionBlock) {
+                    completionBlock(NO);
+                }
             }
-        }
+        } afterDelay:0];
     }];
 }
 
@@ -143,7 +157,10 @@
             
             NSString *title = [videoGroup displayNameForSetNum:nil];
             if (title.length == 0) {
-                title = [VideoGroup temporaryDisplayName];
+                title = sself.suggestedTitle;
+                if (title.length == 0) {
+                    title = [VideoGroup temporaryDisplayName];
+                }
             }
             
             if (videoGroup == nil) {
@@ -154,6 +171,7 @@
                     videoGroup = [VideoGroup MR_createInContext:localContext];
                     videoGroup.videoName = title;
                     videoGroup.videoId = videoId;
+                    NSLog(@"Create VideoGroup[%@] for %@", videoId, sself.webURL);
                 }
             }
             
@@ -178,6 +196,13 @@
             }
             
             videoChannelInfo.url = sself.webURL;
+            if ([sself.webURL hasPrefix:@"file:"]) {
+                // This is no-documented local video, such as from micro cloud
+                // Such as: file://localhost/var/mobile/Applications/9EAE0502-52BC-4568-A6CB-D22465601BEC/Library/Caches/mtt/Videos/1%208.C%E8%AF%AD%E8%A8%8016-%E6%8C%87%E9%92%88%E7%BB%8F%E5%85%B8%E6%A1%88%E4%BE%8B(1).mp4
+                
+                NSURL *filePath = [NSURL URLWithString:sself.webURL];
+                updatedVideo.path = [filePath relativePath];
+            }
             sself.curSetNum = 0;
             sself.srcIndex = 0;
             sself.videoGroup = videoGroup;
@@ -338,7 +363,7 @@
     DefineWeakSelfBeforeBlock();
     if ([self.actualHandler respondsToSelector:@selector(tvDramaManager:sniffVideoSrcWithURL:clarity:src:completionBlock:)]) {
         [self.actualHandler tvDramaManager:manager sniffVideoSrcWithURL:URL clarity:clarity src:src completionBlock:^(NSString *videoSrc, NSInteger clarityCount) {
-//            NSLog(@"[P1] sniffVideoSource %@, handler = %@", videoSrc, self.actualHandler);
+//            NSLog(@"[P1] sniffVideoSource %@, %d, handler = %@", videoSrc, clarityCount, self.actualHandler);
             DefineStrongSelfInBlock(sself);
             if (videoSrc.length > 0) {
                 if (completionBlock) {

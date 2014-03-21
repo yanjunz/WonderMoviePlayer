@@ -12,16 +12,25 @@
 
 @class TVDramaManager;
 
-@interface WonderMovieDownloadController : UIViewController<WonderMovieDownloadViewDelegate>
+@interface WonderMovieDownloadController : CustomBaseViewController<WonderMovieDownloadViewDelegate> {
+    int _currentClarity;
+}
+
 @property (nonatomic, strong) TVDramaManager *tvDramaManager;
 @property (nonatomic, strong) id<BatMovieDownloader> batMovieDownloader;
 
 @property (nonatomic, strong) WonderMovieDownloadView *downloadView;
 @property (nonatomic, strong) UILabel *availableSpaceLabel;
+@property (nonatomic, strong) UIButton *clarityButton;
+@property (nonatomic, copy) NSArray *resolutions;
 
 - (id)initWithTVDramaManager:(TVDramaManager *)tvDramaManager batMovieDownloader:(id<BatMovieDownloader>)batMovieDownloader;
 - (void)setSupportBatchDownload:(BOOL)supportBatchDownload;
 
 - (IBAction)onClickCancel:(id)sender;
 - (IBAction)onClickDownload:(id)sender;
+- (IBAction)onClickClarity:(id)sender;
+
+- (void)selectClarity:(NSInteger)clarity;
+
 @end

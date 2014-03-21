@@ -120,7 +120,7 @@ typedef enum {
 
 @protocol MovieControlSourceDelegate <NSObject>
 @required
-- (void)movieControlSourceLoaded:(id<MovieControlSourceDelegate>)source;
+- (void)movieControlSourceLoaded:(id<MovieControlSource>)source;
 
 - (void)movieControlSourcePlay:(id<MovieControlSource>)source;
 - (void)movieControlSourcePause:(id<MovieControlSource>)source;

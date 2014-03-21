@@ -13,7 +13,7 @@
 
 - (VideoHistoryEntry *)getLastestVideoHistoryEntry
 {
-    return [self getLastestVideoHistoryEntryInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    return [self getLastestVideoHistoryEntryInContext:self.managedObjectContext];
 }
 
 - (VideoHistoryEntry *)getLastestVideoHistoryEntryInContext:(NSManagedObjectContext *)context

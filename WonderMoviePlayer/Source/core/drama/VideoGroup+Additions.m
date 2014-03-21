@@ -78,12 +78,7 @@
                            @(16) : @"56",
                            };
     NSString *desc = dict[@(srcIndex)];
-    if (desc == nil) {
-        return [NSString stringWithFormat:@"%d", srcIndex];
-    }
-    else {
-        return desc;
-    }
+    return desc;
 }
 
 + (NSInteger)srcIndex:(NSString *)srcDescription
@@ -117,13 +112,18 @@
 
 - (Video *)videoAtURL:(NSString *)URL
 {
-    VideoChannelInfo *videoChannelInfo = [VideoChannelInfo MR_findFirstByAttribute:@"url" withValue:URL];
+    VideoChannelInfo *videoChannelInfo = [VideoChannelInfo MR_findFirstByAttribute:@"url" withValue:URL inContext:self.managedObjectContext];
     return videoChannelInfo.video;
 }
 
 - (Video *)videoAtSetNum:(NSNumber *)setNum
 {
-    return [Video MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"videoGroup == %@ AND setNum == %d", self, [setNum intValue]]];
+    /**
+     * NOTE:
+     * The principle of wirting CoreData code
+     * If the function may be used for update, make sure to pass MOC as parameter. Otherwise just use it for reading
+     **/
+    return [Video MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"videoGroup == %@ AND setNum == %d", self, [setNum intValue]] inContext:self.managedObjectContext];
 }
 
 - (NSArray *)sortedVideos:(BOOL)ascending
@@ -133,12 +133,12 @@
 
 - (BOOL)isValidDrama
 {
-    return !(self.totalCount.intValue == 0 && self.maxId.intValue == 0 && self.showType.intValue == VideoGroupShowTypeNone);
+    return self.showType.intValue != VideoGroupShowTypeNone;
 }
 
 - (BOOL)isRecognized
 {
-    return ![self.videoId hasPrefix:[VideoGroup unRecognizedVideoIdPrefix]] && (self.totalCount.intValue != 0 || self.maxId.intValue != 0);
+    return ![self.videoId hasPrefix:[VideoGroup unRecognizedVideoIdPrefix]] && (self.totalCount.intValue != 0 || self.maxId.intValue != 0) && ![self isValidDrama];
 }
 
 + (NSString *)temporaryDisplayName
@@ -163,19 +163,61 @@
 
 - (NSArray *)downloadedVideos
 {
-    return [Video MR_findAllSortedBy:@"setNum" ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"path.length > 0 AND videoGroup == %@", self]];
+    NSMutableArray *downloadArray = [NSMutableArray array];
+    for (Video *video in self.videos) {
+//        NSLog(@"%@, %@, %@", video.setNum, video.path, video.createTime);
+        /**
+         * 1. downloading
+         * 2. downloaded
+         * 3. downloaded but task removed
+         */
+        if ((video.createTime.integerValue > 0 && video.completedTime.integerValue == 0) ||
+            (video.createTime.integerValue > 0 && video.completedTime.integerValue > video.createTime.integerValue && video.path.length > 0) ||
+            (video.createTime.integerValue == 0 && video.completedTime.integerValue == 0 && video.path.length > 0)) {
+            [downloadArray addObject:video];
+        }
+    }
+    return downloadArray;
+    
+    // FIXME: don't work sometime
+//    return [Video MR_findAllSortedBy:@"setNum" ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"path.length > 0 AND videoGroup == %@", self]];
 }
 
 - (void)checkDownloadedVideosExist
 {
     [MagicalRecord saveWithBlockAndWait:^(NSManagedObjectContext *localContext) {
         VideoGroup *videoGroupInContext = [self MR_inContext:localContext];
+        
         NSArray *downloadVideos = [videoGroupInContext downloadedVideos];
         for (Video *video in downloadVideos) {
-            NSString *downloadingPath = [NSString stringWithFormat:@"%@/.%@", [video.path stringByDeletingLastPathComponent], [video.path lastPathComponent]];
-            if (![[NSFileManager defaultManager] fileExistsAtPath:video.path] &&
-                ![[NSFileManager defaultManager] fileExistsAtPath:downloadingPath]) {
-                video.path = nil;
+            /**
+             * Path is valid in following cases:
+             * 1. has path && in downloading && file not existed
+             * 2. has path && downloaded && file existed
+             * 3. has path && download task is removed && file existed
+             **/
+            if (video.path.length > 0) {
+                BOOL fileShouldBeExist = NO;
+                if (video.createTime.integerValue > 0 && video.completedTime.integerValue == 0) {
+                    fileShouldBeExist = NO;
+                }
+                else if (video.createTime.integerValue > 0 && video.completedTime.integerValue > video.createTime.integerValue) {
+                    fileShouldBeExist = YES;
+                }
+                else if (video.createTime.integerValue == 0 && video.completedTime.integerValue == 0) {
+                    fileShouldBeExist = YES;
+                }
+            
+                if (fileShouldBeExist) {
+//                    NSString *downloadingPath = [NSString stringWithFormat:@"%@/.%@", [video.path stringByDeletingLastPathComponent], [video.path lastPathComponent]];
+                    if (![[NSFileManager defaultManager] fileExistsAtPath:video.path]
+//                        &&![[NSFileManager defaultManager] fileExistsAtPath:downloadingPath]
+                        ) {
+                        video.path = nil;
+                        video.completedTime = nil;
+                        video.createTime = nil;
+                    }
+                }
             }
         }
     }];
@@ -185,6 +227,23 @@
 {
     Video *video = [self videoAtSetNum:@(setNum)];
     [video saveVideoSrc:videoSrc forSrcIndex:srcIndex];
+}
+
+
+- (Video *)firstVideo
+{
+    return [Video MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"videoGroup == %@", self] sortedBy:@"setNum" ascending:YES inContext:self.managedObjectContext];
+}
+     
+
+#pragma mark Debug
+- (void)debugPrint
+{
+    NSLog(@"%@", self);
+    NSLog(@"Videos: \n");
+    for (Video *video in self.videos) {
+        NSLog(@"[%@] %@", video.setNum, video);
+    }
 }
 
 @end
