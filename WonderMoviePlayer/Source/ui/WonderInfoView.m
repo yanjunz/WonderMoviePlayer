@@ -18,7 +18,6 @@
 @property (nonatomic, strong) UIImageView *volumeImageView;
 @property (nonatomic, strong) UILabel *brightnessLabel;
 @property (nonatomic, strong) UIView *toastView;
-@property (nonatomic, strong) UILabel *toastLabel;
 @property (nonatomic, strong) UIView *errorView;
 @end
 
@@ -78,12 +77,13 @@
         toastFrameImageView.contentStretch = CGRectMake(0.5, 0.5, 0, 0);
         [toastView addSubview:toastFrameImageView];
         
-        UILabel *toastLabel = [[UILabel alloc] initWithFrame:toastView.bounds];
+        TTTAttributedLabel *toastLabel = [[TTTAttributedLabel alloc] initWithFrame:toastView.bounds];
         toastLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         toastLabel.textColor = [UIColor whiteColor];
         toastLabel.textAlignment = UITextAlignmentCenter;
         toastLabel.font = [UIFont systemFontOfSize:12];
         toastLabel.backgroundColor = [UIColor clearColor];
+        toastLabel.userInteractionEnabled = YES;
         [toastView addSubview:toastLabel];
         self.toastLabel = toastLabel;
         [self addSubview:toastView];
@@ -96,7 +96,6 @@
         UILabel *label = [[UILabel alloc] initWithFrame:self.bounds];
         label.textColor = [UIColor whiteColor];
         label.backgroundColor = [UIColor clearColor];
-//        label.text = NSLocalizedString(@"播放地址失效，请尝试", nil);
         label.text = @"播放地址失效，正在为您跳转对应网页...";
         [label sizeToFit];
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];

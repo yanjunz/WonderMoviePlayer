@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TTTAttributedLabel.h"
 
 @interface WonderInfoView : UIView
 // Only show when setting progress
@@ -26,6 +27,8 @@
 @property (nonatomic, strong) UIView *brightnessView;
 
 @property (nonatomic, strong) UIButton *openSourceButton;
+
+@property (nonatomic, strong) TTTAttributedLabel *toastLabel;
 
 - (void)showProgressTime:(BOOL)show animated:(BOOL)animated;
 - (void)startLoading;

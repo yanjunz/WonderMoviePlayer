@@ -13,6 +13,7 @@
 		AE2572FF18C0AC9D00F71429 /* WonderMovieDownloadListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2572FE18C0AC9D00F71429 /* WonderMovieDownloadListCell.m */; };
 		AE25730318C0C73D00F71429 /* FakeBatMovieDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = AE25730218C0C73D00F71429 /* FakeBatMovieDownloader.m */; };
 		AE35E6F618DC50F0004F0C62 /* MovieInfoObtainer.m in Sources */ = {isa = PBXBuildFile; fileRef = AE35E6F518DC50F0004F0C62 /* MovieInfoObtainer.m */; };
+		AE35E6FA18DC5865004F0C62 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = AE35E6F918DC5865004F0C62 /* TTTAttributedLabel.m */; };
 		AE4FA7CA1872ADAA005B7BD6 /* toast_frame@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AE4FA7C91872ADAA005B7BD6 /* toast_frame@2x.png */; };
 		AE7EED9E18C8540E00EF7947 /* ok@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AE7EED9D18C8540E00EF7947 /* ok@2x.png */; };
 		AE7EEDC518CC50ED00EF7947 /* arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AE7EEDC418CC50ED00EF7947 /* arrow@2x.png */; };
@@ -176,6 +177,8 @@
 		AE25730118C0C73D00F71429 /* FakeBatMovieDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FakeBatMovieDownloader.h; sourceTree = "<group>"; };
 		AE25730218C0C73D00F71429 /* FakeBatMovieDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeBatMovieDownloader.m; sourceTree = "<group>"; };
 		AE35E6F518DC50F0004F0C62 /* MovieInfoObtainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MovieInfoObtainer.m; sourceTree = "<group>"; };
+		AE35E6F818DC5865004F0C62 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
+		AE35E6F918DC5865004F0C62 /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
 		AE4FA7C91872ADAA005B7BD6 /* toast_frame@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toast_frame@2x.png"; sourceTree = "<group>"; };
 		AE7EED9D18C8540E00EF7947 /* ok@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ok@2x.png"; sourceTree = "<group>"; };
 		AE7EEDC418CC50ED00EF7947 /* arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow@2x.png"; sourceTree = "<group>"; };
@@ -445,6 +448,15 @@
 				AED9C38518C32C0900C41142 /* WonderMovieDownloadController.m */,
 			);
 			path = download;
+			sourceTree = "<group>";
+		};
+		AE35E6F718DC5865004F0C62 /* TTTAttributedLabel */ = {
+			isa = PBXGroup;
+			children = (
+				AE35E6F818DC5865004F0C62 /* TTTAttributedLabel.h */,
+				AE35E6F918DC5865004F0C62 /* TTTAttributedLabel.m */,
+			);
+			path = TTTAttributedLabel;
 			sourceTree = "<group>";
 		};
 		B517772B17B36D44006B948E = {
@@ -750,6 +762,7 @@
 		B5D4C3731822636E00BB0A53 /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				AE35E6F718DC5865004F0C62 /* TTTAttributedLabel */,
 				B5435574186D250C0090AFEE /* MttActivityIndicator */,
 				B5F96D651846267C006A73FB /* Reachability */,
 				B58B56F318347F240096801E /* MagicalRecord */,
@@ -1052,6 +1065,7 @@
 				B58B574118347F250096801E /* NSPersistentStoreCoordinator+MagicalRecord.m in Sources */,
 				AEE42DF918D4284F00A72B2E /* FakeMovieInfoObtainer.m in Sources */,
 				B58B573A18347F250096801E /* NSManagedObject+MagicalRequests.m in Sources */,
+				AE35E6FA18DC5865004F0C62 /* TTTAttributedLabel.m in Sources */,
 				B517774817B36D44006B948E /* AppDelegate.m in Sources */,
 				B58B573518347F250096801E /* NSString+MagicalDataImport.m in Sources */,
 				AED9C38618C32C0900C41142 /* WonderMovieDownloadController.m in Sources */,

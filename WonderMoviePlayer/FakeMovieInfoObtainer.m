@@ -32,7 +32,7 @@
         else {
             [self.movieInfoObtainerDelegate movieInfoObtainerFailObtainMovieInfo:self];
         }
-    } afterDelay:5];
+    } afterDelay:0.5];
     
     i ++;
 }

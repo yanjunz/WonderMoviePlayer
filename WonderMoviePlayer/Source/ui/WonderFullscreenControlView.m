@@ -47,7 +47,7 @@
 
 @end
 
-@interface WonderFullscreenControlView () <UIGestureRecognizerDelegate>{
+@interface WonderFullscreenControlView () <UIGestureRecognizerDelegate, TTTAttributedLabelDelegate>{
     CGFloat _downloadProgress;
     BOOL _prepareToPlayForNewClarity;   // YES for clarity changed, NO for setNum changed
 }
@@ -494,10 +494,14 @@ void wonderMovieVolumeListenerCallback (
         [_infoView.replayButton removeTarget:self action:@selector(onClickReplay:) forControlEvents:UIControlEventTouchUpInside];
         [_infoView.centerPlayButton removeTarget:self action:@selector(onClickPlay:) forControlEvents:UIControlEventTouchUpInside];
         [_infoView.openSourceButton removeTarget:self action:@selector(onClickHandleError:) forControlEvents:UIControlEventTouchUpInside];
+        _infoView.toastLabel.delegate = nil;
+        
         _infoView = infoView;
+        _infoView.userInteractionEnabled = YES;
         [_infoView.replayButton addTarget:self action:@selector(onClickReplay:) forControlEvents:UIControlEventTouchUpInside];
         [_infoView.centerPlayButton addTarget:self action:@selector(onClickPlay:) forControlEvents:UIControlEventTouchUpInside];
         [_infoView.openSourceButton addTarget:self action:@selector(onClickHandleError:) forControlEvents:UIControlEventTouchUpInside];
+        _infoView.toastLabel.delegate = self;
     }
 }
 
@@ -642,14 +646,15 @@ void wonderMovieVolumeListenerCallback (
     CGFloat x = 0;//17;
     for (int i = 0; i < count; ++i) {
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        button.exclusiveTouch = YES;
         CGFloat y = i * (menuButtonHeight + menuSeparatorHeight);
         
         button.frame = CGRectMake(x, y + 12 , buttonWidth, buttonHeight);
         button.tag = kWonderMovieResolutionButtonTagBase + i;
         button.titleLabel.font = [UIFont systemFontOfSize:11];
         [button setImage:QQVideoPlayerImage(@"ok") forState:UIControlStateNormal];
-//        [button setBackgroundImage:QQVideoPlayerImage(@"resolution_button_normal") forState:UIControlStateNormal];
         [button addTarget:self action:@selector(onClickResolutionItem:) forControlEvents:UIControlEventTouchUpInside];
+        [button addTarget:self action:@selector(onCancelClickResolutionItem:) forControlEvents:UIControlEventTouchCancel];
         [popupMenu addSubview:button];
         
         UIImageView *menuSeparatorView = [[UIImageView alloc] initWithImage:QQVideoPlayerImage(@"separator_line")];
@@ -1172,8 +1177,15 @@ void wonderMovieVolumeListenerCallback (
         [self updateBookmarkTitle];
         
         if ([videoGroup isValidDrama]) {
-            NSString * infoText = (!hasBookmarked) ? NSLocalizedString(@"已添加到我的视频收藏", nil) : NSLocalizedString(@"已取消收藏", nil);
-            [self.infoView showCommonToast:infoText show:YES animated:YES];
+            if (!hasBookmarked) {
+                NSString *infoText = @"已添加到我的视频收藏";
+                [self.infoView showCommonToast:infoText show:YES animated:YES];
+                NSRange range = [infoText rangeOfString:@"我的视频收藏"];
+                [self.infoView.toastLabel addLinkToURL:[NSURL URLWithString:@"http://www.baidu.com"] withRange:range];
+            }
+            else {
+                [self.infoView showCommonToast:@"已取消收藏" show:YES animated:YES];
+            }
         }
     }
 }
@@ -1311,6 +1323,14 @@ void wonderMovieVolumeListenerCallback (
         _prepareToPlayForNewClarity = YES;
         [self dramaDidSelectSetNum:self.tvDramaManager.curSetNum];
     }
+}
+
+- (IBAction)onCancelClickResolutionItem:(id)sender
+{
+    [self showResolutionView:NO];
+    [self cancelPreviousAndPrepareToDimControl];
+    
+    [self updateResolutions];
 }
 
 - (void)showResolutionView:(BOOL)show
@@ -2049,6 +2069,12 @@ void wonderMovieVolumeListenerCallback (
     return !([touch.view isKindOfClass:[UIControl class]]) && !(self.dramaView && [touch.view isDescendantOfView:self.dramaView]);
 }
 
+#pragma mark TTTAttributedLabel
+- (void)attributedLabel:(TTTAttributedLabel *)label
+   didSelectLinkWithURL:(NSURL *)url
+{
+    NSLog(@"%@", url);
+}
 @end
 
 
