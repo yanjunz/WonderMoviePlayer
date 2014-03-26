@@ -513,7 +513,7 @@ void wonderMovieVolumeListenerCallback (
 - (void)setLiveCastState:(LiveCastState)liveCastState
 {
     _liveCastState = liveCastState;
-    self.progressView.userInteractionEnabled = (liveCastState == LiveCastStateNo);
+    self.progressView.userInteractionEnabled = YES;//(liveCastState == LiveCastStateNo);
     
     if (liveCastState == LiveCastStateYes) {
         self.bottomView.durationLabel.text = @"直播";
@@ -531,7 +531,7 @@ void wonderMovieVolumeListenerCallback (
 {
     // only update download button enable state when liveCast is checked
     if (_liveCastState != LiveCastStateNotCheckYet) {
-        self.bottomView.downloadButton.enabled = (_liveCastState == LiveCastStateNo) && !!self.tvDramaManager.videoGroup;
+        self.bottomView.downloadButton.enabled = !!self.tvDramaManager.videoGroup;
         [self.bottomView setNeedsLayout];
     }
 }
@@ -1178,7 +1178,7 @@ void wonderMovieVolumeListenerCallback (
         
         if ([videoGroup isValidDrama]) {
             if (!hasBookmarked) {
-                NSString *infoText = @"已添加到我的视频 > 我的收藏";
+                NSString *infoText = @"已添加至我的视频 > 我的收藏";
                 [self.infoView showCommonToast:infoText show:YES animated:YES];
                 NSRange range = [infoText rangeOfString:@"我的收藏"];
                 [self.infoView.toastLabel addLinkToURL:[NSURL URLWithString:@"http://v.html5.qq.com"] withRange:range];
@@ -1269,7 +1269,7 @@ void wonderMovieVolumeListenerCallback (
             [self updateNextButtonState];
         }
         else {
-            NSLog(@"Warnning: There no next video");
+            NSLog(@"Warnning: There is no next video");
         }
     }
 }
@@ -1901,10 +1901,10 @@ void wonderMovieVolumeListenerCallback (
 
 - (void)loadDramaInfo
 {
-    NSLog(@"loadDramaInfo");
+//    NSLog(@"loadDramaInfo");
     if (self.tvDramaManager) {
         if ([self.tvDramaManager loadLocalDramaInfo]) {
-            NSLog(@"loadLocalDramaInfo");
+//            NSLog(@"loadLocalDramaInfo");
             [self finishLoadDramaInfo];
             
             if ([[self.tvDramaManager videoGroupInCurrentThread] isRecognized]) {
@@ -1931,7 +1931,7 @@ void wonderMovieVolumeListenerCallback (
 - (void)finishLoadDramaInfo
 {
     VideoGroup *videoGroup = [self.tvDramaManager videoGroupInCurrentThread];
-    NSLog(@"finishLoadDramaInfo %@", videoGroup.videoId);
+//    NSLog(@"finishLoadDramaInfo %@", videoGroup.videoId);
     if ([videoGroup isValidDrama]) {
         [self showDramaButton:YES animated:YES];
     }
@@ -1952,7 +1952,7 @@ void wonderMovieVolumeListenerCallback (
 
 - (void)failLoadDramaInfo
 {
-    NSLog(@"failLoadDramaInfo");
+//    NSLog(@"failLoadDramaInfo");
     [self showDramaButton:NO animated:YES];
     [self showNextButton:NO animated:YES];
     [self updateDownloadState];

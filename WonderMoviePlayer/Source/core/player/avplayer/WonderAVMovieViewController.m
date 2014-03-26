@@ -387,9 +387,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
             }
         });
     }];
-    
-    // show buffer immediately
-//    [self buffer];
+    [self.controlSource prepareToPlay];
 }
 
 #pragma mark Prepare to play asset
@@ -558,7 +556,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
         // FIXME
     }
     
-    [self.controlSource prepareToPlay];
+//    [self.controlSource prepareToPlay];
 #ifdef MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
     [self.movieDownloader mdBindDownloadURL:self.movieURL delegate:self dataSource:self];
 #endif // MTT_TWEAK_FULL_DOWNLOAD_ABILITY_FOR_VIDEO_PLAYER
@@ -759,7 +757,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 //    [self disablePlayerButtons];
     
     /* Display the error. */
-    NSString *errorMsg = [NSString stringWithFormat:@"%@ [%d] URL=%@", [error localizedFailureReason], error.code, [self.movieURL absoluteString]];
+    NSString *errorMsg = [NSString stringWithFormat:@"%@ URL=%@", [error localizedFailureReason], [self.movieURL absoluteString]];
 	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:[error localizedDescription]
 														message:errorMsg
 													   delegate:nil

@@ -25,7 +25,7 @@
 
 - (void)dealloc
 {
-    NSLog(@"TVDramaManager dealloc");
+//    NSLog(@"TVDramaManager dealloc");
 }
 
 - (void)releaseHandlers
@@ -171,7 +171,7 @@
                     videoGroup = [VideoGroup MR_createInContext:localContext];
                     videoGroup.videoName = title;
                     videoGroup.videoId = videoId;
-                    NSLog(@"Create VideoGroup[%@] for %@", videoId, sself.webURL);
+//                    NSLog(@"Create VideoGroup[%@] for %@", videoId, sself.webURL);
                 }
             }
             

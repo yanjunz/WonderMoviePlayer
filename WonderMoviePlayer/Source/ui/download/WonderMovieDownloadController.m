@@ -43,7 +43,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.title = @"离线";
+    self.title = @"选择视频";
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(onClickCancel:)];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"确定" style:UIBarButtonItemStylePlain target:self action:@selector(onClickDownload:)];
     self.navigationItem.rightBarButtonItem.enabled = NO;
@@ -171,6 +171,11 @@
             Video *video = [videoGroup videoAtSetNum:setNum];
             NSString *downloadURL = [video webURLAtSrcIndex:self.tvDramaManager.srcIndex];
             
+            if (downloadURL == nil) {
+                downloadURL = @"";
+                NSLog(@"Warnning: Start to download with nil webURL %@", video);
+            }
+            
             [downloadURLs addObject:downloadURL];
             titleDict[downloadURL] = [video displayName];
             
@@ -223,7 +228,7 @@
         NSNumber *freeFileSystemSizeInBytes = [dictionary objectForKey:NSFileSystemFreeSize];
         totalSpace = [fileSystemSizeInBytes unsignedLongLongValue];
         totalFreeSpace = [freeFileSystemSizeInBytes unsignedLongLongValue];
-        NSLog(@"Memory Capacity of %llu MiB with %llu MiB Free memory available.", ((totalSpace/1024ll)/1024ll), ((totalFreeSpace/1024ll)/1024ll));
+//        NSLog(@"Memory Capacity of %llu MiB with %llu MiB Free memory available.", ((totalSpace/1024ll)/1024ll), ((totalFreeSpace/1024ll)/1024ll));
     } else {
         NSLog(@"Error Obtaining System Memory Info: Domain = %@, Code = %d", [error domain], [error code]);
     }
