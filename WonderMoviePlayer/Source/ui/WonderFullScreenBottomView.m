@@ -89,9 +89,18 @@
     
     CGFloat resolutionButtonWidth = 62, resolutionButtonHeight = 18 + 20;
     
+    UIButton *resolutionButton = [WonderMovieResolutionButton buttonWithType:UIButtonTypeCustom];
+    resolutionButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    resolutionButton.titleLabel.font = [UIFont systemFontOfSize:12];
+    [resolutionButton setImage:QQVideoPlayerImage(@"arrow") forState:UIControlStateNormal];
+    self.resolutionButton = resolutionButton;
+    resolutionButton.frame = CGRectMake(self.width - resolutionButtonWidth, (bottomBarHeight - resolutionButtonHeight) / 2, resolutionButtonWidth, resolutionButtonHeight);
+    [self addSubview:resolutionButton];
+    self.resolutionButton.hidden = YES;
+    
     self.downloadButton.backgroundColor = [UIColor redColor];
     self.downloadButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.downloadButton.frame = CGRectMake(self.width - kDownloadButtonSize, bottomBarHeight - kDownloadButtonSize, kDownloadButtonSize, kDownloadButtonSize);
+    self.downloadButton.frame = CGRectMake(self.resolutionButton.left - resolutionButtonWidth, bottomBarHeight - kBottomButtonHeight, kBottomButtonWidth, kBottomButtonHeight);
     self.downloadButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [self.downloadButton setTitleColor:QQColor(videoplayer_downloaded_color) forState:UIControlStateDisabled];
     [self.downloadButton setImage:QQVideoPlayerImage(@"download") forState:UIControlStateNormal];
@@ -100,9 +109,8 @@
     self.downloadButton.enabled = NO;
     [self addSubview:self.downloadButton];
     
-    
     self.bookmarkButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.bookmarkButton.frame = CGRectMake(self.downloadButton.left - kDownloadButtonSize, bottomBarHeight - kDownloadButtonSize, kDownloadButtonSize, kDownloadButtonSize);
+    self.bookmarkButton.frame = CGRectMake(self.downloadButton.left - kBottomButtonWidth, bottomBarHeight - kBottomButtonHeight, kBottomButtonWidth, kBottomButtonHeight);
     self.bookmarkButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [self.bookmarkButton setTitleColor:QQColor(videoplayer_downloaded_color) forState:UIControlStateDisabled];
     [self.bookmarkButton setImage:QQVideoPlayerImage(@"bookmark_normal") forState:UIControlStateNormal];
@@ -111,16 +119,7 @@
     [self.bookmarkButton setBackgroundImage:highlightedImage forState:UIControlStateHighlighted];
     [self addSubview:self.bookmarkButton];
     
-    
-    UIButton *resolutionButton = [WonderMovieResolutionButton buttonWithType:UIButtonTypeCustom];
-    resolutionButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-    resolutionButton.titleLabel.font = [UIFont systemFontOfSize:11];
-    [resolutionButton setImage:QQVideoPlayerImage(@"arrow") forState:UIControlStateNormal];
-    self.resolutionButton = resolutionButton;
-    resolutionButton.frame = CGRectMake(self.downloadButton.left - resolutionButtonWidth, (bottomBarHeight - resolutionButtonHeight) / 2, resolutionButtonWidth, resolutionButtonHeight);
-    [self addSubview:resolutionButton];
-    self.resolutionButton.hidden = YES;
-    
+
     self.backgroundColor = [UIColor clearColor];
 }
 
@@ -138,17 +137,17 @@
     }
 #endif // MTT_TWEAK_WONDER_MOVIE_AIRPLAY
     
+    self.resolutionButton.right = right;
+    if (!self.resolutionButton.hidden) {
+        right = self.resolutionButton.left;
+    }
+    
     self.downloadButton.right = right;
     right = self.downloadButton.left;
 
     self.bookmarkButton.right = right;
     if (!self.bookmarkButton.hidden) {
         right = self.bookmarkButton.left;
-    }
-    
-    self.resolutionButton.right = right;
-    if (self.resolutionButton.hidden) {
-        right = self.resolutionButton.left;
     }
     
     [self.durationLabel sizeToFit];

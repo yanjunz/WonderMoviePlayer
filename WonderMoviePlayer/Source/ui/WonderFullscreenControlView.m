@@ -651,7 +651,7 @@ void wonderMovieVolumeListenerCallback (
         
         button.frame = CGRectMake(x, y + 12 , buttonWidth, buttonHeight);
         button.tag = kWonderMovieResolutionButtonTagBase + i;
-        button.titleLabel.font = [UIFont systemFontOfSize:11];
+        button.titleLabel.font = [UIFont systemFontOfSize:12];
         [button setImage:QQVideoPlayerImage(@"ok") forState:UIControlStateNormal];
         [button addTarget:self action:@selector(onClickResolutionItem:) forControlEvents:UIControlEventTouchUpInside];
         [button addTarget:self action:@selector(onCancelClickResolutionItem:) forControlEvents:UIControlEventTouchCancel];

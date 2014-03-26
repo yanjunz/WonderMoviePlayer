@@ -109,7 +109,8 @@
 #define kActionButtonSize                           36
 #define kNextButtonRightPadding                     10
 #define kNextButtonSize                             36
-#define kDownloadButtonSize                         36
+#define kBottomButtonHeight                         36
+#define kBottomButtonWidth                          (36+15)
 
 // Download View Grid Cell
 #define kDownloadViewGridCellLeftPadding            10
