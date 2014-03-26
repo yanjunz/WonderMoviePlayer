@@ -148,7 +148,7 @@
 		B58F110918376EDB00D6A9B2 /* TestTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B58F110818376EDB00D6A9B2 /* TestTableViewController.m */; };
 		B5AD785217CDA50E00C08E51 /* video.js in Sources */ = {isa = PBXBuildFile; fileRef = B5AD785117CDA50E00C08E51 /* video.js */; };
 		B5AD785317CDA5E800C08E51 /* video.js in Resources */ = {isa = PBXBuildFile; fileRef = B5AD785117CDA50E00C08E51 /* video.js */; };
-		B5D4C3641820F51A00BB0A53 /* WonderFullscreenControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D4C35A1820F51A00BB0A53 /* WonderFullscreenControlView.m */; };
+		B5D4C3641820F51A00BB0A53 /* WonderFullScreenControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D4C35A1820F51A00BB0A53 /* WonderFullScreenControlView.m */; };
 		B5D4C3651820F51A00BB0A53 /* WonderInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D4C35C1820F51A00BB0A53 /* WonderInfoView.m */; };
 		B5D4C3661820F51A00BB0A53 /* WonderProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D4C35E1820F51A00BB0A53 /* WonderProgressView.m */; };
 		B5D4C37E1822636E00BB0A53 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D4C37A1822636E00BB0A53 /* RegexKitLite.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -378,8 +378,8 @@
 		B58F110718376EDB00D6A9B2 /* TestTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestTableViewController.h; sourceTree = "<group>"; };
 		B58F110818376EDB00D6A9B2 /* TestTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestTableViewController.m; sourceTree = "<group>"; };
 		B5AD785117CDA50E00C08E51 /* video.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = video.js; sourceTree = "<group>"; };
-		B5D4C3591820F51A00BB0A53 /* WonderFullscreenControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderFullscreenControlView.h; sourceTree = "<group>"; };
-		B5D4C35A1820F51A00BB0A53 /* WonderFullscreenControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderFullscreenControlView.m; sourceTree = "<group>"; };
+		B5D4C3591820F51A00BB0A53 /* WonderFullScreenControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderFullScreenControlView.h; sourceTree = "<group>"; };
+		B5D4C35A1820F51A00BB0A53 /* WonderFullScreenControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderFullScreenControlView.m; sourceTree = "<group>"; };
 		B5D4C35B1820F51A00BB0A53 /* WonderInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderInfoView.h; sourceTree = "<group>"; };
 		B5D4C35C1820F51A00BB0A53 /* WonderInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WonderInfoView.m; sourceTree = "<group>"; };
 		B5D4C35D1820F51A00BB0A53 /* WonderProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderProgressView.h; sourceTree = "<group>"; };
@@ -746,8 +746,8 @@
 				AE2572F618C0AA6400F71429 /* download */,
 				B5DC0754182CD2CA0046A7A5 /* drama */,
 				AE1D7C1A18C03CC9006A9196 /* WonderMoviePlayerConstants.h */,
-				B5D4C3591820F51A00BB0A53 /* WonderFullscreenControlView.h */,
-				B5D4C35A1820F51A00BB0A53 /* WonderFullscreenControlView.m */,
+				B5D4C3591820F51A00BB0A53 /* WonderFullScreenControlView.h */,
+				B5D4C35A1820F51A00BB0A53 /* WonderFullScreenControlView.m */,
 				B52DCDA7183F4E890020485B /* WonderFullscreenControlView+StateMachine.h */,
 				B52DCDA8183F4E890020485B /* WonderFullscreenControlView+StateMachine.m */,
 				B5D4C35B1820F51A00BB0A53 /* WonderInfoView.h */,
@@ -1087,7 +1087,7 @@
 				AEE42DF318D4182800A72B2E /* VideoGroup+Bookmark.m in Sources */,
 				B5D4C3661820F51A00BB0A53 /* WonderProgressView.m in Sources */,
 				B5DC0782182CD4690046A7A5 /* WonderAVMovieViewController.m in Sources */,
-				B5D4C3641820F51A00BB0A53 /* WonderFullscreenControlView.m in Sources */,
+				B5D4C3641820F51A00BB0A53 /* WonderFullScreenControlView.m in Sources */,
 				AEE42D2118D0657900A72B2E /* Video+Additions.m in Sources */,
 				B58B574318347F250096801E /* MagicalRecord+ErrorHandling.m in Sources */,
 				B58B573718347F250096801E /* NSManagedObject+MagicalDataImport.m in Sources */,

@@ -1,5 +1,5 @@
 //
-//  WonderFullscreenControlView.m
+//  WonderFullScreenControlView.m
 //  WonderMoviePlayer
 //
 //  Created by Zhuang Yanjun on 13-8-8.
@@ -10,7 +10,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 #import "WonderMoviePlayerConstants.h"
-#import "WonderFullscreenControlView.h"
+#import "WonderFullScreenControlView.h"
 #import "WonderFullscreenControlView+StateMachine.h"
 #import "WonderProgressView.h"
 #import "UIView+Sizes.h"
@@ -47,7 +47,7 @@
 
 @end
 
-@interface WonderFullscreenControlView () <UIGestureRecognizerDelegate, TTTAttributedLabelDelegate>{
+@interface WonderFullScreenControlView () <UIGestureRecognizerDelegate, TTTAttributedLabelDelegate>{
     CGFloat _downloadProgress;
     BOOL _prepareToPlayForNewClarity;   // YES for clarity changed, NO for setNum changed
 }
@@ -93,11 +93,11 @@
 - (void)tryToSetVolume:(NSNumber *)volume;
 @end
 
-@interface WonderFullscreenControlView (ProgressView) <WonderProgressViewDelegate>
+@interface WonderFullScreenControlView (ProgressView) <WonderProgressViewDelegate>
 
 @end
 
-@interface WonderFullscreenControlView (DramaView) <WonderMovieDramaViewDelegate>
+@interface WonderFullScreenControlView (DramaView) <WonderMovieDramaViewDelegate>
 - (void)dramaDidSelectSetNum:(int)setNum;
 - (void)prepareToPlayNextDrama;
 - (void)playNextDrama;
@@ -106,7 +106,7 @@
 
 #pragma mark Tip
 
-@interface WonderFullscreenControlView (Tip)
+@interface WonderFullScreenControlView (Tip)
 - (void)loadTipStatus;
 - (void)showHorizontalPanningTip:(BOOL)show;
 - (void)showVerticalPanningTip:(BOOL)show;
@@ -131,7 +131,7 @@ void wonderMovieVolumeListenerCallback (
         return;
     }
     
-    WonderFullscreenControlView *bself = (__bridge WonderFullscreenControlView *)inClientData;
+    WonderFullScreenControlView *bself = (__bridge WonderFullScreenControlView *)inClientData;
     [bself performSelectorOnMainThread:@selector(tryToShowVerticalPanningTip) withObject:nil waitUntilDone:NO];
     
     const float *volumePointer = inData;
@@ -140,7 +140,7 @@ void wonderMovieVolumeListenerCallback (
     [bself performSelectorOnMainThread:@selector(tryToSetVolume:) withObject:@(volume) waitUntilDone:NO];
 }
 
-@implementation WonderFullscreenControlView
+@implementation WonderFullScreenControlView
 @synthesize delegate;
 @synthesize controlState;
 @synthesize liveCastState = _liveCastState;
@@ -2092,7 +2092,7 @@ void wonderMovieVolumeListenerCallback (
 @end
 
 
-@implementation WonderFullscreenControlView (ProgressView)
+@implementation WonderFullScreenControlView (ProgressView)
 
 - (void)wonderMovieProgressViewBeginChangeProgress:(WonderProgressView *)progressView
 {
@@ -2124,7 +2124,7 @@ void wonderMovieVolumeListenerCallback (
 
 static NSString *kWonderMovieHorizontalPanningTipKey = @"kWonderMovieHorizontalPanningTipKey";
 static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanningTipKey";
-@implementation WonderFullscreenControlView (Tip)
+@implementation WonderFullScreenControlView (Tip)
 
 - (void)loadTipStatus
 {
@@ -2218,7 +2218,7 @@ static NSString *kWonderMovieVerticalPanningTipKey = @"kWonderMovieVerticalPanni
 
 @end
 
-@implementation WonderFullscreenControlView (DramaView)
+@implementation WonderFullScreenControlView (DramaView)
 
 - (void)wonderMovieDramaView:(WonderMovieDramaView *)dramaView didSelectSetNum:(int)setNum
 {

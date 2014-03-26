@@ -10,7 +10,7 @@
 #import "WonderMoviePlayerConstants.h"
 #import "WonderAVMovieViewController.h"
 #import "WonderAVPlayerView.h"
-#import "WonderFullscreenControlView.h"
+#import "WonderFullScreenControlView.h"
 #import "UIView+Sizes.h"
 #import "Reachability.h"
 #import "NSObject+Block.h"
@@ -796,7 +796,7 @@ NSString *kLoadedTimeRangesKey        = @"loadedTimeRanges";
 - (void)setupControlSource:(BOOL)fullscreen
 {
     if (fullscreen) {
-        WonderFullscreenControlView *fullscreenControlView = [[WonderFullscreenControlView alloc] initWithFrame:self.overlayView.bounds
+        WonderFullScreenControlView *fullscreenControlView = [[WonderFullScreenControlView alloc] initWithFrame:self.overlayView.bounds
                                                                                             autoPlayWhenStarted:YES];
         fullscreenControlView.delegate = self;
         fullscreenControlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;

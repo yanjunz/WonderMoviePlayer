@@ -8,7 +8,7 @@
 
 #import "WonderFullscreenControlView+StateMachine.h"
 
-@implementation WonderFullscreenControlView (StateMachine)
+@implementation WonderFullScreenControlView (StateMachine)
 
 #pragma mark State Manchine
 - (void)handleCommand:(MovieControlCommand)cmd param:(id)param notify:(BOOL)notify

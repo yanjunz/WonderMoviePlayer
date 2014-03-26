@@ -1,5 +1,5 @@
 //
-//  WonderFullscreenControlView.h
+//  WonderFullScreenControlView.h
 //  WonderMoviePlayer
 //
 //  Created by Zhuang Yanjun on 13-8-8.
@@ -12,7 +12,7 @@
 #import "MovieControlSource.h"
 #import "WonderInfoView.h"
 
-@interface WonderFullscreenControlView : UIView<MovieControlSource> {
+@interface WonderFullScreenControlView : UIView<MovieControlSource> {
     NSTimeInterval _playbackTime;
     NSTimeInterval _playableDuration;
     NSTimeInterval _duration;

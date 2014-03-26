@@ -6,8 +6,8 @@
 //  Copyright (c) 2013 Tencent. All rights reserved.
 //
 
-#import "WonderFullscreenControlView.h"
+#import "WonderFullScreenControlView.h"
 
-@interface WonderFullscreenControlView (StateMachine)
+@interface WonderFullScreenControlView (StateMachine)
 - (void)handleCommand:(MovieControlCommand)cmd param:(id)param notify:(BOOL)notify;
 @end
