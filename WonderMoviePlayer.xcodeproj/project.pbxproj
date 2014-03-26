@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		89991C3718E27AD200B87C82 /* drama_separator_line@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89991C3618E27AD200B87C82 /* drama_separator_line@2x.png */; };
 		AE1D7C1E18C08335006A9196 /* play@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AE1D7C1D18C08335006A9196 /* play@2x.png */; };
 		AE2572F918C0AB2E00F71429 /* WonderMovieDownloadView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2572F818C0AB2E00F71429 /* WonderMovieDownloadView.m */; };
 		AE2572FC18C0AC8A00F71429 /* WonderMovieDownloadGridCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2572FB18C0AC8A00F71429 /* WonderMovieDownloadGridCell.m */; };
@@ -165,6 +166,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		89991C3618E27AD200B87C82 /* drama_separator_line@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "drama_separator_line@2x.png"; sourceTree = "<group>"; };
 		AE1D7C1A18C03CC9006A9196 /* WonderMoviePlayerConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WonderMoviePlayerConstants.h; sourceTree = "<group>"; };
 		AE1D7C1D18C08335006A9196 /* play@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play@2x.png"; sourceTree = "<group>"; };
 		AE2572F718C0AB2E00F71429 /* WonderMovieDownloadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WonderMovieDownloadView.h; sourceTree = "<group>"; };
@@ -565,6 +567,7 @@
 		B5435578186D26DE0090AFEE /* videoplayer */ = {
 			isa = PBXGroup;
 			children = (
+				89991C3618E27AD200B87C82 /* drama_separator_line@2x.png */,
 				AEE42D1B18D0653400A72B2E /* bookmark_normal@2x.png */,
 				AEE42D1C18D0653400A72B2E /* bookmark_press@2x.png */,
 				AE7EEDC418CC50ED00EF7947 /* arrow@2x.png */,
@@ -1034,6 +1037,7 @@
 				AED9C38F18C40F3700C41142 /* download_cell_sel_single@2x.png in Resources */,
 				B54355C3186D26DF0090AFEE /* mute@2x.png in Resources */,
 				B517777317B3961C006B948E /* Settings.bundle in Resources */,
+				89991C3718E27AD200B87C82 /* drama_separator_line@2x.png in Resources */,
 				B54355C8186D26DF0090AFEE /* play_normal@2x.png in Resources */,
 				B51778B017B9DE32006B948E /* TestWebViewController.xib in Resources */,
 				B51F619717E9ADC200344122 /* Test2ViewController.xib in Resources */,

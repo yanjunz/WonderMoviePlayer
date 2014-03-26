@@ -45,7 +45,7 @@
         
         UIImageView *separatorView = [[UIImageView alloc] initWithFrame:CGRectMake(0, label.bottom, headerView.width, 1)];
         separatorView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        separatorView.image = QQVideoPlayerImage(@"separator_line");
+        separatorView.image = QQVideoPlayerImage(@"drama_separator_line");
         [headerView addSubview:separatorView];
         
         [self addSubview:headerView];
@@ -358,7 +358,7 @@
 
             UIImageView *separatorView = [[UIImageView alloc] initWithFrame:CGRectMake(0, cell.bottom - 1, cell.width, 1)];
             separatorView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-            separatorView.image = QQVideoPlayerImage(@"separator_line");
+            separatorView.image = QQVideoPlayerImage(@"drama_separator_line");
             [cell addSubview:separatorView];
         }
         Video *video = self.sortedVideos[indexPath.row];

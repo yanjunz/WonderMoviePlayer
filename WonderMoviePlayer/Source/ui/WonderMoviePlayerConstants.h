@@ -95,10 +95,10 @@
 
 
 #define kProgressViewPadding 16
-//#define kWonderMovieControlDimDuration              0.8f
-#define kWonderMovieControlDimDuration              0.f
-//#define kWonderMovieControlShowDuration             0.2f
-#define kWonderMovieControlShowDuration             0.f
+#define kWonderMovieControlDimDuration              0.6f
+//#define kWonderMovieControlDimDuration              0.f
+#define kWonderMovieControlShowDuration             0.2f
+//#define kWonderMovieControlShowDuration             0.f
 
 #define kStatusBarHeight                            20
 

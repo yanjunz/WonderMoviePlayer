@@ -236,6 +236,17 @@ void wonderMovieVolumeListenerCallback (
     [contentView addSubview:bottomBarContainer];
     self.bottomBarContainer = bottomBarContainer;
     self.bottomBarContainer.userInteractionEnabled = NO;
+    
+    
+    // http://stackoverflow.com/questions/19258817/cant-fade-uitoolbar-or-uitabbar-in-ios7
+    // Need to disable AllowsGroupOpacity of UIToolBar's parent view layer to enable fading animtion of UIToolbar in iOS7
+    if ([bottomBarContainer.layer respondsToSelector:@selector(setAllowsGroupOpacity:)]) {
+        [bottomBarContainer.layer setAllowsGroupOpacity:NO];
+    }
+    if ([contentView.layer respondsToSelector:@selector(setAllowsGroupOpacity:)]) {
+        [contentView.layer setAllowsGroupOpacity:NO];
+    }
+    
 
     UIView *bottomBarBg = nil;
     if (hasBlurSupport) {
