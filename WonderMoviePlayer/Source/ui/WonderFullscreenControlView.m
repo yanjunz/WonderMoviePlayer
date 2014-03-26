@@ -268,6 +268,7 @@ void wonderMovieVolumeListenerCallback (
     
     WonderProgressView *progressView = [[WonderProgressView alloc] initWithFrame:CGRectMake(0, 0, self.width, progressIndicatorHeight)];
     self.progressView = progressView;
+//    progressView.backgroundColor = [UIColor redColor];
     [bottomBarContainer addSubview:progressView];
     
     self.progressView.delegate = self;
@@ -651,7 +652,7 @@ void wonderMovieVolumeListenerCallback (
         
         button.frame = CGRectMake(x, y + 12 , buttonWidth, buttonHeight);
         button.tag = kWonderMovieResolutionButtonTagBase + i;
-        button.titleLabel.font = [UIFont systemFontOfSize:12];
+        button.titleLabel.font = [UIFont systemFontOfSize:kResolutionButtonFontSize];
         [button setImage:QQVideoPlayerImage(@"ok") forState:UIControlStateNormal];
         [button addTarget:self action:@selector(onClickResolutionItem:) forControlEvents:UIControlEventTouchUpInside];
         [button addTarget:self action:@selector(onCancelClickResolutionItem:) forControlEvents:UIControlEventTouchCancel];

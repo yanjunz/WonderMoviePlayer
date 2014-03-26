@@ -91,16 +91,16 @@
     
     UIButton *resolutionButton = [WonderMovieResolutionButton buttonWithType:UIButtonTypeCustom];
     resolutionButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-    resolutionButton.titleLabel.font = [UIFont systemFontOfSize:12];
+    resolutionButton.titleLabel.font = [UIFont systemFontOfSize:kResolutionButtonFontSize];
     [resolutionButton setImage:QQVideoPlayerImage(@"arrow") forState:UIControlStateNormal];
     self.resolutionButton = resolutionButton;
-    resolutionButton.frame = CGRectMake(self.width - resolutionButtonWidth, (bottomBarHeight - resolutionButtonHeight) / 2, resolutionButtonWidth, resolutionButtonHeight);
+    resolutionButton.frame = CGRectMake(self.width - resolutionButtonWidth, (bottomBarHeight - resolutionButtonHeight) / 2 + 3, resolutionButtonWidth, resolutionButtonHeight);
     [self addSubview:resolutionButton];
     self.resolutionButton.hidden = YES;
     
     self.downloadButton.backgroundColor = [UIColor redColor];
     self.downloadButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.downloadButton.frame = CGRectMake(self.resolutionButton.left - resolutionButtonWidth, bottomBarHeight - kBottomButtonHeight, kBottomButtonWidth, kBottomButtonHeight);
+    self.downloadButton.frame = CGRectMake(self.resolutionButton.left - resolutionButtonWidth - 6, bottomBarHeight - kBottomButtonHeight, kBottomButtonWidth, kBottomButtonHeight);
     self.downloadButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [self.downloadButton setTitleColor:QQColor(videoplayer_downloaded_color) forState:UIControlStateDisabled];
     [self.downloadButton setImage:QQVideoPlayerImage(@"download") forState:UIControlStateNormal];
@@ -139,7 +139,7 @@
     
     self.resolutionButton.right = right;
     if (!self.resolutionButton.hidden) {
-        right = self.resolutionButton.left;
+        right = self.resolutionButton.left - 6;
     }
     
     self.downloadButton.right = right;

@@ -112,6 +112,8 @@
 #define kBottomButtonHeight                         36
 #define kBottomButtonWidth                          (36+15)
 
+#define kResolutionButtonFontSize                   14
+
 // Download View Grid Cell
 #define kDownloadViewGridCellLeftPadding            10
 #define kDownloadViewGridCellTopPadding             15 + 11 + 8

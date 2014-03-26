@@ -26,12 +26,12 @@
     
     [self.movieInfoObtainerDelegate movieInfoObtainerBeginObtainMovieInfo:self];
     [self performBlockInMainThread:^{
-        if (i % 2 == 0) {
+//        if (i % 2 == 0) {
             [self.movieInfoObtainerDelegate movieInfoObtainer:self successObtainMovieInfoWithMovieURL:self.movieURL withProgressInfo:MakeMovieProgressInfoWithProgress(0.5)];
-        }
-        else {
-            [self.movieInfoObtainerDelegate movieInfoObtainerFailObtainMovieInfo:self];
-        }
+//        }
+//        else {
+//            [self.movieInfoObtainerDelegate movieInfoObtainerFailObtainMovieInfo:self];
+//        }
     } afterDelay:0.5];
     
     i ++;
