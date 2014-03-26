@@ -237,7 +237,6 @@ void wonderMovieVolumeListenerCallback (
     self.bottomBarContainer = bottomBarContainer;
     self.bottomBarContainer.userInteractionEnabled = NO;
     
-    
     // http://stackoverflow.com/questions/19258817/cant-fade-uitoolbar-or-uitabbar-in-ios7
     // Need to disable AllowsGroupOpacity of UIToolBar's parent view layer to enable fading animtion of UIToolbar in iOS7
     if ([bottomBarContainer.layer respondsToSelector:@selector(setAllowsGroupOpacity:)]) {
@@ -279,7 +278,6 @@ void wonderMovieVolumeListenerCallback (
     
     WonderProgressView *progressView = [[WonderProgressView alloc] initWithFrame:CGRectMake(0, 0, self.width, progressIndicatorHeight)];
     self.progressView = progressView;
-//    progressView.backgroundColor = [UIColor redColor];
     [bottomBarContainer addSubview:progressView];
     
     self.progressView.delegate = self;
@@ -519,7 +517,7 @@ void wonderMovieVolumeListenerCallback (
 
 - (CGRect)suggestedInfoViewFrame
 {
-    return CGRectMake(0, self.headerBar.bottom, self.width, self.height - self.headerBar.bottom - self.bottomView.height);
+    return CGRectMake(0, self.headerBar.bottom, self.width, self.height - self.headerBar.bottom - self.bottomBarContainer.height);
 }
 
 - (void)setLiveCastState:(LiveCastState)liveCastState
